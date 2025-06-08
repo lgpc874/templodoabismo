@@ -6,12 +6,19 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
+import Login from "@/pages/login";
+import Sobre from "@/pages/sobre";
+import Oraculo from "@/pages/oraculo";
 import AdminPanel from "@/pages/admin/AdminPanel";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/login" component={Login} />
+      <Route path="/acesso" component={Login} />
+      <Route path="/sobre" component={Sobre} />
+      <Route path="/oraculo" component={Oraculo} />
       <Route path="/magus-secretum" component={AdminPanel} />
       <Route component={NotFound} />
     </Switch>

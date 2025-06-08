@@ -134,18 +134,32 @@ export class MemStorage implements IStorage {
   private initializeDefaultAdmin() {
     // Create default admin user if none exists
     const bcrypt = require('bcrypt');
-    const hashedPassword = bcrypt.hashSync('admin123', 10);
+    const adminPassword = bcrypt.hashSync('admin123', 10);
     
     const adminUser: User = {
       id: this.currentUserId++,
       username: 'admin',
       email: 'admin@templo.com',
-      password: hashedPassword,
+      password: adminPassword,
       role: 'admin',
       createdAt: new Date(),
     };
     
     this.users.set(adminUser.id, adminUser);
+    
+    // Create default test user
+    const userPassword = bcrypt.hashSync('user123', 10);
+    
+    const testUser: User = {
+      id: this.currentUserId++,
+      username: 'usuario',
+      email: 'usuario@templo.com',
+      password: userPassword,
+      role: 'user',
+      createdAt: new Date(),
+    };
+    
+    this.users.set(testUser.id, testUser);
   }
 
   // Users
