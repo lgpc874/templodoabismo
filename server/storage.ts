@@ -20,6 +20,7 @@ import {
   type Backup, 
   type InsertBackup 
 } from "@shared/schema";
+import bcrypt from "bcrypt";
 
 export interface IStorage {
   // Users

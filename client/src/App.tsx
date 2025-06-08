@@ -9,7 +9,7 @@ import Home from "@/pages/home";
 import Login from "@/pages/login";
 import Sobre from "@/pages/sobre";
 import Oraculo from "@/pages/oraculo";
-import AdminPanel from "@/pages/admin/AdminPanel";
+import SimpleAdminLogin from "@/pages/admin/SimpleAdminLogin";
 
 function Router() {
   return (
@@ -19,7 +19,7 @@ function Router() {
       <Route path="/acesso" component={Login} />
       <Route path="/sobre" component={Sobre} />
       <Route path="/oraculo" component={Oraculo} />
-      <Route path="/magus-secretum" component={AdminPanel} />
+      <Route path="/magus-secretum" component={SimpleAdminLogin} />
       <Route component={NotFound} />
     </Switch>
   );
