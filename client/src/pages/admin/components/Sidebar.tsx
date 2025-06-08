@@ -1,6 +1,20 @@
 import { Crown, LayoutDashboard, Settings, FileText, Palette, Image, Users, Database, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { AdminSection, User } from "../types";
+export type AdminSection = 
+  | "dashboard"
+  | "site-config"
+  | "content-manager"
+  | "design-editor"
+  | "media-library"
+  | "backup-manager"
+  | "user-manager";
+
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+}
 
 interface SidebarProps {
   activeSection: AdminSection;

@@ -90,6 +90,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin token validation
+  app.get("/api/admin/validate", requireAdmin, async (req: any, res) => {
+    try {
+      res.json({
+        id: req.user.id,
+        username: req.user.username,
+        email: req.user.email,
+        role: req.user.role,
+      });
+    } catch (error) {
+      res.status(401).json({ message: "Invalid token" });
+    }
+  });
+
   app.post("/api/admin/logout", requireAdmin, async (req: any, res) => {
     try {
       await storage.deleteAdminSession(req.session.token);

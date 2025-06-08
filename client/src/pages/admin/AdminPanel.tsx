@@ -14,7 +14,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Shield, Eye, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import type { AdminSection } from "./types";
+type AdminSection = 
+  | "dashboard"
+  | "site-config"
+  | "content-manager"
+  | "design-editor"
+  | "media-library"
+  | "backup-manager"
+  | "user-manager";
 
 export default function AdminPanel() {
   const { user, login, logout, isLoading } = useAuth();
@@ -53,15 +60,15 @@ export default function AdminPanel() {
         return <Dashboard />;
       case "site-config":
         return <SiteConfig />;
-      case "content":
+      case "content-manager":
         return <ContentManager />;
-      case "design":
+      case "design-editor":
         return <DesignEditor />;
-      case "media":
+      case "media-library":
         return <MediaLibrary />;
-      case "backup":
+      case "backup-manager":
         return <BackupManager />;
-      case "users":
+      case "user-manager":
         return <UserManager />;
       default:
         return <Dashboard />;

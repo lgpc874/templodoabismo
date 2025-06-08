@@ -43,8 +43,11 @@ export function useAuth() {
   const login = async (username: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      const response = await apiRequest("/api/admin/login", {
+      const response = await fetch("/api/admin/login", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ username, password }),
       });
 
