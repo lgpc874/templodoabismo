@@ -83,12 +83,122 @@ export const backups = pgTable("backups", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Templo do Abismo specific tables
+export const courses = pgTable("courses", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  level: integer("level").notNull().default(1),
+  price_tkazh: integer("price_tkazh").notNull().default(0),
+  modules: jsonb("modules").notNull(),
+  requirements: text("requirements").array().default([]),
+  rewards: text("rewards").array().default([]),
+  type: text("type").notNull().default("initiation"),
+  is_active: boolean("is_active").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+export const grimoires = pgTable("grimoires", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  chapters: jsonb("chapters").notNull(),
+  access_level: integer("access_level").default(0),
+  price_tkazh: integer("price_tkazh").default(5),
+  pdf_url: text("pdf_url"),
+  cover_image: text("cover_image"),
+  is_active: boolean("is_active").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+export const oracle_sessions = pgTable("oracle_sessions", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id").references(() => users.id).notNull(),
+  oracle_type: text("oracle_type").notNull(),
+  question: text("question"),
+  result: jsonb("result").notNull(),
+  tkazh_cost: integer("tkazh_cost").default(1),
+  session_date: timestamp("session_date").defaultNow(),
+});
+
+export const daily_poems = pgTable("daily_poems", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  date: timestamp("date").notNull(),
+  author: text("author").default("Voz da Pluma"),
+  is_ai_generated: boolean("is_ai_generated").default(true),
+  published: boolean("published").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+export const user_progress = pgTable("user_progress", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id").references(() => users.id).notNull(),
+  course_id: integer("course_id").references(() => courses.id).notNull(),
+  current_module: integer("current_module").default(0),
+  completed_modules: text("completed_modules").array().default([]),
+  progress_percentage: integer("progress_percentage").default(0),
+  started_at: timestamp("started_at").defaultNow(),
+  completed_at: timestamp("completed_at"),
+});
+
+export const liber_access = pgTable("liber_access", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id").references(() => users.id).notNull(),
+  power_word: text("power_word").notNull(),
+  access_granted: timestamp("access_granted").defaultNow(),
+  expires_at: timestamp("expires_at"),
+});
+
 // Insert Schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   email: true,
   password: true,
+  magical_name: true,
+  member_type: true,
   role: true,
+});
+
+export const insertCourseSchema = createInsertSchema(courses).pick({
+  title: true,
+  description: true,
+  level: true,
+  price_tkazh: true,
+  modules: true,
+  requirements: true,
+  rewards: true,
+  type: true,
+  is_active: true,
+});
+
+export const insertGrimoireSchema = createInsertSchema(grimoires).pick({
+  title: true,
+  description: true,
+  chapters: true,
+  access_level: true,
+  price_tkazh: true,
+  pdf_url: true,
+  cover_image: true,
+  is_active: true,
+});
+
+export const insertOracleSessionSchema = createInsertSchema(oracle_sessions).pick({
+  user_id: true,
+  oracle_type: true,
+  question: true,
+  result: true,
+  tkazh_cost: true,
+});
+
+export const insertDailyPoemSchema = createInsertSchema(daily_poems).pick({
+  title: true,
+  content: true,
+  date: true,
+  author: true,
+  is_ai_generated: true,
+  published: true,
 });
 
 export const insertSiteConfigSchema = createInsertSchema(siteConfig).pick({
@@ -152,3 +262,15 @@ export type InsertActivityLog = z.infer<typeof insertActivityLogSchema>;
 export type Backup = typeof backups.$inferSelect;
 export type InsertBackup = z.infer<typeof insertBackupSchema>;
 export type LoginRequest = z.infer<typeof loginSchema>;
+
+// Templo do Abismo types
+export type Course = typeof courses.$inferSelect;
+export type InsertCourse = z.infer<typeof insertCourseSchema>;
+export type Grimoire = typeof grimoires.$inferSelect;
+export type InsertGrimoire = z.infer<typeof insertGrimoireSchema>;
+export type OracleSession = typeof oracle_sessions.$inferSelect;
+export type InsertOracleSession = z.infer<typeof insertOracleSessionSchema>;
+export type DailyPoem = typeof daily_poems.$inferSelect;
+export type InsertDailyPoem = z.infer<typeof insertDailyPoemSchema>;
+export type UserProgress = typeof user_progress.$inferSelect;
+export type LiberAccess = typeof liber_access.$inferSelect;

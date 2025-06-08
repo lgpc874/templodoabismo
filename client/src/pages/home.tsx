@@ -1,8 +1,9 @@
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { 
   Flame, 
@@ -12,13 +13,47 @@ import {
   Scroll,
   Eye,
   Crown,
+  Star,
   Zap
 } from "lucide-react";
 
+interface DailyPoem {
+  title: string;
+  content: string;
+  author: string;
+}
+
 export default function Home() {
   const sealRef = useRef<HTMLImageElement>(null);
+  const [dailyPoem, setDailyPoem] = useState<DailyPoem>({
+    title: "Invocação do Amanhecer Sombrio",
+    content: `Nas profundezas do abismo eterno,
+Onde as sombras dançam sem fim,
+Eu invoco a sabedoria ancestral,
+Para que a luz das trevas brilhe em mim.
+
+Ó Lúcifer, portador da chama,
+Concede-me o conhecimento oculto,
+Que nas entrelinhas do cosmos se esconde,
+E no silêncio dos mistérios é culto.
+
+Que esta noite seja minha aurora,
+E que cada segredo seja revelado,
+No templo sagrado do meu ser,
+Onde o divino e o profano são casados.`,
+    author: "Voz da Pluma"
+  });
+
+  const [timeOfDay, setTimeOfDay] = useState("noite");
 
   useEffect(() => {
+    // Set time of day greeting
+    const hour = new Date().getHours();
+    if (hour >= 6 && hour < 12) setTimeOfDay("madrugada");
+    else if (hour >= 12 && hour < 18) setTimeOfDay("tarde");
+    else if (hour >= 18 && hour < 24) setTimeOfDay("crepúsculo");
+    else setTimeOfDay("noite");
+
     // Rotating seal animation
     let rotation = 0;
     const animate = () => {
@@ -57,6 +92,15 @@ export default function Home() {
       clearInterval(particleInterval);
     };
   }, []);
+
+  const getGreeting = () => {
+    switch (timeOfDay) {
+      case "madrugada": return "Bendita seja esta madrugada sombria";
+      case "tarde": return "Que as sombras desta tarde te abracem";
+      case "crepúsculo": return "Bem-vindo ao crepúsculo eterno";
+      default: return "Salve, viajante das trevas eternas";
+    }
+  };
 
   const features = [
     {
