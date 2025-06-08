@@ -1,3 +1,9 @@
+import { useEffect, useRef } from "react";
+import Navigation from "@/components/navigation";
+import Footer from "@/components/footer";
+import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
+
 import { useQuery } from "@tanstack/react-query";
 import type { Grimoire } from "@shared/schema";
 
@@ -49,7 +55,7 @@ export default function GrimoiresSection() {
   };
 
   const groupedGrimoires = grimoires.reduce((acc, grimoire) => {
-    const type = grimoire.type;
+    const type = grimoires.type;
     if (!acc[type]) {
       acc[type] = [];
     }
@@ -114,8 +120,8 @@ export default function GrimoiresSection() {
                   ))}
                 </ul>
                 <button className={`w-full py-2 font-cinzel-regular transition-all ${typeInfo.buttonClass}`}>
-                  {type === 'premium' && typeGrimoires[0]?.price ? 
-                    `${typeInfo.buttonText} - R$ ${typeGrimoires[0].price}` : 
+                  {type === 'premium' && typeGrimoires[0]?.price_tkazh ? 
+                    `${typeInfo.buttonText} - R$ ${typeGrimoires[0].price_tkazh}` : 
                     typeInfo.buttonText
                   }
                 </button>

@@ -8,7 +8,7 @@ import {
   Flame, 
   BookOpen, 
   GraduationCap, 
-  Crystal, 
+  Gem, 
   Scroll,
   Eye,
   Crown,
@@ -22,7 +22,7 @@ export default function Home() {
     // Rotating seal animation
     let rotation = 0;
     const animate = () => {
-      rotation += 0.5;
+      rotation += 0.1;
       if (sealRef.current) {
         sealRef.current.style.transform = `rotate(${rotation}deg)`;
       }
@@ -60,7 +60,7 @@ export default function Home() {
 
   const features = [
     {
-      icon: Crystal,
+      icon: Gem,
       title: "Oráculos do Abismo",
       description: "Tarot Infernal, Espelho Negro, Runas ancestrais e mais",
       href: "/oraculo",
@@ -123,7 +123,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/oraculo">
               <Button size="lg" className="bg-red-800 hover:bg-red-700 text-white px-8 py-4">
-                <Crystal className="w-5 h-5 mr-2" />
+                <Gem className="w-5 h-5 mr-2" />
                 Consultar Oráculos
               </Button>
             </Link>

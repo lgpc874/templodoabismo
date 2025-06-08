@@ -1,235 +1,160 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 72.2% 50.6%;
-    --primary-foreground: 0 85.7% 97.3%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 72.2% 50.6%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-  }
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(262, 83%, 58%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.75rem;
+  
+  /* Admin panel specific colors */
+  --admin-sidebar-bg: hsl(222, 84%, 4.9%);
+  --admin-sidebar-hover: hsl(215, 27.9%, 16.9%);
+  --admin-sidebar-active: hsl(217.2, 32.6%, 17.5%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(262, 83%, 58%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
 }
 
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground;
-    font-family: 'Crimson Text', serif;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Cinzel', serif;
+    @apply font-sans antialiased bg-background text-foreground;
   }
 }
 
-@layer utilities {
-  .font-cinzel {
-    font-family: 'Cinzel', serif;
-  }
-  
-  .font-crimson {
-    font-family: 'Crimson Text', serif;
-  }
-  
-  .animate-spin-slow {
-    animation: spin 20s linear infinite;
-  }
-  
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  .animate-pulse-slow {
-    animation: pulse 4s cubic-bezier(0.4, 0, 0.8, 1) infinite;
-  }
-  
-  .text-shadow-gold {
-    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-  }
-  
-  .text-shadow-red {
-    text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
-  }
-  
-  .glass-effect {
-    @apply bg-black/20 backdrop-blur-sm;
-  }
-  
-  .mystic-border {
-    @apply border border-red-900/30 hover:border-red-500/50 transition-all duration-300;
-  }
-  
-  .scroll-reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease-out;
-  }
-  
-  .scroll-reveal.revealed {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  
-  .gradient-text {
-    @apply bg-gradient-to-r from-red-500 via-red-400 to-yellow-400 bg-clip-text text-transparent;
-  }
-  
-  .mystical-glow {
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
-  }
-  
-  .abyssal-bg {
-    background: radial-gradient(ellipse at center, rgba(139, 69, 19, 0.1) 0%, rgba(0, 0, 0, 0.9) 70%);
-  }
+/* Admin panel specific styles */
+.admin-panel {
+  font-family: 'Inter', sans-serif;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+.admin-sidebar {
+  background-color: var(--admin-sidebar-bg);
+  box-shadow: 4px 0 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-@keyframes flicker {
+.admin-nav-item {
+  transition: all 0.2s ease;
+}
+
+.admin-nav-item:hover {
+  background-color: var(--admin-sidebar-hover);
+}
+
+.admin-nav-item.active {
+  background-color: hsl(217, 91%, 60%);
+  color: white;
+}
+
+.admin-content {
+  min-height: 100vh;
+}
+
+.glass-morphism {
+  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.config-panel {
+  transition: all 0.3s ease;
+  scrollbar-width: thin;
+  scrollbar-color: hsl(20, 5.9%, 90%) hsl(60, 4.8%, 95.9%);
+}
+
+.config-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.config-panel::-webkit-scrollbar-track {
+  background: hsl(60, 4.8%, 95.9%);
+}
+
+.config-panel::-webkit-scrollbar-thumb {
+  background: hsl(20, 5.9%, 90%);
+  border-radius: 3px;
+}
+
+.preview-frame {
+  transform-origin: top left;
+  transition: all 0.3s ease;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes pulseSubtle {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.8; }
 }
 
-.flicker {
-  animation: flicker 2s infinite;
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+.animate-pulse-subtle {
+  animation: pulseSubtle 2s infinite;
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(239, 68, 68, 0.5);
-  border-radius: 4px;
+/* Dark mode overrides for admin panel */
+.admin-panel.dark .admin-sidebar {
+  background-color: hsl(222, 84%, 4.9%);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(239, 68, 68, 0.7);
+.admin-panel.dark .config-panel::-webkit-scrollbar-track {
+  background: hsl(240, 3.7%, 15.9%);
 }
 
-/* Selection color */
-::selection {
-  background: rgba(239, 68, 68, 0.3);
-  color: white;
-}
-
-/* Focus styles */
-*:focus {
-  outline: 2px solid rgba(239, 68, 68, 0.5);
-  outline-offset: 2px;
-}
-
-/* Custom button animations */
-.btn-mystic {
-  @apply relative overflow-hidden;
-}
-
-.btn-mystic::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.5s;
-}
-
-.btn-mystic:hover::before {
-  left: 100%;
-}
-
-/* Particle effects */
-.particle {
-  position: fixed;
-  pointer-events: none;
-  width: 2px;
-  height: 2px;
-  background: #ef4444;
-  border-radius: 50%;
-  opacity: 0.6;
-  z-index: 1;
-}
-
-/* Loading animations */
-.loading-seal {
-  animation: spin 2s linear infinite;
-}
-
-/* Card hover effects */
-.mystic-card {
-  @apply transition-all duration-300 hover:scale-105 hover:shadow-2xl;
-}
-
-.mystic-card:hover {
-  box-shadow: 0 25px 50px -12px rgba(239, 68, 68, 0.25);
-}
-
-/* Text animations */
-.typing-effect {
-  overflow: hidden;
-  border-right: 2px solid #ef4444;
-  white-space: nowrap;
-  margin: 0 auto;
-  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
-}
-
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
-}
-
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: #ef4444 }
-}
-
-/* Modal animations */
-.modal-enter {
-  animation: modalFadeIn 0.3s ease-out;
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.admin-panel.dark .config-panel::-webkit-scrollbar-thumb {
+  background: hsl(240, 3.7%, 25%);
 }
