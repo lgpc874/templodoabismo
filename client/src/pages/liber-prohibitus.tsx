@@ -3,7 +3,7 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
-export default function Sobre() {
+export default function LiberProhibitus() {
   useScrollReveal();
 
   return (
@@ -12,10 +12,10 @@ export default function Sobre() {
       <div className="pt-20">
         <div className="container mx-auto px-6 py-12">
           <h1 className="text-5xl md:text-7xl font-light text-center mb-8 text-antique-gold">
-            De Templo
+            Liber Prohibitus
           </h1>
           <p className="text-xl text-center mb-16 text-deep-red">
-            Sobre o Templo do Abismo
+            O Livro Proibido dos Segredos
           </p>
         </div>
       </div>
