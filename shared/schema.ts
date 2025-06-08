@@ -1,5 +1,5 @@
 
-import { sqliteTable, text, integer, real, boolean } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { relations } from "drizzle-orm";
 import { z } from "zod";
@@ -12,7 +12,7 @@ export const users = sqliteTable("users", {
   tkazh_credits: integer("tkazh_credits").default(0),
   free_credits: integer("free_credits").default(10),
   last_credit_reset: text("last_credit_reset"),
-  personal_seal_generated: boolean("personal_seal_generated").default(false),
+  personal_seal_generated: integer("personal_seal_generated", { mode: "boolean" }).default(false),
   initiation_level: integer("initiation_level").default(0),
   created_at: text("created_at").default("datetime('now')"),
 });
@@ -24,7 +24,7 @@ export const grimoires = sqliteTable("grimoires", {
   content: text("content").notNull(),
   price_tkazh: integer("price_tkazh"),
   price_real: real("price_real"),
-  is_free: boolean("is_free").default(false),
+  is_free: integer("is_free", { mode: "boolean" }).default(false),
   chapter_count: integer("chapter_count").default(1),
   image_url: text("image_url"),
 });
@@ -34,7 +34,7 @@ export const courses = sqliteTable("courses", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   level: integer("level").notNull(), // 1-7 para níveis iniciáticos
-  is_professional: boolean("is_professional").default(false),
+  is_professional: integer("is_professional", { mode: "boolean" }).default(false),
   price_real: real("price_real"),
   modules: text("modules"), // JSON string
   requirements: text("requirements"),
@@ -72,7 +72,7 @@ export const user_courses = sqliteTable("user_courses", {
   user_id: integer("user_id").references(() => users.id),
   course_id: integer("course_id").references(() => courses.id),
   progress: integer("progress").default(0),
-  completed: boolean("completed").default(false),
+  completed: integer("completed", { mode: "boolean" }).default(false),
   enrolled_at: text("enrolled_at").default("datetime('now')"),
 });
 
@@ -82,7 +82,7 @@ export const plume_posts = sqliteTable("plume_posts", {
   content: text("content").notNull(),
   author: text("author").default("Voz da Pluma"),
   created_at: text("created_at").default("datetime('now')"),
-  is_featured: boolean("is_featured").default(false),
+  is_featured: integer("is_featured", { mode: "boolean" }).default(false),
 });
 
 export const site_settings = sqliteTable("site_settings", {
