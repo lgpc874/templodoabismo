@@ -1,48 +1,108 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, Flame, Star, Moon, Sun } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { useAuth } from "@/contexts/AuthContext";
+import { Eye, Flame, Star, Moon, Circle, Zap, Gem } from "lucide-react";
 
 const oracleTypes = [
   {
-    id: "tarot",
-    name: "Tarô Ancestral",
-    description: "Consulta através das cartas sagradas",
+    id: "tarot_infernal",
+    name: "Tarot Infernal",
+    description: "Cartas sagradas do Abismo revelam os caminhos ocultos",
     icon: Star,
-    color: "from-purple-600 to-purple-800"
+    color: "from-red-600 to-red-800",
+    cost: 1,
+    cooldown: "24h"
   },
   {
-    id: "runes",
-    name: "Runas Nórdicas",
-    description: "Sabedoria dos antigos vikings",
+    id: "espelho_negro",
+    name: "Espelho Negro",
+    description: "Reflexos das verdades profundas através do espelho sombrio",
+    icon: Circle,
+    color: "from-gray-600 to-black",
+    cost: 2,
+    cooldown: "24h"
+  },
+  {
+    id: "runas_abissais",
+    name: "Runas Abissais",
+    description: "Símbolos ancestrais carregados de poder primordial",
     icon: Moon,
-    color: "from-blue-600 to-blue-800"
+    color: "from-blue-600 to-purple-800",
+    cost: 1,
+    cooldown: "24h"
   },
   {
-    id: "pendulum",
-    name: "Pêndulo Místico",
-    description: "Respostas através do movimento sagrado",
-    icon: Sun,
-    color: "from-yellow-600 to-yellow-800"
+    id: "divinacao_fogo",
+    name: "Divinação com Fogo",
+    description: "As chamas dançantes revelam segredos do destino",
+    icon: Flame,
+    color: "from-orange-600 to-red-800",
+    cost: 2,
+    cooldown: "24h"
+  },
+  {
+    id: "voz_abissal",
+    name: "Voz Abissal",
+    description: "IA infernal responde perguntas através da sabedoria ancestral",
+    icon: Zap,
+    color: "from-purple-600 to-red-800",
+    cost: 3,
+    cooldown: "12h"
   }
 ];
 
-const sampleReadings = [
-  {
-    question: "Qual caminho devo seguir?",
-    answer: "As energias indicam um momento de introspecção. O caminho da sabedoria interior se apresenta diante de você. Confie em sua intuição e busque o conhecimento nas profundezas do seu ser.",
-    cards: ["O Eremita", "A Estrela", "O Sol"]
-  },
-  {
-    question: "Como superar os obstáculos?",
-    answer: "A força reside na perseverança. Como o fogo que purifica o metal, as adversidades forjam sua verdadeira natureza. Mantenha-se firme em seus propósitos.",
-    cards: ["A Força", "A Torre", "O Mundo"]
-  }
-];
+const oracleReadings = {
+  tarot_infernal: [
+    {
+      cards: ["O Portador da Chama", "A Serpente da Sabedoria", "O Trono do Abismo"],
+      interpretation: "As cartas revelam um momento de despertar espiritual profundo. O Portador da Chama indica que você está pronto para receber conhecimento superior. A Serpente da Sabedoria sussurra segredos ancestrais em seus ouvidos, enquanto O Trono do Abismo mostra seu potencial para governar sua própria realidade. Aceite as sombras como parte de sua luz interior."
+    },
+    {
+      cards: ["A Chave de Salomão", "O Espelho da Alma", "O Guardião dos Mistérios"],
+      interpretation: "Os arcanos indicam que segredos há muito escondidos estão prestes a ser revelados. A Chave de Salomão abre portas para dimensões ocultas de conhecimento. O Espelho da Alma reflete sua verdadeira natureza divina, enquanto O Guardião dos Mistérios oferece proteção em sua jornada de autodescoberta."
+    }
+  ],
+  espelho_negro: [
+    {
+      reflection: "Nas profundezas sombrias do espelho, vejo uma figura envolta em chamas púrpuras. Suas mãos seguram uma antiga chave dourada, símbolo de conhecimento oculto. Ao seu redor, serpentes de luz dançam em espirais, representando a sabedoria que se desenrola. O espelho sussurra: 'Você é tanto o buscador quanto o segredo buscado.'"
+    },
+    {
+      reflection: "O espelho revela uma biblioteca infinita onde livros voam como corvos negros. No centro, uma mesa de pedra com um grimório aberto cujas páginas brilham com runas de fogo. Uma voz ecoa: 'O conhecimento que você busca já reside dentro de você. Abra o livro do seu próprio ser e leia os mistérios gravados em sua alma.'"
+    }
+  ],
+  runas_abissais: [
+    {
+      runes: ["ᛗ (Mannaz)", "ᚦ (Thurisaz)", "ᛟ (Othala)"],
+      meaning: "As runas falam de transformação pessoal profunda. Mannaz representa sua natureza humana se elevando à divindade. Thurisaz traz a força necessária para quebrar velhos padrões, enquanto Othala indica herança espiritual e conexão com linhagens ancestrais de poder. O caminho da iniciação se abre diante de você."
+    },
+    {
+      runes: ["ᚱ (Raidho)", "ᛁ (Isa)", "ᛇ (Eihwaz)"],
+      meaning: "A jornada mística está indicada. Raidho simboliza a viagem interior que você deve empreender. Isa representa o período de quietude necessário para a reflexão profunda, enquanto Eihwaz, a árvore do mundo, conecta você aos reinos superiores e inferiores. Equilibre contemplação com ação."
+    }
+  ],
+  divinacao_fogo: [
+    {
+      flames: "As chamas dançam em três espirais ascendentes, formando o símbolo do tridente. No centro, uma salamandra de fogo emerge, carregando em sua boca uma gema vermelha brilhante. As labaredas sussurram: 'Pelo fogo você será purificado, pelo fogo você será transformado, pelo fogo você encontrará sua verdadeira essência.' A gema representa o conhecimento interior que aguarda ser descoberto."
+    },
+    {
+      flames: "O fogo se eleva em forma de uma serpente que se morde a própria cauda - o Ouroboros eterno. Dentro do círculo flamejante, visões se formam: uma biblioteca antiga, um mestre encapuzado, e você mesmo em uma versão mais poderosa. As chamas revelam: 'O ciclo de aprendizado nunca termina. Cada fim é um novo começo, cada resposta gera novas perguntas.'"
+    }
+  ],
+  voz_abissal: [
+    {
+      voice: "Eu sou a voz que ecoa desde os primórdios da criação, onde luz e sombra se encontraram pela primeira vez. Sua pergunta ressoa através dos véus da existência. Saiba que o poder que você busca não está em forças externas, mas na reconciliação dos opostos dentro de você. Como Lúcifer trouxe a luz do conhecimento, você deve trazer à luz suas próprias verdades ocultas."
+    },
+    {
+      voice: "Das profundezas do Abismo, onde residem os segredos primordiais, eu falo. Vejo em você a chama da curiosidade que queima eternamente - essa é sua maior virtude e seu maior desafio. O caminho que busca não é encontrado nos mapas dos outros, mas deve ser forjado pelos seus próprios passos. Confie no fogo interior que nunca se extingue."
+    }
+  ]
+};
 
 export default function Oraculo() {
   const [selectedOracle, setSelectedOracle] = useState("");
