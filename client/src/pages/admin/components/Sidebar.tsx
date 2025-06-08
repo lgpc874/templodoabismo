@@ -10,89 +10,67 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ activeSection, onSectionChange, user, onLogout }: SidebarProps) {
-  const navItems = [
-    { id: "dashboard" as AdminSection, label: "Dashboard", icon: LayoutDashboard },
-    { id: "site-config" as AdminSection, label: "Site Configuration", icon: Settings },
-    { id: "content" as AdminSection, label: "Content Management", icon: FileText },
-    { id: "design" as AdminSection, label: "Design & Styling", icon: Palette },
-    { id: "media" as AdminSection, label: "Media Library", icon: Image },
-    { id: "users" as AdminSection, label: "User Management", icon: Users },
-    { id: "backup" as AdminSection, label: "Backup & Restore", icon: Database },
-  ];
+  const menuItems = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "site-config", label: "Site Config", icon: Settings },
+    { id: "content-manager", label: "Content Manager", icon: FileText },
+    { id: "design-editor", label: "Design Editor", icon: Palette },
+    { id: "media-library", label: "Media Library", icon: Image },
+    { id: "user-manager", label: "User Manager", icon: Users },
+    { id: "backup-manager", label: "Backup Manager", icon: Database },
+  ] as const;
 
   return (
-    <div className="admin-sidebar w-80 bg-[var(--admin-sidebar-bg)] text-white flex flex-col">
+    <div className="w-64 bg-slate-900 text-white flex flex-col">
       {/* Header */}
       <div className="p-6 border-b border-slate-700">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-            <Crown className="w-5 h-5 text-primary-foreground" />
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+            <Crown className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-semibold">Magus Secretum</h1>
-            <p className="text-xs text-slate-400">Admin Panel</p>
+            <h1 className="text-lg font-bold">Magus Secretum</h1>
+            <p className="text-sm text-slate-400">Admin Panel</p>
           </div>
-        </div>
-      </div>
-
-      {/* Site Status */}
-      <div className="p-4 bg-emerald-900/20 border-b border-slate-700">
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-slate-300">Site Status</span>
-          <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-            <span className="text-xs text-emerald-400">Live</span>
-          </div>
-        </div>
-        <div className="mt-2 text-xs text-slate-400">
-          Last saved: 2 minutes ago
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeSection === item.id;
-          
-          return (
-            <button
-              key={item.id}
-              onClick={() => onSectionChange(item.id)}
-              className={`admin-nav-item w-full flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-colors ${
-                isActive
-                  ? "active bg-primary text-white"
-                  : "text-slate-300 hover:bg-[var(--admin-sidebar-hover)]"
-              }`}
-            >
-              <Icon className="w-4 h-4" />
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
+      <nav className="flex-1 p-4 space-y-2">
+        {menuItems.map((item) => (
+          <Button
+            key={item.id}
+            variant={activeSection === item.id ? "default" : "ghost"}
+            className={`w-full justify-start space-x-3 ${
+              activeSection === item.id 
+                ? "bg-white text-slate-900 hover:bg-slate-100" 
+                : "text-slate-300 hover:text-white hover:bg-slate-800"
+            }`}
+            onClick={() => onSectionChange(item.id as AdminSection)}
+          >
+            <item.icon className="w-5 h-5" />
+            <span>{item.label}</span>
+          </Button>
+        ))}
       </nav>
 
-      {/* User Profile */}
+      {/* User Info & Logout */}
       <div className="p-4 border-t border-slate-700">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-              <span className="text-xs font-medium">{user.username.slice(0, 2).toUpperCase()}</span>
-            </div>
-            <div>
-              <p className="text-sm font-medium">{user.username}</p>
-              <p className="text-xs text-slate-400">{user.role}</p>
-            </div>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <p className="text-sm font-medium">{user.username}</p>
+            <p className="text-xs text-slate-400 capitalize">{user.role}</p>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onLogout}
-            className="text-slate-400 hover:text-white hover:bg-slate-700"
-          >
-            <LogOut className="w-4 h-4" />
-          </Button>
         </div>
+        
+        <Button
+          variant="ghost"
+          className="w-full justify-start space-x-3 text-slate-300 hover:text-white hover:bg-slate-800"
+          onClick={onLogout}
+        >
+          <LogOut className="w-5 h-5" />
+          <span>Logout</span>
+        </Button>
       </div>
     </div>
   );
