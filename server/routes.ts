@@ -1,4 +1,3 @@
-
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
@@ -42,14 +41,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userData = insertUserSchema.parse(req.body);
       const existingUser = await storage.getUserByEmail(userData.email);
-      
+
       if (existingUser) {
         return res.status(400).json({ message: "Usuário já existe" });
       }
 
       const user = await storage.createUser(userData);
       const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
-      
+
       res.json({ 
         token, 
         user: { 
@@ -69,7 +68,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, password } = req.body;
       const user = await storage.getUserByEmail(email);
-      
+
       if (!user) {
         return res.status(401).json({ message: "Credenciais inválidas" });
       }
@@ -80,7 +79,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
-      
+
       res.json({ 
         token, 
         user: { 
@@ -103,7 +102,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!user) {
         return res.status(404).json({ message: "Usuário não encontrado" });
       }
-      
+
       res.json({
         id: user.id,
         username: user.username,
@@ -176,11 +175,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const oracleId = parseInt(req.params.id);
       const { question } = req.body;
-      
+
       const oracle = await storage.getOracles().then(oracles => 
         oracles.find(o => o.id === oracleId)
       );
-      
+
       if (!oracle) {
         return res.status(404).json({ message: "Oráculo não encontrado" });
       }
@@ -221,7 +220,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Deduct credits
       let newTkazh = user.tkazh_credits;
       let newFree = user.free_credits;
-      
+
       if (user.free_credits >= oracle.tkazh_cost) {
         newFree -= oracle.tkazh_cost;
       } else {
@@ -261,7 +260,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const logo = await storage.getSetting("site_logo");
       const background = await storage.getSetting("site_background");
-      
+
       res.json({
         logo: logo || "https://i.postimg.cc/g20gqmdX/IMG-20250527-182235-1.png",
         background: background || "https://i.postimg.cc/qqX1Q7zn/Textura-envelhecida-e-marcada-pelo-tempo.png"
@@ -276,7 +275,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { password } = req.body;
       const correctPassword = await storage.getSetting("liber_password");
-      
+
       if (password === correctPassword) {
         res.json({ access: true });
       } else {
@@ -292,7 +291,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { username, password } = req.body;
       const isValid = await storage.validateAdmin(username, password);
-      
+
       if (isValid) {
         (req.session as any).isAdmin = true;
         res.json({ success: true });

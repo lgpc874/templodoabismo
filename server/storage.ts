@@ -21,8 +21,150 @@ import {
 } from "@shared/schema";
 import { eq, desc, and } from "drizzle-orm";
 import bcrypt from "bcrypt";
+import Database from 'better-sqlite3';
 
 export class Storage {
+  constructor() {
+    this.initializeDatabase();
+  }
+
+  private initializeDatabase() {
+    try {
+      // Criar tabelas se não existirem (SQLite)
+      const sqlite = new Database('database.sqlite');
+      
+      // Users table
+      sqlite.exec(`
+        CREATE TABLE IF NOT EXISTS users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          username TEXT NOT NULL UNIQUE,
+          email TEXT NOT NULL UNIQUE,
+          password TEXT NOT NULL,
+          tkazh_credits INTEGER DEFAULT 0,
+          free_credits INTEGER DEFAULT 10,
+          last_credit_reset TEXT,
+          personal_seal_generated INTEGER DEFAULT 0,
+          initiation_level INTEGER DEFAULT 0,
+          created_at TEXT DEFAULT (datetime('now'))
+        )
+      `);
+
+      // Grimoires table
+      sqlite.exec(`
+        CREATE TABLE IF NOT EXISTS grimoires (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          description TEXT NOT NULL,
+          content TEXT NOT NULL,
+          price_tkazh INTEGER,
+          price_real REAL,
+          is_free INTEGER DEFAULT 0,
+          chapter_count INTEGER DEFAULT 1,
+          image_url TEXT
+        )
+      `);
+
+      // Courses table
+      sqlite.exec(`
+        CREATE TABLE IF NOT EXISTS courses (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          description TEXT NOT NULL,
+          level INTEGER NOT NULL,
+          is_professional INTEGER DEFAULT 0,
+          price_real REAL,
+          modules TEXT,
+          requirements TEXT,
+          image_url TEXT
+        )
+      `);
+
+      // Oracles table
+      sqlite.exec(`
+        CREATE TABLE IF NOT EXISTS oracles (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          description TEXT NOT NULL,
+          tkazh_cost INTEGER NOT NULL,
+          oracle_type TEXT NOT NULL
+        )
+      `);
+
+      // Oracle sessions table
+      sqlite.exec(`
+        CREATE TABLE IF NOT EXISTS oracle_sessions (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER REFERENCES users(id),
+          oracle_id INTEGER REFERENCES oracles(id),
+          question TEXT NOT NULL,
+          response TEXT NOT NULL,
+          created_at TEXT DEFAULT (datetime('now'))
+        )
+      `);
+
+      // User grimoire access table
+      sqlite.exec(`
+        CREATE TABLE IF NOT EXISTS user_grimoire_access (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER REFERENCES users(id),
+          grimoire_id INTEGER REFERENCES grimoires(id),
+          access_type TEXT NOT NULL,
+          expires_at TEXT,
+          purchased_at TEXT DEFAULT (datetime('now'))
+        )
+      `);
+
+      // User courses table
+      sqlite.exec(`
+        CREATE TABLE IF NOT EXISTS user_courses (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER REFERENCES users(id),
+          course_id INTEGER REFERENCES courses(id),
+          progress INTEGER DEFAULT 0,
+          completed INTEGER DEFAULT 0,
+          enrolled_at TEXT DEFAULT (datetime('now'))
+        )
+      `);
+
+      // Plume posts table
+      sqlite.exec(`
+        CREATE TABLE IF NOT EXISTS plume_posts (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          content TEXT NOT NULL,
+          author TEXT DEFAULT 'Voz da Pluma',
+          created_at TEXT DEFAULT (datetime('now')),
+          is_featured INTEGER DEFAULT 0
+        )
+      `);
+
+      // Site settings table
+      sqlite.exec(`
+        CREATE TABLE IF NOT EXISTS site_settings (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          key TEXT NOT NULL UNIQUE,
+          value TEXT NOT NULL,
+          updated_at TEXT DEFAULT (datetime('now'))
+        )
+      `);
+
+      // Admin users table
+      sqlite.exec(`
+        CREATE TABLE IF NOT EXISTS admin_users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          username TEXT NOT NULL UNIQUE,
+          password TEXT NOT NULL,
+          created_at TEXT DEFAULT (datetime('now'))
+        )
+      `);
+
+      sqlite.close();
+      console.log("Tabelas do banco de dados inicializadas com sucesso");
+    } catch (error) {
+      console.log("Erro ao inicializar banco de dados:", error);
+    }
+  }
+
   // User management
   async createUser(userData: InsertUser): Promise<User> {
     const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -98,6 +240,11 @@ export class Storage {
     return await db.select().from(oracles);
   }
 
+  async getOracleById(id: number): Promise<Oracle | null> {
+    const [oracle] = await db.select().from(oracles).where(eq(oracles.id, id));
+    return oracle || null;
+  }
+
   async createOracleSession(sessionData: Omit<OracleSession, 'id' | 'created_at'>): Promise<OracleSession> {
     const [session] = await db.insert(oracle_sessions).values({
       ...sessionData,
@@ -107,18 +254,20 @@ export class Storage {
   }
 
   async getUserOracleSessions(userId: number): Promise<OracleSession[]> {
-    return await db.select()
-      .from(oracle_sessions)
+    return await db.select().from(oracle_sessions)
       .where(eq(oracle_sessions.user_id, userId))
       .orderBy(desc(oracle_sessions.created_at));
   }
 
-  // Plume posts
-  async getPlumeePosts(limit: number = 10): Promise<PlumePost[]> {
-    return await db.select()
-      .from(plume_posts)
-      .orderBy(desc(plume_posts.created_at))
-      .limit(limit);
+  // Plume Posts
+  async getPlumePosts(): Promise<PlumePost[]> {
+    return await db.select().from(plume_posts).orderBy(desc(plume_posts.created_at));
+  }
+
+  async getFeaturedPlumePosts(): Promise<PlumePost[]> {
+    return await db.select().from(plume_posts)
+      .where(eq(plume_posts.is_featured, 1))
+      .orderBy(desc(plume_posts.created_at));
   }
 
   async createPlumePost(postData: Omit<PlumePost, 'id' | 'created_at'>): Promise<PlumePost> {
@@ -129,42 +278,49 @@ export class Storage {
     return post;
   }
 
-  // Site settings
+  // Site Settings
   async getSetting(key: string): Promise<string | null> {
     const [setting] = await db.select().from(site_settings).where(eq(site_settings.key, key));
     return setting?.value || null;
   }
 
   async setSetting(key: string, value: string): Promise<void> {
-    await db.insert(site_settings)
-      .values({ key, value, updated_at: new Date().toISOString() })
-      .onConflictDoUpdate({
-        target: site_settings.key,
-        set: { value, updated_at: new Date().toISOString() }
+    const existing = await this.getSetting(key);
+    if (existing) {
+      await db.update(site_settings)
+        .set({ value, updated_at: new Date().toISOString() })
+        .where(eq(site_settings.key, key));
+    } else {
+      await db.insert(site_settings).values({
+        key,
+        value,
+        updated_at: new Date().toISOString(),
       });
+    }
   }
 
   // Admin
-  async createAdmin(username: string, password: string): Promise<void> {
+  async createAdminUser(username: string, password: string): Promise<void> {
     const hashedPassword = await bcrypt.hash(password, 10);
     await db.insert(admin_users).values({
       username,
       password: hashedPassword,
+      created_at: new Date().toISOString(),
     });
   }
 
-  async validateAdmin(username: string, password: string): Promise<boolean> {
+  async verifyAdminUser(username: string, password: string): Promise<boolean> {
     const [admin] = await db.select().from(admin_users).where(eq(admin_users.username, username));
     if (!admin) return false;
     return await bcrypt.compare(password, admin.password);
   }
 
   // Initialize default data
-  async initializeDefaults(): Promise<void> {
-    // Create default admin
+  async initializeDefaultData(): Promise<void> {
+    // Create default admin user if none exists
     const adminExists = await db.select().from(admin_users).limit(1);
     if (adminExists.length === 0) {
-      await this.createAdmin("admin", "magurklucifex312");
+      await this.createAdminUser("admin", "admin123");
     }
 
     // Create default oracles
