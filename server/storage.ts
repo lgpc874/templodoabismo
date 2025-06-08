@@ -104,6 +104,8 @@ export class MemStorage implements IStorage {
 
     // Initialize default site configuration
     this.initializeDefaultConfig();
+    // Initialize default admin user
+    this.initializeDefaultAdmin();
   }
 
   private initializeDefaultConfig() {
@@ -127,6 +129,23 @@ export class MemStorage implements IStorage {
         updatedAt: new Date(),
       });
     });
+  }
+
+  private initializeDefaultAdmin() {
+    // Create default admin user if none exists
+    const bcrypt = require('bcrypt');
+    const hashedPassword = bcrypt.hashSync('admin123', 10);
+    
+    const adminUser: User = {
+      id: this.currentUserId++,
+      username: 'admin',
+      email: 'admin@templo.com',
+      password: hashedPassword,
+      role: 'admin',
+      createdAt: new Date(),
+    };
+    
+    this.users.set(adminUser.id, adminUser);
   }
 
   // Users
