@@ -132,34 +132,38 @@ export class MemStorage implements IStorage {
   }
 
   private initializeDefaultAdmin() {
-    // Create default admin user if none exists
-    const bcrypt = require('bcrypt');
-    const adminPassword = bcrypt.hashSync('admin123', 10);
-    
-    const adminUser: User = {
-      id: this.currentUserId++,
-      username: 'admin',
-      email: 'admin@templo.com',
-      password: adminPassword,
-      role: 'admin',
-      createdAt: new Date(),
-    };
-    
-    this.users.set(adminUser.id, adminUser);
-    
-    // Create default test user
-    const userPassword = bcrypt.hashSync('user123', 10);
-    
-    const testUser: User = {
-      id: this.currentUserId++,
-      username: 'usuario',
-      email: 'usuario@templo.com',
-      password: userPassword,
-      role: 'user',
-      createdAt: new Date(),
-    };
-    
-    this.users.set(testUser.id, testUser);
+    try {
+      // Create default admin user if none exists
+      const adminPassword = bcrypt.hashSync('admin123', 10);
+      
+      const adminUser: User = {
+        id: 1,
+        username: 'admin',
+        email: 'admin@templo.com',
+        password: adminPassword,
+        role: 'admin',
+        createdAt: new Date(),
+      };
+      
+      this.users.set(1, adminUser);
+      
+      // Create default test user
+      const userPassword = bcrypt.hashSync('user123', 10);
+      
+      const testUser: User = {
+        id: 2,
+        username: 'usuario',
+        email: 'usuario@templo.com',
+        password: userPassword,
+        role: 'user',
+        createdAt: new Date(),
+      };
+      
+      this.users.set(2, testUser);
+      this.currentUserId = 3;
+    } catch (error) {
+      console.error('Error initializing users:', error);
+    }
   }
 
   // Users
