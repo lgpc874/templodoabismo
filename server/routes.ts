@@ -26,7 +26,7 @@ const authenticateToken = (req: any, res: any, next: any) => {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize storage defaults
-  await storage.initializeDefaults();
+  await storage.initializeDefaultData();
 
   // Session middleware
   app.use(session({
@@ -248,7 +248,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Plume posts
   app.get("/api/plume", async (req, res) => {
     try {
-      const posts = await storage.getPlumeePosts(10);
+      const posts = await storage.getPlumePosts();
       res.json(posts);
     } catch (error) {
       res.status(500).json({ message: "Erro ao buscar posts da Pluma" });
@@ -290,7 +290,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/admin/login", async (req, res) => {
     try {
       const { username, password } = req.body;
-      const isValid = await storage.validateAdmin(username, password);
+      const isValid = await storage.verifyAdminUser(username, password);
 
       if (isValid) {
         (req.session as any).isAdmin = true;
