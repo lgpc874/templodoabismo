@@ -1,0 +1,170 @@
+ Texto para o Assistant do Replit:
+🔥 Instruções completas para criação do site místico "Templo do Abismo"
+
+Desejo criar um site místico, ocultista e ritualístico chamado Templo do Abismo, com foco em IA, cursos, oráculos e conteúdo infernal. O site já está iniciado no Replit, mas agora precisa ser completamente estruturado e funcional com as seguintes exigências:
+
+1. Tecnologia e Estrutura Base
+Use Vite + React + Tailwind CSS + TypeScript
+
+O site deve ser 100% responsivo (celular, tablet e desktop)
+
+Estrutura baseada em arquivos separados (componentes, páginas, estilos, hooks)
+
+Integração com IA via API simulada ou configurável
+
+2. Estética Ritualística
+Use este fundo de textura ritualística:
+https://i.postimg.cc/qqX1Q7zn/Textura-envelhecida-e-marcada-pelo-tempo.png
+
+Selo central girando lentamente (imagem PNG com rotação CSS):
+https://i.postimg.cc/g20gqmdX/IMG-20250527-182235-1.png
+
+Fonte dos títulos: Cinzel Decorative
+Fonte dos textos: EB Garamond
+Fonte de citações e enns: IM Fell DW Pica
+
+Layout escuro, abissal, com bordas laterais ocultistas (por imagem)
+
+3. Páginas Obrigatórias
+Página inicial com fundo, selo central giratório e poema diário (gerado por IA)
+
+Página "Sobre o Templo"
+
+Página "Grimórios" com leitura online por capítulos e opção PDF
+
+Página "Cursos" (trilha completa + profissionalizantes)
+
+Página "Oráculos" (vários tipos, uso limitado por créditos)
+
+Página "Voz da Pluma" (postagem automática ou manual de poemas)
+
+Página "Liber Prohibitus" com acesso por palavra de poder
+
+Página de Login/Cadastro
+
+Página de perfil do membro (com saldo de créditos, progresso, selo pessoal)
+
+Página Painel Administrativo secreta acessada por /magus-secretum
+
+4. Sistema de Créditos (T’KAZH)
+Membros recebem T’KAZH (créditos) por:
+
+Conclusão de cursos
+
+Desafios, pactos ou ações místicas
+
+Compra direta no site
+
+Créditos:
+
+Usados para: oráculos, leitura de grimórios, selos, liberar capítulos
+
+Resetam semanalmente (exceto os comprados)
+
+VIPs ganham um valor diário fixo
+
+5. Oráculos
+Tarot Infernal
+
+Espelho Negro
+
+Runas Abissais
+
+Divinação com Fogo
+
+Voz Abissal (IA responde perguntas infernais)
+
+Cada oráculo consome créditos e pode ser usado 1x/dia gratuitamente (reset semanal)
+
+6. Cursos (com IA integrada para avaliação)
+Trilha iniciática do Abismo (7 cursos com módulos e provas)
+
+Cursos profissionalizantes (ex: tarot, bruxaria, necromancia, conjuração)
+
+IA avalia descrição de rituais, respostas e progresso
+
+Cada curso libera recompensas e conteúdos selados
+
+Cursos pagos individualmente ou pacote completo com desconto
+
+7. Voz da Pluma
+Página que publica diariamente um poema infernal
+
+Pode ser gerado por IA ou postado manualmente via painel admin
+
+Estilo poético sombrio, ocultista, vibracional
+
+8. Selos Pessoais
+Membro pode gerar apenas 1 selo pessoal e único
+
+Baseado em nome mágico e energia
+
+Criado via IA apenas uma vez
+
+9. Painel Administrativo (/magus-secretum)
+Acesso por rota secreta com senha configurável (magurklucifex312)
+
+Permite:
+
+Criar, editar e excluir qualquer página
+
+Postar textos, grimórios e cursos
+
+Alterar imagens do site via link
+
+Ativar/Desativar funções
+
+Editar créditos dos usuários
+
+Acessar relatórios e mensagens da IA
+
+Alterar senha secreta
+
+10. Outros sistemas obrigatórios
+Sistema de login, cadastro e autenticação de usuários
+
+Sistema de membros com diferentes status:
+
+Visitante
+
+Membro (iniciado)
+
+VIP (opcional por assinatura futura)
+
+Banco de dados (pode simular via JSON inicialmente)
+
+IA deve responder apenas sobre o Templo, seus mistérios e temas infernais
+
+11. Hospedagem futura
+O projeto será hospedado no Vercel, por isso:
+
+Mantenha compatibilidade com deploy direto via GitHub + Vercel
+
+Estrutura leve, modular e limpa
+
+12. Extras
+Adicionar loader inicial com selo girante e frase abissal
+
+Incluir arquivos auxiliares:
+
+README-INSTRUÇÕES-INFERNAIS.md com guia completo do uso
+
+Layout da página 404 personalizado ("Perdido no Abismo…")
+
+Sistema de IA configurável via painel
+
+📦 Conclusão:
+Criar um site funcional e visualmente idêntico ao que já está no Replit, com:
+
+Todas as páginas
+
+Estética do templo
+
+IA funcionando nos locais indicados
+
+Sistema de créditos T’KAZH
+
+Painel administrativo oculto e completo
+
+Todos os conteúdos integrados, testáveis e prontos para deploy
+
