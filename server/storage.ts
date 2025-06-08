@@ -147,6 +147,7 @@ export class MemStorage implements IStorage {
     const newUser: User = {
       ...user,
       id,
+      role: user.role || "user",
       createdAt: new Date(),
     };
     this.users.set(id, newUser);
@@ -236,8 +237,13 @@ export class MemStorage implements IStorage {
   async createContentSection(section: InsertContentSection): Promise<ContentSection> {
     const id = this.currentContentSectionId++;
     const newSection: ContentSection = {
-      ...section,
       id,
+      pageId: section.pageId,
+      sectionType: section.sectionType,
+      title: section.title ?? null,
+      content: section.content,
+      order: section.order ?? 0,
+      isEnabled: section.isEnabled ?? true,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -287,8 +293,14 @@ export class MemStorage implements IStorage {
   async createMediaAsset(asset: InsertMediaAsset): Promise<MediaAsset> {
     const id = this.currentMediaAssetId++;
     const newAsset: MediaAsset = {
-      ...asset,
       id,
+      filename: asset.filename,
+      originalName: asset.originalName,
+      mimeType: asset.mimeType,
+      size: asset.size,
+      url: asset.url,
+      alt: asset.alt ?? null,
+      tags: asset.tags ?? null,
       uploadedAt: new Date(),
     };
     this.mediaAssets.set(id, newAsset);
@@ -318,8 +330,11 @@ export class MemStorage implements IStorage {
   async createActivityLog(log: InsertActivityLog): Promise<ActivityLog> {
     const id = this.currentActivityLogId++;
     const newLog: ActivityLog = {
-      ...log,
       id,
+      userId: log.userId ?? null,
+      action: log.action,
+      target: log.target,
+      metadata: log.metadata ?? {},
       createdAt: new Date(),
     };
     this.activityLogs.set(id, newLog);
@@ -340,8 +355,12 @@ export class MemStorage implements IStorage {
   async createBackup(backup: InsertBackup): Promise<Backup> {
     const id = this.currentBackupId++;
     const newBackup: Backup = {
-      ...backup,
       id,
+      name: backup.name,
+      type: backup.type,
+      path: backup.path,
+      size: backup.size,
+      createdBy: backup.createdBy ?? null,
       createdAt: new Date(),
     };
     this.backups.set(id, newBackup);
