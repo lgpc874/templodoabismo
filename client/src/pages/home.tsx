@@ -1,25 +1,47 @@
+
+import { useEffect, useRef } from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import { useScrollReveal } from "@/hooks/use-scroll-reveal";
-import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
+import { 
+  Flame, 
+  BookOpen, 
+  GraduationCap, 
+  Crystal, 
+  Scroll,
+  Eye,
+  Crown,
+  Zap
+} from "lucide-react";
 
 export default function Home() {
-  useScrollReveal();
+  const sealRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    // Add mystical particle effects
-    function createParticle() {
+    // Rotating seal animation
+    let rotation = 0;
+    const animate = () => {
+      rotation += 0.5;
+      if (sealRef.current) {
+        sealRef.current.style.transform = `rotate(${rotation}deg)`;
+      }
+      requestAnimationFrame(animate);
+    };
+    animate();
+
+    // Mystical particles
+    const createParticle = () => {
       const particle = document.createElement('div');
-      particle.className = 'fixed w-1 h-1 bg-antique-gold rounded-full pointer-events-none z-0';
+      particle.className = 'fixed w-1 h-1 bg-red-400 rounded-full pointer-events-none z-10 opacity-50';
       particle.style.left = Math.random() * window.innerWidth + 'px';
       particle.style.top = window.innerHeight + 'px';
-      particle.style.opacity = String(Math.random() * 0.5 + 0.2);
       
       document.body.appendChild(particle);
       
       const duration = Math.random() * 3000 + 2000;
       const animation = particle.animate([
-        { transform: 'translateY(0px)', opacity: particle.style.opacity },
+        { transform: 'translateY(0px)', opacity: '0.5' },
         { transform: `translateY(-${window.innerHeight + 100}px)`, opacity: '0' }
       ], {
         duration: duration,
@@ -27,167 +49,146 @@ export default function Home() {
       });
       
       animation.onfinish = () => particle.remove();
-    }
+    };
 
-    // Create particles periodically
-    const particleInterval = setInterval(createParticle, 2000);
-
-    // Add cursor trail effect
-    let mouseTrail: Array<{x: number, y: number, time: number}> = [];
-    const maxTrailLength = 10;
-
-    function handleMouseMove(e: MouseEvent) {
-      mouseTrail.push({ x: e.clientX, y: e.clientY, time: Date.now() });
-      
-      if (mouseTrail.length > maxTrailLength) {
-        mouseTrail.shift();
-      }
-      
-      // Update existing trail elements or create new ones
-      mouseTrail.forEach((point, index) => {
-        let trailElement = document.getElementById(`trail-${index}`);
-        if (!trailElement) {
-          trailElement = document.createElement('div');
-          trailElement.id = `trail-${index}`;
-          trailElement.className = 'fixed w-2 h-2 bg-antique-gold rounded-full pointer-events-none z-10';
-          trailElement.style.opacity = '0.3';
-          document.body.appendChild(trailElement);
-        }
-        
-        const age = Date.now() - point.time;
-        const opacity = Math.max(0, 0.3 - (age / 1000));
-        const size = Math.max(1, 8 - (age / 100));
-        
-        trailElement.style.left = point.x - size/2 + 'px';
-        trailElement.style.top = point.y - size/2 + 'px';
-        trailElement.style.opacity = String(opacity);
-        trailElement.style.width = size + 'px';
-        trailElement.style.height = size + 'px';
-      });
-    }
-
-    document.addEventListener('mousemove', handleMouseMove);
-
-    // Clean up old trail elements
-    const trailCleanup = setInterval(() => {
-      mouseTrail = mouseTrail.filter(point => Date.now() - point.time < 1000);
-      
-      // Remove orphaned trail elements
-      for (let i = mouseTrail.length; i < maxTrailLength; i++) {
-        const element = document.getElementById(`trail-${i}`);
-        if (element) {
-          element.remove();
-        }
-      }
-    }, 100);
+    const particleInterval = setInterval(createParticle, 1000);
 
     return () => {
       clearInterval(particleInterval);
-      clearInterval(trailCleanup);
-      document.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 
-  return (
-    <div className="bg-abyss-black text-antique-gold min-h-screen relative overflow-hidden">
-      <div className="rotating-seal fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 opacity-[0.08] pointer-events-none z-0">
-        <svg viewBox="0 0 400 400" className="w-full h-full animate-spin-slow">
-          <circle cx="200" cy="200" r="190" fill="none" stroke="currentColor" strokeWidth="2"/>
-          <circle cx="200" cy="200" r="160" fill="none" stroke="currentColor" strokeWidth="1"/>
-          <circle cx="200" cy="200" r="130" fill="none" stroke="currentColor" strokeWidth="1"/>
-          
-          <g transform="translate(200,200)">
-            <polygon points="0,-80 23,-25 77,-25 38,8 49,62 0,31 -49,62 -38,8 -77,-25 -23,-25" 
-                     fill="currentColor" opacity="0.6"/>
-            
-            <circle cx="0" cy="-60" r="8" fill="currentColor"/>
-            <circle cx="45" cy="-18" r="6" fill="currentColor"/>
-            <circle cx="28" cy="48" r="6" fill="currentColor"/>
-            <circle cx="-28" cy="48" r="6" fill="currentColor"/>
-            <circle cx="-45" cy="-18" r="6" fill="currentColor"/>
-            
-            <text x="0" y="-100" textAnchor="middle" fontSize="12" fill="currentColor">LUCIFER</text>
-            <text x="0" y="120" textAnchor="middle" fontSize="10" fill="currentColor">TEMPLO DO ABISMO</text>
-          </g>
-          
-          <g transform="translate(200,200)">
-            <text fontSize="8" fill="currentColor">
-              <textPath href="#circle-path" startOffset="0%">CONHECIMENTO • SABEDORIA • ILUMINAÇÃO • PODER</textPath>
-            </text>
-          </g>
-          
-          <defs>
-            <path id="circle-path" d="M 200,40 A 160,160 0 1,1 199.9,40"/>
-          </defs>
-        </svg>
-      </div>
+  const features = [
+    {
+      icon: Crystal,
+      title: "Oráculos do Abismo",
+      description: "Tarot Infernal, Espelho Negro, Runas ancestrais e mais",
+      href: "/oraculo",
+      color: "text-purple-400"
+    },
+    {
+      icon: BookOpen,
+      title: "Grimórios Digitais",
+      description: "Compêndios de sabedoria oculta e rituais ancestrais",
+      href: "/grimorios",
+      color: "text-red-400"
+    },
+    {
+      icon: GraduationCap,
+      title: "Trilha Iniciática",
+      description: "7 níveis de conhecimento esotérico profundo",
+      href: "/cursos",
+      color: "text-yellow-400"
+    },
+    {
+      icon: Scroll,
+      title: "Voz da Pluma",
+      description: "Poesia e sabedoria infernal diária",
+      href: "/voz-da-pluma",
+      color: "text-green-400"
+    }
+  ];
 
+  return (
+    <div className="min-h-screen text-red-100">
       <Navigation />
       
-      {/* Hero Section with Temple Introduction */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 py-20">
-        <div className="max-w-4xl mx-auto text-center z-10">
-          <h1 className="text-6xl md:text-8xl font-light mb-8 text-antique-gold">
-            Templum Abyssi
-          </h1>
-          <h2 className="text-2xl md:text-3xl font-light mb-12 text-deep-red">
-            Domus Luciferi Ancestralis
-          </h2>
-          
-          <div className="space-y-8 text-lg leading-relaxed">
-            <p className="fade-in-up">
-              Bem-vindos ao <strong>Templo do Abismo</strong>, um santuário virtual dedicado aos 
-              ensinamentos luciferianos ancestrais. Aqui, nas profundezas do conhecimento esotérico, 
-              revelamos os mistérios que foram preservados através dos séculos.
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Central Rotating Seal */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <img 
+            ref={sealRef}
+            src="https://i.postimg.cc/g20gqmdX/IMG-20250527-182235-1.png"
+            alt="Selo do Templo"
+            className="w-64 h-64 md:w-96 md:h-96 opacity-30"
+          />
+        </div>
+
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+          <div className="mb-8">
+            <Flame className="w-16 h-16 mx-auto text-red-500 mb-4 animate-pulse" />
+            <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-red-500 via-red-400 to-yellow-400 bg-clip-text text-transparent">
+              TEMPLO DO ABISMO
+            </h1>
+            <p className="text-xl md:text-2xl text-red-300 mb-8 italic">
+              "Portal Místico de Sabedoria Infernal"
             </p>
-            
-            <p className="fade-in-up">
-              Nossa missão é iluminar aqueles que buscam a verdade além do véu da ignorância, 
-              oferecendo acesso aos textos sagrados, grimórios perdidos e ensinamentos que 
-              transcendem as limitações do conhecimento comum.
+            <p className="text-lg text-red-200 max-w-2xl mx-auto leading-relaxed">
+              Adentre os mistérios ancestrais através de oráculos sagrados, grimórios proibidos 
+              e a trilha iniciática que conduz ao verdadeiro conhecimento interior.
             </p>
-            
-            <div className="grid md:grid-cols-2 gap-8 mt-16">
-              <div className="fade-in-up p-6 border border-deep-red/30 rounded-lg">
-                <h3 className="text-xl font-semibold mb-4 text-deep-red">Nossa Filosofia</h3>
-                <p className="text-sm">
-                  O conhecimento verdadeiro não pode ser limitado por dogmas ou convenções. 
-                  Exploramos as tradições luciferianas como um caminho de autodeificação 
-                  e iluminação espiritual.
-                </p>
-              </div>
-              
-              <div className="fade-in-up p-6 border border-deep-red/30 rounded-lg">
-                <h3 className="text-xl font-semibold mb-4 text-deep-red">Nosso Conteúdo</h3>
-                <p className="text-sm">
-                  Grimórios autênticos, cursos estruturados, textos raros, rituais ancestrais 
-                  e ensinamentos práticos para aqueles que trilham o caminho da Mão Esquerda.
-                </p>
-              </div>
-            </div>
-            
-            <div className="mt-16 p-8 border border-antique-gold/20 rounded-lg fade-in-up">
-              <h3 className="text-2xl font-semibold mb-6 text-antique-gold">O Que Você Encontrará</h3>
-              <div className="grid md:grid-cols-4 gap-6 text-sm">
-                <div>
-                  <h4 className="font-semibold text-deep-red mb-2">Grimórios</h4>
-                  <p>Textos sagrados e livros de sombras autênticos</p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-deep-red mb-2">Cursos</h4>
-                  <p>Ensinamentos estruturados para iniciação e avanço</p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-deep-red mb-2">Área VIP</h4>
-                  <p>Conteúdo exclusivo para membros avançados</p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-deep-red mb-2">Segredos</h4>
-                  <p>Conhecimentos ocultos para os verdadeiros iniciados</p>
-                </div>
-              </div>
-            </div>
           </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/oraculo">
+              <Button size="lg" className="bg-red-800 hover:bg-red-700 text-white px-8 py-4">
+                <Crystal className="w-5 h-5 mr-2" />
+                Consultar Oráculos
+              </Button>
+            </Link>
+            <Link href="/cursos">
+              <Button size="lg" variant="outline" className="border-red-400 text-red-400 hover:bg-red-900/20 px-8 py-4">
+                <GraduationCap className="w-5 h-5 mr-2" />
+                Iniciar Jornada
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-bold mb-6 text-red-400">
+              Caminhos do Conhecimento
+            </h2>
+            <p className="text-xl text-red-300 max-w-3xl mx-auto">
+              Explore as diferentes dimensões da sabedoria ancestral através de nossas ferramentas místicas
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <Link key={index} href={feature.href}>
+                  <div className="group bg-black/40 backdrop-blur-sm border border-red-900/30 rounded-lg p-6 hover:border-red-500/50 transition-all duration-300 cursor-pointer h-full">
+                    <div className="text-center">
+                      <Icon className={`w-12 h-12 mx-auto mb-4 ${feature.color} group-hover:scale-110 transition-transform`} />
+                      <h3 className="text-xl font-bold text-red-200 mb-3">
+                        {feature.title}
+                      </h3>
+                      <p className="text-red-300 text-sm leading-relaxed">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="py-20 px-6 bg-gradient-to-r from-red-900/20 to-black/40">
+        <div className="max-w-4xl mx-auto text-center">
+          <Eye className="w-16 h-16 mx-auto text-red-400 mb-6 animate-pulse" />
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-red-300">
+            Desperte Sua Natureza Superior
+          </h2>
+          <p className="text-xl text-red-200 mb-8 max-w-2xl mx-auto">
+            O verdadeiro poder reside no autoconhecimento. Inicie sua jornada através dos mistérios 
+            do Abismo e descubra as chamas da sabedoria que já ardem dentro de você.
+          </p>
+          <Link href="/login">
+            <Button size="lg" className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white px-10 py-4 text-lg">
+              <Crown className="w-6 h-6 mr-2" />
+              Iniciar Jornada Mística
+            </Button>
+          </Link>
         </div>
       </section>
 

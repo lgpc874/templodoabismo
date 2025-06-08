@@ -1,43 +1,120 @@
-import { pgTable, text, serial, integer, boolean, decimal } from "drizzle-orm/pg-core";
+
+import { sqliteTable, text, integer, real, boolean } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { relations } from "drizzle-orm";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+export const users = sqliteTable("users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
-  isVip: boolean("is_vip").default(false),
-  hasSecretAccess: boolean("has_secret_access").default(false),
+  tkazh_credits: integer("tkazh_credits").default(0),
+  free_credits: integer("free_credits").default(10),
+  last_credit_reset: text("last_credit_reset"),
+  personal_seal_generated: boolean("personal_seal_generated").default(false),
+  initiation_level: integer("initiation_level").default(0),
+  created_at: text("created_at").default("datetime('now')"),
 });
 
-export const grimoires = pgTable("grimoires", {
-  id: serial("id").primaryKey(),
+export const grimoires = sqliteTable("grimoires", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull(),
   description: text("description").notNull(),
-  type: text("type").notNull(), // "free", "premium", "lost"
-  price: decimal("price", { precision: 10, scale: 2 }),
-  content: text("content"),
+  content: text("content").notNull(),
+  price_tkazh: integer("price_tkazh"),
+  price_real: real("price_real"),
+  is_free: boolean("is_free").default(false),
+  chapter_count: integer("chapter_count").default(1),
+  image_url: text("image_url"),
 });
 
-export const courses = pgTable("courses", {
-  id: serial("id").primaryKey(),
+export const courses = sqliteTable("courses", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull(),
   description: text("description").notNull(),
-  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
-  category: text("category").notNull(),
-  level: text("level").notNull(), // "beginner", "intermediate", "advanced"
+  level: integer("level").notNull(), // 1-7 para níveis iniciáticos
+  is_professional: boolean("is_professional").default(false),
+  price_real: real("price_real"),
+  modules: text("modules"), // JSON string
+  requirements: text("requirements"),
+  image_url: text("image_url"),
 });
 
-export const contacts = pgTable("contacts", {
-  id: serial("id").primaryKey(),
+export const oracles = sqliteTable("oracles", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
-  email: text("email").notNull(),
-  subject: text("subject").notNull(),
-  message: text("message").notNull(),
+  description: text("description").notNull(),
+  tkazh_cost: integer("tkazh_cost").notNull(),
+  oracle_type: text("oracle_type").notNull(), // tarot, mirror, runes, flames, voice
 });
 
+export const oracle_sessions = sqliteTable("oracle_sessions", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  user_id: integer("user_id").references(() => users.id),
+  oracle_id: integer("oracle_id").references(() => oracles.id),
+  question: text("question").notNull(),
+  response: text("response").notNull(),
+  created_at: text("created_at").default("datetime('now')"),
+});
+
+export const user_grimoire_access = sqliteTable("user_grimoire_access", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  user_id: integer("user_id").references(() => users.id),
+  grimoire_id: integer("grimoire_id").references(() => grimoires.id),
+  access_type: text("access_type").notNull(), // full, chapter, rental
+  expires_at: text("expires_at"),
+  purchased_at: text("purchased_at").default("datetime('now')"),
+});
+
+export const user_courses = sqliteTable("user_courses", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  user_id: integer("user_id").references(() => users.id),
+  course_id: integer("course_id").references(() => courses.id),
+  progress: integer("progress").default(0),
+  completed: boolean("completed").default(false),
+  enrolled_at: text("enrolled_at").default("datetime('now')"),
+});
+
+export const plume_posts = sqliteTable("plume_posts", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  author: text("author").default("Voz da Pluma"),
+  created_at: text("created_at").default("datetime('now')"),
+  is_featured: boolean("is_featured").default(false),
+});
+
+export const site_settings = sqliteTable("site_settings", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  key: text("key").notNull().unique(),
+  value: text("value").notNull(),
+  updated_at: text("updated_at").default("datetime('now')"),
+});
+
+export const admin_users = sqliteTable("admin_users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  username: text("username").notNull().unique(),
+  password: text("password").notNull(),
+  created_at: text("created_at").default("datetime('now')"),
+});
+
+// Relations
+export const usersRelations = relations(users, ({ many }) => ({
+  oracleSessions: many(oracle_sessions),
+  grimoireAccess: many(user_grimoire_access),
+  courses: many(user_courses),
+}));
+
+export const grimoiresRelations = relations(grimoires, ({ many }) => ({
+  userAccess: many(user_grimoire_access),
+}));
+
+export const coursesRelations = relations(courses, ({ many }) => ({
+  userCourses: many(user_courses),
+}));
+
+// Insert schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   email: true,
@@ -52,33 +129,16 @@ export const insertCourseSchema = createInsertSchema(courses).omit({
   id: true,
 });
 
-export const insertContactSchema = createInsertSchema(contacts).omit({
+export const insertOracleSessionSchema = createInsertSchema(oracle_sessions).omit({
   id: true,
+  created_at: true,
 });
 
-// Relations
-export const usersRelations = relations(users, ({ many }) => ({
-  contacts: many(contacts),
-}));
-
-export const grimoiresRelations = relations(grimoires, ({ one }) => ({
-}));
-
-export const coursesRelations = relations(courses, ({ one }) => ({
-}));
-
-export const contactsRelations = relations(contacts, ({ one }) => ({
-  user: one(users, {
-    fields: [contacts.email],
-    references: [users.email],
-  }),
-}));
-
-export type InsertUser = z.infer<typeof insertUserSchema>;
+// Types
 export type User = typeof users.$inferSelect;
-export type InsertGrimoire = z.infer<typeof insertGrimoireSchema>;
+export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Grimoire = typeof grimoires.$inferSelect;
-export type InsertCourse = z.infer<typeof insertCourseSchema>;
 export type Course = typeof courses.$inferSelect;
-export type InsertContact = z.infer<typeof insertContactSchema>;
-export type Contact = typeof contacts.$inferSelect;
+export type Oracle = typeof oracles.$inferSelect;
+export type OracleSession = typeof oracle_sessions.$inferSelect;
+export type PlumePost = typeof plume_posts.$inferSelect;

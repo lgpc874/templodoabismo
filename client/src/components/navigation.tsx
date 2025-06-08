@@ -1,69 +1,177 @@
+
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { 
+  Menu, 
+  X, 
+  Home, 
+  BookOpen, 
+  GraduationCap, 
+  Crystal, 
+  Scroll,
+  Library,
+  Lock,
+  User,
+  LogOut,
+  Coins
+} from "lucide-react";
 
 export default function Navigation() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [location] = useLocation();
+  const { user, logout, isAuthenticated } = useAuth();
 
-  const navItems = [
-    { href: "/", label: "Templum" },
-    { href: "/libri-umbrarum", label: "Libri Umbrarum" },
-    { href: "/cursus-mysticus", label: "Cursus Mysticus" },
-    { href: "/sanctum-vip", label: "Sanctum VIP" },
-    { href: "/arcana-secreta", label: "Arcana Secreta" },
-    { href: "/porta-templi", label: "Porta Templi" },
+  const navigation = [
+    { name: "Início", href: "/", icon: Home },
+    { name: "Sobre", href: "/sobre", icon: BookOpen },
+    { name: "Oráculos", href: "/oraculo", icon: Crystal },
+    { name: "Grimórios", href: "/grimorios", icon: Scroll },
+    { name: "Cursos", href: "/cursos", icon: GraduationCap },
+    { name: "Voz da Pluma", href: "/voz-da-pluma", icon: Scroll },
+    { name: "Bibliotheca", href: "/bibliotheca", icon: Library },
   ];
 
   return (
-    <nav className="fixed top-0 w-full z-50 glass-effect border-b border-deep-red/30">
-      <div className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="font-cinzel text-2xl font-bold text-shadow-gold hover:text-blood-red transition-colors">
-            Templo do Abismo
-          </Link>
-          
-          <div className="hidden md:flex space-x-8 font-cinzel-regular">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`hover:text-blood-red transition-colors duration-300 ${
-                  location === item.href ? 'text-blood-red border-b border-blood-red' : ''
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+    <nav className="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-sm border-b border-red-900/30">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <Link href="/">
+              <div className="flex items-center space-x-2 cursor-pointer">
+                <img 
+                  src="https://i.postimg.cc/g20gqmdX/IMG-20250527-182235-1.png" 
+                  alt="Templo do Abismo" 
+                  className="h-8 w-8 animate-spin-slow"
+                />
+                <span className="text-xl font-bold text-red-400">
+                  Templo do Abismo
+                </span>
+              </div>
+            </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden text-antique-gold hover:text-blood-red"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-4">
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link key={item.name} href={item.href}>
+                  <Button
+                    variant={location === item.href ? "destructive" : "ghost"}
+                    className="text-red-200 hover:text-red-400 hover:bg-red-900/20"
+                  >
+                    <Icon className="w-4 h-4 mr-2" />
+                    {item.name}
+                  </Button>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* User Menu */}
+          <div className="hidden md:flex items-center space-x-4">
+            {isAuthenticated ? (
+              <>
+                <div className="flex items-center space-x-2 text-yellow-400">
+                  <Coins className="w-4 h-4" />
+                  <span className="text-sm">
+                    {user?.tkazh_credits || 0} + {user?.free_credits || 0} T'KAZH
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2 text-red-200">
+                  <User className="w-4 h-4" />
+                  <span className="text-sm">{user?.username}</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  onClick={logout}
+                  className="text-red-200 hover:text-red-400"
+                >
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </>
+            ) : (
+              <Link href="/login">
+                <Button variant="destructive" className="bg-red-800 hover:bg-red-700">
+                  Entrar
+                </Button>
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center">
+            <Button
+              variant="ghost"
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-red-200"
+            >
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
+          </div>
         </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 font-cinzel-regular">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block w-full text-left py-2 hover:text-blood-red transition-colors ${
-                  location === item.href ? 'text-blood-red' : ''
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        )}
       </div>
+
+      {/* Mobile Navigation */}
+      {isOpen && (
+        <div className="md:hidden bg-black/95 border-t border-red-900/30">
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link key={item.name} href={item.href}>
+                  <Button
+                    variant={location === item.href ? "destructive" : "ghost"}
+                    className="w-full justify-start text-red-200 hover:text-red-400 hover:bg-red-900/20"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Icon className="w-4 h-4 mr-2" />
+                    {item.name}
+                  </Button>
+                </Link>
+              );
+            })}
+            
+            {isAuthenticated ? (
+              <div className="pt-4 border-t border-red-900/30">
+                <div className="px-3 py-2 text-yellow-400 text-sm">
+                  <Coins className="w-4 h-4 inline mr-2" />
+                  {user?.tkazh_credits || 0} + {user?.free_credits || 0} T'KAZH
+                </div>
+                <div className="px-3 py-2 text-red-200 text-sm">
+                  <User className="w-4 h-4 inline mr-2" />
+                  {user?.username}
+                </div>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    logout();
+                    setIsOpen(false);
+                  }}
+                  className="w-full justify-start text-red-200 hover:text-red-400"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sair
+                </Button>
+              </div>
+            ) : (
+              <div className="pt-4 border-t border-red-900/30">
+                <Link href="/login">
+                  <Button 
+                    variant="destructive" 
+                    className="w-full bg-red-800 hover:bg-red-700"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Entrar
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
