@@ -1,0 +1,137 @@
+DOCUMENTO MESTRE – TEMPLO DO ABISMO
+
+NOME DO PROJETO: Templo do AbismoFinalidade: Portal místico de sabedoria infernal, autoconhecimento, iniciação, pactos, cursos e rituais guiados por IA ritualística.Linguagem Base: Vite + Tailwind + TypeScript + ReactPlataformas: Replit (desenvolvimento), Vercel (deploy final)Painel Administrativo: Acesso por rota secreta /magus-secretum, senha inicial: magurklucifex312
+
+FUNCIONALIDADES PRINCIPAIS:
+
+IA Ritualística Integrada
+
+Respostas ocultistas limitadas ao contexto do Abismo, Templo, Lúcifer, Lilith e entidades infernais.
+
+IA utilizada em: selos pessoais, relatórios místicos, mentorias, oráculos e avaliações de cursos.
+
+Sistema de Créditos (T'KAZH)
+
+Obtido por:
+
+Compra no site
+
+Conclusão de cursos
+
+Pactos e desafios ritualísticos
+
+Reset semanal dos créditos gratuitos. Créditos pagos são permanentes.
+
+Uso de T'KAZH:
+
+Liberar oráculos
+
+Desbloquear grimórios online (por capítulo ou inteiro)
+
+Gerar selo pessoal (somente uma vez)
+
+Oráculos Disponíveis
+
+Tarot Infernal
+
+Espelho Negro
+
+Runas do Abismo
+
+Chamas Negras (divinação por fogo)
+
+Voz Abissal (resposta oracular por IA)
+
+Grimórios
+
+Leituras online desbloqueáveis por T'KAZH ou dinheiro real
+
+PDFs para compra e download
+
+Aluguel temporário de grimórios
+
+Cursos do Abismo
+
+7 Níveis Iniciáticos + Cursos Profissionalizantes
+
+Cada curso contém módulos, rituais e provas
+
+Avaliação através de descrição ritualística + análise IA
+
+Painel Administrativo (/magus-secretum)
+
+Trocar imagens por link (logo, fundo, selo central, etc.)
+
+Criar, editar e excluir páginas
+
+Editar textos diretamente
+
+Postar na Voz da Pluma (manual ou IA)
+
+Criar novos cursos, grimórios, pactos, desafios
+
+Controlar créditos dos usuários
+
+Alterar senha do painel
+
+Selo Girante + Fundo Ritualístico
+
+Fundo: https://i.postimg.cc/qqX1Q7zn/Textura-envelhecida-e-marcada-pelo-tempo.png
+
+Selo: https://i.postimg.cc/g20gqmdX/IMG-20250527-182235-1.png (gira lentamente no centro da tela)
+
+Liber Prohibitus
+
+Seção secreta acessada por Palavra de Poder
+
+Protegida e visível apenas a iniciados
+
+Voz da Pluma
+
+Poema ocultista infernal postado diariamente
+
+Pode ser gerado por IA ou inserido manualmente via painel
+
+Sistema de Usuários
+
+Cadastro/login normal
+
+Controle de créditos
+
+Histórico de cursos, grimórios e oráculos usados
+
+Apenas um selo pessoal por membro
+
+ESTRUTURA DE PÁGINAS ESSENCIAIS
+
+/ Início
+
+/sobre Sobre o Templo
+
+/oraculo Oráculos do Abismo
+
+/grimorios Grimórios digitais
+
+/cursos Trilha Iniciática e profissional
+
+/voz-da-pluma Poemas infernais
+
+/bibliotheca Sabedoria arcana livre
+
+/liber-prohibitus (acesso com palavra de poder)
+
+/magus-secretum (painel do administrador)
+
+TECNOLOGIAS UTILIZADAS
+
+Vite + TypeScript + React
+
+TailwindCSS (visual ritualístico)
+
+Replit (desenvolvimento)
+
+Vercel (deploy final)
+
+IA integrada com respostas ritualísticas
+
+Banco de dados leve (JSON ou Firebase)
