@@ -226,7 +226,7 @@ export default function Courses() {
                           disabled={enrollMutation.isPending}
                           className="w-full bg-gradient-to-r from-amber-600 to-red-600 text-white py-2 rounded-lg font-semibold hover:from-amber-700 hover:to-red-700 transition-colors disabled:opacity-50"
                         >
-                          {enrollMutation.isPending ? "Iniciando..." : `Iniciar (${course.price_tkazh} T'KAZH)`}
+                          {enrollMutation.isPending ? "Iniciando..." : `Iniciar (R$ ${(course.price_brl / 100).toFixed(2)})`}
                         </button>
                       ) : isCompleted ? (
                         <button

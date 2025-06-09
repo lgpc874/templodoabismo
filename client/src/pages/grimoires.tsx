@@ -317,7 +317,7 @@ export default function Grimoires() {
                               className="w-full bg-gradient-to-r from-amber-600 to-red-600 text-white py-2 rounded-lg font-semibold hover:from-amber-700 hover:to-red-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                             >
                               <Download className="w-4 h-4" />
-                              {purchaseMutation.isPending ? "Comprando..." : `Comprar (${grimoire.price_tkazh} T'KAZH)`}
+                              {purchaseMutation.isPending ? "Comprando..." : `Comprar (R$ ${(grimoire.price_brl / 100).toFixed(2)})`}
                             </button>
                           )}
                         </div>
@@ -330,7 +330,7 @@ export default function Grimoires() {
                               className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                             >
                               <Clock className="w-4 h-4" />
-                              {rentMutation.isPending ? "Alugando..." : `Alugar 7d (${grimoire.rental_price_tkazh} T'KAZH)`}
+                              {rentMutation.isPending ? "Alugando..." : `Alugar 7d (R$ ${(grimoire.rental_price_brl / 100).toFixed(2)})`}
                             </button>
                           )}
                           {grimoire.can_download && (
@@ -340,7 +340,7 @@ export default function Grimoires() {
                               className="w-full bg-gradient-to-r from-amber-600 to-red-600 text-white py-2 rounded-lg font-semibold hover:from-amber-700 hover:to-red-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                             >
                               <Download className="w-4 h-4" />
-                              {purchaseMutation.isPending ? "Comprando..." : `Comprar (${grimoire.price_tkazh} T'KAZH)`}
+                              {purchaseMutation.isPending ? "Comprando..." : `Comprar (R$ ${(grimoire.price_brl / 100).toFixed(2)})`}
                             </button>
                           )}
                         </div>

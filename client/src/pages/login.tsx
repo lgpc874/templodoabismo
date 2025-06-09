@@ -172,7 +172,7 @@ export default function Login() {
                 <CardHeader>
                   <CardTitle className="text-red-400">Inicie sua Jornada</CardTitle>
                   <CardDescription className="text-red-300">
-                    Crie sua conta e receba 10 T'KAZH gratuitos
+                    Entre no portal de conhecimentos ancestrais
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
