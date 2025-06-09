@@ -40,7 +40,7 @@ export default function Home() {
         {/* Welcome Section */}
         <div className="text-center mb-12 max-w-4xl">
           <h1 className="text-5xl md:text-7xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 animate-pulse">
-            TEMPLO DO ABISMO
+            TEMPLUM ABYSSOS
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
             Portal das trevas sagradas onde almas corajosas adentram os mistérios primordiais. 
@@ -55,7 +55,7 @@ export default function Home() {
             <div className="text-center">
               <h3 className="text-2xl font-bold text-red-400 mb-4 flex items-center justify-center gap-2">
                 <Flame className="w-6 h-6" />
-                Sussurros do Abismo
+                Susurri Abyssos
               </h3>
               <div className="text-lg text-gray-300 italic leading-relaxed mb-4">
                 "{dailyQuote.content}"
@@ -75,7 +75,7 @@ export default function Home() {
             <div className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300">
               <div className="p-6 text-center">
                 <Eye className="w-12 h-12 mx-auto mb-4 text-red-500" />
-                <h3 className="text-xl font-bold text-amber-400 mb-3">Oráculo Abissal</h3>
+                <h3 className="text-xl font-bold text-amber-400 mb-3">Oraculum Tenebrae</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
                   Desperte os véus entre mundos através de rituais divinatórios ancestrais. 
                   As entidades sussurram segredos àqueles que ousam questionar o destino.
@@ -89,7 +89,7 @@ export default function Home() {
             <div className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300">
               <div className="p-6 text-center">
                 <Flame className="w-12 h-12 mx-auto mb-4 text-orange-500" />
-                <h3 className="text-xl font-bold text-amber-400 mb-3">Academia das Trevas</h3>
+                <h3 className="text-xl font-bold text-amber-400 mb-3">Academia Luciferiana</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
                   Sete círculos de conhecimento forbidden onde almas destemidas transcendem 
                   os limites da consciência mortal através da gnose luciferiana.
@@ -103,7 +103,7 @@ export default function Home() {
             <div className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300">
               <div className="p-6 text-center">
                 <Scroll className="w-12 h-12 mx-auto mb-4 text-purple-500" />
-                <h3 className="text-xl font-bold text-amber-400 mb-3">Grimórios Ancestrais</h3>
+                <h3 className="text-xl font-bold text-amber-400 mb-3">Bibliotheca Abyssos</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
                   Manuscritos sombrios onde repousam invocações primordiais e rituais ctônicos. 
                   Cada página pulsa com poder ancestral das correntes abissais.
@@ -133,7 +133,7 @@ export default function Home() {
             <div className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300">
               <div className="p-6 text-center">
                 <Moon className="w-12 h-12 mx-auto mb-4 text-indigo-500" />
-                <h3 className="text-xl font-bold text-amber-400 mb-3">Voz da Pluma</h3>
+                <h3 className="text-xl font-bold text-amber-400 mb-3">Vox Plumae</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
                   Sussurros poéticos das musas sombrias onde a beleza emerge das trevas. 
                   Versos que nutrem a alma através da contemplação mística.
@@ -147,7 +147,7 @@ export default function Home() {
             <div className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300">
               <div className="p-6 text-center">
                 <BookOpen className="w-12 h-12 mx-auto mb-4 text-emerald-500" />
-                <h3 className="text-xl font-bold text-amber-400 mb-3">Gnosis Abissal</h3>
+                <h3 className="text-xl font-bold text-amber-400 mb-3">Gnosis Abyssos</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
                   Portal público de conhecimento sobre luciferianismo ancestral e gnose ctônica. 
                   Artigos educativos para todos os buscadores da sabedoria oculta.
