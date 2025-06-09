@@ -131,10 +131,7 @@ export default function Navigation() {
             
             {isAuthenticated ? (
               <div className="pt-4 border-t border-red-900/30">
-                <div className="px-3 py-2 text-yellow-400 text-sm">
-                  <Coins className="w-4 h-4 inline mr-2" />
-                  {user?.tkazh_credits || 0} + {user?.free_credits || 0} T'KAZH
-                </div>
+
                 <div className="px-3 py-2 text-red-200 text-sm">
                   <User className="w-4 h-4 inline mr-2" />
                   {user?.username}

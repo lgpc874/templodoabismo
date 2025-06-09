@@ -10,7 +10,8 @@ interface OracleReading {
   type: string;
   question: string;
   result: any;
-  tkazh_cost: number;
+  cost_brl: number;
+  payment_id: string;
 }
 
 export default function Oraculo() {
@@ -28,12 +29,8 @@ export default function Oraculo() {
   });
 
   const consultMutation = useMutation({
-    mutationFn: async ({ type, question }: { type: string; question: string }) => {
-      return await apiRequest("/api/oracle/consult", {
-        method: "POST",
-        body: JSON.stringify({ type, question }),
-        headers: { "Content-Type": "application/json" },
-      });
+    mutationFn: async ({ type, question, paymentId }: { type: string; question: string; paymentId: string }) => {
+      return await apiRequest("/api/oracle/consult", "POST", { type, question, paymentId });
     },
     onSuccess: (data) => {
       setCurrentReading(data);
@@ -83,7 +80,7 @@ export default function Oraculo() {
       name: "Leitura do Fogo",
       description: "As chamas dançantes mostram visões do presente e futuro através da piromancia sagrada.",
       icon: Flame,
-      cost: 1,
+      price_brl: 300, // R$ 3.00
       color: "text-orange-500",
     },
     {
@@ -91,7 +88,7 @@ export default function Oraculo() {
       name: "Voz do Abismo",
       description: "Canalize diretamente as vozes primordiais do abismo para orientação suprema.",
       icon: Skull,
-      cost: 5,
+      price_brl: 1000, // R$ 10.00
       color: "text-yellow-500",
     },
   ];
@@ -109,16 +106,9 @@ export default function Oraculo() {
     const oracle = oracles.find(o => o.id === selectedOracle);
     if (!oracle) return;
 
-    if (!user || user.tkazh_credits < oracle.cost) {
-      toast({
-        title: "T'KAZH Insuficiente",
-        description: `Você precisa de ${oracle.cost} T'KAZH para esta consulta.`,
-        variant: "destructive",
-      });
-      return;
-    }
-
-    consultMutation.mutate({ type: selectedOracle, question });
+    // For now, simulate successful payment - in production, integrate with PayPal
+    const mockPaymentId = "mock_" + Date.now();
+    consultMutation.mutate({ type: selectedOracle, question, paymentId: mockPaymentId });
   };
 
   const renderReading = (reading: OracleReading) => {
@@ -305,7 +295,7 @@ export default function Oraculo() {
                       {oracle.description}
                     </p>
                     <div className="text-amber-500 font-semibold">
-                      {oracle.cost} T'KAZH
+                      R$ {(oracle.price_brl / 100).toFixed(2)}
                     </div>
                   </div>
                 </div>
@@ -373,7 +363,7 @@ export default function Oraculo() {
                       Pergunta: "{reading.question}"
                     </div>
                     <div className="text-xs text-gray-500">
-                      Custo: {reading.tkazh_cost} T'KAZH
+                      Custo: R$ {(reading.cost_brl / 100).toFixed(2)}
                     </div>
                   </div>
                 ))}

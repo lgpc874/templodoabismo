@@ -9,7 +9,7 @@ interface DailyQuote {
 }
 
 export default function Home() {
-  const { data: dailyQuote, isLoading } = useQuery({
+  const { data: dailyQuote, isLoading } = useQuery<DailyQuote>({
     queryKey: ["/api/daily-quote"],
     refetchInterval: 24 * 60 * 60 * 1000, // Refetch every 24 hours
   });
