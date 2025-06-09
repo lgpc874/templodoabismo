@@ -92,10 +92,10 @@ export default function Login() {
           <div className="text-center mb-8">
             <Flame className="w-16 h-16 mx-auto text-red-500 mb-4 animate-pulse" />
             <h1 className="text-3xl font-bold text-red-400 mb-2">
-              Portal de Acesso
+              Porta Accessus
             </h1>
             <p className="text-red-300">
-              Entre no Templo do Abismo
+              Ingressus in Templum Abyssos
             </p>
           </div>
 

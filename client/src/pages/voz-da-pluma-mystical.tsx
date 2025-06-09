@@ -90,7 +90,7 @@ function VozDaPlumaContent() {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-cinzel font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-500 to-pink-400">
-              VOZ DA PLUMA
+              VOX PLUMAE
             </h1>
             <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
               Portal de inspiração onde as musas sussurram versos sagrados através da pluma mística. 
