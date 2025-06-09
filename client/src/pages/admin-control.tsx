@@ -70,7 +70,7 @@ export default function AdminControl() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-7 bg-black/40 border border-purple-500/30">
+          <TabsList className="grid w-full grid-cols-9 bg-black/40 border border-purple-500/30">
             <TabsTrigger value="dashboard" className="text-amber-400">
               <BarChart3 className="w-4 h-4 mr-2" />
               Dashboard
@@ -79,9 +79,21 @@ export default function AdminControl() {
               <Users className="w-4 h-4 mr-2" />
               Usuários
             </TabsTrigger>
-            <TabsTrigger value="content" className="text-amber-400">
+            <TabsTrigger value="pages" className="text-amber-400">
               <BookOpen className="w-4 h-4 mr-2" />
-              Conteúdo
+              Páginas
+            </TabsTrigger>
+            <TabsTrigger value="scriptures" className="text-amber-400">
+              <Scroll className="w-4 h-4 mr-2" />
+              Escrituras
+            </TabsTrigger>
+            <TabsTrigger value="courses" className="text-amber-400">
+              <BookOpen className="w-4 h-4 mr-2" />
+              Cursos
+            </TabsTrigger>
+            <TabsTrigger value="media" className="text-amber-400">
+              <Database className="w-4 h-4 mr-2" />
+              Mídia
             </TabsTrigger>
             <TabsTrigger value="apis" className="text-amber-400">
               <Settings className="w-4 h-4 mr-2" />
@@ -92,12 +104,8 @@ export default function AdminControl() {
               Susurri
             </TabsTrigger>
             <TabsTrigger value="system" className="text-amber-400">
-              <Settings className="w-4 h-4 mr-2" />
-              Sistema
-            </TabsTrigger>
-            <TabsTrigger value="logs" className="text-amber-400">
               <Activity className="w-4 h-4 mr-2" />
-              Logs
+              Sistema
             </TabsTrigger>
           </TabsList>
 

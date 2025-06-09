@@ -9,7 +9,9 @@ import Home from "@/pages/home";
 import Login from "@/pages/login";
 import Sobre from "@/pages/sobre";
 import Oraculo from "@/pages/oraculo-mystical";
-import Courses from "@/pages/courses-mystical";
+import CoursesOld from "@/pages/courses-mystical";
+import Courses from "@/pages/courses";
+import Profile from "@/pages/profile";
 import Grimoires from "@/pages/grimoires-mystical";
 import Bibliotheca from "@/pages/bibliotheca-mystical";
 import VozDaPluma from "@/pages/voz-da-pluma-mystical";
@@ -28,6 +30,8 @@ function Router() {
       <Route path="/oraculo" component={Oraculo} />
       <Route path="/courses" component={Courses} />
       <Route path="/cursos" component={Courses} />
+      <Route path="/profile" component={Profile} />
+      <Route path="/perfil" component={Profile} />
       <Route path="/grimoires" component={Grimoires} />
       <Route path="/grimorios" component={Grimoires} />
       <Route path="/bibliotheca" component={Bibliotheca} />

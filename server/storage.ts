@@ -49,10 +49,22 @@ import {
   type InsertNewsletterSubscriber,
   susurri_abyssos,
   api_configurations,
+  pages,
+  page_revisions,
+  media_library,
+  scriptures,
   type SusurriAbyssos,
   type InsertSusurriAbyssos,
   type ApiConfiguration,
   type InsertApiConfiguration,
+  type Page,
+  type InsertPage,
+  type PageRevision,
+  type InsertPageRevision,
+  type MediaLibrary,
+  type InsertMediaLibrary,
+  type Scripture,
+  type InsertScripture,
 } from "@shared/schema";
 
 import { db } from "./db";

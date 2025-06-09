@@ -871,6 +871,93 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User Profile Routes
+  app.get('/api/user/profile', requireAuth, async (req: any, res: Response) => {
+    try {
+      const user = await storage.getUser(req.user.id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Calculate user stats
+      const enrolledCourses = await storage.getUserCourses(req.user.id);
+      const completedCourses = enrolledCourses.filter(course => course.completedAt);
+      
+      const userProfile = {
+        ...user,
+        totalCoursesCompleted: completedCourses.length,
+        totalHoursStudied: completedCourses.reduce((total, course) => total + (course.estimatedDuration || 0), 0),
+        level: Math.floor(completedCourses.length / 3) + 1, // Level up every 3 courses
+        experience: completedCourses.length * 100, // 100 XP per completed course
+      };
+
+      res.json(userProfile);
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      res.status(500).json({ message: 'Failed to fetch user profile' });
+    }
+  });
+
+  app.get('/api/grimoires/:id/download', requireAuth, async (req: any, res: Response) => {
+    try {
+      const grimoireId = parseInt(req.params.id);
+      
+      // Check if user has purchased this grimoire
+      const rental = await storage.getGrimoireRental(req.user.id, grimoireId);
+      if (!rental) {
+        return res.status(403).json({ message: 'Grimoire not purchased' });
+      }
+
+      // Check download limits
+      if (rental.downloads >= (rental.maxDownloads || 5)) {
+        return res.status(403).json({ message: 'Download limit exceeded' });
+      }
+
+      const grimoire = await storage.getGrimoire(grimoireId);
+      if (!grimoire || !grimoire.pdf_url) {
+        return res.status(404).json({ message: 'Grimoire file not found' });
+      }
+
+      // Increment download count
+      await storage.updateGrimoireRental(rental.id, {
+        downloads: rental.downloads + 1,
+        lastDownloadedAt: new Date(),
+      });
+
+      res.json({
+        downloadUrl: grimoire.pdf_url,
+        filename: `${grimoire.title}.pdf`,
+      });
+    } catch (error) {
+      console.error('Error downloading grimoire:', error);
+      res.status(500).json({ message: 'Failed to download grimoire' });
+    }
+  });
+
+  app.post('/api/courses/:id/modules/:moduleId/continue', requireAuth, async (req: any, res: Response) => {
+    try {
+      const courseId = parseInt(req.params.id);
+      const moduleId = parseInt(req.params.moduleId);
+
+      // Check if user is enrolled in this course
+      const enrollment = await storage.getCourseProgress(req.user.id, courseId);
+      if (!enrollment) {
+        return res.status(403).json({ message: 'Not enrolled in this course' });
+      }
+
+      // Update progress
+      const updatedProgress = await storage.updateCourseProgress(req.user.id, courseId, {
+        currentModule: moduleId,
+        lastAccessedAt: new Date(),
+      });
+
+      res.json(updatedProgress);
+    } catch (error) {
+      console.error('Error continuing course module:', error);
+      res.status(500).json({ message: 'Failed to continue course' });
+    }
+  });
+
   // Public routes for published content
   app.get('/api/pages/:slug', async (req: Request, res: Response) => {
     try {
