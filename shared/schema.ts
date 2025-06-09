@@ -84,14 +84,60 @@ export const backups = pgTable("backups", {
 export const courses = pgTable("courses", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
-  description: text("description").notNull(),
-  level: integer("level").notNull().default(1),
-  price_brl: numeric("price_brl", { precision: 10, scale: 2 }).default("0"), // Price in Brazilian Real
-  modules: jsonb("modules").notNull(),
+  short_description: text("short_description").notNull(), // Para a página de listagem
+  full_description: text("full_description").notNull(), // Para a página individual
+  slug: text("slug").notNull().unique(), // Para URLs amigáveis
+  category: text("category").default("luciferiano"),
+  difficulty_level: integer("difficulty_level").default(1), // 1-5
+  total_levels: integer("total_levels").default(1), // Quantos níveis o curso tem
+  full_course_price_brl: numeric("full_course_price_brl", { precision: 10, scale: 2 }).default("0"),
+  discount_percentage: integer("discount_percentage").default(30), // Desconto para curso completo
+  estimated_duration_hours: integer("estimated_duration_hours").default(10),
+  cover_image: text("cover_image"),
+  preview_video_url: text("preview_video_url"),
   requirements: text("requirements").array().default([]),
-  rewards: text("rewards").array().default([]),
-  type: text("type").notNull().default("initiation"),
+  what_you_learn: text("what_you_learn").array().default([]),
   is_active: boolean("is_active").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+export const courseLevels = pgTable("course_levels", {
+  id: serial("id").primaryKey(),
+  course_id: integer("course_id").references(() => courses.id).notNull(),
+  level_number: integer("level_number").notNull(), // 1, 2, 3, etc.
+  title: text("title").notNull(), // Ex: "Nível 1: Fundamentos"
+  description: text("description").notNull(),
+  price_brl: numeric("price_brl", { precision: 10, scale: 2 }).default("0"),
+  content_modules: jsonb("content_modules").notNull(), // Módulos de conteúdo do nível
+  duration_hours: integer("duration_hours").default(0),
+  materials_included: text("materials_included").array().default([]),
+  unlock_requirements: text("unlock_requirements").array().default([]), // Requisitos para desbloquear
+  is_active: boolean("is_active").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+export const courseEnrollments = pgTable("course_enrollments", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id").references(() => users.id).notNull(),
+  course_id: integer("course_id").references(() => courses.id).notNull(),
+  enrollment_type: text("enrollment_type").notNull(), // "level" ou "full_course"
+  level_id: integer("level_id").references(() => courseLevels.id), // Se comprou nível específico
+  purchase_price_brl: numeric("purchase_price_brl", { precision: 10, scale: 2 }).notNull(),
+  progress_percentage: integer("progress_percentage").default(0),
+  completed_at: timestamp("completed_at"),
+  certificate_issued: boolean("certificate_issued").default(false),
+  enrolled_at: timestamp("enrolled_at").defaultNow(),
+});
+
+export const courseProgress = pgTable("course_progress", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id").references(() => users.id).notNull(),
+  course_id: integer("course_id").references(() => courses.id).notNull(),
+  level_id: integer("level_id").references(() => courseLevels.id).notNull(),
+  module_id: text("module_id").notNull(), // ID do módulo dentro do nível
+  completed: boolean("completed").default(false),
+  completion_date: timestamp("completion_date"),
+  notes: text("notes"), // Anotações pessoais do estudante
   created_at: timestamp("created_at").defaultNow(),
 });
 
@@ -391,14 +437,41 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export const insertCourseSchema = createInsertSchema(courses).pick({
   title: true,
-  description: true,
-  level: true,
-  price_brl: true,
-  modules: true,
+  short_description: true,
+  full_description: true,
+  slug: true,
+  category: true,
+  difficulty_level: true,
+  total_levels: true,
+  full_course_price_brl: true,
+  discount_percentage: true,
+  estimated_duration_hours: true,
+  cover_image: true,
+  preview_video_url: true,
   requirements: true,
-  rewards: true,
-  type: true,
+  what_you_learn: true,
   is_active: true,
+});
+
+export const insertCourseLevelSchema = createInsertSchema(courseLevels).pick({
+  course_id: true,
+  level_number: true,
+  title: true,
+  description: true,
+  price_brl: true,
+  content_modules: true,
+  duration_hours: true,
+  materials_included: true,
+  unlock_requirements: true,
+  is_active: true,
+});
+
+export const insertCourseEnrollmentSchema = createInsertSchema(courseEnrollments).pick({
+  user_id: true,
+  course_id: true,
+  enrollment_type: true,
+  level_id: true,
+  purchase_price_brl: true,
 });
 
 export const insertGrimoireSchema = createInsertSchema(grimoires).pick({
