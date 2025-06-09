@@ -316,6 +316,98 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // New Grimoire API Routes for 3 Monetization Systems
+  app.get('/api/grimoires/:id/chapters', async (req: Request, res: Response) => {
+    try {
+      const grimoireId = parseInt(req.params.id);
+      const chapters = await storage.getGrimoireChapters(grimoireId);
+      res.json(chapters);
+    } catch (error) {
+      console.error('Error fetching grimoire chapters:', error);
+      res.status(500).json({ message: 'Failed to fetch chapters' });
+    }
+  });
+
+  app.get('/api/user/grimoire-access', requireAuth, async (req: any, res: Response) => {
+    try {
+      const userId = req.user.id;
+      const access = await storage.getUserGrimoireAccess(userId);
+      res.json(access);
+    } catch (error) {
+      console.error('Error fetching user grimoire access:', error);
+      res.status(500).json({ message: 'Failed to fetch access' });
+    }
+  });
+
+  app.post('/api/grimoires/purchase', requireAuth, async (req: any, res: Response) => {
+    try {
+      const { grimoireId, type, chapterId } = req.body;
+      const userId = req.user.id;
+
+      // Get grimoire details
+      const grimoire = await storage.getGrimoire(grimoireId);
+      if (!grimoire) {
+        return res.status(404).json({ message: 'Grimoire not found' });
+      }
+
+      // Calculate price and create access record
+      let pricePaid = 0;
+      let expiresAt = null;
+      let downloadsRemaining = 0;
+
+      switch (type) {
+        case 'rental':
+          if (!grimoire.enable_rental) {
+            return res.status(400).json({ message: 'Rental not available for this grimoire' });
+          }
+          pricePaid = grimoire.rental_price_brl;
+          expiresAt = new Date(Date.now() + (grimoire.rental_days * 24 * 60 * 60 * 1000));
+          break;
+
+        case 'purchase':
+          if (!grimoire.enable_purchase) {
+            return res.status(400).json({ message: 'Purchase not available for this grimoire' });
+          }
+          pricePaid = grimoire.purchase_price_brl;
+          downloadsRemaining = 5;
+          break;
+
+        case 'chapter':
+          if (!grimoire.enable_chapter_purchase) {
+            return res.status(400).json({ message: 'Chapter purchase not available for this grimoire' });
+          }
+          pricePaid = grimoire.chapter_price_brl;
+          break;
+
+        default:
+          return res.status(400).json({ message: 'Invalid purchase type' });
+      }
+
+      // Create access record
+      const accessData = {
+        user_id: userId,
+        grimoire_id: grimoireId,
+        access_type: type,
+        chapter_id: chapterId || null,
+        expires_at: expiresAt,
+        downloads_remaining: downloadsRemaining,
+        price_paid_brl: pricePaid,
+        payment_id: `payment_${Date.now()}_${userId}`, // Simplified payment ID
+      };
+
+      const access = await storage.createGrimoireAccess(accessData);
+
+      res.json({
+        success: true,
+        access,
+        message: 'Purchase completed successfully'
+      });
+    } catch (error) {
+      console.error('Error processing grimoire purchase:', error);
+      res.status(500).json({ message: 'Failed to process purchase' });
+    }
+  });
+
   // Oracle consultation routes
   app.post('/api/oracle/consult', requireAuth, async (req: any, res: Response) => {
     try {

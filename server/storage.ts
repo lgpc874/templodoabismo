@@ -8,6 +8,8 @@ import {
   backups,
   courses,
   grimoires,
+  grimoireChapters,
+  grimoireAccess,
   oracle_sessions,
   daily_poems,
   daily_quotes,
