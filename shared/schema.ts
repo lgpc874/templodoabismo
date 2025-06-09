@@ -105,9 +105,48 @@ export const grimoires = pgTable("grimoires", {
   chapters: jsonb("chapters").notNull(),
   access_level: integer("access_level").default(0),
   price_tkazh: integer("price_tkazh").default(5),
+  rental_price_tkazh: integer("rental_price_tkazh").default(2),
+  rental_days: integer("rental_days").default(7),
   pdf_url: text("pdf_url"),
   cover_image: text("cover_image"),
+  can_read_online: boolean("can_read_online").default(true),
+  can_download: boolean("can_download").default(true),
   is_active: boolean("is_active").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+export const grimoire_rentals = pgTable("grimoire_rentals", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id").references(() => users.id).notNull(),
+  grimoire_id: integer("grimoire_id").references(() => grimoires.id).notNull(),
+  expires_at: timestamp("expires_at").notNull(),
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+export const daily_quotes = pgTable("daily_quotes", {
+  id: serial("id").primaryKey(),
+  content: text("content").notNull(),
+  author: text("author").notNull(),
+  date: timestamp("date").notNull(),
+  is_active: boolean("is_active").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+export const pluma_shares = pgTable("pluma_shares", {
+  id: serial("id").primaryKey(),
+  poem_id: integer("poem_id").references(() => daily_poems.id).notNull(),
+  image_url: text("image_url"),
+  share_count: integer("share_count").default(0),
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+export const course_progress = pgTable("course_progress", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id").references(() => users.id).notNull(),
+  course_id: integer("course_id").references(() => courses.id).notNull(),
+  module_index: integer("module_index").default(0),
+  completed: boolean("completed").default(false),
+  completed_at: timestamp("completed_at"),
   created_at: timestamp("created_at").defaultNow(),
 });
 
