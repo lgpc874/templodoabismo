@@ -14,9 +14,7 @@ export const users = pgTable("users", {
   magical_name: text("magical_name"),
   member_type: text("member_type").default("initiate"), // initiate, member
   role: text("role").notNull().default("user"),
-  last_credit_reset: timestamp("last_credit_reset").defaultNow(),
-  oracle_uses_today: integer("oracle_uses_today").default(0),
-  last_oracle_use: timestamp("last_oracle_use"),
+
   courses_completed: text("courses_completed").array().default([]),
   achievements: text("achievements").array().default([]),
   join_date: timestamp("join_date").defaultNow(),
