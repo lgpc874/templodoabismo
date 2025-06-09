@@ -70,7 +70,7 @@ export default function AdminControl() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-black/40 border border-purple-500/30">
+          <TabsList className="grid w-full grid-cols-7 bg-black/40 border border-purple-500/30">
             <TabsTrigger value="dashboard" className="text-amber-400">
               <BarChart3 className="w-4 h-4 mr-2" />
               Dashboard
@@ -82,6 +82,14 @@ export default function AdminControl() {
             <TabsTrigger value="content" className="text-amber-400">
               <BookOpen className="w-4 h-4 mr-2" />
               Conteúdo
+            </TabsTrigger>
+            <TabsTrigger value="apis" className="text-amber-400">
+              <Settings className="w-4 h-4 mr-2" />
+              APIs
+            </TabsTrigger>
+            <TabsTrigger value="susurri" className="text-amber-400">
+              <Scroll className="w-4 h-4 mr-2" />
+              Susurri
             </TabsTrigger>
             <TabsTrigger value="system" className="text-amber-400">
               <Settings className="w-4 h-4 mr-2" />
@@ -391,6 +399,204 @@ export default function AdminControl() {
                     </p>
                     <Button variant="destructive" size="sm">
                       Resetar Sistema
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* APIs Tab */}
+          <TabsContent value="apis" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Pagamentos */}
+              <Card className="bg-black/40 border-purple-500/30">
+                <CardHeader>
+                  <CardTitle className="text-amber-400 flex items-center">
+                    <Settings className="w-5 h-5 mr-2" />
+                    APIs de Pagamento
+                  </CardTitle>
+                  <CardDescription className="text-gray-400">
+                    Configurações dos gateways de pagamento
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 border border-purple-500/20 rounded">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-300">PayPal</h4>
+                        <p className="text-xs text-gray-500">Pagamentos internacionais</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                        <Button size="sm" variant="outline" className="text-xs">
+                          Configurar
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 border border-purple-500/20 rounded">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-300">Mercado Pago</h4>
+                        <p className="text-xs text-gray-500">Gateway brasileiro</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                        <Button size="sm" variant="outline" className="text-xs">
+                          Configurar
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 border border-purple-500/20 rounded">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-300">InfinitePay</h4>
+                        <p className="text-xs text-gray-500">PIX e cartões</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                        <Button size="sm" variant="outline" className="text-xs">
+                          Configurar
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 border border-purple-500/20 rounded">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-300">PagSeguro</h4>
+                        <p className="text-xs text-gray-500">Plataforma completa</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                        <Button size="sm" variant="outline" className="text-xs">
+                          Configurar
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Inteligência Artificial */}
+              <Card className="bg-black/40 border-purple-500/30">
+                <CardHeader>
+                  <CardTitle className="text-amber-400 flex items-center">
+                    <Settings className="w-5 h-5 mr-2" />
+                    APIs de Inteligência Artificial
+                  </CardTitle>
+                  <CardDescription className="text-gray-400">
+                    Configurações de IA para geração de conteúdo místico
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 border border-purple-500/20 rounded">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-300">OpenAI ChatGPT</h4>
+                        <p className="text-xs text-gray-500">Geração de Susurri Abyssos e interpretações</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                        <Button size="sm" variant="outline" className="text-xs">
+                          Configurar
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 p-4 border border-amber-500/30 rounded bg-amber-500/10">
+                    <h5 className="text-sm font-medium text-amber-400 mb-2">Configuração Necessária</h5>
+                    <p className="text-xs text-gray-400 mb-3">
+                      Configure as APIs para ativar funcionalidades automáticas como geração de conteúdo místico e processamento de pagamentos.
+                    </p>
+                    <Button size="sm" className="bg-amber-600 hover:bg-amber-700">
+                      Iniciar Configuração
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Susurri Abyssos Tab */}
+          <TabsContent value="susurri" className="space-y-6">
+            <Card className="bg-black/40 border-purple-500/30">
+              <CardHeader>
+                <CardTitle className="text-amber-400 flex items-center">
+                  <Scroll className="w-5 h-5 mr-2" />
+                  Susurri Abyssos
+                </CardTitle>
+                <CardDescription className="text-gray-400">
+                  Gerenciamento das frases místicas do portal
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-300">Frases Ativas</h3>
+                    <p className="text-sm text-gray-500">Gerencie as mensagens que aparecem no portal</p>
+                  </div>
+                  <Button className="bg-purple-600 hover:bg-purple-700">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Nova Frase
+                  </Button>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between p-4 border border-purple-500/20 rounded">
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-300 mb-2">
+                        "A sabedoria verdadeira emerge das profundezas do abismo, onde a luz comum não ousa penetrar."
+                      </p>
+                      <div className="flex items-center space-x-4 text-xs text-gray-500">
+                        <span>Categoria: Sabedoria</span>
+                        <span>Autor: Templo do Abismo</span>
+                        <span>Ordem: 1</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Button size="sm" variant="outline">
+                        <Edit className="w-3 h-3" />
+                      </Button>
+                      <Button size="sm" variant="destructive">
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start justify-between p-4 border border-purple-500/20 rounded">
+                    <div className="flex-1">
+                      <p className="text-sm text-gray-300 mb-2">
+                        "No silêncio da escuridão encontra-se o sussurro eterno que guia os buscadores corajosos."
+                      </p>
+                      <div className="flex items-center space-x-4 text-xs text-gray-500">
+                        <span>Categoria: Trevas</span>
+                        <span>Autor: Mestre Abyssal</span>
+                        <span>Ordem: 2</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Button size="sm" variant="outline">
+                        <Edit className="w-3 h-3" />
+                      </Button>
+                      <Button size="sm" variant="destructive">
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-6 p-4 border border-amber-500/30 rounded bg-amber-500/10">
+                  <h5 className="text-sm font-medium text-amber-400 mb-2">Geração Automática com IA</h5>
+                  <p className="text-xs text-gray-400 mb-3">
+                    Configure a API do ChatGPT para gerar automaticamente novas frases místicas baseadas nos temas do Templo do Abismo.
+                  </p>
+                  <div className="flex space-x-2">
+                    <Button size="sm" className="bg-amber-600 hover:bg-amber-700">
+                      Gerar com IA
+                    </Button>
+                    <Button size="sm" variant="outline">
+                      Configurar Prompts
                     </Button>
                   </div>
                 </div>
