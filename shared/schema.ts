@@ -99,24 +99,71 @@ export const grimoires = pgTable("grimoires", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
-  chapters: jsonb("chapters").notNull(),
+  author: text("author").default("Templo do Abismo"),
+  level: integer("level").default(1), // 1-5 difficulty
   access_level: integer("access_level").default(0),
-  price_brl: integer("price_brl").default(2000), // Purchase price in centavos (R$ 20.00)
-  rental_price_brl: integer("rental_price_brl").default(500), // Rental price in centavos (R$ 5.00)
+  
+  // Pricing options
+  purchase_price_brl: integer("purchase_price_brl").default(2000), // Full download price
+  rental_price_brl: integer("rental_price_brl").default(500), // 7-day rental
+  chapter_price_brl: integer("chapter_price_brl").default(300), // Per chapter
+  
   rental_days: integer("rental_days").default(7),
+  total_chapters: integer("total_chapters").default(1),
+  
+  // Content
   pdf_url: text("pdf_url"),
   cover_image: text("cover_image"),
-  can_read_online: boolean("can_read_online").default(true),
-  can_download: boolean("can_download").default(true),
+  
+  // Access types enabled
+  enable_rental: boolean("enable_rental").default(true),
+  enable_purchase: boolean("enable_purchase").default(true),
+  enable_chapter_purchase: boolean("enable_chapter_purchase").default(true),
+  enable_online_reading: boolean("enable_online_reading").default(true),
+  
+  tags: text("tags").array().default([]),
   is_active: boolean("is_active").default(true),
   created_at: timestamp("created_at").defaultNow(),
 });
 
+export const grimoireChapters = pgTable("grimoire_chapters", {
+  id: serial("id").primaryKey(),
+  grimoire_id: integer("grimoire_id").references(() => grimoires.id).notNull(),
+  chapter_number: integer("chapter_number").notNull(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  summary: text("summary"),
+  is_preview: boolean("is_preview").default(false), // Free preview chapter
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+export const grimoireAccess = pgTable("grimoire_access", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id").references(() => users.id).notNull(),
+  grimoire_id: integer("grimoire_id").references(() => grimoires.id).notNull(),
+  access_type: text("access_type").notNull(), // 'rental', 'purchase', 'chapter'
+  chapter_id: integer("chapter_id").references(() => grimoireChapters.id), // For chapter purchases
+  
+  // Access control
+  expires_at: timestamp("expires_at"), // For rentals
+  downloads_remaining: integer("downloads_remaining").default(5), // For purchases
+  
+  // Payment info
+  price_paid_brl: integer("price_paid_brl").notNull(),
+  payment_id: text("payment_id"),
+  
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+// Legacy table for compatibility
 export const grimoire_rentals = pgTable("grimoire_rentals", {
   id: serial("id").primaryKey(),
   user_id: integer("user_id").references(() => users.id).notNull(),
   grimoire_id: integer("grimoire_id").references(() => grimoires.id).notNull(),
   expires_at: timestamp("expires_at").notNull(),
+  downloads: integer("downloads").default(0),
+  max_downloads: integer("max_downloads").default(5),
+  last_downloaded_at: timestamp("last_downloaded_at"),
   created_at: timestamp("created_at").defaultNow(),
 });
 
@@ -357,13 +404,42 @@ export const insertCourseSchema = createInsertSchema(courses).pick({
 export const insertGrimoireSchema = createInsertSchema(grimoires).pick({
   title: true,
   description: true,
-  chapters: true,
+  author: true,
+  level: true,
   access_level: true,
-  price_brl: true,
+  purchase_price_brl: true,
   rental_price_brl: true,
+  chapter_price_brl: true,
+  rental_days: true,
+  total_chapters: true,
   pdf_url: true,
   cover_image: true,
+  enable_rental: true,
+  enable_purchase: true,
+  enable_chapter_purchase: true,
+  enable_online_reading: true,
+  tags: true,
   is_active: true,
+});
+
+export const insertGrimoireChapterSchema = createInsertSchema(grimoireChapters).pick({
+  grimoire_id: true,
+  chapter_number: true,
+  title: true,
+  content: true,
+  summary: true,
+  is_preview: true,
+});
+
+export const insertGrimoireAccessSchema = createInsertSchema(grimoireAccess).pick({
+  user_id: true,
+  grimoire_id: true,
+  access_type: true,
+  chapter_id: true,
+  expires_at: true,
+  downloads_remaining: true,
+  price_paid_brl: true,
+  payment_id: true,
 });
 
 export const insertOracleSessionSchema = createInsertSchema(oracle_sessions).omit({

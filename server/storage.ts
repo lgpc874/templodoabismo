@@ -438,38 +438,125 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Grimoires
-  async getGrimoires(): Promise<Grimoire[]> {
-    return await db.select().from(grimoires).where(eq(grimoires.is_published, true));
+  async getGrimoires(): Promise<any[]> {
+    return await db.select().from(grimoires).where(eq(grimoires.is_active, true));
   }
 
-  async getAllGrimoires(): Promise<Grimoire[]> {
+  async getAllGrimoires(): Promise<any[]> {
     return await db.select().from(grimoires);
   }
 
-  async getGrimoire(id: number): Promise<Grimoire | undefined> {
+  async getGrimoire(id: number): Promise<any | undefined> {
     const [grimoire] = await db.select().from(grimoires).where(eq(grimoires.id, id));
     return grimoire;
   }
 
-  async createGrimoire(grimoire: InsertGrimoire): Promise<Grimoire> {
+  async createGrimoire(grimoire: any): Promise<any> {
     const [newGrimoire] = await db.insert(grimoires).values(grimoire).returning();
     return newGrimoire;
   }
 
-  // Grimoire Rentals/Purchases
+  async updateGrimoire(id: number, grimoire: any): Promise<any> {
+    const [updatedGrimoire] = await db.update(grimoires)
+      .set(grimoire)
+      .where(eq(grimoires.id, id))
+      .returning();
+    return updatedGrimoire;
+  }
+
+  async deleteGrimoire(id: number): Promise<boolean> {
+    const result = await db.delete(grimoires).where(eq(grimoires.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  // Grimoire Chapters
+  async getGrimoireChapters(grimoireId: number): Promise<any[]> {
+    return await db.select()
+      .from(grimoireChapters)
+      .where(eq(grimoireChapters.grimoire_id, grimoireId))
+      .orderBy(grimoireChapters.chapter_number);
+  }
+
+  async createGrimoireChapter(chapter: any): Promise<any> {
+    const [newChapter] = await db.insert(grimoireChapters).values(chapter).returning();
+    return newChapter;
+  }
+
+  async updateGrimoireChapter(id: number, chapter: any): Promise<any> {
+    const [updatedChapter] = await db.update(grimoireChapters)
+      .set(chapter)
+      .where(eq(grimoireChapters.id, id))
+      .returning();
+    return updatedChapter;
+  }
+
+  async deleteGrimoireChapter(id: number): Promise<boolean> {
+    const result = await db.delete(grimoireChapters).where(eq(grimoireChapters.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  // Grimoire Access
+  async getUserGrimoireAccess(userId: number): Promise<any[]> {
+    return await db.select()
+      .from(grimoireAccess)
+      .where(eq(grimoireAccess.user_id, userId));
+  }
+
+  async getGrimoireAccess(userId: number, grimoireId: number): Promise<any | undefined> {
+    const [access] = await db.select()
+      .from(grimoireAccess)
+      .where(
+        and(
+          eq(grimoireAccess.user_id, userId),
+          eq(grimoireAccess.grimoire_id, grimoireId)
+        )
+      );
+    return access;
+  }
+
+  async createGrimoireAccess(access: any): Promise<any> {
+    const [newAccess] = await db.insert(grimoireAccess).values(access).returning();
+    return newAccess;
+  }
+
+  async updateGrimoireAccess(id: number, access: any): Promise<any> {
+    const [updatedAccess] = await db.update(grimoireAccess)
+      .set(access)
+      .where(eq(grimoireAccess.id, id))
+      .returning();
+    return updatedAccess;
+  }
+
+  // Legacy grimoire rentals (for compatibility)
   async createGrimoireRental(rental: any): Promise<any> {
     const [newRental] = await db.insert(grimoire_rentals).values(rental).returning();
     return newRental;
   }
 
-  async createGrimoirePurchase(purchase: any): Promise<any> {
-    const [newPurchase] = await db.insert(liber_access).values({
-      user_id: purchase.user_id,
-      grimoire_id: purchase.grimoire_id,
-      access_type: 'purchased',
-      expires_at: null,
-    }).returning();
-    return newPurchase;
+  async getGrimoireRentals(userId: number): Promise<any[]> {
+    return await db.select()
+      .from(grimoire_rentals)
+      .where(eq(grimoire_rentals.user_id, userId));
+  }
+
+  async getGrimoireRental(userId: number, grimoireId: number): Promise<any | undefined> {
+    const [rental] = await db.select()
+      .from(grimoire_rentals)
+      .where(
+        and(
+          eq(grimoire_rentals.user_id, userId),
+          eq(grimoire_rentals.grimoire_id, grimoireId)
+        )
+      );
+    return rental;
+  }
+
+  async updateGrimoireRental(id: number, rental: any): Promise<any> {
+    const [updatedRental] = await db.update(grimoire_rentals)
+      .set(rental)
+      .where(eq(grimoire_rentals.id, id))
+      .returning();
+    return updatedRental;
   }
 
   async getUserGrimoireRentals(userId: number): Promise<any[]> {
