@@ -1,0 +1,3 @@
+[workflows.start_application]
+name = "Start application"
+command = "npm run dev"

@@ -267,9 +267,18 @@
   50% { opacity: 0.8; }
 }
 
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 @keyframes rotateEternal {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.rotating-seal {
+  animation: rotate 60s linear infinite;
 }
 
 @keyframes glowPulse {
