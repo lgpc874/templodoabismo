@@ -145,6 +145,10 @@ export class TemploAI {
   }
 
   async generateFireReading(question: string): Promise<FireReading> {
+    if (!openai) {
+      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
+    }
+    
     try {
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
@@ -175,6 +179,10 @@ export class TemploAI {
   }
 
   async generateAbyssalVoice(question: string): Promise<AbyssalVoice> {
+    if (!openai) {
+      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
+    }
+    
     try {
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
@@ -206,6 +214,10 @@ export class TemploAI {
   }
 
   async generateDailyPoem(): Promise<{title: string, content: string, author: string}> {
+    if (!openai) {
+      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
+    }
+    
     try {
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
@@ -237,6 +249,10 @@ export class TemploAI {
   }
 
   async generateCourseContent(level: number, topic: string): Promise<{title: string, description: string, modules: any[]}> {
+    if (!openai) {
+      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
+    }
+    
     try {
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
@@ -267,6 +283,10 @@ export class TemploAI {
   }
 
   async generateGrimoireContent(title: string): Promise<{title: string, description: string, chapters: any[]}> {
+    if (!openai) {
+      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
+    }
+    
     try {
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
