@@ -32,7 +32,7 @@ export default function LiberProhibitus() {
       description: "Fragmentos autênticos do livro proibido que revela os nomes dos Antigos",
       warning: "Pode causar insanidade permanente em mentes não preparadas",
       content: "███████ ████ ██ ████████ ████ ███████",
-      tkazhCost: 1000
+      price_brl: 5000 // R$ 50.00
     },
     {
       id: "qliphothic-invocations", 
@@ -43,7 +43,7 @@ export default function LiberProhibitus() {
       description: "Rituais para contato direto com as Qliphoth mais perigosas",
       warning: "Risco de possessão ou fragmentação da alma",
       content: "█████ ███████ ████ ██████ ███",
-      tkazhCost: 750
+      price_brl: 3500 // R$ 35.00
     },
     {
       id: "blood-pacts",
@@ -54,7 +54,7 @@ export default function LiberProhibitus() {
       description: "Contratos irreversíveis com entidades dimensionais",
       warning: "Consequências permanentes e hereditárias",
       content: "██████ ████ ███████ ████",
-      tkazhCost: 800
+      price_brl: 4000 // R$ 40.00
     },
     {
       id: "soul-extraction",
@@ -65,7 +65,7 @@ export default function LiberProhibitus() {
       description: "Métodos para separar e manipular a essência vital",
       warning: "Uso incorreto pode resultar em morte espiritual",
       content: "████████ ██ ███████ ████ ██",
-      tkazhCost: 1200
+      price_brl: 6000 // R$ 60.00
     },
     {
       id: "dimensional-gates",
@@ -76,7 +76,7 @@ export default function LiberProhibitus() {
       description: "Abertura de passagens para dimensões hostis",
       warning: "Pode permitir invasões de entidades malévolas",
       content: "███ ████████ ███ ██████",
-      tkazhCost: 1500
+      price_brl: 7500 // R$ 75.00
     }
   ];
 
@@ -114,10 +114,10 @@ export default function LiberProhibitus() {
       return;
     }
 
-    if (user.tkazh_credits < doc.tkazhCost) {
-      window.location.href = '/comprar-tkazh';
-      return;
-    }
+    // Payment would be handled through PayPal integration
+    // For now, show payment required message
+    alert(`Este documento custa R$ ${(doc.price_brl / 100).toFixed(2)}. Pagamento direto será implementado.`);
+    return;
 
     // Show final warning
     const confirmed = confirm(
@@ -307,21 +307,13 @@ export default function LiberProhibitus() {
                         ) : (
                           <div className="flex items-center justify-between pt-4 border-t border-red-800/20">
                             <div className="text-xl font-bold text-red-400">
-                              {text.tkazhCost} T'KAZH
+                              R$ {(text.price_brl / 100).toFixed(2)}
                             </div>
                             
                             {!canAccessThis ? (
                               <Button disabled className="opacity-50 cursor-not-allowed">
                                 <Lock className="w-4 h-4 mr-2" />
                                 Nível {text.requiredLevel} Requerido
-                              </Button>
-                            ) : user.tkazh_credits < text.tkazhCost ? (
-                              <Button 
-                                variant="outline"
-                                className="border-yellow-600 text-yellow-600 hover:bg-yellow-600 hover:text-black"
-                                onClick={() => window.location.href = '/comprar-tkazh'}
-                              >
-                                Comprar T'KAZH
                               </Button>
                             ) : (
                               <Button 
