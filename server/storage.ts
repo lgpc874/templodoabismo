@@ -155,6 +155,14 @@ export interface IStorage {
   updateTagUsage(tags: string[]): Promise<void>;
   
   subscribeNewsletter(subscriber: InsertNewsletterSubscriber): Promise<NewsletterSubscriber>;
+  
+  // Susurri Abyssos
+  getSusurriAbyssos(): Promise<SusurriAbyssos[]>;
+  getSusurriAbysso(id: number): Promise<SusurriAbyssos | undefined>;
+  createSusurriAbysso(susurri: InsertSusurriAbyssos): Promise<SusurriAbyssos>;
+  updateSusurriAbysso(id: number, updates: Partial<InsertSusurriAbyssos>): Promise<SusurriAbyssos | undefined>;
+  deleteSusurriAbysso(id: number): Promise<boolean>;
+  getRandomSusurriAbyssos(limit: number): Promise<SusurriAbyssos[]>;
 }
 
 export class DatabaseStorage implements IStorage {

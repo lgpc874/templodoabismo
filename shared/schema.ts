@@ -230,6 +230,19 @@ export const newsletter_subscribers = pgTable("newsletter_subscribers", {
   confirmedAt: timestamp("confirmed_at"),
 });
 
+export const susurri_abyssos = pgTable("susurri_abyssos", {
+  id: serial("id").primaryKey(),
+  phrase: text("phrase").notNull(),
+  author: text("author"),
+  category: text("category").notNull().default("wisdom"), // wisdom, darkness, power, transformation
+  isActive: boolean("is_active").notNull().default(true),
+  displayOrder: integer("display_order").default(0),
+  aiGenerated: boolean("ai_generated").notNull().default(false),
+  generationPrompt: text("generation_prompt"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Insert Schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -338,6 +351,12 @@ export const insertNewsletterSubscriberSchema = createInsertSchema(newsletter_su
   confirmedAt: true,
 });
 
+export const insertSusurriAbyssosSchema = createInsertSchema(susurri_abyssos).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Auth schemas
 export const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -380,3 +399,5 @@ export type InsertBlogCategory = z.infer<typeof insertBlogCategorySchema>;
 export type BlogTag = typeof blog_tags.$inferSelect;
 export type NewsletterSubscriber = typeof newsletter_subscribers.$inferSelect;
 export type InsertNewsletterSubscriber = z.infer<typeof insertNewsletterSubscriberSchema>;
+export type SusurriAbyssos = typeof susurri_abyssos.$inferSelect;
+export type InsertSusurriAbyssos = z.infer<typeof insertSusurriAbyssosSchema>;
