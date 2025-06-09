@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Scroll, Flame, Star, Eye, Moon, Crown, BookOpen } from "lucide-react";
-import Navigation from "../components/navigation";
+import SiteNavigation from "../components/SiteNavigation";
 import { Link } from "wouter";
 
 interface DailyQuote {
@@ -16,7 +16,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <Navigation />
+      <SiteNavigation />
       
       {/* Fixed Central Rotating Seal - Your Custom Image */}
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">

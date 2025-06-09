@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Flame, Zap, Eye, BookOpen, History, Skull, Moon, Star } from "lucide-react";
 import MysticalGate from "@/components/MysticalGate";
-import Navigation from "@/components/navigation";
+import SiteNavigation from "@/components/SiteNavigation";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/contexts/AuthContext";
 
