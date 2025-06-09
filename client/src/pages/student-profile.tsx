@@ -176,10 +176,27 @@ export default function StudentProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
+    <div className="min-h-screen relative overflow-hidden">
       <SiteNavigation />
       
-      <div className="container mx-auto px-4 py-8 mt-20">
+      {/* Fixed Central Rotating Seal */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <div className="rotating-seal w-96 h-96 opacity-10">
+          <img 
+            src="/seal.png" 
+            alt="Selo do Estudante" 
+            className="w-full h-full object-contain filter drop-shadow-lg"
+          />
+        </div>
+      </div>
+
+      {/* Mystical floating particles */}
+      <div className="fixed inset-0 overflow-hidden z-0">
+        <div className="mystical-particles"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+      </div>
+      
+      <div className="relative z-10 container mx-auto px-4 py-8 pt-24">
         {/* Profile Header */}
         <div className="grid lg:grid-cols-4 gap-6 mb-8">
           {/* Profile Info */}

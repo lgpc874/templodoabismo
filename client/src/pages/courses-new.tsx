@@ -97,10 +97,27 @@ export default function CoursesNew() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
+    <div className="min-h-screen relative overflow-hidden">
       <SiteNavigation />
       
-      <div className="container mx-auto px-4 py-8 mt-20">
+      {/* Fixed Central Rotating Seal */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <div className="rotating-seal w-96 h-96 opacity-10">
+          <img 
+            src="/seal.png" 
+            alt="Selo dos Ensinamentos" 
+            className="w-full h-full object-contain filter drop-shadow-lg"
+          />
+        </div>
+      </div>
+
+      {/* Mystical floating particles */}
+      <div className="fixed inset-0 overflow-hidden z-0">
+        <div className="mystical-particles"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+      </div>
+      
+      <div className="relative z-10 container mx-auto px-4 py-8 pt-24">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-600 mb-4">
@@ -136,76 +153,53 @@ export default function CoursesNew() {
             const discountedPrice = Number(course.full_course_price_brl) * (1 - course.discount_percentage / 100);
             
             return (
-              <Card key={course.id} className="bg-black/40 border-purple-500/30 hover:border-purple-400/60 transition-all duration-300 group">
-                <CardHeader className="space-y-4">
-                  {/* Course Image Placeholder */}
-                  <div className="w-full h-48 bg-gradient-to-br from-purple-800/30 to-gray-900/50 rounded-lg flex items-center justify-center">
-                    <BookOpen className="w-16 h-16 text-purple-400" />
+              <div key={course.id} className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300">
+                <div className="p-6">
+                  {/* Course Icon */}
+                  <div className="w-16 h-16 mx-auto mb-4">
+                    <BookOpen className="w-full h-full text-orange-500" />
                   </div>
                   
-                  {/* Course Title and Category */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Badge className={`${getDifficultyColor(course.difficulty_level)} text-white`}>
-                        {getDifficultyText(course.difficulty_level)}
-                      </Badge>
-                      <span className="text-sm text-gray-400 capitalize">{course.category}</span>
-                    </div>
-                    <CardTitle className="text-xl text-white group-hover:text-amber-400 transition-colors">
-                      {course.title}
-                    </CardTitle>
-                  </div>
-                </CardHeader>
-
-                <CardContent className="space-y-4">
+                  {/* Course Title */}
+                  <h3 className="text-xl font-bold text-amber-400 mb-3 text-center">
+                    {course.title}
+                  </h3>
+                  
                   {/* Description */}
-                  <CardDescription className="text-gray-300 line-clamp-3">
+                  <p className="text-gray-300 text-sm leading-relaxed mb-4 text-center">
                     {course.short_description}
-                  </CardDescription>
+                  </p>
 
                   {/* Course Stats */}
-                  <div className="flex items-center gap-4 text-sm text-gray-400">
+                  <div className="flex justify-center gap-4 text-xs text-gray-400 mb-4">
                     <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4" />
+                      <Star className="w-3 h-3" />
                       <span>{course.total_levels} níveis</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
+                      <Clock className="w-3 h-3" />
                       <span>{course.estimated_duration_hours}h</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Users className="w-4 h-4" />
-                      <span>Online</span>
                     </div>
                   </div>
 
                   {/* Pricing */}
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-amber-400">
-                        R$ {discountedPrice.toFixed(2)}
-                      </span>
-                      <span className="text-sm text-gray-500 line-through">
-                        R$ {Number(course.full_course_price_brl).toFixed(2)}
-                      </span>
-                      <Badge variant="destructive" className="text-xs">
-                        -{course.discount_percentage}%
-                      </Badge>
+                  <div className="text-center mb-4">
+                    <div className="text-lg font-bold text-amber-400">
+                      R$ {discountedPrice.toFixed(2)}
                     </div>
-                    <p className="text-xs text-gray-400">
-                      Ou compre por níveis individuais
-                    </p>
+                    <div className="text-xs text-gray-500 line-through">
+                      R$ {Number(course.full_course_price_brl).toFixed(2)}
+                    </div>
                   </div>
 
                   {/* Action Button */}
                   <Link href={`/curso/${course.slug}`}>
-                    <Button className="w-full bg-purple-600 hover:bg-purple-700 group-hover:bg-gradient-to-r group-hover:from-purple-600 group-hover:to-amber-600 transition-all">
-                      Ver Curso
-                      <ArrowRight className="w-4 h-4 ml-2" />
+                    <Button className="w-full bg-red-600 hover:bg-red-700 transition-all">
+                      Explorar Curso
                     </Button>
                   </Link>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             );
           })}
         </div>
@@ -223,7 +217,7 @@ export default function CoursesNew() {
 
         {/* Info Section */}
         <div className="mt-16 text-center">
-          <div className="bg-black/20 border border-purple-500/30 rounded-lg p-8 max-w-4xl mx-auto">
+          <div className="floating-card max-w-4xl mx-auto p-8">
             <h2 className="text-2xl font-bold text-amber-400 mb-4">
               Sistema de Aprendizado Progressivo
             </h2>

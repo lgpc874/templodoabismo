@@ -234,13 +234,30 @@ export default function GrimoiresPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Fixed Central Rotating Seal */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <div className="rotating-seal w-96 h-96 opacity-10">
+          <img 
+            src="/seal.png" 
+            alt="Selo dos Grimórios" 
+            className="w-full h-full object-contain filter drop-shadow-lg"
+          />
+        </div>
+      </div>
+
+      {/* Mystical floating particles */}
+      <div className="fixed inset-0 overflow-hidden z-0">
+        <div className="mystical-particles"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+      </div>
+
       {/* Header */}
-      <div className="bg-gradient-to-r from-red-900/20 to-purple-900/20 border-b border-red-800/20">
-        <div className="container mx-auto px-6 py-12">
+      <div className="relative z-10 pt-24 pb-12">
+        <div className="container mx-auto px-6">
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4 text-red-400">
-              📚 Bibliotheca Nigra
+            <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 mb-4">
+              Bibliotheca Abyssos
             </h1>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
               Textos ancestrais e grimórios luciferinos para sua jornada de conhecimento
@@ -249,7 +266,7 @@ export default function GrimoiresPage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-8">
+      <div className="relative z-10 container mx-auto px-6 py-8">
         {/* Search and Filters */}
         <div className="mb-8 space-y-4">
           <div className="flex flex-col md:flex-row gap-4 items-center">
