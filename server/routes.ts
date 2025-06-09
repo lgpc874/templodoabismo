@@ -2,6 +2,7 @@ import type { Express, Request, Response } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { db } from "./db";
 import { temploAI } from "./ai-service";
 import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
 import bcrypt from "bcrypt";
@@ -165,8 +166,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Test database connection
   app.get('/api/test-db', async (req: Request, res: Response) => {
     try {
-      const result = await db.execute('SELECT COUNT(*) as count FROM courses');
-      res.json({ success: true, count: result.rows[0] });
+      const result = await storage.getCourses();
+      res.json({ success: true, count: result.length, courses: result });
     } catch (error: any) {
       console.error('Database test error:', error);
       res.status(500).json({ success: false, error: error.message });

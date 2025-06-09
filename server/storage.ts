@@ -402,7 +402,7 @@ export class DatabaseStorage implements IStorage {
       console.log('Storage: Fetching courses from database...');
       const result = await db.select().from(courses).where(eq(courses.is_active, true));
       console.log('Storage: Found courses:', result.length);
-      return result;
+      return result as Course[];
     } catch (error) {
       console.error('Storage: Database error in getCourses:', error);
       throw error;
