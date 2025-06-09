@@ -61,18 +61,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         email,
         password: hashedPassword,
         role: 'user',
-        tkazh_credits: 5, // Welcome credits
-        free_credits: 0,
-        initiation_level: 0,
-        personal_seal_generated: false,
-        magical_name: null,
-        member_type: 'initiate',
-        last_oracle_use: null,
-        last_course_access: null,
-        profile_image_url: null,
-        joined_at: new Date(),
-        subscription_type: 'free',
-        subscription_expires: null,
       });
       
       const token = jwt.sign({ userId: user.id }, JWT_SECRET);
@@ -187,20 +175,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/courses/:id/enroll', requireAuth, async (req: any, res: Response) => {
     try {
       const courseId = parseInt(req.params.id);
+      const { paymentId } = req.body;
       const course = await storage.getCourse(courseId);
       
       if (!course) {
         return res.status(404).json({ message: 'Course not found' });
       }
       
-      if (req.user.tkazh_credits < course.price_tkazh) {
-        return res.status(400).json({ message: 'Insufficient T\'KAZH credits' });
+      if (!paymentId) {
+        return res.status(400).json({ 
+          message: 'Payment required for course enrollment', 
+          price_brl: course.price_brl 
+        });
       }
       
-      // Deduct credits and enroll
-      await storage.updateUser(req.user.id, {
-        tkazh_credits: req.user.tkazh_credits - course.price_tkazh
-      });
+      // Verify payment was successful (implement with your payment processor)
+      // For now, we'll assume payment was verified if paymentId is provided
       
       await storage.createCourseProgress({
         user_id: req.user.id,
@@ -240,23 +230,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/grimoires/:id/rent', requireAuth, async (req: any, res: Response) => {
     try {
       const grimoireId = parseInt(req.params.id);
+      const { paymentId } = req.body;
       const grimoire = await storage.getGrimoire(grimoireId);
       
       if (!grimoire) {
         return res.status(404).json({ message: 'Grimoire not found' });
       }
       
-      if (req.user.tkazh_credits < grimoire.rental_price_tkazh) {
-        return res.status(400).json({ message: 'Insufficient T\'KAZH credits' });
+      if (!paymentId) {
+        return res.status(400).json({ 
+          message: 'Payment required for grimoire rental', 
+          price_brl: grimoire.rental_price_brl 
+        });
       }
       
-      // Deduct credits and create rental
-      await storage.updateUser(req.user.id, {
-        tkazh_credits: req.user.tkazh_credits - grimoire.rental_price_tkazh
-      });
+      // Verify payment was successful (implement with your payment processor)
+      // For now, we'll assume payment was verified if paymentId is provided
       
       const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + grimoire.rental_days);
+      expiresAt.setDate(expiresAt.getDate() + (grimoire.rental_days || 7));
       
       await storage.createGrimoireRental({
         user_id: req.user.id,
@@ -274,20 +266,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/grimoires/:id/purchase', requireAuth, async (req: any, res: Response) => {
     try {
       const grimoireId = parseInt(req.params.id);
+      const { paymentId } = req.body;
       const grimoire = await storage.getGrimoire(grimoireId);
       
       if (!grimoire) {
         return res.status(404).json({ message: 'Grimoire not found' });
       }
       
-      if (req.user.tkazh_credits < grimoire.price_tkazh) {
-        return res.status(400).json({ message: 'Insufficient T\'KAZH credits' });
+      if (!paymentId) {
+        return res.status(400).json({ 
+          message: 'Payment required for grimoire purchase', 
+          price_brl: grimoire.price_brl 
+        });
       }
       
-      // Deduct credits and create purchase record
-      await storage.updateUser(req.user.id, {
-        tkazh_credits: req.user.tkazh_credits - grimoire.price_tkazh
-      });
+      // Verify payment was successful (implement with your payment processor)
+      // For now, we'll assume payment was verified if paymentId is provided
       
       await storage.createGrimoirePurchase({
         user_id: req.user.id,
@@ -324,21 +318,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Oracle consultation routes
   app.post('/api/oracle/consult', requireAuth, async (req: any, res: Response) => {
     try {
-      const { type, question } = req.body;
+      const { type, question, paymentId } = req.body;
       
-      // Define oracle costs
+      // Define oracle costs in Brazilian Real (centavos)
       const costs = {
-        fire: 1,
-        runes: 2,
-        mirror: 2,
-        tarot: 3,
-        abyssal: 5,
+        fire: 300,    // R$ 3.00
+        runes: 500,   // R$ 5.00
+        mirror: 500,  // R$ 5.00
+        tarot: 700,   // R$ 7.00
+        abyssal: 1000, // R$ 10.00
       };
       
-      const cost = costs[type as keyof typeof costs] || 1;
+      const cost = costs[type as keyof typeof costs] || 300;
       
-      if (req.user.tkazh_credits < cost) {
-        return res.status(400).json({ message: 'Insufficient T\'KAZH credits' });
+      // Here you would verify the payment with your payment processor
+      // For now, we'll assume payment was successful if paymentId is provided
+      if (!paymentId) {
+        return res.status(400).json({ message: 'Payment required for oracle consultation', cost_brl: cost });
       }
       
       // Generate reading with AI
@@ -363,25 +359,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(400).json({ message: 'Invalid oracle type' });
       }
       
-      // Deduct credits
-      await storage.updateUser(req.user.id, {
-        tkazh_credits: req.user.tkazh_credits - cost
-      });
-      
       // Save oracle session
       const session = await storage.createOracleSession({
         user_id: req.user.id,
         oracle_type: type,
         question,
         result,
-        tkazh_cost: cost,
+        cost_brl: cost,
       });
       
       res.json({
         type,
         question,
         result,
-        tkazh_cost: cost,
+        cost_brl: cost,
+        payment_id: paymentId,
       });
     } catch (error) {
       console.error('Oracle consultation error:', error);
@@ -412,22 +404,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     await capturePaypalOrder(req, res);
   });
 
-  // T'KAZH purchase completion
-  app.post('/api/tkazh/purchase-complete', requireAuth, async (req: any, res: Response) => {
+  // Payment completion (removed T'KAZH credit system)
+  app.post('/api/payment/complete', requireAuth, async (req: any, res: Response) => {
     try {
-      const { amount, payment_method, payment_id } = req.body;
+      const { service_type, service_id, amount_brl, payment_id } = req.body;
       
-      // Convert amount to T'KAZH (1 BRL = 1 T'KAZH for simplicity)
-      const tkazhAmount = Math.floor(amount);
-      
-      await storage.updateUser(req.user.id, {
-        tkazh_credits: req.user.tkazh_credits + tkazhAmount
+      // Log successful payment for audit purposes
+      await storage.createActivityLog({
+        userId: req.user.id,
+        action: 'payment_completed',
+        target: `${service_type}:${service_id}`,
+        metadata: { amount_brl, payment_id }
       });
       
-      res.json({ message: 'T\'KAZH credits added successfully', added: tkazhAmount });
+      res.json({ message: 'Payment completed successfully' });
     } catch (error) {
-      console.error('T\'KAZH purchase error:', error);
-      res.status(500).json({ message: 'Purchase completion failed' });
+      console.error('Payment completion error:', error);
+      res.status(500).json({ message: 'Payment completion failed' });
     }
   });
 
