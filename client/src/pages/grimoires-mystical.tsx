@@ -46,9 +46,11 @@ function GrimoiresContent() {
 
   const rentMutation = useMutation({
     mutationFn: async (grimoireId: number) => {
-      return await apiRequest(`/api/grimoires/${grimoireId}/rent`, {
+      const response = await fetch(`/api/grimoires/${grimoireId}/rent`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
       });
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/user/rentals'] });
@@ -57,9 +59,11 @@ function GrimoiresContent() {
 
   const purchaseMutation = useMutation({
     mutationFn: async (grimoireId: number) => {
-      return await apiRequest(`/api/grimoires/${grimoireId}/purchase`, {
+      const response = await fetch(`/api/grimoires/${grimoireId}/purchase`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
       });
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/user/purchases'] });
