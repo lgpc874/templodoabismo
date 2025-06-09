@@ -165,11 +165,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Courses routes
   app.get('/api/courses', async (req: Request, res: Response) => {
     try {
+      console.log('Attempting to fetch courses...');
       const courses = await storage.getCourses();
+      console.log('Courses fetched successfully:', courses.length);
       res.json(courses);
     } catch (error) {
-      console.error('Courses error:', error);
-      res.status(500).json({ message: 'Failed to get courses' });
+      console.error('Courses error details:', error);
+      res.status(500).json({ message: 'Failed to get courses', error: error.message });
     }
   });
 

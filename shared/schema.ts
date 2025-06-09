@@ -86,7 +86,7 @@ export const courses = pgTable("courses", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   level: integer("level").notNull().default(1),
-  price_brl: integer("price_brl").notNull().default(0), // Price in Brazilian Real (centavos)
+  price_brl: numeric("price_brl", { precision: 10, scale: 2 }).default("0"), // Price in Brazilian Real
   modules: jsonb("modules").notNull(),
   requirements: text("requirements").array().default([]),
   rewards: text("rewards").array().default([]),
@@ -104,9 +104,9 @@ export const grimoires = pgTable("grimoires", {
   access_level: integer("access_level").default(0),
   
   // Pricing options
-  purchase_price_brl: integer("purchase_price_brl").default(2000), // Full download price
-  rental_price_brl: integer("rental_price_brl").default(500), // 7-day rental
-  chapter_price_brl: integer("chapter_price_brl").default(300), // Per chapter
+  purchase_price_brl: numeric("purchase_price_brl", { precision: 10, scale: 2 }).default("20.00"), // Full download price
+  rental_price_brl: numeric("rental_price_brl", { precision: 10, scale: 2 }).default("5.00"), // 7-day rental
+  chapter_price_brl: numeric("chapter_price_brl", { precision: 10, scale: 2 }).default("3.00"), // Per chapter
   
   rental_days: integer("rental_days").default(7),
   total_chapters: integer("total_chapters").default(1),
