@@ -17,6 +17,7 @@ import fs from "fs/promises";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { temploAI } from "./ai-service.js";
+import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
 
 const JWT_SECRET = process.env.JWT_SECRET || "magus-secretum-jwt-secret";
 const upload = multer({ dest: "uploads/" });
@@ -654,6 +655,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Stats error:', error);
       res.status(500).json({ message: "Failed to load statistics" });
+    }
+  });
+
+  // PayPal payment routes
+  app.get("/api/paypal/setup", async (req, res) => {
+    await loadPaypalDefault(req, res);
+  });
+
+  app.post("/api/paypal/order", async (req, res) => {
+    // Request body should contain: { intent, amount, currency }
+    await createPaypalOrder(req, res);
+  });
+
+  app.post("/api/paypal/order/:orderID/capture", async (req, res) => {
+    await capturePaypalOrder(req, res);
+  });
+
+  // T'KAZH purchase processing
+  app.post("/api/purchase/tkazh", async (req, res) => {
+    const { packageId, paymentMethod, userId } = req.body;
+    
+    try {
+      // Here would validate payment and credit T'KAZH to user account
+      // For now, return success response
+      res.json({
+        success: true,
+        message: "Purchase processed successfully",
+        packageId,
+        paymentMethod
+      });
+    } catch (error) {
+      console.error('Purchase error:', error);
+      res.status(500).json({ message: "Purchase failed" });
     }
   });
 
