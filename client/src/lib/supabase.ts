@@ -1,62 +1,61 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@shared/supabase'
 
-// Simple configuration that works immediately
-const supabaseUrl = 'https://placeholder.supabase.co'
-const supabaseKey = 'placeholder-key'
+// Configuration will be loaded dynamically
+let supabaseClient: SupabaseClient<Database> | null = null
+let configPromise: Promise<SupabaseClient<Database>> | null = null
 
-// Initialize client with placeholder values
-export const supabase: SupabaseClient<Database> = createClient(
-  supabaseUrl,
-  supabaseKey,
-  {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true
-    },
-    realtime: {
-      params: {
-        eventsPerSecond: 10
-      }
-    }
-  }
-)
-
-// Initialize with real configuration when available
-let initialized = false
-export async function initializeSupabase() {
-  if (initialized) return supabase
-  
+async function createSupabaseClient(): Promise<SupabaseClient<Database>> {
   try {
     const response = await fetch('/api/config/supabase')
-    if (response.ok) {
-      const config = await response.json()
-      
-      // Update client with real configuration
-      Object.assign(supabase, createClient(
-        config.url,
-        config.key,
-        {
-          auth: {
-            autoRefreshToken: true,
-            persistSession: true,
-            detectSessionInUrl: true
-          },
-          realtime: {
-            params: {
-              eventsPerSecond: 10
-            }
+    if (!response.ok) {
+      throw new Error('Failed to fetch Supabase configuration')
+    }
+    
+    const config = await response.json()
+    
+    return createClient(
+      config.url,
+      config.key,
+      {
+        auth: {
+          autoRefreshToken: true,
+          persistSession: true,
+          detectSessionInUrl: true
+        },
+        realtime: {
+          params: {
+            eventsPerSecond: 10
           }
         }
-      ))
-      
-      initialized = true
-      console.log('Supabase client initialized with server configuration')
-    }
+      }
+    )
   } catch (error) {
-    console.warn('Using placeholder Supabase configuration')
+    console.error('Supabase configuration error:', error)
+    throw error
+  }
+}
+
+export async function getSupabase(): Promise<SupabaseClient<Database>> {
+  if (supabaseClient) {
+    return supabaseClient
   }
   
-  return supabase
+  if (!configPromise) {
+    configPromise = createSupabaseClient()
+  }
+  
+  supabaseClient = await configPromise
+  return supabaseClient
 }
+
+// Proxy object for synchronous access (will throw if not initialized)
+export const supabase = new Proxy({} as SupabaseClient<Database>, {
+  get(target, prop) {
+    if (!supabaseClient) {
+      throw new Error('Supabase client not initialized. Use getSupabase() for proper initialization.')
+    }
+    const value = (supabaseClient as any)[prop]
+    return typeof value === 'function' ? value.bind(supabaseClient) : value
+  }
+})

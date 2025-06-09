@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase, initializeSupabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 import type { User, Session } from '@supabase/supabase-js';
 
 interface AuthState {
@@ -18,32 +18,48 @@ export function useSupabaseAuth() {
   });
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setAuthState({
-        user: session?.user ?? null,
-        session,
-        loading: false,
-        isAuthenticated: !!session,
-      });
-    });
+    let subscription: any = null;
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setAuthState({
-        user: session?.user ?? null,
-        session,
-        loading: false,
-        isAuthenticated: !!session,
-      });
-    });
+    async function initializeAuth() {
+      try {
+        const supabase = await getSupabase();
+        
+        // Get initial session
+        const { data: { session } } = await supabase.auth.getSession();
+        setAuthState({
+          user: session?.user ?? null,
+          session,
+          loading: false,
+          isAuthenticated: !!session,
+        });
 
-    return () => subscription.unsubscribe();
+        // Listen for auth changes
+        const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+          setAuthState({
+            user: session?.user ?? null,
+            session,
+            loading: false,
+            isAuthenticated: !!session,
+          });
+        });
+        subscription = data.subscription;
+      } catch (error) {
+        console.error('Failed to initialize Supabase auth:', error);
+        setAuthState(prev => ({ ...prev, loading: false }));
+      }
+    }
+
+    initializeAuth();
+
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
   }, []);
 
   const signUp = async (email: string, password: string, metadata?: { username?: string }) => {
+    const supabase = await getSupabase();
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -55,6 +71,7 @@ export function useSupabaseAuth() {
   };
 
   const signIn = async (email: string, password: string) => {
+    const supabase = await getSupabase();
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -63,16 +80,19 @@ export function useSupabaseAuth() {
   };
 
   const signOut = async () => {
+    const supabase = await getSupabase();
     const { error } = await supabase.auth.signOut();
     return { error };
   };
 
   const resetPassword = async (email: string) => {
+    const supabase = await getSupabase();
     const { data, error } = await supabase.auth.resetPasswordForEmail(email);
     return { data, error };
   };
 
   const updateProfile = async (updates: { username?: string; email?: string }) => {
+    const supabase = await getSupabase();
     const { data, error } = await supabase.auth.updateUser({
       email: updates.email,
       data: { username: updates.username },
