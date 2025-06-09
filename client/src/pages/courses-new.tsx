@@ -132,7 +132,7 @@ export default function CoursesNew() {
 
         {/* Courses Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredCourses.map(course => {
+          {filteredCourses.map((course: Course) => {
             const discountedPrice = Number(course.full_course_price_brl) * (1 - course.discount_percentage / 100);
             
             return (
