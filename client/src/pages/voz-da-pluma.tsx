@@ -390,6 +390,9 @@ export default function VozDaPluma() {
           </div>
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

@@ -30,6 +30,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import Footer from "@/components/footer";
 
 interface Grimoire {
   id: number;
@@ -647,6 +648,9 @@ export default function GrimoiresPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

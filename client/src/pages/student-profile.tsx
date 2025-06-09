@@ -11,6 +11,7 @@ import {
   CheckCircle, TrendingUp, Calendar, User
 } from "lucide-react";
 import SiteNavigation from "@/components/SiteNavigation";
+import Footer from "@/components/footer";
 
 interface StudentCourse {
   id: number;
@@ -472,6 +473,9 @@ export default function StudentProfile() {
           </TabsContent>
         </Tabs>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
