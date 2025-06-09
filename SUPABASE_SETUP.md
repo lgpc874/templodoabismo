@@ -256,12 +256,24 @@ function UploadComponent() {
 
 ## Testing the Setup
 
-Access `/supabase-demo` route to test all Supabase features:
-- User registration and login
-- Creating courses and poems
-- File uploads
-- Real-time data updates
-- Connection status monitoring
+The project includes a comprehensive demo at `/supabase-demo` that tests:
+- Database connection verification
+- User registration with email/password
+- Course creation and real-time data display
+- Error handling and status monitoring
+
+**Quick Start:**
+1. Set up your Supabase project at https://supabase.com
+2. Copy the database schema from this file to your Supabase SQL editor
+3. Add your credentials to environment variables
+4. Access `/supabase-demo` to verify all functionality
+
+**Demo Features:**
+- Live connection status indicator
+- User authentication testing
+- Database CRUD operations
+- Real-time data synchronization
+- Error reporting and debugging
 
 ## Security Notes
 
