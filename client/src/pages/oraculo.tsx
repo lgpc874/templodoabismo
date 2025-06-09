@@ -59,7 +59,7 @@ export default function Oraculo() {
       name: "Tarô Luciferiano",
       description: "Consulte as cartas ancestrais para revelar caminhos ocultos e verdades profundas sobre seu destino.",
       icon: Eye,
-      cost: 3,
+      price_brl: 700, // R$ 7.00
       color: "text-red-500",
     },
     {
@@ -67,7 +67,7 @@ export default function Oraculo() {
       name: "Espelho Negro",
       description: "Olhe nas profundezas do espelho abissal e veja reflexões de sua alma e futuro.",
       icon: Circle,
-      cost: 2,
+      price_brl: 500, // R$ 5.00
       color: "text-purple-500",
     },
     {
@@ -75,7 +75,7 @@ export default function Oraculo() {
       name: "Runas Antigas",
       description: "As pedras ancestrais revelam mensagens dos antigos poderes e guiam sua jornada.",
       icon: Zap,
-      cost: 2,
+      price_brl: 500, // R$ 5.00
       color: "text-blue-500",
     },
     {
@@ -252,20 +252,16 @@ export default function Oraculo() {
           </p>
         </div>
 
-        {/* User Credits Display - Only T'KAZH */}
-        {isAuthenticated && user && (
+        {/* Payment Notice */}
+        {isAuthenticated && (
           <div className="floating-card max-w-md mx-auto mb-12 p-6 text-center bg-gradient-to-r from-amber-900/20 to-red-900/20">
-            <h3 className="text-xl font-bold text-amber-400 mb-3">Créditos T'KAZH</h3>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-yellow-400 mb-2">{user.tkazh_credits}</div>
-              <div className="text-sm text-gray-400 mb-4">Moeda Sagrada do Templo</div>
+            <h3 className="text-xl font-bold text-amber-400 mb-3">Consultas Oraculares</h3>
+            <p className="text-gray-300 text-sm mb-4">
+              Pagamento direto por consulta com preços justos em Real Brasileiro
+            </p>
+            <div className="text-xs text-gray-400">
+              Valores: R$ 3,00 - R$ 10,00 por consulta
             </div>
-            <button 
-              onClick={() => window.location.href = '/comprar-tkazh'}
-              className="bg-gradient-to-r from-amber-600 to-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-amber-700 hover:to-red-700 transition-colors"
-            >
-              Adquirir Mais T'KAZH
-            </button>
           </div>
         )}
 

@@ -5,8 +5,6 @@ interface User {
   id: number;
   username: string;
   email: string;
-  tkazh_credits: number;
-  free_credits: number;
   initiation_level: number;
   personal_seal_generated: boolean;
 }

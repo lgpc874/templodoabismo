@@ -139,7 +139,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           content: generatedPoem.content,
           author: generatedPoem.author,
           date: today,
-          is_active: true,
+          is_ai_generated: true,
+          published: true,
         });
       }
       

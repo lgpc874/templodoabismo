@@ -33,7 +33,7 @@ function Router() {
       <Route path="/voz-da-pluma" component={VozDaPluma} />
 
       <Route path="/liber-prohibitus" component={LiberProhibitus} />
-      <Route path="/comprar-tkazh" component={ComprarTkazh} />
+
       <Route path="/magus-secretum" component={SimpleAdminLogin} />
       <Route path="/admin" component={AdminDashboard} />
       <Route component={NotFound} />

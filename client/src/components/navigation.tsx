@@ -74,12 +74,7 @@ export default function Navigation() {
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <>
-                <div className="flex items-center space-x-2 text-yellow-400">
-                  <Coins className="w-4 h-4" />
-                  <span className="text-sm">
-                    {user?.tkazh_credits || 0} + {user?.free_credits || 0} T'KAZH
-                  </span>
-                </div>
+
                 <div className="flex items-center space-x-2 text-red-200">
                   <User className="w-4 h-4" />
                   <span className="text-sm">{user?.username}</span>
