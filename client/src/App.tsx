@@ -1,4 +1,5 @@
 import { Switch, Route } from "wouter";
+import React, { lazy } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -20,6 +21,13 @@ function Router() {
       <Route path="/acesso" component={Login} />
       <Route path="/sobre" component={Sobre} />
       <Route path="/oraculo" component={Oraculo} />
+      <Route path="/courses" component={lazy(() => import("./pages/courses"))} />
+      <Route path="/grimoires" component={lazy(() => import("./pages/grimoires"))} />
+      <Route path="/bibliotheca" component={lazy(() => import("./pages/bibliotheca"))} />
+      <Route path="/voz-da-pluma" component={lazy(() => import("./pages/voz-da-pluma"))} />
+      <Route path="/vip" component={lazy(() => import("./pages/vip"))} />
+      <Route path="/liber-prohibitus" component={lazy(() => import("./pages/liber-prohibitus"))} />
+      <Route path="/comprar-tkazh" component={lazy(() => import("./pages/comprar-tkazh"))} />
       <Route path="/magus-secretum" component={SimpleAdminLogin} />
       <Route path="/admin" component={AdminDashboard} />
       <Route component={NotFound} />

@@ -140,7 +140,118 @@
   transition: all 0.3s ease;
 }
 
+/* Templo do Abismo Mystical Styles */
+.abyssal-card-transparent {
+  @apply bg-black/10 backdrop-blur-md border border-yellow-600/20 shadow-2xl hover:bg-black/20 hover:border-yellow-500/40;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 0 20px rgba(234, 179, 8, 0.1),
+    0 0 40px rgba(234, 179, 8, 0.05),
+    inset 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.flame-text-clean {
+  background: linear-gradient(45deg, #b45309, #d97706, #eab308, #f59e0b, #d97706, #92400e);
+  background-size: 600% 600%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: flame-shimmer 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 15px rgba(234, 179, 8, 0.4)) drop-shadow(0 0 30px rgba(234, 179, 8, 0.2));
+}
+
+.mystical-glow {
+  filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 0 20px currentColor);
+  animation: mystical-pulse 3s ease-in-out infinite alternate;
+}
+
+.mystical-particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, rgba(234, 179, 8, 0.4), transparent),
+    radial-gradient(1px 1px at 40px 70px, rgba(168, 85, 247, 0.3), transparent),
+    radial-gradient(2px 2px at 90px 40px, rgba(59, 130, 246, 0.2), transparent),
+    radial-gradient(1px 1px at 130px 80px, rgba(234, 179, 8, 0.3), transparent),
+    radial-gradient(2px 2px at 160px 30px, rgba(16, 185, 129, 0.2), transparent),
+    radial-gradient(1px 1px at 200px 60px, rgba(239, 68, 68, 0.2), transparent);
+  background-repeat: repeat;
+  background-size: 300px 200px;
+  animation: mystical-float 25s linear infinite;
+  opacity: 0.6;
+}
+
+.floating-element {
+  animation: gentle-float 8s ease-in-out infinite;
+}
+
+.ethereal-glow {
+  box-shadow: 
+    0 0 25px rgba(234, 179, 8, 0.3),
+    0 0 50px rgba(234, 179, 8, 0.15),
+    inset 0 0 25px rgba(234, 179, 8, 0.05);
+}
+
 /* Templo do Abismo Animations */
+@keyframes flame-shimmer {
+  0%, 100% { 
+    background-position: 0% 50%;
+    filter: drop-shadow(0 0 15px rgba(234, 179, 8, 0.4)) drop-shadow(0 0 30px rgba(234, 179, 8, 0.2));
+  }
+  25% { 
+    background-position: 100% 50%;
+    filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.6)) drop-shadow(0 0 40px rgba(234, 179, 8, 0.3));
+  }
+  50% { 
+    background-position: 100% 100%;
+    filter: drop-shadow(0 0 25px rgba(234, 179, 8, 0.5)) drop-shadow(0 0 50px rgba(234, 179, 8, 0.25));
+  }
+  75% { 
+    background-position: 0% 100%;
+    filter: drop-shadow(0 0 18px rgba(234, 179, 8, 0.45)) drop-shadow(0 0 35px rgba(234, 179, 8, 0.22));
+  }
+}
+
+@keyframes mystical-pulse {
+  0% { 
+    filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 0 20px currentColor);
+    transform: scale(1);
+  }
+  100% { 
+    filter: drop-shadow(0 0 15px currentColor) drop-shadow(0 0 30px currentColor);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes mystical-float {
+  0% { 
+    transform: translateX(0px) translateY(0px) rotate(0deg);
+    opacity: 0.6;
+  }
+  33% { 
+    transform: translateX(30px) translateY(-30px) rotate(120deg);
+    opacity: 0.8;
+  }
+  66% { 
+    transform: translateX(-20px) translateY(20px) rotate(240deg);
+    opacity: 0.4;
+  }
+  100% { 
+    transform: translateX(0px) translateY(0px) rotate(360deg);
+    opacity: 0.6;
+  }
+}
+
+@keyframes gentle-float {
+  0%, 100% { 
+    transform: translateY(0px) scale(1);
+  }
+  50% { 
+    transform: translateY(-10px) scale(1.02);
+  }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
