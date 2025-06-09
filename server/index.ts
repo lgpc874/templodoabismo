@@ -40,39 +40,23 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Essential API endpoints registered early to avoid Vite interception
+  // Core API endpoints with direct database access
   app.get('/api/courses', async (req, res) => {
     try {
-      console.log('API: Fetching courses from database...');
-      const result = await db.execute(`
-        SELECT id, title, description, level, price_brl, modules, requirements, rewards, type, is_active, created_at
-        FROM courses 
-        WHERE is_active = true 
-        ORDER BY level, title
-      `);
-      console.log('API: Successfully fetched courses:', result.rows.length);
-      res.json(result.rows);
+      const result = await db.select().from(courses).where(eq(courses.is_active, true));
+      res.json(result);
     } catch (error: any) {
-      console.error('API: Courses error:', error);
+      console.error('Courses API error:', error);
       res.status(500).json({ message: 'Failed to get courses', error: error.message });
     }
   });
 
   app.get('/api/grimoires', async (req, res) => {
     try {
-      console.log('API: Fetching grimoires from database...');
-      const result = await db.execute(`
-        SELECT id, title, description, author, level, purchase_price_brl, rental_price_brl, 
-               chapter_price_brl, rental_days, total_chapters, cover_image, category, 
-               enable_chapter_purchase, enable_online_reading, is_active, created_at
-        FROM grimoires 
-        WHERE is_active = true 
-        ORDER BY level, title
-      `);
-      console.log('API: Successfully fetched grimoires:', result.rows.length);
-      res.json(result.rows);
+      const result = await db.select().from(grimoires).where(eq(grimoires.is_active, true));
+      res.json(result);
     } catch (error: any) {
-      console.error('API: Grimoires error:', error);
+      console.error('Grimoires API error:', error);
       res.status(500).json({ message: 'Failed to get grimoires', error: error.message });
     }
   });
