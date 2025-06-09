@@ -48,18 +48,13 @@ async function requireAdmin(req: any, res: Response, next: any) {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
-  // Working API endpoints - must be first to avoid routing conflicts
+  // Essential API endpoints - must be first to ensure proper routing
   app.get('/api/courses', async (req: Request, res: Response) => {
     try {
-      console.log('Fetching courses...');
-      const result = await db.execute(`
-        SELECT id, title, description, level, price_brl, modules, requirements, rewards, type, is_active, created_at
-        FROM courses 
-        WHERE is_active = true 
-        ORDER BY level, title
-      `);
-      console.log('Courses fetched:', result.rows.length);
-      res.json(result.rows);
+      console.log('Fetching courses from database...');
+      const result = await storage.getCourses();
+      console.log('Successfully fetched courses:', result.length);
+      res.json(result);
     } catch (error: any) {
       console.error('Courses error:', error);
       res.status(500).json({ message: 'Failed to get courses', error: error.message });
@@ -68,17 +63,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/grimoires', async (req: Request, res: Response) => {
     try {
-      console.log('Fetching grimoires...');
-      const result = await db.execute(`
-        SELECT id, title, description, author, level, purchase_price_brl, rental_price_brl, 
-               chapter_price_brl, rental_days, total_chapters, cover_image, category, 
-               enable_chapter_purchase, enable_online_reading, is_active, created_at
-        FROM grimoires 
-        WHERE is_active = true 
-        ORDER BY level, title
-      `);
-      console.log('Grimoires fetched:', result.rows.length);
-      res.json(result.rows);
+      console.log('Fetching grimoires from database...');
+      const result = await storage.getGrimoires();
+      console.log('Successfully fetched grimoires:', result.length);
+      res.json(result);
     } catch (error: any) {
       console.error('Grimoires error:', error);
       res.status(500).json({ message: 'Failed to get grimoires', error: error.message });
