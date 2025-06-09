@@ -112,19 +112,7 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* VIP Section */}
-          <Link href="/vip">
-            <div className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300">
-              <div className="p-6 text-center">
-                <Crown className="w-12 h-12 mx-auto mb-4 text-yellow-500" />
-                <h3 className="text-xl font-bold text-amber-400 mb-3">Círculo VIP</h3>
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  Acesso exclusivo a ensinamentos avançados, rituais especiais e 
-                  mentoria personalizada. Para iniciados sérios.
-                </p>
-              </div>
-            </div>
-          </Link>
+
 
           {/* Bibliotheca Section */}
           <Link href="/bibliotheca">

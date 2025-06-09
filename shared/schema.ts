@@ -13,7 +13,7 @@ export const users = pgTable("users", {
   personal_seal_generated: boolean("personal_seal_generated").default(false),
   personal_seal_url: text("personal_seal_url"),
   magical_name: text("magical_name"),
-  member_type: text("member_type").default("initiate"), // initiate, member, vip
+  member_type: text("member_type").default("initiate"), // initiate, member
   role: text("role").notNull().default("user"),
   last_credit_reset: timestamp("last_credit_reset").defaultNow(),
   oracle_uses_today: integer("oracle_uses_today").default(0),

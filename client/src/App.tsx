@@ -13,7 +13,7 @@ import Courses from "@/pages/courses";
 import Grimoires from "@/pages/grimoires";
 import Bibliotheca from "@/pages/bibliotheca";
 import VozDaPluma from "@/pages/voz-da-pluma";
-import Vip from "@/pages/vip";
+
 import LiberProhibitus from "@/pages/liber-prohibitus";
 import ComprarTkazh from "@/pages/comprar-tkazh";
 import SimpleAdminLogin from "@/pages/admin/SimpleAdminLogin";
@@ -31,7 +31,7 @@ function Router() {
       <Route path="/grimoires" component={Grimoires} />
       <Route path="/bibliotheca" component={Bibliotheca} />
       <Route path="/voz-da-pluma" component={VozDaPluma} />
-      <Route path="/vip" component={Vip} />
+
       <Route path="/liber-prohibitus" component={LiberProhibitus} />
       <Route path="/comprar-tkazh" component={ComprarTkazh} />
       <Route path="/magus-secretum" component={SimpleAdminLogin} />

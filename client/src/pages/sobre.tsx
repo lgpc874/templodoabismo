@@ -146,24 +146,25 @@ export default function Sobre() {
           </div>
         </div>
 
-        {/* The Inner Circle */}
+        {/* The Sacred Knowledge */}
         <div className="floating-card max-w-4xl mx-auto mb-16">
           <div className="p-8">
             <div className="text-center mb-8">
-              <Crown className="w-16 h-16 mx-auto mb-4 text-yellow-400" />
-              <h2 className="text-3xl font-bold text-amber-400 mb-4">O Círculo Interior</h2>
+              <BookOpen className="w-16 h-16 mx-auto mb-4 text-blue-400" />
+              <h2 className="text-3xl font-bold text-amber-400 mb-4">A Gnose Suprema</h2>
             </div>
             
             <div className="text-gray-300 leading-relaxed space-y-6">
               <p>
                 Para aqueles que demonstram verdadeiro comprometimento com a Obra, 
-                o Círculo VIP oferece acesso aos ensinamentos mais avançados e às 
-                práticas reservadas apenas aos iniciados sérios.
+                os ensinamentos mais profundos se revelam através do progresso 
+                natural na jornada iniciática.
               </p>
               
               <p>
-                Aqui, os mistérios da Bibliotheca Secreta se revelam, contendo textos 
-                de poder extraordinário que foram mantidos ocultos por séculos. 
+                Os mistérios da Bibliotheca Secreta aguardam aqueles que completaram 
+                sua formação básica nos três primeiros cursos, contendo textos 
+                de poder extraordinário que foram preservados através dos séculos. 
                 O acesso a estes conhecimentos é conquistado através da dedicação 
                 genuína ao caminho da transformação interior.
               </p>
