@@ -124,16 +124,14 @@ export default function Home() {
     <div className="min-h-screen relative overflow-hidden">
       <Navigation />
       
-      {/* Fixed Central Rotating Seal - Larger and more prominent */}
+      {/* Fixed Central Rotating Seal - Your Custom Image */}
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
-        <div className="rotating-seal w-80 h-80 opacity-15">
-          <svg viewBox="0 0 200 200" className="w-full h-full">
-            <circle cx="100" cy="100" r="90" fill="none" stroke="rgb(234, 179, 8)" strokeWidth="2"/>
-            <polygon points="100,20 130,80 190,80 140,120 160,180 100,140 40,180 60,120 10,80 70,80" 
-                     fill="none" stroke="rgb(234, 179, 8)" strokeWidth="2"/>
-            <circle cx="100" cy="100" r="15" fill="rgb(234, 179, 8)"/>
-            <path d="M100,85 L115,100 L100,115 L85,100 Z" fill="rgb(234, 179, 8)"/>
-          </svg>
+        <div className="rotating-seal w-96 h-96 opacity-20">
+          <img 
+            src="/seal.png" 
+            alt="Selo do Templo do Abismo" 
+            className="w-full h-full object-contain filter drop-shadow-lg"
+          />
         </div>
       </div>
 

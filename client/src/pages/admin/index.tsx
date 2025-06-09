@@ -240,6 +240,67 @@ export default function AdminDashboard() {
           <TabsContent value="settings" className="space-y-6">
             <Card className="abyssal-card">
               <CardHeader>
+                <CardTitle className="text-red-400">Configurações de APIs</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Configure as chaves das APIs de pagamento e IA
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <Label className="text-white">OpenAI API Key</Label>
+                    <Input 
+                      type="password"
+                      placeholder="sk-..." 
+                      className="bg-black/50 border-red-800/50"
+                    />
+                    <p className="text-xs text-gray-400">Para geração de conteúdo com IA</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-white">PayPal Client ID</Label>
+                    <Input 
+                      placeholder="PayPal Client ID"
+                      className="bg-black/50 border-red-800/50"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-white">PayPal Client Secret</Label>
+                    <Input 
+                      type="password"
+                      placeholder="PayPal Client Secret"
+                      className="bg-black/50 border-red-800/50"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-white">Mercado Pago Access Token</Label>
+                    <Input 
+                      type="password"
+                      placeholder="Mercado Pago Access Token"
+                      className="bg-black/50 border-red-800/50"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-white">InfinitePay API Key</Label>
+                    <Input 
+                      type="password"
+                      placeholder="InfinitePay API Key"
+                      className="bg-black/50 border-red-800/50"
+                    />
+                  </div>
+                  
+                  <Button className="bg-red-600 hover:bg-red-700">
+                    Salvar Configurações de API
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="abyssal-card">
+              <CardHeader>
                 <CardTitle className="text-red-400">Configurações Gerais</CardTitle>
                 <CardDescription className="text-gray-400">
                   Configurações globais do templo
@@ -251,14 +312,6 @@ export default function AdminDashboard() {
                     <Label className="text-white">Nome do Site</Label>
                     <Input 
                       defaultValue="Templo do Abismo" 
-                      className="bg-black/50 border-red-800/50"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label className="text-white">Descrição</Label>
-                    <Textarea 
-                      defaultValue="Portal místico de ensinamentos luciferiano-ancestrais"
                       className="bg-black/50 border-red-800/50"
                     />
                   </div>

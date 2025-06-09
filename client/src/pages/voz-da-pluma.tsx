@@ -22,7 +22,7 @@ import {
 export default function VozDaPluma() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [dailyPoem, setDailyPoem] = useState(null);
+  const [dailyPoem, setDailyPoem] = useState<any>(null);
 
   useEffect(() => {
     loadDailyPoem();
