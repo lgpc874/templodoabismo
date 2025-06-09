@@ -10,6 +10,7 @@ import Login from "@/pages/login";
 import Sobre from "@/pages/sobre";
 import Oraculo from "@/pages/oraculo";
 import SimpleAdminLogin from "@/pages/admin/SimpleAdminLogin";
+import AdminDashboard from "@/pages/admin";
 
 function Router() {
   return (
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/sobre" component={Sobre} />
       <Route path="/oraculo" component={Oraculo} />
       <Route path="/magus-secretum" component={SimpleAdminLogin} />
+      <Route path="/admin" component={AdminDashboard} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -641,6 +641,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin statistics endpoint
+  app.get("/api/admin/stats", requireAdmin, async (req: any, res) => {
+    try {
+      const stats = await storage.getStats();
+      res.json({
+        totalUsers: stats.totalUsers,
+        totalCourses: 5, // Placeholder - would be from actual course data
+        totalGrimoires: 3, // Placeholder - would be from actual grimoire data
+        todayConsultations: Math.floor(Math.random() * 20) + 5 // Placeholder - would be from actual consultation logs
+      });
+    } catch (error) {
+      console.error('Stats error:', error);
+      res.status(500).json({ message: "Failed to load statistics" });
+    }
+  });
+
   // Serve uploaded files
   app.use("/uploads", express.static("uploads"));
 

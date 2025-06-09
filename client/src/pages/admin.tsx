@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import AIContentGenerator from "./admin/components/AIContentGenerator";
 
-export default function AdminDashboard() {
+function AdminDashboard() {
   const { user } = useAuth();
   const [stats, setStats] = useState({
     totalUsers: 0,
