@@ -32,7 +32,7 @@ interface Course {
   description: string;
   type: string;
   level: number;
-  price_brl: number;
+  price_brl: string;
   requirements: string[];
   rewards: string[];
   estimatedDuration?: number;
@@ -344,7 +344,7 @@ export default function Courses() {
                     <div className="flex justify-between items-center pt-2 border-t border-purple-500/20">
                       <div>
                         <span className="text-xl font-bold text-amber-400">
-                          R$ {course.price_brl.toFixed(2)}
+                          R$ {parseFloat(String(course.price_brl) || '0').toFixed(2)}
                         </span>
                       </div>
                       <Button 
@@ -480,7 +480,7 @@ export default function Courses() {
                   <div className="flex justify-between items-center">
                     <div>
                       <div className="text-3xl font-bold text-amber-400">
-                        R$ {selectedCourse.price_brl.toFixed(2)}
+                        R$ {parseFloat(String(selectedCourse.price_brl) || '0').toFixed(2)}
                       </div>
                       <div className="text-sm text-gray-400">
                         Acesso completo ao curso
