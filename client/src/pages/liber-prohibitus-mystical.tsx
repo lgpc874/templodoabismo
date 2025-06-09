@@ -357,7 +357,7 @@ export default function LiberProhibitus() {
   return (
     <MysticalGate
       title="LIBER PROHIBITUS"
-      description="Arquivo dos conhecimentos mais perigosos do ocultismo. Textos banidos, censurados e considerados demasiadamente arriscados para circulação pública. Grimórios que testam os limites da sanidade e segurança espiritual."
+      description="Arquivo amaldiçoado dos conhecimentos que podem fragmentar a mente humana. Textos que sussurram loucura, grimórios que corrompem a alma e escrituras que testam os limites da sanidade mortal."
       mysticText="Apenas aqueles que dominam as trevas podem caminhar seguramente pelos abismos do conhecimento proibido"
       icon={<Skull className="w-8 h-8 text-red-400" />}
     >
