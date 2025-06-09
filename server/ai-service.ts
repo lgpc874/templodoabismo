@@ -1,9 +1,9 @@
 import OpenAI from "openai";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ 
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({ 
   apiKey: process.env.OPENAI_API_KEY 
-});
+}) : null;
 
 export interface OracleConsultation {
   type: string;
@@ -36,6 +36,10 @@ export interface AbyssalVoice {
 export class TemploAI {
   
   async generateTarotReading(question: string): Promise<TarotReading> {
+    if (!openai) {
+      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
+    }
+    
     try {
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
@@ -69,6 +73,10 @@ export class TemploAI {
   }
 
   async generateMirrorReading(question: string): Promise<MirrorReading> {
+    if (!openai) {
+      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
+    }
+    
     try {
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
@@ -99,6 +107,10 @@ export class TemploAI {
   }
 
   async generateRuneReading(question: string): Promise<RuneReading> {
+    if (!openai) {
+      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
+    }
+    
     try {
       const response = await openai.chat.completions.create({
         model: "gpt-4o",

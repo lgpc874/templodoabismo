@@ -601,7 +601,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     } catch (error) {
       console.error('Oracle consultation error:', error);
-      res.status(500).json({ message: error.message || "Oracle consultation failed" });
+      const errorMessage = error instanceof Error ? error.message : "Oracle consultation failed";
+      res.status(500).json({ message: errorMessage });
     }
   });
 
