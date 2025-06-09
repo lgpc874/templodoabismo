@@ -16,8 +16,6 @@ import VozDaPluma from "@/pages/voz-da-pluma-mystical";
 import LiberProhibitus from "@/pages/liber-prohibitus-mystical";
 import Blog from "@/pages/blog";
 
-import SimpleAdminLogin from "@/pages/admin/SimpleAdminLogin";
-import AdminDashboard from "@/pages/admin";
 import AdminControl from "@/pages/admin-control";
 
 function Router() {
@@ -38,8 +36,6 @@ function Router() {
       <Route path="/gnosis" component={Blog} />
       <Route path="/liber-prohibitus" component={LiberProhibitus} />
 
-      <Route path="/magus-secretum" component={SimpleAdminLogin} />
-      <Route path="/admin" component={AdminDashboard} />
       <Route path="/sanctum-administratoris" component={AdminControl} />
       <Route component={NotFound} />
     </Switch>
