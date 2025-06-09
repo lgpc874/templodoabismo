@@ -1,9 +1,7 @@
 import type { Express, Request, Response } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
-import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { storage } from "./supabase-storage";
 import { temploAI } from "./ai-service";
 
 import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
