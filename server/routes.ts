@@ -5,17 +5,7 @@ import { storage } from "./storage";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 import { temploAI } from "./ai-service";
-import { 
-  courses, 
-  grimoires, 
-  users,
-  susurriAbyssos,
-  blogPosts,
-  blogCategories,
-  pages,
-  scriptures,
-  mediaLibrary
-} from "@shared/schema";
+
 import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -189,10 +179,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Courses routes
   app.get('/api/courses', async (req: Request, res: Response) => {
     try {
-      console.log('API: Attempting to fetch courses...');
-      const coursesData = await storage.getCourses();
-      console.log('API: Courses fetched successfully:', coursesData.length);
-      res.json(coursesData);
+      console.log('API: Attempting to fetch courses directly...');
+      const result = await db.execute(`
+        SELECT id, title, description, level, price_brl, modules, requirements, rewards, type, is_active, created_at
+        FROM courses 
+        WHERE is_active = true 
+        ORDER BY level, title
+      `);
+      console.log('API: Courses fetched successfully:', result.rows.length);
+      res.json(result.rows);
     } catch (error: any) {
       console.error('API: Courses error details:', error);
       res.status(500).json({ message: 'Failed to get courses', error: error.message });
