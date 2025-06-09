@@ -8,13 +8,13 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Login from "@/pages/login";
 import Sobre from "@/pages/sobre";
-import Oraculo from "@/pages/oraculo";
-import Courses from "@/pages/courses";
-import Grimoires from "@/pages/grimoires";
-import Bibliotheca from "@/pages/bibliotheca";
-import VozDaPluma from "@/pages/voz-da-pluma";
+import Oraculo from "@/pages/oraculo-mystical";
+import Courses from "@/pages/courses-mystical";
+import Grimoires from "@/pages/grimoires-mystical";
+import Bibliotheca from "@/pages/bibliotheca-mystical";
+import VozDaPluma from "@/pages/voz-da-pluma-mystical";
 
-import LiberProhibitus from "@/pages/liber-prohibitus";
+import LiberProhibitus from "@/pages/liber-prohibitus-mystical";
 
 import SimpleAdminLogin from "@/pages/admin/SimpleAdminLogin";
 import AdminDashboard from "@/pages/admin";

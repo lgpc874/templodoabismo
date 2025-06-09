@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Flame, Crystal, Zap, Eye, BookOpen, History, Skull, Moon, Star } from "lucide-react";
+import { Flame, Zap, Eye, BookOpen, History, Skull, Moon, Star } from "lucide-react";
 import MysticalGate from "@/components/MysticalGate";
 import Navigation from "@/components/navigation";
 import { apiRequest } from "@/lib/queryClient";
@@ -149,7 +149,7 @@ function OracleContent() {
               <Card className="glass-effect border-purple-900/30">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-purple-400 font-cinzel">
-                    <Crystal className="w-6 h-6" />
+                    <Star className="w-6 h-6" />
                     Escolha Seu Oráculo
                   </CardTitle>
                 </CardHeader>
@@ -297,7 +297,7 @@ export default function Oraculo() {
       title="ORÁCULOS ABISSAIS"
       description="Portal sagrado onde iniciados consultam entidades ancestrais através de rituais divinatórios milenares. Cinco métodos oraculares aguardam aqueles que buscam conhecimento além do véu da realidade."
       mysticText="Que os espíritos sussurrem verdades aos corajosos o suficiente para questionar o destino"
-      icon={<Crystal className="w-8 h-8 text-purple-400" />}
+      icon={<Star className="w-8 h-8 text-purple-400" />}
     >
       <OracleContent />
     </MysticalGate>
