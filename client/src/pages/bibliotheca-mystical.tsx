@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Lock, Crown, Scroll, Eye, Flame, Star } from "lucide-react";
 import MysticalGate from "@/components/MysticalGate";
-import Navigation from "@/components/navigation";
+import SiteNavigation from "@/components/SiteNavigation";
 import { useAuth } from "@/contexts/AuthContext";
 
 function BibliothecaContent() {
@@ -68,7 +68,7 @@ function BibliothecaContent() {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      <Navigation />
+      <SiteNavigation />
       
       {/* Mystical background */}
       <div className="fixed inset-0 overflow-hidden">
@@ -258,13 +258,16 @@ function BibliothecaContent() {
 
 export default function Bibliotheca() {
   return (
-    <MysticalGate
-      title="BIBLIOTHECA SECRETA"
-      description="Câmara amaldiçoada onde jazem os conhecimentos que podem despedaçar a mente mortal. Manuscritos que sussurram loucura, tratados que corrompem a alma e escrituras que testam os limites da sanidade humana."
-      mysticText="Que apenas os dignos contemplem os segredos dos antigos mestres"
-      icon={<BookOpen className="w-8 h-8 text-indigo-400" />}
-    >
-      <BibliothecaContent />
-    </MysticalGate>
+    <div className="min-h-screen bg-black relative overflow-hidden">
+      <SiteNavigation />
+      <MysticalGate
+        title="BIBLIOTHECA SECRETA"
+        description="Câmara amaldiçoada onde jazem os conhecimentos que podem despedaçar a mente mortal. Manuscritos que sussurram loucura, tratados que corrompem a alma e escrituras que testam os limites da sanidade humana."
+        mysticText="Que apenas os dignos contemplem os segredos dos antigos mestres"
+        icon={<BookOpen className="w-8 h-8 text-indigo-400" />}
+      >
+        <BibliothecaContent />
+      </MysticalGate>
+    </div>
   );
 }

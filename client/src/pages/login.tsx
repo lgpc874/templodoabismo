@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, EyeOff, Flame, Crown } from "lucide-react";
-import Navigation from "@/components/navigation";
+import SiteNavigation from "@/components/SiteNavigation";
 
 export default function Login() {
   const [, setLocation] = useLocation();
