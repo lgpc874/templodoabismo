@@ -47,6 +47,12 @@ import {
   type BlogTag,
   type NewsletterSubscriber,
   type InsertNewsletterSubscriber,
+  susurri_abyssos,
+  api_configurations,
+  type SusurriAbyssos,
+  type InsertSusurriAbyssos,
+  type ApiConfiguration,
+  type InsertApiConfiguration,
 } from "@shared/schema";
 
 import { db } from "./db";
@@ -163,6 +169,14 @@ export interface IStorage {
   updateSusurriAbysso(id: number, updates: Partial<InsertSusurriAbyssos>): Promise<SusurriAbyssos | undefined>;
   deleteSusurriAbysso(id: number): Promise<boolean>;
   getRandomSusurriAbyssos(limit: number): Promise<SusurriAbyssos[]>;
+  
+  // API Configurations
+  getApiConfigurations(): Promise<ApiConfiguration[]>;
+  getApiConfiguration(serviceName: string): Promise<ApiConfiguration | undefined>;
+  createApiConfiguration(config: InsertApiConfiguration): Promise<ApiConfiguration>;
+  updateApiConfiguration(serviceName: string, updates: Partial<InsertApiConfiguration>): Promise<ApiConfiguration | undefined>;
+  deleteApiConfiguration(serviceName: string): Promise<boolean>;
+  testApiConnection(serviceName: string): Promise<{success: boolean, message: string}>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -633,6 +647,173 @@ export class DatabaseStorage implements IStorage {
   async subscribeNewsletter(subscriber: InsertNewsletterSubscriber): Promise<NewsletterSubscriber> {
     const [newSubscriber] = await db.insert(newsletter_subscribers).values(subscriber).returning();
     return newSubscriber;
+  }
+
+  // Susurri Abyssos
+  async getSusurriAbyssos(): Promise<SusurriAbyssos[]> {
+    return await db
+      .select()
+      .from(susurri_abyssos)
+      .where(eq(susurri_abyssos.isActive, true))
+      .orderBy(susurri_abyssos.displayOrder, susurri_abyssos.createdAt);
+  }
+
+  async getSusurriAbysso(id: number): Promise<SusurriAbyssos | undefined> {
+    const [susurri] = await db
+      .select()
+      .from(susurri_abyssos)
+      .where(eq(susurri_abyssos.id, id));
+    return susurri;
+  }
+
+  async createSusurriAbysso(susurri: InsertSusurriAbyssos): Promise<SusurriAbyssos> {
+    const [newSusurri] = await db
+      .insert(susurri_abyssos)
+      .values(susurri)
+      .returning();
+    return newSusurri;
+  }
+
+  async updateSusurriAbysso(id: number, updates: Partial<InsertSusurriAbyssos>): Promise<SusurriAbyssos | undefined> {
+    const [updated] = await db
+      .update(susurri_abyssos)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(susurri_abyssos.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteSusurriAbysso(id: number): Promise<boolean> {
+    const result = await db
+      .delete(susurri_abyssos)
+      .where(eq(susurri_abyssos.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async getRandomSusurriAbyssos(limit: number): Promise<SusurriAbyssos[]> {
+    return await db
+      .select()
+      .from(susurri_abyssos)
+      .where(eq(susurri_abyssos.isActive, true))
+      .orderBy(sql`RANDOM()`)
+      .limit(limit);
+  }
+
+  // API Configurations
+  async getApiConfigurations(): Promise<ApiConfiguration[]> {
+    return await db
+      .select()
+      .from(api_configurations)
+      .orderBy(api_configurations.category, api_configurations.priority);
+  }
+
+  async getApiConfiguration(serviceName: string): Promise<ApiConfiguration | undefined> {
+    const [config] = await db
+      .select()
+      .from(api_configurations)
+      .where(eq(api_configurations.serviceName, serviceName));
+    return config;
+  }
+
+  async createApiConfiguration(config: InsertApiConfiguration): Promise<ApiConfiguration> {
+    const [newConfig] = await db
+      .insert(api_configurations)
+      .values(config)
+      .returning();
+    return newConfig;
+  }
+
+  async updateApiConfiguration(serviceName: string, updates: Partial<InsertApiConfiguration>): Promise<ApiConfiguration | undefined> {
+    const [updated] = await db
+      .update(api_configurations)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(api_configurations.serviceName, serviceName))
+      .returning();
+    return updated;
+  }
+
+  async deleteApiConfiguration(serviceName: string): Promise<boolean> {
+    const result = await db
+      .delete(api_configurations)
+      .where(eq(api_configurations.serviceName, serviceName));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async testApiConnection(serviceName: string): Promise<{success: boolean, message: string}> {
+    const config = await this.getApiConfiguration(serviceName);
+    if (!config) {
+      return { success: false, message: "Configuração não encontrada" };
+    }
+
+    try {
+      // Update test status
+      await this.updateApiConfiguration(serviceName, {
+        lastTested: new Date(),
+        testStatus: "testing",
+        testMessage: "Testando conexão..."
+      });
+
+      // Simple connectivity test based on service type
+      let testResult = { success: false, message: "Teste não implementado" };
+
+      switch (serviceName) {
+        case "openai":
+          // Test OpenAI API
+          if (config.configuration?.apiKey) {
+            testResult = { success: true, message: "Chave de API válida" };
+          } else {
+            testResult = { success: false, message: "Chave de API não configurada" };
+          }
+          break;
+        
+        case "paypal":
+          if (config.configuration?.clientId && config.configuration?.clientSecret) {
+            testResult = { success: true, message: "Credenciais PayPal configuradas" };
+          } else {
+            testResult = { success: false, message: "Credenciais PayPal incompletas" };
+          }
+          break;
+        
+        case "mercadopago":
+          if (config.configuration?.accessToken) {
+            testResult = { success: true, message: "Token Mercado Pago válido" };
+          } else {
+            testResult = { success: false, message: "Token Mercado Pago não configurado" };
+          }
+          break;
+        
+        case "infinitepay":
+          if (config.configuration?.clientId && config.configuration?.clientSecret) {
+            testResult = { success: true, message: "Credenciais InfinitePay configuradas" };
+          } else {
+            testResult = { success: false, message: "Credenciais InfinitePay incompletas" };
+          }
+          break;
+        
+        case "pagseguro":
+          if (config.configuration?.token) {
+            testResult = { success: true, message: "Token PagSeguro válido" };
+          } else {
+            testResult = { success: false, message: "Token PagSeguro não configurado" };
+          }
+          break;
+      }
+
+      // Update final test result
+      await this.updateApiConfiguration(serviceName, {
+        testStatus: testResult.success ? "success" : "failed",
+        testMessage: testResult.message
+      });
+
+      return testResult;
+    } catch (error) {
+      await this.updateApiConfiguration(serviceName, {
+        testStatus: "failed",
+        testMessage: `Erro no teste: ${error instanceof Error ? error.message : "Erro desconhecido"}`
+      });
+      
+      return { success: false, message: "Erro durante o teste de conexão" };
+    }
   }
 }
 

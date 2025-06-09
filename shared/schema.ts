@@ -243,6 +243,23 @@ export const susurri_abyssos = pgTable("susurri_abyssos", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const api_configurations = pgTable("api_configurations", {
+  id: serial("id").primaryKey(),
+  serviceName: text("service_name").notNull().unique(), // openai, paypal, mercadopago, infinitepay, pagseguro
+  displayName: text("display_name").notNull(),
+  description: text("description"),
+  category: text("category").notNull(), // payments, ai, notifications, etc
+  isEnabled: boolean("is_enabled").notNull().default(false),
+  configuration: jsonb("configuration").notNull().default({}), // API keys, endpoints, settings
+  testEndpoint: text("test_endpoint"), // URL to test API connection
+  lastTested: timestamp("last_tested"),
+  testStatus: text("test_status"), // success, failed, never_tested
+  testMessage: text("test_message"),
+  priority: integer("priority").default(0), // Order within category
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Insert Schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -357,6 +374,15 @@ export const insertSusurriAbyssosSchema = createInsertSchema(susurri_abyssos).om
   updatedAt: true,
 });
 
+export const insertApiConfigurationSchema = createInsertSchema(api_configurations).omit({
+  id: true,
+  lastTested: true,
+  testStatus: true,
+  testMessage: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Auth schemas
 export const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -401,3 +427,5 @@ export type NewsletterSubscriber = typeof newsletter_subscribers.$inferSelect;
 export type InsertNewsletterSubscriber = z.infer<typeof insertNewsletterSubscriberSchema>;
 export type SusurriAbyssos = typeof susurri_abyssos.$inferSelect;
 export type InsertSusurriAbyssos = z.infer<typeof insertSusurriAbyssosSchema>;
+export type ApiConfiguration = typeof api_configurations.$inferSelect;
+export type InsertApiConfiguration = z.infer<typeof insertApiConfigurationSchema>;
