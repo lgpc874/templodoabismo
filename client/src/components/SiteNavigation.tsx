@@ -15,7 +15,6 @@ export default function SiteNavigation() {
     { href: '/grimorios', label: 'Bibliotheca Abyssos', icon: Scroll },
     { href: '/bibliotheca', label: 'Bibliotheca Secreta', icon: Star },
     { href: '/voz-da-pluma', label: 'Vox Plumae', icon: Feather },
-    { href: '/liber-prohibitus', label: 'Liber Prohibitus', icon: Skull },
   ];
 
   const isActive = (href: string) => {
