@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { GraduationCap, Lock, CheckCircle, Star, Flame, Crown, Shield, Eye } from "lucide-react";
 import MysticalGate from "@/components/MysticalGate";
-import Navigation from "@/components/navigation";
+import SiteNavigation from "@/components/SiteNavigation";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -129,7 +129,7 @@ function CoursesContent() {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      <Navigation />
+      <SiteNavigation />
       
       {/* Mystical background */}
       <div className="fixed inset-0 overflow-hidden">

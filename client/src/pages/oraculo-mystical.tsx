@@ -99,7 +99,7 @@ function OracleContent() {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      <Navigation />
+      <SiteNavigation />
       
       {/* Mystical background */}
       <div className="fixed inset-0 overflow-hidden">
