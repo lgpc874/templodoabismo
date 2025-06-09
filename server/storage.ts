@@ -1,26 +1,45 @@
-import { 
-  users, 
-  adminSessions, 
-  siteConfig, 
-  contentSections, 
-  mediaAssets, 
-  activityLogs, 
+import {
+  users,
+  adminSessions,
+  siteConfig,
+  contentSections,
+  mediaAssets,
+  activityLogs,
   backups,
-  type User, 
-  type InsertUser, 
-  type AdminSession, 
-  type SiteConfig, 
-  type InsertSiteConfig, 
-  type ContentSection, 
-  type InsertContentSection, 
-  type MediaAsset, 
-  type InsertMediaAsset, 
-  type ActivityLog, 
-  type InsertActivityLog, 
-  type Backup, 
-  type InsertBackup 
+  courses,
+  grimoires,
+  oracle_sessions,
+  daily_poems,
+  daily_quotes,
+  grimoire_rentals,
+  course_progress,
+  user_progress,
+  liber_access,
+  type User,
+  type InsertUser,
+  type AdminSession,
+  type SiteConfig,
+  type InsertSiteConfig,
+  type ContentSection,
+  type InsertContentSection,
+  type MediaAsset,
+  type InsertMediaAsset,
+  type ActivityLog,
+  type InsertActivityLog,
+  type Backup,
+  type InsertBackup,
+  type Course,
+  type InsertCourse,
+  type Grimoire,
+  type InsertGrimoire,
+  type OracleSession,
+  type InsertOracleSession,
+  type DailyPoem,
+  type InsertDailyPoem,
 } from "@shared/schema";
-import bcrypt from "bcrypt";
+
+import { db } from "./db";
+import { eq, desc, and, lt, gte, sql } from "drizzle-orm";
 
 export interface IStorage {
   // Users
@@ -66,6 +85,41 @@ export interface IStorage {
   createBackup(backup: InsertBackup): Promise<Backup>;
   deleteBackup(id: number): Promise<boolean>;
   
+  // Courses
+  getCourses(): Promise<Course[]>;
+  getAllCourses(): Promise<Course[]>;
+  getCourse(id: number): Promise<Course | undefined>;
+  createCourse(course: InsertCourse): Promise<Course>;
+  updateCourse(id: number, updates: Partial<InsertCourse>): Promise<Course | undefined>;
+  deleteCourse(id: number): Promise<boolean>;
+  
+  // Course Progress
+  createCourseProgress(progress: any): Promise<any>;
+  getUserCourseProgress(userId: number): Promise<any[]>;
+  
+  // Grimoires
+  getGrimoires(): Promise<Grimoire[]>;
+  getAllGrimoires(): Promise<Grimoire[]>;
+  getGrimoire(id: number): Promise<Grimoire | undefined>;
+  createGrimoire(grimoire: InsertGrimoire): Promise<Grimoire>;
+  
+  // Grimoire Rentals/Purchases
+  createGrimoireRental(rental: any): Promise<any>;
+  createGrimoirePurchase(purchase: any): Promise<any>;
+  getUserGrimoireRentals(userId: number): Promise<any[]>;
+  getUserGrimoirePurchases(userId: number): Promise<any[]>;
+  
+  // Oracle Sessions
+  createOracleSession(session: InsertOracleSession): Promise<OracleSession>;
+  getUserOracleHistory(userId: number): Promise<OracleSession[]>;
+  
+  // Daily Content
+  getDailyQuote(date: Date): Promise<any>;
+  createDailyQuote(quote: any): Promise<any>;
+  getDailyPoem(date: Date): Promise<DailyPoem | undefined>;
+  createDailyPoem(poem: InsertDailyPoem): Promise<DailyPoem>;
+  getRecentPoems(days: number): Promise<DailyPoem[]>;
+  
   // Stats
   getStats(): Promise<{
     totalUsers: number;
@@ -75,242 +129,135 @@ export interface IStorage {
   }>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User> = new Map();
-  private adminSessions: Map<string, AdminSession> = new Map();
-  private siteConfigs: Map<string, SiteConfig> = new Map();
-  private contentSections: Map<number, ContentSection> = new Map();
-  private mediaAssets: Map<number, MediaAsset> = new Map();
-  private activityLogs: Map<number, ActivityLog> = new Map();
-  private backups: Map<number, Backup> = new Map();
+export class DatabaseStorage implements IStorage {
   
-  private currentUserId = 1;
-  private currentSiteConfigId = 1;
-  private currentContentSectionId = 1;
-  private currentMediaAssetId = 1;
-  private currentActivityLogId = 1;
-  private currentBackupId = 1;
-
-  constructor() {
-    // Initialize with default admin user
-    this.users.set(1, {
-      id: 1,
-      username: "admin",
-      email: "admin@magussecretum.com",
-      password: "$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi", // password
-      role: "admin",
-      createdAt: new Date(),
-    });
-    this.currentUserId = 2;
-
-    // Initialize default site configuration
-    this.initializeDefaultConfig();
-    // Initialize default admin user
-    this.initializeDefaultAdmin();
-  }
-
-  private initializeDefaultConfig() {
-    const defaultConfigs = [
-      { key: "site_title", value: "Templo do Abismo", category: "general" },
-      { key: "site_tagline", value: "Journey into the depths of mystical knowledge", category: "general" },
-      { key: "site_description", value: "A sanctuary for mystical exploration and spiritual growth", category: "general" },
-      { key: "primary_color", value: "#3B82F6", category: "theme" },
-      { key: "secondary_color", value: "#64748B", category: "theme" },
-      { key: "accent_color", value: "#10B981", category: "theme" },
-      { key: "heading_font", value: "Inter", category: "typography" },
-      { key: "body_font", value: "Inter", category: "typography" },
-    ];
-
-    defaultConfigs.forEach(config => {
-      this.siteConfigs.set(config.key, {
-        id: this.currentSiteConfigId++,
-        key: config.key,
-        value: config.value,
-        category: config.category,
-        updatedAt: new Date(),
-      });
-    });
-  }
-
-  private initializeDefaultAdmin() {
-    try {
-      // Create default admin user if none exists
-      const adminPassword = bcrypt.hashSync('admin123', 10);
-      
-      const adminUser: User = {
-        id: 1,
-        username: 'admin',
-        email: 'admin@templo.com',
-        password: adminPassword,
-        role: 'admin',
-        createdAt: new Date(),
-      };
-      
-      this.users.set(1, adminUser);
-      
-      // Create default test user
-      const userPassword = bcrypt.hashSync('user123', 10);
-      
-      const testUser: User = {
-        id: 2,
-        username: 'usuario',
-        email: 'usuario@templo.com',
-        password: userPassword,
-        role: 'user',
-        createdAt: new Date(),
-      };
-      
-      this.users.set(2, testUser);
-      this.currentUserId = 3;
-    } catch (error) {
-      console.error('Error initializing users:', error);
-    }
-  }
-
   // Users
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.username === username);
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.email === email);
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
   }
 
   async createUser(user: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const newUser: User = {
-      ...user,
-      id,
-      role: user.role || "user",
-      createdAt: new Date(),
-    };
-    this.users.set(id, newUser);
+    const [newUser] = await db.insert(users).values(user).returning();
     return newUser;
   }
 
   async updateUser(id: number, updates: Partial<InsertUser>): Promise<User | undefined> {
-    const user = this.users.get(id);
-    if (!user) return undefined;
-    
-    const updatedUser = { ...user, ...updates };
-    this.users.set(id, updatedUser);
+    const [updatedUser] = await db
+      .update(users)
+      .set(updates)
+      .where(eq(users.id, id))
+      .returning();
     return updatedUser;
   }
 
   async deleteUser(id: number): Promise<boolean> {
-    return this.users.delete(id);
+    const result = await db.delete(users).where(eq(users.id, id));
+    return result.rowCount > 0;
   }
 
   // Admin Sessions
   async createAdminSession(userId: number, token: string, expiresAt: Date): Promise<AdminSession> {
-    const session: AdminSession = {
-      id: Date.now(),
-      userId,
-      token,
-      expiresAt,
-      createdAt: new Date(),
-    };
-    this.adminSessions.set(token, session);
+    const [session] = await db
+      .insert(adminSessions)
+      .values({ userId, token, expiresAt })
+      .returning();
     return session;
   }
 
   async getAdminSession(token: string): Promise<AdminSession | undefined> {
-    const session = this.adminSessions.get(token);
-    if (session && session.expiresAt > new Date()) {
-      return session;
-    }
-    if (session) {
-      this.adminSessions.delete(token);
-    }
-    return undefined;
+    const [session] = await db
+      .select()
+      .from(adminSessions)
+      .where(eq(adminSessions.token, token));
+    return session;
   }
 
   async deleteAdminSession(token: string): Promise<boolean> {
-    return this.adminSessions.delete(token);
+    const result = await db.delete(adminSessions).where(eq(adminSessions.token, token));
+    return result.rowCount > 0;
   }
 
   // Site Configuration
   async getSiteConfig(key?: string): Promise<SiteConfig[]> {
-    const configs = Array.from(this.siteConfigs.values());
-    return key ? configs.filter(config => config.key === key) : configs;
+    if (key) {
+      const configs = await db.select().from(siteConfig).where(eq(siteConfig.key, key));
+      return configs;
+    }
+    return await db.select().from(siteConfig);
   }
 
   async setSiteConfig(config: InsertSiteConfig): Promise<SiteConfig> {
-    const existing = this.siteConfigs.get(config.key);
-    if (existing) {
-      const updated = { ...existing, ...config, updatedAt: new Date() };
-      this.siteConfigs.set(config.key, updated);
-      return updated;
-    } else {
-      const newConfig: SiteConfig = {
-        ...config,
-        id: this.currentSiteConfigId++,
-        updatedAt: new Date(),
-      };
-      this.siteConfigs.set(config.key, newConfig);
-      return newConfig;
-    }
+    const [newConfig] = await db
+      .insert(siteConfig)
+      .values(config)
+      .onConflictDoUpdate({
+        target: siteConfig.key,
+        set: { value: config.value, updatedAt: new Date() }
+      })
+      .returning();
+    return newConfig;
   }
 
   async deleteSiteConfig(key: string): Promise<boolean> {
-    return this.siteConfigs.delete(key);
+    const result = await db.delete(siteConfig).where(eq(siteConfig.key, key));
+    return result.rowCount > 0;
   }
 
   // Content Sections
   async getContentSections(pageId?: string): Promise<ContentSection[]> {
-    const sections = Array.from(this.contentSections.values());
-    return pageId 
-      ? sections.filter(section => section.pageId === pageId).sort((a, b) => a.order - b.order)
-      : sections.sort((a, b) => a.order - b.order);
+    if (pageId) {
+      return await db
+        .select()
+        .from(contentSections)
+        .where(eq(contentSections.pageId, pageId))
+        .orderBy(contentSections.sortOrder);
+    }
+    return await db.select().from(contentSections).orderBy(contentSections.sortOrder);
   }
 
   async getContentSection(id: number): Promise<ContentSection | undefined> {
-    return this.contentSections.get(id);
+    const [section] = await db.select().from(contentSections).where(eq(contentSections.id, id));
+    return section;
   }
 
   async createContentSection(section: InsertContentSection): Promise<ContentSection> {
-    const id = this.currentContentSectionId++;
-    const newSection: ContentSection = {
-      id,
-      pageId: section.pageId,
-      sectionType: section.sectionType,
-      title: section.title ?? null,
-      content: section.content,
-      order: section.order ?? 0,
-      isEnabled: section.isEnabled ?? true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    this.contentSections.set(id, newSection);
+    const [newSection] = await db.insert(contentSections).values(section).returning();
     return newSection;
   }
 
   async updateContentSection(id: number, updates: Partial<InsertContentSection>): Promise<ContentSection | undefined> {
-    const section = this.contentSections.get(id);
-    if (!section) return undefined;
-    
-    const updatedSection = { ...section, ...updates, updatedAt: new Date() };
-    this.contentSections.set(id, updatedSection);
+    const [updatedSection] = await db
+      .update(contentSections)
+      .set(updates)
+      .where(eq(contentSections.id, id))
+      .returning();
     return updatedSection;
   }
 
   async deleteContentSection(id: number): Promise<boolean> {
-    return this.contentSections.delete(id);
+    const result = await db.delete(contentSections).where(eq(contentSections.id, id));
+    return result.rowCount > 0;
   }
 
   async reorderContentSections(pageId: string, sectionIds: number[]): Promise<boolean> {
     try {
-      sectionIds.forEach((id, index) => {
-        const section = this.contentSections.get(id);
-        if (section && section.pageId === pageId) {
-          section.order = index;
-          section.updatedAt = new Date();
-        }
-      });
+      for (let i = 0; i < sectionIds.length; i++) {
+        await db
+          .update(contentSections)
+          .set({ sortOrder: i })
+          .where(and(eq(contentSections.id, sectionIds[i]), eq(contentSections.pageId, pageId)));
+      }
       return true;
     } catch {
       return false;
@@ -319,94 +266,215 @@ export class MemStorage implements IStorage {
 
   // Media Assets
   async getMediaAssets(): Promise<MediaAsset[]> {
-    return Array.from(this.mediaAssets.values()).sort((a, b) => 
-      b.uploadedAt!.getTime() - a.uploadedAt!.getTime()
-    );
+    return await db.select().from(mediaAssets).orderBy(desc(mediaAssets.createdAt));
   }
 
   async getMediaAsset(id: number): Promise<MediaAsset | undefined> {
-    return this.mediaAssets.get(id);
+    const [asset] = await db.select().from(mediaAssets).where(eq(mediaAssets.id, id));
+    return asset;
   }
 
   async createMediaAsset(asset: InsertMediaAsset): Promise<MediaAsset> {
-    const id = this.currentMediaAssetId++;
-    const newAsset: MediaAsset = {
-      id,
-      filename: asset.filename,
-      originalName: asset.originalName,
-      mimeType: asset.mimeType,
-      size: asset.size,
-      url: asset.url,
-      alt: asset.alt ?? null,
-      tags: asset.tags ?? null,
-      uploadedAt: new Date(),
-    };
-    this.mediaAssets.set(id, newAsset);
+    const [newAsset] = await db.insert(mediaAssets).values(asset).returning();
     return newAsset;
   }
 
   async updateMediaAsset(id: number, updates: Partial<InsertMediaAsset>): Promise<MediaAsset | undefined> {
-    const asset = this.mediaAssets.get(id);
-    if (!asset) return undefined;
-    
-    const updatedAsset = { ...asset, ...updates };
-    this.mediaAssets.set(id, updatedAsset);
+    const [updatedAsset] = await db
+      .update(mediaAssets)
+      .set(updates)
+      .where(eq(mediaAssets.id, id))
+      .returning();
     return updatedAsset;
   }
 
   async deleteMediaAsset(id: number): Promise<boolean> {
-    return this.mediaAssets.delete(id);
+    const result = await db.delete(mediaAssets).where(eq(mediaAssets.id, id));
+    return result.rowCount > 0;
   }
 
   // Activity Logs
   async getActivityLogs(limit = 50): Promise<ActivityLog[]> {
-    const logs = Array.from(this.activityLogs.values())
-      .sort((a, b) => b.createdAt!.getTime() - a.createdAt!.getTime());
-    return logs.slice(0, limit);
+    return await db
+      .select()
+      .from(activityLogs)
+      .orderBy(desc(activityLogs.createdAt))
+      .limit(limit);
   }
 
   async createActivityLog(log: InsertActivityLog): Promise<ActivityLog> {
-    const id = this.currentActivityLogId++;
-    const newLog: ActivityLog = {
-      id,
-      userId: log.userId ?? null,
-      action: log.action,
-      target: log.target,
-      metadata: log.metadata ?? {},
-      createdAt: new Date(),
-    };
-    this.activityLogs.set(id, newLog);
+    const [newLog] = await db.insert(activityLogs).values(log).returning();
     return newLog;
   }
 
   // Backups
   async getBackups(): Promise<Backup[]> {
-    return Array.from(this.backups.values()).sort((a, b) => 
-      b.createdAt!.getTime() - a.createdAt!.getTime()
-    );
+    return await db.select().from(backups).orderBy(desc(backups.createdAt));
   }
 
   async getBackup(id: number): Promise<Backup | undefined> {
-    return this.backups.get(id);
+    const [backup] = await db.select().from(backups).where(eq(backups.id, id));
+    return backup;
   }
 
   async createBackup(backup: InsertBackup): Promise<Backup> {
-    const id = this.currentBackupId++;
-    const newBackup: Backup = {
-      id,
-      name: backup.name,
-      type: backup.type,
-      path: backup.path,
-      size: backup.size,
-      createdBy: backup.createdBy ?? null,
-      createdAt: new Date(),
-    };
-    this.backups.set(id, newBackup);
+    const [newBackup] = await db.insert(backups).values(backup).returning();
     return newBackup;
   }
 
   async deleteBackup(id: number): Promise<boolean> {
-    return this.backups.delete(id);
+    const result = await db.delete(backups).where(eq(backups.id, id));
+    return result.rowCount > 0;
+  }
+
+  // Courses
+  async getCourses(): Promise<Course[]> {
+    return await db.select().from(courses).where(eq(courses.is_published, true));
+  }
+
+  async getAllCourses(): Promise<Course[]> {
+    return await db.select().from(courses);
+  }
+
+  async getCourse(id: number): Promise<Course | undefined> {
+    const [course] = await db.select().from(courses).where(eq(courses.id, id));
+    return course;
+  }
+
+  async createCourse(course: InsertCourse): Promise<Course> {
+    const [newCourse] = await db.insert(courses).values(course).returning();
+    return newCourse;
+  }
+
+  async updateCourse(id: number, updates: Partial<InsertCourse>): Promise<Course | undefined> {
+    const [updatedCourse] = await db
+      .update(courses)
+      .set(updates)
+      .where(eq(courses.id, id))
+      .returning();
+    return updatedCourse;
+  }
+
+  async deleteCourse(id: number): Promise<boolean> {
+    const result = await db.delete(courses).where(eq(courses.id, id));
+    return result.rowCount > 0;
+  }
+
+  // Course Progress
+  async createCourseProgress(progress: any): Promise<any> {
+    const [newProgress] = await db.insert(course_progress).values(progress).returning();
+    return newProgress;
+  }
+
+  async getUserCourseProgress(userId: number): Promise<any[]> {
+    return await db.select().from(course_progress).where(eq(course_progress.user_id, userId));
+  }
+
+  // Grimoires
+  async getGrimoires(): Promise<Grimoire[]> {
+    return await db.select().from(grimoires).where(eq(grimoires.is_published, true));
+  }
+
+  async getAllGrimoires(): Promise<Grimoire[]> {
+    return await db.select().from(grimoires);
+  }
+
+  async getGrimoire(id: number): Promise<Grimoire | undefined> {
+    const [grimoire] = await db.select().from(grimoires).where(eq(grimoires.id, id));
+    return grimoire;
+  }
+
+  async createGrimoire(grimoire: InsertGrimoire): Promise<Grimoire> {
+    const [newGrimoire] = await db.insert(grimoires).values(grimoire).returning();
+    return newGrimoire;
+  }
+
+  // Grimoire Rentals/Purchases
+  async createGrimoireRental(rental: any): Promise<any> {
+    const [newRental] = await db.insert(grimoire_rentals).values(rental).returning();
+    return newRental;
+  }
+
+  async createGrimoirePurchase(purchase: any): Promise<any> {
+    const [newPurchase] = await db.insert(liber_access).values({
+      user_id: purchase.user_id,
+      grimoire_id: purchase.grimoire_id,
+      access_type: 'purchased',
+      expires_at: null,
+    }).returning();
+    return newPurchase;
+  }
+
+  async getUserGrimoireRentals(userId: number): Promise<any[]> {
+    return await db
+      .select()
+      .from(grimoire_rentals)
+      .where(and(
+        eq(grimoire_rentals.user_id, userId),
+        gte(grimoire_rentals.expires_at, new Date())
+      ));
+  }
+
+  async getUserGrimoirePurchases(userId: number): Promise<any[]> {
+    return await db
+      .select()
+      .from(liber_access)
+      .where(and(
+        eq(liber_access.user_id, userId),
+        eq(liber_access.access_type, 'purchased')
+      ));
+  }
+
+  // Oracle Sessions
+  async createOracleSession(session: InsertOracleSession): Promise<OracleSession> {
+    const [newSession] = await db.insert(oracle_sessions).values(session).returning();
+    return newSession;
+  }
+
+  async getUserOracleHistory(userId: number): Promise<OracleSession[]> {
+    return await db
+      .select()
+      .from(oracle_sessions)
+      .where(eq(oracle_sessions.user_id, userId))
+      .orderBy(desc(oracle_sessions.created_at));
+  }
+
+  // Daily Content
+  async getDailyQuote(date: Date): Promise<any> {
+    const [quote] = await db
+      .select()
+      .from(daily_quotes)
+      .where(eq(daily_quotes.date, date));
+    return quote;
+  }
+
+  async createDailyQuote(quote: any): Promise<any> {
+    const [newQuote] = await db.insert(daily_quotes).values(quote).returning();
+    return newQuote;
+  }
+
+  async getDailyPoem(date: Date): Promise<DailyPoem | undefined> {
+    const [poem] = await db
+      .select()
+      .from(daily_poems)
+      .where(eq(daily_poems.date, date));
+    return poem;
+  }
+
+  async createDailyPoem(poem: InsertDailyPoem): Promise<DailyPoem> {
+    const [newPoem] = await db.insert(daily_poems).values(poem).returning();
+    return newPoem;
+  }
+
+  async getRecentPoems(days: number): Promise<DailyPoem[]> {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+    
+    return await db
+      .select()
+      .from(daily_poems)
+      .where(gte(daily_poems.date, cutoffDate))
+      .orderBy(desc(daily_poems.date));
   }
 
   // Stats
@@ -416,16 +484,22 @@ export class MemStorage implements IStorage {
     totalAssets: number;
     lastBackup: string | null;
   }> {
-    const backupList = await this.getBackups();
-    const uniquePages = new Set(Array.from(this.contentSections.values()).map(s => s.pageId));
-    
+    const [userCount] = await db.select({ count: sql<number>`count(*)` }).from(users);
+    const [sectionCount] = await db.select({ count: sql<number>`count(*)` }).from(contentSections);
+    const [assetCount] = await db.select({ count: sql<number>`count(*)` }).from(mediaAssets);
+    const [lastBackup] = await db
+      .select({ createdAt: backups.createdAt })
+      .from(backups)
+      .orderBy(desc(backups.createdAt))
+      .limit(1);
+
     return {
-      totalUsers: this.users.size,
-      totalPages: uniquePages.size,
-      totalAssets: this.mediaAssets.size,
-      lastBackup: backupList.length > 0 ? backupList[0].createdAt!.toISOString() : null,
+      totalUsers: userCount.count,
+      totalPages: sectionCount.count,
+      totalAssets: assetCount.count,
+      lastBackup: lastBackup?.createdAt?.toISOString() || null,
     };
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

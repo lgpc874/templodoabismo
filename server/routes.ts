@@ -1,660 +1,400 @@
-import type { Express } from "express";
-import express from "express";
+import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { 
-  loginSchema, 
-  insertSiteConfigSchema, 
-  insertContentSectionSchema, 
-  insertMediaAssetSchema, 
-  insertActivityLogSchema, 
-  insertBackupSchema 
-} from "@shared/schema";
-import { z } from "zod";
-import multer from "multer";
-import path from "path";
-import fs from "fs/promises";
+import { temploAI } from "./ai-service";
+import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { temploAI } from "./ai-service.js";
-import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
+import multer from "multer";
+import path from "path";
 
-const JWT_SECRET = process.env.JWT_SECRET || "magus-secretum-jwt-secret";
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ dest: 'uploads/' });
 
-// Middleware for admin authentication
-async function requireAdmin(req: any, res: any, next: any) {
+// JWT secret
+const JWT_SECRET = process.env.JWT_SECRET || 'templo-do-abismo-secret-key';
+
+// Auth middleware
+async function requireAuth(req: any, res: Response, next: any) {
   try {
-    const token = req.headers.authorization?.replace("Bearer ", "");
+    const token = req.headers.authorization?.replace('Bearer ', '');
     if (!token) {
-      return res.status(401).json({ message: "No token provided" });
+      return res.status(401).json({ message: 'Token required' });
     }
-
-    const session = await storage.getAdminSession(token);
-    if (!session) {
-      return res.status(401).json({ message: "Invalid or expired token" });
+    
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    const user = await storage.getUser(decoded.userId);
+    
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
     }
-
-    const user = await storage.getUser(session.userId);
-    if (!user || user.role !== "admin") {
-      return res.status(403).json({ message: "Admin access required" });
-    }
-
+    
     req.user = user;
-    req.session = session;
     next();
   } catch (error) {
-    res.status(401).json({ message: "Authentication failed" });
+    return res.status(401).json({ message: 'Invalid token' });
   }
 }
 
+async function requireAdmin(req: any, res: Response, next: any) {
+  if (!req.user || req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Admin access required' });
+  }
+  next();
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Regular user auth routes
-  app.post("/api/register", async (req, res) => {
+  
+  // Authentication routes
+  app.post('/api/auth/register', async (req: Request, res: Response) => {
     try {
       const { username, email, password } = req.body;
       
-      // Check if user already exists
       const existingUser = await storage.getUserByEmail(email);
       if (existingUser) {
-        return res.status(400).json({ message: "User already exists" });
+        return res.status(400).json({ message: 'Email already registered' });
       }
       
-      // Hash password and create user
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = await storage.createUser({
         username,
         email,
         password: hashedPassword,
-        role: "user"
+        role: 'user',
+        tkazh_credits: 5, // Welcome credits
+        free_credits: 0,
+        initiation_level: 0,
+        personal_seal_generated: false,
+        magical_name: null,
+        member_type: 'initiate',
+        last_oracle_use: null,
+        last_course_access: null,
+        profile_image_url: null,
+        joined_at: new Date(),
+        subscription_type: 'free',
+        subscription_expires: null,
       });
       
-      // Generate JWT token
-      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "7d" });
+      const token = jwt.sign({ userId: user.id }, JWT_SECRET);
       
-      res.json({
-        token,
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          role: user.role,
-        },
-      });
+      res.json({ user: { ...user, password: undefined }, token });
     } catch (error) {
-      res.status(500).json({ message: "Registration failed" });
+      console.error('Registration error:', error);
+      res.status(500).json({ message: 'Registration failed' });
     }
   });
 
-  app.post("/api/login", async (req, res) => {
+  app.post('/api/auth/login', async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body;
       
       const user = await storage.getUserByEmail(email);
       if (!user) {
-        return res.status(401).json({ message: "Invalid credentials" });
+        return res.status(401).json({ message: 'Invalid credentials' });
       }
-
+      
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) {
-        return res.status(401).json({ message: "Invalid credentials" });
+        return res.status(401).json({ message: 'Invalid credentials' });
       }
-
-      // Generate JWT token
-      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "7d" });
-
-      res.json({
-        token,
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          role: user.role,
-        },
-      });
-    } catch (error) {
-      res.status(500).json({ message: "Login failed" });
-    }
-  });
-
-  app.get("/api/profile", async (req, res) => {
-    try {
-      const token = req.headers.authorization?.replace("Bearer ", "");
-      if (!token) {
-        return res.status(401).json({ message: "No token provided" });
-      }
-
-      const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-      const user = await storage.getUser(decoded.userId);
       
-      if (!user) {
-        return res.status(401).json({ message: "Invalid token" });
-      }
-
-      res.json({
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-      });
-    } catch (error) {
-      res.status(401).json({ message: "Invalid token" });
-    }
-  });
-
-  // Admin auth routes
-  app.post("/api/admin/login", async (req, res) => {
-    try {
-      const { username, password } = loginSchema.parse(req.body);
+      const token = jwt.sign({ userId: user.id }, JWT_SECRET);
       
-      const user = await storage.getUserByUsername(username);
-      if (!user || user.role !== "admin") {
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
+      res.json({ user: { ...user, password: undefined }, token });
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ message: 'Login failed' });
+    }
+  });
 
-      const validPassword = await bcrypt.compare(password, user.password);
-      if (!validPassword) {
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
-
-      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "24h" });
-      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  // Daily quote route
+  app.get('/api/daily-quote', async (req: Request, res: Response) => {
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
       
-      await storage.createAdminSession(user.id, token, expiresAt);
-      await storage.createActivityLog({
-        userId: user.id,
-        action: "admin_login",
-        target: "admin_panel",
-        metadata: { ip: req.ip },
-      });
-
-      res.json({
-        token,
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          role: user.role,
-        },
-      });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid input", errors: error.errors });
-      }
-      res.status(500).json({ message: "Login failed" });
-    }
-  });
-
-  // Admin token validation
-  app.get("/api/admin/validate", requireAdmin, async (req: any, res) => {
-    try {
-      res.json({
-        id: req.user.id,
-        username: req.user.username,
-        email: req.user.email,
-        role: req.user.role,
-      });
-    } catch (error) {
-      res.status(401).json({ message: "Invalid token" });
-    }
-  });
-
-  app.post("/api/admin/logout", requireAdmin, async (req: any, res) => {
-    try {
-      await storage.deleteAdminSession(req.session.token);
-      res.json({ message: "Logged out successfully" });
-    } catch (error) {
-      res.status(500).json({ message: "Logout failed" });
-    }
-  });
-
-  // Site configuration routes
-  app.get("/api/admin/config", requireAdmin, async (req: any, res) => {
-    try {
-      const config = await storage.getSiteConfig();
-      res.json(config);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch configuration" });
-    }
-  });
-
-  app.post("/api/admin/config", requireAdmin, async (req: any, res) => {
-    try {
-      const configData = insertSiteConfigSchema.parse(req.body);
-      const config = await storage.setSiteConfig(configData);
+      // Check if we already have a quote for today
+      let quote = await storage.getDailyQuote(today);
       
-      await storage.createActivityLog({
-        userId: req.user.id,
-        action: "config_updated",
-        target: configData.key,
-        metadata: { category: configData.category },
-      });
-
-      res.json(config);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid input", errors: error.errors });
-      }
-      res.status(500).json({ message: "Failed to update configuration" });
-    }
-  });
-
-  app.delete("/api/admin/config/:key", requireAdmin, async (req: any, res) => {
-    try {
-      const { key } = req.params;
-      const success = await storage.deleteSiteConfig(key);
-      
-      if (success) {
-        await storage.createActivityLog({
-          userId: req.user.id,
-          action: "config_deleted",
-          target: key,
+      if (!quote) {
+        // Generate new quote with AI
+        const generatedQuote = await temploAI.generateDailyQuote();
+        quote = await storage.createDailyQuote({
+          content: generatedQuote.content,
+          author: generatedQuote.author,
+          date: today,
+          is_active: true,
         });
-        res.json({ message: "Configuration deleted" });
-      } else {
-        res.status(404).json({ message: "Configuration not found" });
       }
-    } catch (error) {
-      res.status(500).json({ message: "Failed to delete configuration" });
-    }
-  });
-
-  // Content sections routes
-  app.get("/api/admin/content/sections", requireAdmin, async (req: any, res) => {
-    try {
-      const { pageId } = req.query;
-      const sections = await storage.getContentSections(pageId);
-      res.json(sections);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch content sections" });
-    }
-  });
-
-  app.post("/api/admin/content/sections", requireAdmin, async (req: any, res) => {
-    try {
-      const sectionData = insertContentSectionSchema.parse(req.body);
-      const section = await storage.createContentSection(sectionData);
       
-      await storage.createActivityLog({
-        userId: req.user.id,
-        action: "section_created",
-        target: `${sectionData.pageId}/${sectionData.sectionType}`,
-        metadata: { title: sectionData.title },
+      res.json(quote);
+    } catch (error) {
+      console.error('Daily quote error:', error);
+      res.status(500).json({ message: 'Failed to get daily quote' });
+    }
+  });
+
+  // Daily poem route for Voz da Pluma
+  app.get('/api/daily-poem', async (req: Request, res: Response) => {
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      // Check if we already have a poem for today
+      let poem = await storage.getDailyPoem(today);
+      
+      if (!poem) {
+        // Generate new poem with AI
+        const generatedPoem = await temploAI.generateDailyPoem();
+        poem = await storage.createDailyPoem({
+          title: generatedPoem.title,
+          content: generatedPoem.content,
+          author: generatedPoem.author,
+          date: today,
+          is_active: true,
+        });
+      }
+      
+      res.json(poem);
+    } catch (error) {
+      console.error('Daily poem error:', error);
+      res.status(500).json({ message: 'Failed to get daily poem' });
+    }
+  });
+
+  // Recent poems for archive
+  app.get('/api/poems/recent', async (req: Request, res: Response) => {
+    try {
+      const poems = await storage.getRecentPoems(30); // Last 30 days
+      res.json(poems);
+    } catch (error) {
+      console.error('Recent poems error:', error);
+      res.status(500).json({ message: 'Failed to get recent poems' });
+    }
+  });
+
+  // Courses routes
+  app.get('/api/courses', async (req: Request, res: Response) => {
+    try {
+      const courses = await storage.getCourses();
+      res.json(courses);
+    } catch (error) {
+      console.error('Courses error:', error);
+      res.status(500).json({ message: 'Failed to get courses' });
+    }
+  });
+
+  app.post('/api/courses/:id/enroll', requireAuth, async (req: any, res: Response) => {
+    try {
+      const courseId = parseInt(req.params.id);
+      const course = await storage.getCourse(courseId);
+      
+      if (!course) {
+        return res.status(404).json({ message: 'Course not found' });
+      }
+      
+      if (req.user.tkazh_credits < course.price_tkazh) {
+        return res.status(400).json({ message: 'Insufficient T\'KAZH credits' });
+      }
+      
+      // Deduct credits and enroll
+      await storage.updateUser(req.user.id, {
+        tkazh_credits: req.user.tkazh_credits - course.price_tkazh
       });
-
-      res.json(section);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid input", errors: error.errors });
-      }
-      res.status(500).json({ message: "Failed to create content section" });
-    }
-  });
-
-  app.put("/api/admin/content/sections/:id", requireAdmin, async (req: any, res) => {
-    try {
-      const { id } = req.params;
-      const updates = insertContentSectionSchema.partial().parse(req.body);
-      const section = await storage.updateContentSection(parseInt(id), updates);
       
-      if (section) {
-        await storage.createActivityLog({
-          userId: req.user.id,
-          action: "section_updated",
-          target: `${section.pageId}/${section.sectionType}`,
-          metadata: { sectionId: section.id },
-        });
-        res.json(section);
-      } else {
-        res.status(404).json({ message: "Content section not found" });
-      }
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid input", errors: error.errors });
-      }
-      res.status(500).json({ message: "Failed to update content section" });
-    }
-  });
-
-  app.delete("/api/admin/content/sections/:id", requireAdmin, async (req: any, res) => {
-    try {
-      const { id } = req.params;
-      const section = await storage.getContentSection(parseInt(id));
-      const success = await storage.deleteContentSection(parseInt(id));
-      
-      if (success && section) {
-        await storage.createActivityLog({
-          userId: req.user.id,
-          action: "section_deleted",
-          target: `${section.pageId}/${section.sectionType}`,
-          metadata: { sectionId: section.id },
-        });
-        res.json({ message: "Content section deleted" });
-      } else {
-        res.status(404).json({ message: "Content section not found" });
-      }
-    } catch (error) {
-      res.status(500).json({ message: "Failed to delete content section" });
-    }
-  });
-
-  app.post("/api/admin/content/sections/reorder", requireAdmin, async (req: any, res) => {
-    try {
-      const { pageId, sectionIds } = req.body;
-      const success = await storage.reorderContentSections(pageId, sectionIds);
-      
-      if (success) {
-        await storage.createActivityLog({
-          userId: req.user.id,
-          action: "sections_reordered",
-          target: pageId,
-          metadata: { sectionIds },
-        });
-        res.json({ message: "Sections reordered" });
-      } else {
-        res.status(400).json({ message: "Failed to reorder sections" });
-      }
-    } catch (error) {
-      res.status(500).json({ message: "Failed to reorder sections" });
-    }
-  });
-
-  // Media assets routes
-  app.get("/api/admin/media", requireAdmin, async (req: any, res) => {
-    try {
-      const assets = await storage.getMediaAssets();
-      res.json(assets);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch media assets" });
-    }
-  });
-
-  app.post("/api/admin/media/upload", requireAdmin, upload.array("files"), async (req: any, res) => {
-    try {
-      const files = req.files as Express.Multer.File[];
-      const assets = [];
-
-      for (const file of files) {
-        const filename = `${Date.now()}-${file.originalname}`;
-        const url = `/uploads/${filename}`;
-        
-        // Move file to permanent location
-        await fs.rename(file.path, path.join("uploads", filename));
-
-        const assetData = {
-          filename,
-          originalName: file.originalname,
-          mimeType: file.mimetype,
-          size: file.size,
-          url,
-          alt: req.body.alt || "",
-          tags: req.body.tags ? req.body.tags.split(",") : [],
-        };
-
-        const asset = await storage.createMediaAsset(assetData);
-        assets.push(asset);
-      }
-
-      await storage.createActivityLog({
-        userId: req.user.id,
-        action: "media_uploaded",
-        target: "media_library",
-        metadata: { count: assets.length },
+      await storage.createCourseProgress({
+        user_id: req.user.id,
+        course_id: courseId,
+        module_index: 0,
+        completed: false,
       });
-
-      res.json(assets);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to upload media" });
-    }
-  });
-
-  app.put("/api/admin/media/:id", requireAdmin, async (req: any, res) => {
-    try {
-      const { id } = req.params;
-      const updates = insertMediaAssetSchema.partial().parse(req.body);
-      const asset = await storage.updateMediaAsset(parseInt(id), updates);
       
-      if (asset) {
-        await storage.createActivityLog({
-          userId: req.user.id,
-          action: "media_updated",
-          target: asset.filename,
-          metadata: { assetId: asset.id },
-        });
-        res.json(asset);
-      } else {
-        res.status(404).json({ message: "Media asset not found" });
-      }
+      res.json({ message: 'Enrolled successfully' });
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid input", errors: error.errors });
-      }
-      res.status(500).json({ message: "Failed to update media asset" });
+      console.error('Course enrollment error:', error);
+      res.status(500).json({ message: 'Enrollment failed' });
     }
   });
 
-  app.delete("/api/admin/media/:id", requireAdmin, async (req: any, res) => {
+  app.get('/api/user/progress', requireAuth, async (req: any, res: Response) => {
     try {
-      const { id } = req.params;
-      const asset = await storage.getMediaAsset(parseInt(id));
-      const success = await storage.deleteMediaAsset(parseInt(id));
+      const progress = await storage.getUserCourseProgress(req.user.id);
+      res.json(progress);
+    } catch (error) {
+      console.error('User progress error:', error);
+      res.status(500).json({ message: 'Failed to get progress' });
+    }
+  });
+
+  // Grimoires routes
+  app.get('/api/grimoires', async (req: Request, res: Response) => {
+    try {
+      const grimoires = await storage.getGrimoires();
+      res.json(grimoires);
+    } catch (error) {
+      console.error('Grimoires error:', error);
+      res.status(500).json({ message: 'Failed to get grimoires' });
+    }
+  });
+
+  app.post('/api/grimoires/:id/rent', requireAuth, async (req: any, res: Response) => {
+    try {
+      const grimoireId = parseInt(req.params.id);
+      const grimoire = await storage.getGrimoire(grimoireId);
       
-      if (success && asset) {
-        // Delete file from filesystem
-        try {
-          await fs.unlink(path.join("uploads", asset.filename));
-        } catch (error) {
-          console.warn("Failed to delete file:", asset.filename);
-        }
-
-        await storage.createActivityLog({
-          userId: req.user.id,
-          action: "media_deleted",
-          target: asset.filename,
-          metadata: { assetId: asset.id },
-        });
-        res.json({ message: "Media asset deleted" });
-      } else {
-        res.status(404).json({ message: "Media asset not found" });
+      if (!grimoire) {
+        return res.status(404).json({ message: 'Grimoire not found' });
       }
-    } catch (error) {
-      res.status(500).json({ message: "Failed to delete media asset" });
-    }
-  });
-
-  // Activity logs routes
-  app.get("/api/admin/activity", requireAdmin, async (req: any, res) => {
-    try {
-      const { limit } = req.query;
-      const logs = await storage.getActivityLogs(limit ? parseInt(limit) : 50);
-      res.json(logs);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch activity logs" });
-    }
-  });
-
-  // Backup routes
-  app.get("/api/admin/backups", requireAdmin, async (req: any, res) => {
-    try {
-      const backups = await storage.getBackups();
-      res.json(backups);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch backups" });
-    }
-  });
-
-  app.post("/api/admin/backups", requireAdmin, async (req: any, res) => {
-    try {
-      const { name, type } = req.body;
       
-      // Create backup data
-      const backupData = {
-        config: await storage.getSiteConfig(),
-        sections: await storage.getContentSections(),
-        assets: await storage.getMediaAssets(),
+      if (req.user.tkazh_credits < grimoire.rental_price_tkazh) {
+        return res.status(400).json({ message: 'Insufficient T\'KAZH credits' });
+      }
+      
+      // Deduct credits and create rental
+      await storage.updateUser(req.user.id, {
+        tkazh_credits: req.user.tkazh_credits - grimoire.rental_price_tkazh
+      });
+      
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + grimoire.rental_days);
+      
+      await storage.createGrimoireRental({
+        user_id: req.user.id,
+        grimoire_id: grimoireId,
+        expires_at: expiresAt,
+      });
+      
+      res.json({ message: 'Grimoire rented successfully' });
+    } catch (error) {
+      console.error('Grimoire rental error:', error);
+      res.status(500).json({ message: 'Rental failed' });
+    }
+  });
+
+  app.post('/api/grimoires/:id/purchase', requireAuth, async (req: any, res: Response) => {
+    try {
+      const grimoireId = parseInt(req.params.id);
+      const grimoire = await storage.getGrimoire(grimoireId);
+      
+      if (!grimoire) {
+        return res.status(404).json({ message: 'Grimoire not found' });
+      }
+      
+      if (req.user.tkazh_credits < grimoire.price_tkazh) {
+        return res.status(400).json({ message: 'Insufficient T\'KAZH credits' });
+      }
+      
+      // Deduct credits and create purchase record
+      await storage.updateUser(req.user.id, {
+        tkazh_credits: req.user.tkazh_credits - grimoire.price_tkazh
+      });
+      
+      await storage.createGrimoirePurchase({
+        user_id: req.user.id,
+        grimoire_id: grimoireId,
+      });
+      
+      res.json({ message: 'Grimoire purchased successfully' });
+    } catch (error) {
+      console.error('Grimoire purchase error:', error);
+      res.status(500).json({ message: 'Purchase failed' });
+    }
+  });
+
+  app.get('/api/user/rentals', requireAuth, async (req: any, res: Response) => {
+    try {
+      const rentals = await storage.getUserGrimoireRentals(req.user.id);
+      res.json(rentals);
+    } catch (error) {
+      console.error('User rentals error:', error);
+      res.status(500).json({ message: 'Failed to get rentals' });
+    }
+  });
+
+  app.get('/api/user/purchases', requireAuth, async (req: any, res: Response) => {
+    try {
+      const purchases = await storage.getUserGrimoirePurchases(req.user.id);
+      res.json(purchases);
+    } catch (error) {
+      console.error('User purchases error:', error);
+      res.status(500).json({ message: 'Failed to get purchases' });
+    }
+  });
+
+  // Oracle consultation routes
+  app.post('/api/oracle/consult', requireAuth, async (req: any, res: Response) => {
+    try {
+      const { type, question } = req.body;
+      
+      // Define oracle costs
+      const costs = {
+        fire: 1,
+        runes: 2,
+        mirror: 2,
+        tarot: 3,
+        abyssal: 5,
       };
-
-      const backupJson = JSON.stringify(backupData, null, 2);
-      const filename = `backup-${Date.now()}.json`;
-      const filePath = path.join("backups", filename);
       
-      // Ensure backups directory exists
-      await fs.mkdir("backups", { recursive: true });
-      await fs.writeFile(filePath, backupJson);
-
-      const backup = await storage.createBackup({
-        name: name || `Backup ${new Date().toLocaleDateString()}`,
-        type: type || "manual",
-        size: Buffer.byteLength(backupJson),
-        path: filePath,
-        createdBy: req.user.id,
-      });
-
-      await storage.createActivityLog({
-        userId: req.user.id,
-        action: "backup_created",
-        target: backup.name,
-        metadata: { backupId: backup.id, type: backup.type },
-      });
-
-      res.json(backup);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to create backup" });
-    }
-  });
-
-  app.delete("/api/admin/backups/:id", requireAdmin, async (req: any, res) => {
-    try {
-      const { id } = req.params;
-      const backup = await storage.getBackup(parseInt(id));
-      const success = await storage.deleteBackup(parseInt(id));
+      const cost = costs[type as keyof typeof costs] || 1;
       
-      if (success && backup) {
-        // Delete backup file
-        try {
-          await fs.unlink(backup.path);
-        } catch (error) {
-          console.warn("Failed to delete backup file:", backup.path);
-        }
-
-        await storage.createActivityLog({
-          userId: req.user.id,
-          action: "backup_deleted",
-          target: backup.name,
-          metadata: { backupId: backup.id },
-        });
-        res.json({ message: "Backup deleted" });
-      } else {
-        res.status(404).json({ message: "Backup not found" });
+      if (req.user.tkazh_credits < cost) {
+        return res.status(400).json({ message: 'Insufficient T\'KAZH credits' });
       }
-    } catch (error) {
-      res.status(500).json({ message: "Failed to delete backup" });
-    }
-  });
-
-  // Stats route
-  app.get("/api/admin/stats", requireAdmin, async (req: any, res) => {
-    try {
-      const stats = await storage.getStats();
-      res.json(stats);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch stats" });
-    }
-  });
-
-  // Oracle AI-integrated routes
-  app.post("/api/oracles/consult", async (req, res) => {
-    try {
-      const { oracleType, question, userId } = req.body;
       
-      if (!oracleType || !question) {
-        return res.status(400).json({ message: "Oracle type and question are required" });
-      }
-
+      // Generate reading with AI
       let result;
-      
-      switch (oracleType) {
-        case 'tarot_infernal':
+      switch (type) {
+        case 'tarot':
           result = await temploAI.generateTarotReading(question);
           break;
-        case 'espelho_negro':
+        case 'mirror':
           result = await temploAI.generateMirrorReading(question);
           break;
-        case 'runas_abissais':
+        case 'runes':
           result = await temploAI.generateRuneReading(question);
           break;
-        case 'divinacao_fogo':
+        case 'fire':
           result = await temploAI.generateFireReading(question);
           break;
-        case 'voz_abissal':
+        case 'abyssal':
           result = await temploAI.generateAbyssalVoice(question);
           break;
         default:
-          return res.status(400).json({ message: "Invalid oracle type" });
+          return res.status(400).json({ message: 'Invalid oracle type' });
       }
-
-      res.json({
-        oracle: oracleType,
+      
+      // Deduct credits
+      await storage.updateUser(req.user.id, {
+        tkazh_credits: req.user.tkazh_credits - cost
+      });
+      
+      // Save oracle session
+      const session = await storage.createOracleSession({
+        user_id: req.user.id,
+        oracle_type: type,
         question,
         result,
-        timestamp: new Date().toISOString()
+        tkazh_cost: cost,
       });
-
+      
+      res.json({
+        type,
+        question,
+        result,
+        tkazh_cost: cost,
+      });
     } catch (error) {
       console.error('Oracle consultation error:', error);
-      const errorMessage = error instanceof Error ? error.message : "Oracle consultation failed";
-      res.status(500).json({ message: errorMessage });
+      res.status(500).json({ message: 'Consultation failed' });
     }
   });
 
-  // Daily poem AI generation
-  app.get("/api/daily-poem", async (req, res) => {
+  app.get('/api/oracle/history', requireAuth, async (req: any, res: Response) => {
     try {
-      const poem = await temploAI.generateDailyPoem();
-      res.json(poem);
+      const history = await storage.getUserOracleHistory(req.user.id);
+      res.json(history);
     } catch (error) {
-      console.error('Daily poem generation error:', error);
-      res.status(500).json({ message: "Failed to generate daily poem" });
-    }
-  });
-
-  // Course content AI generation
-  app.post("/api/admin/courses/generate", requireAdmin, async (req: any, res) => {
-    try {
-      const { level, topic } = req.body;
-      const course = await temploAI.generateCourseContent(level, topic);
-      res.json(course);
-    } catch (error) {
-      console.error('Course generation error:', error);
-      res.status(500).json({ message: "Failed to generate course content" });
-    }
-  });
-
-  // Grimoire content AI generation
-  app.post("/api/admin/grimoires/generate", requireAdmin, async (req: any, res) => {
-    try {
-      const { title } = req.body;
-      const grimoire = await temploAI.generateGrimoireContent(title);
-      res.json(grimoire);
-    } catch (error) {
-      console.error('Grimoire generation error:', error);
-      res.status(500).json({ message: "Failed to generate grimoire content" });
-    }
-  });
-
-  // Admin statistics endpoint
-  app.get("/api/admin/stats", requireAdmin, async (req: any, res) => {
-    try {
-      const stats = await storage.getStats();
-      res.json({
-        totalUsers: stats.totalUsers,
-        totalCourses: 5, // Placeholder - would be from actual course data
-        totalGrimoires: 3, // Placeholder - would be from actual grimoire data
-        todayConsultations: Math.floor(Math.random() * 20) + 5 // Placeholder - would be from actual consultation logs
-      });
-    } catch (error) {
-      console.error('Stats error:', error);
-      res.status(500).json({ message: "Failed to load statistics" });
+      console.error('Oracle history error:', error);
+      res.status(500).json({ message: 'Failed to get oracle history' });
     }
   });
 
@@ -664,7 +404,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post("/api/paypal/order", async (req, res) => {
-    // Request body should contain: { intent, amount, currency }
     await createPaypalOrder(req, res);
   });
 
@@ -672,27 +411,101 @@ export async function registerRoutes(app: Express): Promise<Server> {
     await capturePaypalOrder(req, res);
   });
 
-  // T'KAZH purchase processing
-  app.post("/api/purchase/tkazh", async (req, res) => {
-    const { packageId, paymentMethod, userId } = req.body;
-    
+  // T'KAZH purchase completion
+  app.post('/api/tkazh/purchase-complete', requireAuth, async (req: any, res: Response) => {
     try {
-      // Here would validate payment and credit T'KAZH to user account
-      // For now, return success response
-      res.json({
-        success: true,
-        message: "Purchase processed successfully",
-        packageId,
-        paymentMethod
+      const { amount, payment_method, payment_id } = req.body;
+      
+      // Convert amount to T'KAZH (1 BRL = 1 T'KAZH for simplicity)
+      const tkazhAmount = Math.floor(amount);
+      
+      await storage.updateUser(req.user.id, {
+        tkazh_credits: req.user.tkazh_credits + tkazhAmount
       });
+      
+      res.json({ message: 'T\'KAZH credits added successfully', added: tkazhAmount });
     } catch (error) {
-      console.error('Purchase error:', error);
-      res.status(500).json({ message: "Purchase failed" });
+      console.error('T\'KAZH purchase error:', error);
+      res.status(500).json({ message: 'Purchase completion failed' });
+    }
+  });
+
+  // Admin routes
+  app.get('/api/admin/courses', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const courses = await storage.getAllCourses();
+      res.json(courses);
+    } catch (error) {
+      console.error('Admin courses error:', error);
+      res.status(500).json({ message: 'Failed to get courses' });
+    }
+  });
+
+  app.post('/api/admin/courses', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const course = await storage.createCourse(req.body);
+      res.json(course);
+    } catch (error) {
+      console.error('Admin create course error:', error);
+      res.status(500).json({ message: 'Failed to create course' });
+    }
+  });
+
+  app.put('/api/admin/courses/:id', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const course = await storage.updateCourse(parseInt(req.params.id), req.body);
+      res.json(course);
+    } catch (error) {
+      console.error('Admin update course error:', error);
+      res.status(500).json({ message: 'Failed to update course' });
+    }
+  });
+
+  app.delete('/api/admin/courses/:id', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      await storage.deleteCourse(parseInt(req.params.id));
+      res.json({ message: 'Course deleted successfully' });
+    } catch (error) {
+      console.error('Admin delete course error:', error);
+      res.status(500).json({ message: 'Failed to delete course' });
+    }
+  });
+
+  // Similar admin routes for grimoires
+  app.get('/api/admin/grimoires', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const grimoires = await storage.getAllGrimoires();
+      res.json(grimoires);
+    } catch (error) {
+      console.error('Admin grimoires error:', error);
+      res.status(500).json({ message: 'Failed to get grimoires' });
+    }
+  });
+
+  app.post('/api/admin/grimoires', requireAuth, requireAdmin, upload.single('pdf'), async (req: Request, res: Response) => {
+    try {
+      const grimoireData = {
+        ...req.body,
+        chapters: JSON.parse(req.body.chapters || '[]'),
+        pdf_url: req.file ? `/uploads/${req.file.filename}` : null,
+      };
+      
+      const grimoire = await storage.createGrimoire(grimoireData);
+      res.json(grimoire);
+    } catch (error) {
+      console.error('Admin create grimoire error:', error);
+      res.status(500).json({ message: 'Failed to create grimoire' });
     }
   });
 
   // Serve uploaded files
-  app.use("/uploads", express.static("uploads"));
+  app.use('/uploads', express.static('uploads'));
+
+  // Error handling middleware
+  app.use((err: any, req: Request, res: Response, next: any) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Something went wrong!' });
+  });
 
   const httpServer = createServer(app);
   return httpServer;
