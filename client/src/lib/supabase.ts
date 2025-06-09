@@ -1,11 +1,31 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@shared/supabase'
 
-// Configuration will be loaded dynamically
+// Configuration will be loaded dynamically for development, environment variables for production
 let supabaseClient: SupabaseClient<Database> | null = null
 let configPromise: Promise<SupabaseClient<Database>> | null = null
 
 async function createSupabaseClient(): Promise<SupabaseClient<Database>> {
+  // Try environment variables first (for production)
+  const envUrl = import.meta.env.VITE_SUPABASE_URL
+  const envKey = import.meta.env.VITE_SUPABASE_KEY
+  
+  if (envUrl && envKey) {
+    return createClient<Database>(envUrl, envKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true
+      },
+      realtime: {
+        params: {
+          eventsPerSecond: 10
+        }
+      }
+    })
+  }
+  
+  // Fallback to API endpoint for development
   try {
     const response = await fetch('/api/config/supabase')
     if (!response.ok) {
@@ -14,7 +34,7 @@ async function createSupabaseClient(): Promise<SupabaseClient<Database>> {
     
     const config = await response.json()
     
-    return createClient(
+    return createClient<Database>(
       config.url,
       config.key,
       {
