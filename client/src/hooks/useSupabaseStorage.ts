@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabase } from '@shared/supabase';
+import { supabase } from '@/lib/supabase';
 
 export function useSupabaseStorage() {
   const [uploading, setUploading] = useState(false);

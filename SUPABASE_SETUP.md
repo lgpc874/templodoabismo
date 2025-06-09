@@ -9,11 +9,27 @@ This project has been fully migrated from SQLite to Supabase, providing:
 - Real-time subscriptions
 
 ## Required Environment Variables
-```
-SUPABASE_URL=your_supabase_project_url
+
+Create a `.env` file in the project root with:
+
+```bash
+# Server-side Supabase configuration
+SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_KEY=your_supabase_anon_key
+
+# Client-side Supabase configuration (prefixed with VITE_)
+VITE_SUPABASE_URL=https://your-project-id.supabase.co
+VITE_SUPABASE_KEY=your_supabase_anon_key
+
+# AI functionality
 OPENAI_API_KEY=your_openai_api_key
+
+# PayPal integration
+PAYPAL_CLIENT_ID=your_paypal_client_id
+PAYPAL_CLIENT_SECRET=your_paypal_client_secret
 ```
+
+**Important**: Both server and client variables are required. The VITE_ prefixed variables are used by the frontend, while the non-prefixed ones are for the backend.
 
 ## Database Schema Setup
 
