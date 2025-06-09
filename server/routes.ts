@@ -425,6 +425,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin stats route
+  app.get('/api/admin/stats', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const stats = await storage.getStats();
+      res.json(stats);
+    } catch (error) {
+      console.error('Admin stats error:', error);
+      res.status(500).json({ message: 'Failed to get stats' });
+    }
+  });
+
+  // Admin users route
+  app.get('/api/admin/users', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const users = await storage.getAllUsers();
+      res.json(users);
+    } catch (error) {
+      console.error('Admin users error:', error);
+      res.status(500).json({ message: 'Failed to get users' });
+    }
+  });
+
   // Admin routes
   app.get('/api/admin/courses', requireAuth, requireAdmin, async (req: Request, res: Response) => {
     try {
