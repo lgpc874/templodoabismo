@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Scroll, Flame, Star, Eye, Moon, Crown } from "lucide-react";
+import { Scroll, Flame, Star, Eye, Moon, Crown, BookOpen } from "lucide-react";
 import Navigation from "../components/navigation";
 import { Link } from "wouter";
 
@@ -137,6 +137,20 @@ export default function Home() {
                 <p className="text-gray-300 text-sm leading-relaxed">
                   Sussurros poéticos das musas sombrias onde a beleza emerge das trevas. 
                   Versos que nutrem a alma através da contemplação mística.
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          {/* Blog Section */}
+          <Link href="/blog">
+            <div className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300">
+              <div className="p-6 text-center">
+                <BookOpen className="w-12 h-12 mx-auto mb-4 text-emerald-500" />
+                <h3 className="text-xl font-bold text-amber-400 mb-3">Gnosis Abissal</h3>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  Portal público de conhecimento sobre luciferianismo ancestral e gnose ctônica. 
+                  Artigos educativos para todos os buscadores da sabedoria oculta.
                 </p>
               </div>
             </div>

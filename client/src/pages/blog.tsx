@@ -1,10 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { Calendar, Clock, User, BookOpen, Search, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/lib/queryClient';
 
 interface BlogPost {
   id: number;
@@ -51,6 +53,63 @@ export default function Blog() {
 
   const featuredPosts = filteredPosts.filter(post => post.featured);
   const regularPosts = filteredPosts.filter(post => !post.featured);
+
+  // Newsletter form component
+  function NewsletterForm() {
+    const [email, setEmail] = useState('');
+    const { toast } = useToast();
+
+    const subscribeNewsletter = useMutation({
+      mutationFn: async (email: string) => {
+        return await apiRequest('/api/newsletter/subscribe', {
+          method: 'POST',
+          body: JSON.stringify({ email }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+      },
+      onSuccess: () => {
+        toast({
+          title: "Inscrição realizada!",
+          description: "Você receberá novos artigos em seu email.",
+        });
+        setEmail('');
+      },
+      onError: (error: any) => {
+        toast({
+          title: "Erro na inscrição",
+          description: error.message || "Tente novamente mais tarde.",
+          variant: "destructive",
+        });
+      },
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (email && /\S+@\S+\.\S+/.test(email)) {
+        subscribeNewsletter.mutate(email);
+      }
+    };
+
+    return (
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+        <Input
+          type="email"
+          placeholder="Seu email..."
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="bg-black/50 border-amber-900/50 text-white placeholder-gray-400"
+          required
+        />
+        <Button 
+          type="submit" 
+          disabled={subscribeNewsletter.isPending}
+          className="bg-amber-600 hover:bg-amber-700 text-black font-semibold"
+        >
+          {subscribeNewsletter.isPending ? 'Inscrevendo...' : 'Inscrever-se'}
+        </Button>
+      </form>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -287,15 +346,7 @@ export default function Blog() {
             Inscreva-se para receber notificações sobre novos artigos sobre luciferianismo, 
             gnose e mistérios ocultos diretamente em seu email.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <Input
-              placeholder="Seu email..."
-              className="bg-black/50 border-amber-900/50 text-white placeholder-gray-400"
-            />
-            <Button className="bg-amber-600 hover:bg-amber-700 text-black font-semibold">
-              Inscrever-se
-            </Button>
-          </div>
+          <NewsletterForm />
         </div>
       </div>
     </div>
