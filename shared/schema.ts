@@ -273,7 +273,7 @@ export const pages = pgTable("pages", {
   metaDescription: text("meta_description"),
   customCss: text("custom_css"),
   customJs: text("custom_js"),
-  parentId: integer("parent_id").references(() => pages.id),
+  parentId: integer("parent_id"),
   sortOrder: integer("sort_order").default(0),
   viewCount: integer("view_count").default(0),
   isHomepage: boolean("is_homepage").default(false),
@@ -455,6 +455,33 @@ export const insertApiConfigurationSchema = createInsertSchema(api_configuration
   updatedAt: true,
 });
 
+export const insertPageSchema = createInsertSchema(pages).omit({
+  id: true,
+  viewCount: true,
+  publishedAt: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertPageRevisionSchema = createInsertSchema(page_revisions).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertMediaLibrarySchema = createInsertSchema(media_library).omit({
+  id: true,
+  uploadedAt: true,
+});
+
+export const insertScriptureSchema = createInsertSchema(scriptures).omit({
+  id: true,
+  downloads: true,
+  ratings: true,
+  publishedAt: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Auth schemas
 export const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -501,3 +528,11 @@ export type SusurriAbyssos = typeof susurri_abyssos.$inferSelect;
 export type InsertSusurriAbyssos = z.infer<typeof insertSusurriAbyssosSchema>;
 export type ApiConfiguration = typeof api_configurations.$inferSelect;
 export type InsertApiConfiguration = z.infer<typeof insertApiConfigurationSchema>;
+export type Page = typeof pages.$inferSelect;
+export type InsertPage = z.infer<typeof insertPageSchema>;
+export type PageRevision = typeof page_revisions.$inferSelect;
+export type InsertPageRevision = z.infer<typeof insertPageRevisionSchema>;
+export type MediaLibrary = typeof media_library.$inferSelect;
+export type InsertMediaLibrary = z.infer<typeof insertMediaLibrarySchema>;
+export type Scripture = typeof scriptures.$inferSelect;
+export type InsertScripture = z.infer<typeof insertScriptureSchema>;

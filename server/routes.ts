@@ -636,6 +636,268 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // CMS Routes - Pages Management
+  app.get('/api/admin/pages', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const pages = await storage.getPages();
+      res.json(pages);
+    } catch (error) {
+      console.error('Error fetching pages:', error);
+      res.status(500).json({ message: 'Failed to fetch pages' });
+    }
+  });
+
+  app.get('/api/admin/pages/:id', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const page = await storage.getPageById(parseInt(req.params.id));
+      if (!page) {
+        return res.status(404).json({ message: 'Page not found' });
+      }
+      res.json(page);
+    } catch (error) {
+      console.error('Error fetching page:', error);
+      res.status(500).json({ message: 'Failed to fetch page' });
+    }
+  });
+
+  app.post('/api/admin/pages', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const pageData = req.body;
+      pageData.authorId = req.user?.id;
+      const page = await storage.createPage(pageData);
+      res.status(201).json(page);
+    } catch (error) {
+      console.error('Error creating page:', error);
+      res.status(500).json({ message: 'Failed to create page' });
+    }
+  });
+
+  app.put('/api/admin/pages/:id', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const page = await storage.updatePage(parseInt(req.params.id), req.body);
+      if (!page) {
+        return res.status(404).json({ message: 'Page not found' });
+      }
+      res.json(page);
+    } catch (error) {
+      console.error('Error updating page:', error);
+      res.status(500).json({ message: 'Failed to update page' });
+    }
+  });
+
+  app.delete('/api/admin/pages/:id', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const success = await storage.deletePage(parseInt(req.params.id));
+      if (!success) {
+        return res.status(404).json({ message: 'Page not found' });
+      }
+      res.json({ message: 'Page deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting page:', error);
+      res.status(500).json({ message: 'Failed to delete page' });
+    }
+  });
+
+  app.post('/api/admin/pages/:id/publish', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const page = await storage.publishPage(parseInt(req.params.id));
+      if (!page) {
+        return res.status(404).json({ message: 'Page not found' });
+      }
+      res.json(page);
+    } catch (error) {
+      console.error('Error publishing page:', error);
+      res.status(500).json({ message: 'Failed to publish page' });
+    }
+  });
+
+  // CMS Routes - Scriptures Management
+  app.get('/api/admin/scriptures', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const scriptures = await storage.getScriptures();
+      res.json(scriptures);
+    } catch (error) {
+      console.error('Error fetching scriptures:', error);
+      res.status(500).json({ message: 'Failed to fetch scriptures' });
+    }
+  });
+
+  app.post('/api/admin/scriptures', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const scriptureData = req.body;
+      scriptureData.authorId = req.user?.id;
+      const scripture = await storage.createScripture(scriptureData);
+      res.status(201).json(scripture);
+    } catch (error) {
+      console.error('Error creating scripture:', error);
+      res.status(500).json({ message: 'Failed to create scripture' });
+    }
+  });
+
+  app.put('/api/admin/scriptures/:id', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const scripture = await storage.updateScripture(parseInt(req.params.id), req.body);
+      if (!scripture) {
+        return res.status(404).json({ message: 'Scripture not found' });
+      }
+      res.json(scripture);
+    } catch (error) {
+      console.error('Error updating scripture:', error);
+      res.status(500).json({ message: 'Failed to update scripture' });
+    }
+  });
+
+  app.delete('/api/admin/scriptures/:id', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const success = await storage.deleteScripture(parseInt(req.params.id));
+      if (!success) {
+        return res.status(404).json({ message: 'Scripture not found' });
+      }
+      res.json({ message: 'Scripture deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting scripture:', error);
+      res.status(500).json({ message: 'Failed to delete scripture' });
+    }
+  });
+
+  app.post('/api/admin/scriptures/:id/publish', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const scripture = await storage.publishScripture(parseInt(req.params.id));
+      if (!scripture) {
+        return res.status(404).json({ message: 'Scripture not found' });
+      }
+      res.json(scripture);
+    } catch (error) {
+      console.error('Error publishing scripture:', error);
+      res.status(500).json({ message: 'Failed to publish scripture' });
+    }
+  });
+
+  // CMS Routes - Media Library
+  app.get('/api/admin/media', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const media = await storage.getMediaFiles();
+      res.json(media);
+    } catch (error) {
+      console.error('Error fetching media:', error);
+      res.status(500).json({ message: 'Failed to fetch media files' });
+    }
+  });
+
+  app.post('/api/admin/media/upload', requireAuth, requireAdmin, upload.single('file'), async (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+
+      const mediaData = {
+        filename: req.file.filename,
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+        fileSize: req.file.size,
+        url: `/uploads/${req.file.filename}`,
+        uploadedBy: req.user?.id,
+      };
+
+      const media = await storage.uploadMedia(mediaData);
+      res.status(201).json(media);
+    } catch (error) {
+      console.error('Error uploading media:', error);
+      res.status(500).json({ message: 'Failed to upload media' });
+    }
+  });
+
+  app.delete('/api/admin/media/:id', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const success = await storage.deleteMedia(parseInt(req.params.id));
+      if (!success) {
+        return res.status(404).json({ message: 'Media file not found' });
+      }
+      res.json({ message: 'Media file deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting media:', error);
+      res.status(500).json({ message: 'Failed to delete media file' });
+    }
+  });
+
+  // Enhanced Course Management Routes
+  app.put('/api/admin/courses/:id/pricing', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const { price, currency, discountPrice, discountValidUntil } = req.body;
+      const course = await storage.updateCourse(parseInt(req.params.id), {
+        price,
+        currency,
+        discountPrice,
+        discountValidUntil,
+      });
+      if (!course) {
+        return res.status(404).json({ message: 'Course not found' });
+      }
+      res.json(course);
+    } catch (error) {
+      console.error('Error updating course pricing:', error);
+      res.status(500).json({ message: 'Failed to update course pricing' });
+    }
+  });
+
+  app.post('/api/admin/courses/:id/publish', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const course = await storage.updateCourse(parseInt(req.params.id), {
+        isPublished: true,
+        publishedAt: new Date(),
+      });
+      if (!course) {
+        return res.status(404).json({ message: 'Course not found' });
+      }
+      res.json(course);
+    } catch (error) {
+      console.error('Error publishing course:', error);
+      res.status(500).json({ message: 'Failed to publish course' });
+    }
+  });
+
+  app.post('/api/admin/courses/:id/unpublish', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const course = await storage.updateCourse(parseInt(req.params.id), {
+        isPublished: false,
+      });
+      if (!course) {
+        return res.status(404).json({ message: 'Course not found' });
+      }
+      res.json(course);
+    } catch (error) {
+      console.error('Error unpublishing course:', error);
+      res.status(500).json({ message: 'Failed to unpublish course' });
+    }
+  });
+
+  // Public routes for published content
+  app.get('/api/pages/:slug', async (req: Request, res: Response) => {
+    try {
+      const page = await storage.getPageBySlug(req.params.slug);
+      if (!page || page.status !== 'published') {
+        return res.status(404).json({ message: 'Page not found' });
+      }
+      res.json(page);
+    } catch (error) {
+      console.error('Error fetching page:', error);
+      res.status(500).json({ message: 'Failed to fetch page' });
+    }
+  });
+
+  app.get('/api/scriptures/:slug', async (req: Request, res: Response) => {
+    try {
+      const scripture = await storage.getScriptureBySlug(req.params.slug);
+      if (!scripture || !scripture.isPublic) {
+        return res.status(404).json({ message: 'Scripture not found' });
+      }
+      res.json(scripture);
+    } catch (error) {
+      console.error('Error fetching scripture:', error);
+      res.status(500).json({ message: 'Failed to fetch scripture' });
+    }
+  });
+
   // Serve uploaded files
   app.use('/uploads', express.static('uploads'));
 

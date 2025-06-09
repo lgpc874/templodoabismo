@@ -815,6 +815,122 @@ export class DatabaseStorage implements IStorage {
       return { success: false, message: "Erro durante o teste de conexão" };
     }
   }
+
+  // Pages methods
+  async getPages(): Promise<Page[]> {
+    return await db.select().from(pages).orderBy(pages.sortOrder, pages.title);
+  }
+
+  async getPageBySlug(slug: string): Promise<Page | undefined> {
+    const [page] = await db.select().from(pages).where(eq(pages.slug, slug));
+    return page;
+  }
+
+  async getPageById(id: number): Promise<Page | undefined> {
+    const [page] = await db.select().from(pages).where(eq(pages.id, id));
+    return page;
+  }
+
+  async createPage(pageData: InsertPage): Promise<Page> {
+    const [page] = await db.insert(pages).values(pageData).returning();
+    return page;
+  }
+
+  async updatePage(id: number, updates: Partial<InsertPage>): Promise<Page | undefined> {
+    const [updated] = await db
+      .update(pages)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(pages.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deletePage(id: number): Promise<boolean> {
+    const result = await db.delete(pages).where(eq(pages.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async publishPage(id: number): Promise<Page | undefined> {
+    const [updated] = await db
+      .update(pages)
+      .set({ 
+        status: 'published', 
+        publishedAt: new Date(),
+        updatedAt: new Date() 
+      })
+      .where(eq(pages.id, id))
+      .returning();
+    return updated;
+  }
+
+  // Page Revisions methods
+  async createPageRevision(revisionData: InsertPageRevision): Promise<PageRevision> {
+    const [revision] = await db.insert(page_revisions).values(revisionData).returning();
+    return revision;
+  }
+
+  async getPageRevisions(pageId: number): Promise<PageRevision[]> {
+    return await db.select().from(page_revisions)
+      .where(eq(page_revisions.pageId, pageId))
+      .orderBy(desc(page_revisions.createdAt));
+  }
+
+  // Media Library methods
+  async uploadMedia(mediaData: InsertMediaLibrary): Promise<MediaLibrary> {
+    const [media] = await db.insert(media_library).values(mediaData).returning();
+    return media;
+  }
+
+  async getMediaFiles(): Promise<MediaLibrary[]> {
+    return await db.select().from(media_library).orderBy(desc(media_library.uploadedAt));
+  }
+
+  async deleteMedia(id: number): Promise<boolean> {
+    const result = await db.delete(media_library).where(eq(media_library.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  // Scriptures methods
+  async getScriptures(): Promise<Scripture[]> {
+    return await db.select().from(scriptures).orderBy(scriptures.category, scriptures.title);
+  }
+
+  async getScriptureBySlug(slug: string): Promise<Scripture | undefined> {
+    const [scripture] = await db.select().from(scriptures).where(eq(scriptures.slug, slug));
+    return scripture;
+  }
+
+  async createScripture(scriptureData: InsertScripture): Promise<Scripture> {
+    const [scripture] = await db.insert(scriptures).values(scriptureData).returning();
+    return scripture;
+  }
+
+  async updateScripture(id: number, updates: Partial<InsertScripture>): Promise<Scripture | undefined> {
+    const [updated] = await db
+      .update(scriptures)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(scriptures.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteScripture(id: number): Promise<boolean> {
+    const result = await db.delete(scriptures).where(eq(scriptures.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async publishScripture(id: number): Promise<Scripture | undefined> {
+    const [updated] = await db
+      .update(scriptures)
+      .set({ 
+        isPublic: true, 
+        publishedAt: new Date(),
+        updatedAt: new Date() 
+      })
+      .where(eq(scriptures.id, id))
+      .returning();
+    return updated;
+  }
 }
 
 export const storage = new DatabaseStorage();
