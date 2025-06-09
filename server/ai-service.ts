@@ -213,6 +213,38 @@ export class TemploAI {
     }
   }
 
+  async generateDailyQuote(): Promise<{content: string, author: string}> {
+    try {
+      const response = await this.openai.chat.completions.create({
+        model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+        messages: [
+          {
+            role: "system",
+            content: "Você é um mestre luciferiano ancestral que cria citações diárias profundas sobre gnose, transformação e sabedoria oculta. Responda em JSON com 'content' e 'author'."
+          },
+          {
+            role: "user",
+            content: "Crie uma citação diária inspiradora sobre os mistérios luciferianos, transformação da consciência e busca pela gnose. A citação deve ser profunda, poética e motivacional."
+          }
+        ],
+        response_format: { type: "json_object" },
+      });
+
+      const result = JSON.parse(response.choices[0].message.content || '{}');
+      
+      return {
+        content: result.content || "A chama interior queima eternamente para aqueles que ousam buscar a verdade além dos véus da ilusão.",
+        author: result.author || "Mestre do Abismo"
+      };
+    } catch (error) {
+      console.error('Error generating daily quote:', error);
+      return {
+        content: "Nas profundezas do abismo reside a sabedoria que transcende todas as limitações.",
+        author: "Oráculo Ancestral"
+      };
+    }
+  }
+
   async generateDailyPoem(): Promise<{title: string, content: string, author: string}> {
     if (!openai) {
       throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
