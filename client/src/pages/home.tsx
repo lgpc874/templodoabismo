@@ -43,9 +43,9 @@ export default function Home() {
             TEMPLO DO ABISMO
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
-            Portal ancestral de conhecimentos Luciferianos onde iniciados descobrem os mistérios antigos, 
-            acessam grimórios sagrados, consultam oráculos primordiais e despertam sua essência através 
-            da gnose abissal.
+            Portal das trevas sagradas onde almas corajosas adentram os mistérios primordiais. 
+            Aqui repousam grimórios ancestrais, oráculos abissais e conhecimentos vedados que 
+            despertam a chama interior através da gnose luciferiana.
           </p>
         </div>
 
@@ -53,9 +53,9 @@ export default function Home() {
         {!isLoading && dailyQuote && (
           <div className="floating-card max-w-2xl mx-auto mb-12 p-8 bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-xl">
             <div className="text-center">
-              <h3 className="text-2xl font-bold text-amber-400 mb-4 flex items-center justify-center gap-2">
-                <Scroll className="w-6 h-6" />
-                Citação Diária
+              <h3 className="text-2xl font-bold text-red-400 mb-4 flex items-center justify-center gap-2">
+                <Flame className="w-6 h-6" />
+                Sussurros do Abismo
               </h3>
               <div className="text-lg text-gray-300 italic leading-relaxed mb-4">
                 "{dailyQuote.content}"
@@ -77,8 +77,8 @@ export default function Home() {
                 <Eye className="w-12 h-12 mx-auto mb-4 text-red-500" />
                 <h3 className="text-xl font-bold text-amber-400 mb-3">Oráculo Abissal</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  Consulte as forças primordiais através do Tarô Luciferiano, Espelhos Negros, 
-                  Runas Antigas e a Voz do Abismo. Revelações profundas aguardam os iniciados.
+                  Desperte os véus entre mundos através de rituais divinatórios ancestrais. 
+                  As entidades sussurram segredos àqueles que ousam questionar o destino.
                 </p>
               </div>
             </div>
@@ -89,10 +89,10 @@ export default function Home() {
             <div className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300">
               <div className="p-6 text-center">
                 <Flame className="w-12 h-12 mx-auto mb-4 text-orange-500" />
-                <h3 className="text-xl font-bold text-amber-400 mb-3">Iniciação Luciferiana</h3>
+                <h3 className="text-xl font-bold text-amber-400 mb-3">Academia das Trevas</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  Jornada progressiva pelos mistérios antigos. Desperte sua chama interior 
-                  através de ensinamentos ancestrais e práticas transformadoras.
+                  Sete círculos de conhecimento forbidden onde almas destemidas transcendem 
+                  os limites da consciência mortal através da gnose luciferiana.
                 </p>
               </div>
             </div>
@@ -105,8 +105,8 @@ export default function Home() {
                 <Scroll className="w-12 h-12 mx-auto mb-4 text-purple-500" />
                 <h3 className="text-xl font-bold text-amber-400 mb-3">Grimórios Ancestrais</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  Acesso aos textos sagrados e conhecimentos ocultos. Biblioteca de sabedoria 
-                  luciferiana para estudos profundos e prática ritual.
+                  Manuscritos sombrios onde repousam invocações primordiais e rituais ctônicos. 
+                  Cada página pulsa com poder ancestral das correntes abissais.
                 </p>
               </div>
             </div>
@@ -121,8 +121,8 @@ export default function Home() {
                 <Star className="w-12 h-12 mx-auto mb-4 text-blue-500" />
                 <h3 className="text-xl font-bold text-amber-400 mb-3">Bibliotheca Secreta</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  Arquivo seleto de textos raros e conhecimentos avançados. 
-                  Disponível apenas para iniciados de nível superior.
+                  Câmara vedada onde dormem os segredos supremos dos antigos mestres. 
+                  Manuscritos que testam os limites da sanidade e transcendência.
                 </p>
               </div>
             </div>
@@ -135,8 +135,8 @@ export default function Home() {
                 <Moon className="w-12 h-12 mx-auto mb-4 text-indigo-500" />
                 <h3 className="text-xl font-bold text-amber-400 mb-3">Voz da Pluma</h3>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  Reflexões diárias canalizadas do abismo. Sabedoria ancestral 
-                  expressa através de poesia mística e prosa profunda.
+                  Sussurros poéticos das musas sombrias onde a beleza emerge das trevas. 
+                  Versos que nutrem a alma através da contemplação mística.
                 </p>
               </div>
             </div>
