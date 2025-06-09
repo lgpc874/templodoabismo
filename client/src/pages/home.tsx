@@ -1,20 +1,22 @@
-
-import { useEffect, useRef, useState } from "react";
+import { useState, useEffect } from "react";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "wouter";
 import { 
-  Flame, 
   BookOpen, 
-  GraduationCap, 
-  Gem, 
-  Scroll,
-  Eye,
-  Crown,
+  Scroll, 
+  Eye, 
+  Flame, 
   Star,
-  Zap
+  Crown,
+  Feather,
+  Shield,
+  Users,
+  DollarSign,
+  Gem
 } from "lucide-react";
 
 interface DailyPoem {
@@ -24,350 +26,224 @@ interface DailyPoem {
 }
 
 export default function Home() {
-  const sealRef = useRef<HTMLImageElement>(null);
-  const [dailyPoem, setDailyPoem] = useState<DailyPoem>({
-    title: "Carregando...",
-    content: "As palavras ancestrais estão sendo invocadas...",
-    author: "Voz da Pluma"
-  });
-
-  const [timeOfDay, setTimeOfDay] = useState("noite");
+  const { user } = useAuth();
+  const [dailyPoem, setDailyPoem] = useState<DailyPoem | null>(null);
 
   useEffect(() => {
-    // Set time of day greeting
-    const hour = new Date().getHours();
-    if (hour >= 6 && hour < 12) setTimeOfDay("madrugada");
-    else if (hour >= 12 && hour < 18) setTimeOfDay("tarde");
-    else if (hour >= 18 && hour < 24) setTimeOfDay("crepúsculo");
-    else setTimeOfDay("noite");
-
-    // Load daily poem from AI
-    const loadDailyPoem = async () => {
-      try {
-        const response = await fetch('/api/daily-poem');
-        if (response.ok) {
-          const poem = await response.json();
-          setDailyPoem(poem);
-        }
-      } catch (error) {
-        console.error('Error loading daily poem:', error);
-        // Keep loading state if API fails
-      }
-    };
     loadDailyPoem();
-
-    // Rotating seal animation
-    let rotation = 0;
-    const animate = () => {
-      rotation += 0.1;
-      if (sealRef.current) {
-        sealRef.current.style.transform = `rotate(${rotation}deg)`;
-      }
-      requestAnimationFrame(animate);
-    };
-    animate();
-
-    // Mystical particles
-    const createParticle = () => {
-      const particle = document.createElement('div');
-      particle.className = 'fixed w-1 h-1 bg-red-400 rounded-full pointer-events-none z-10 opacity-50';
-      particle.style.left = Math.random() * window.innerWidth + 'px';
-      particle.style.top = window.innerHeight + 'px';
-      
-      document.body.appendChild(particle);
-      
-      const duration = Math.random() * 3000 + 2000;
-      const animation = particle.animate([
-        { transform: 'translateY(0px)', opacity: '0.5' },
-        { transform: `translateY(-${window.innerHeight + 100}px)`, opacity: '0' }
-      ], {
-        duration: duration,
-        easing: 'linear'
-      });
-      
-      animation.onfinish = () => particle.remove();
-    };
-
-    const particleInterval = setInterval(createParticle, 1000);
-
-    return () => {
-      clearInterval(particleInterval);
-    };
   }, []);
 
-  const getGreeting = () => {
-    switch (timeOfDay) {
-      case "madrugada": return "Bendita seja esta madrugada sombria";
-      case "tarde": return "Que as sombras desta tarde te abracem";
-      case "crepúsculo": return "Bem-vindo ao crepúsculo eterno";
-      default: return "Salve, viajante das trevas eternas";
+  const loadDailyPoem = async () => {
+    try {
+      const response = await fetch('/api/daily-poem');
+      if (response.ok) {
+        const poem = await response.json();
+        setDailyPoem(poem);
+      }
+    } catch (error) {
+      console.error('Error loading daily poem:', error);
     }
   };
 
-  const features = [
+  const sections = [
     {
-      icon: Gem,
-      title: "Oráculos do Abismo",
-      description: "Tarot Infernal, Espelho Negro, Runas ancestrais e mais",
+      icon: Eye,
+      title: "Oráculos Ancestrais",
+      description: "Consulte os cinco oráculos sagrados para obter sabedoria ancestral",
       href: "/oraculo",
-      color: "text-purple-400",
-      cost: "1 T'KAZH"
+      cost: "10-25 T'KAZH",
+      color: "text-purple-400"
     },
     {
       icon: BookOpen,
-      title: "Grimórios Digitais",
-      description: "Compêndios de sabedoria oculta e rituais ancestrais",
-      href: "/grimoires",
-      color: "text-red-400",
-      cost: "5 T'KAZH"
-    },
-    {
-      icon: GraduationCap,
-      title: "Trilha Iniciática",
-      description: "7 níveis de conhecimento esotérico profundo",
+      title: "Cursos Esotéricos", 
+      description: "Caminhos de conhecimento luciferiano em 7 níveis de iniciação",
       href: "/courses",
-      color: "text-yellow-400",
-      cost: "Variável"
+      cost: "50-200 T'KAZH",
+      color: "text-blue-400"
     },
     {
       icon: Scroll,
+      title: "Grimórios Sagrados",
+      description: "Textos ancestrais e códices de sabedoria oculta",
+      href: "/grimoires",
+      cost: "100+ T'KAZH",
+      color: "text-red-400"
+    },
+    {
+      icon: Flame,
+      title: "Biblioteca Secreta",
+      description: "Acesso à vasta coleção de conhecimentos ocultos",
+      href: "/bibliotheca",
+      cost: "Gratuito",
+      color: "text-orange-400"
+    },
+    {
+      icon: Feather,
       title: "Voz da Pluma",
-      description: "Poesia e sabedoria infernal diária",
+      description: "Poesias místicas e textos inspiracionais diários",
       href: "/voz-da-pluma",
-      color: "text-green-400",
-      cost: "Gratuito"
+      cost: "Gratuito",
+      color: "text-cyan-400"
     },
     {
       icon: Star,
-      title: "Liber Prohibitus",
-      description: "Conhecimentos proibidos - palavra de poder necessária",
-      href: "/liber-prohibitus",
-      color: "text-purple-300",
-      cost: "Restrito"
+      title: "Área VIP",
+      description: "Conteúdo exclusivo para iniciados avançados",
+      href: "/vip",
+      cost: "Premium",
+      color: "text-yellow-400"
     },
     {
-      icon: Crown,
-      title: "Acesso VIP",
-      description: "T'KAZH ilimitado e conteúdos exclusivos",
-      href: "/vip",
-      color: "text-yellow-400",
-      cost: "Premium"
+      icon: Shield,
+      title: "Liber Prohibitus",
+      description: "Conhecimentos restritos aos mais preparados",
+      href: "/liber-prohibitus",
+      cost: "Especial",
+      color: "text-red-500"
+    },
+    {
+      icon: Users,
+      title: "Sobre o Templo",
+      description: "Conheça nossa história e filosofia ancestral",
+      href: "/sobre", 
+      cost: "Gratuito",
+      color: "text-green-400"
+    },
+    {
+      icon: DollarSign,
+      title: "Adquirir T'KAZH",
+      description: "Compre créditos para acessar todos os serviços",
+      href: "/comprar-tkazh",
+      cost: "Pagamento",
+      color: "text-emerald-400"
     }
   ];
 
   return (
-    <div className="min-h-screen ritual-background">
+    <div className="min-h-screen relative overflow-hidden">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Central Rotating Seal */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <img 
-            ref={sealRef}
-            src="https://i.postimg.cc/g20gqmdX/IMG-20250527-182235-1.png"
-            alt="Selo do Templo"
-            className="w-64 h-64 md:w-96 md:h-96 opacity-20 central-seal"
-          />
+      {/* Fixed Central Rotating Seal - Larger and more prominent */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <div className="rotating-seal w-80 h-80 opacity-15">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="90" fill="none" stroke="rgb(234, 179, 8)" strokeWidth="2"/>
+            <polygon points="100,20 130,80 190,80 140,120 160,180 100,140 40,180 60,120 10,80 70,80" 
+                     fill="none" stroke="rgb(234, 179, 8)" strokeWidth="2"/>
+            <circle cx="100" cy="100" r="15" fill="rgb(234, 179, 8)"/>
+            <path d="M100,85 L115,100 L100,115 L85,100 Z" fill="rgb(234, 179, 8)"/>
+          </svg>
         </div>
+      </div>
 
-        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          {/* Dynamic Greeting */}
-          <div className="mb-8">
-            <p className="font-enns text-xl md:text-2xl text-red-300 mb-6 italic">
-              {getGreeting()}
-            </p>
-            <Flame className="w-16 h-16 mx-auto text-red-500 mb-6 animate-glow-pulse" />
-            <h1 className="font-titles text-6xl md:text-8xl font-black mb-6 text-white tracking-wider drop-shadow-2xl">
+      {/* Mystical floating particles */}
+      <div className="fixed inset-0 overflow-hidden z-0">
+        <div className="mystical-particles"></div>
+      </div>
+      
+      {/* Hero Section */}
+      <div className="relative min-h-screen flex items-center justify-center z-10 pt-20">
+        <div className="text-center px-4 max-w-4xl mx-auto">
+          <div className="mb-12">
+            <h1 className="text-6xl md:text-8xl font-titles text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 via-yellow-500 to-amber-600 mb-6 drop-shadow-2xl">
               TEMPLO DO ABISMO
             </h1>
-            <p className="font-enns text-xl md:text-2xl text-red-300 mb-8 italic">
-              Portal de Ensinamentos Ancestrais Luciferianos
+            <p className="text-xl md:text-2xl text-gray-200 font-serif mb-8 drop-shadow-lg">
+              Portal Místico de Ensinamentos Luciferiano-Ancestrais
             </p>
-            <div className="abyssal-card p-6 max-w-2xl mx-auto mb-8">
-              <p className="font-body text-lg text-gray-200 leading-relaxed">
-                "Aqueles que buscam a sabedoria nas profundezas encontrarão 
-                a luz que as trevas guardam. O conhecimento ancestral 
-                aguarda os dignos de sua revelação."
+          </div>
+
+          {user ? (
+            <div className="bg-black/30 backdrop-blur-md border border-yellow-600/40 rounded-xl p-6 mb-8 shadow-2xl">
+              <p className="text-gray-200 mb-4 text-lg">
+                Bem-vindo de volta, <span className="text-yellow-500 font-semibold">{user.username}</span>
               </p>
-              <p className="text-red-400 mt-4 font-semibold">— Magus Primordialis</p>
+              <div className="flex items-center justify-center space-x-8 text-sm">
+                <div className="text-center">
+                  <Gem className="w-6 h-6 text-yellow-500 mx-auto mb-2" />
+                  <div className="text-yellow-500 font-bold text-xl">{user.tkazh_credits}</div>
+                  <div className="text-gray-300">T'KAZH</div>
+                </div>
+                <div className="text-center">
+                  <Star className="w-6 h-6 text-blue-400 mx-auto mb-2" />
+                  <div className="text-blue-400 font-bold text-xl">{user.free_credits}</div>
+                  <div className="text-gray-300">Grátis</div>
+                </div>
+                <div className="text-center">
+                  <Crown className="w-6 h-6 text-purple-400 mx-auto mb-2" />
+                  <div className="text-purple-400 font-bold text-xl">Nível {user.initiation_level}</div>
+                  <div className="text-gray-300">Iniciação</div>
+                </div>
+              </div>
             </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/login">
-              <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 font-bold">
-                <Crown className="w-5 h-5 mr-2" />
-                Iniciar Jornada
-              </Button>
-            </Link>
-            <Link href="/oraculo">
-              <Button size="lg" variant="outline" className="border-red-400 text-red-400 hover:bg-red-900/20 px-8 py-4">
-                <Gem className="w-5 h-5 mr-2" />
-                Consultar Oráculos
-              </Button>
-            </Link>
-          </div>
+          ) : (
+            <div className="mb-8">
+              <Link href="/login">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-700 hover:to-amber-700 text-black px-8 py-4 font-bold text-lg shadow-2xl border-2 border-yellow-500/50"
+                >
+                  <Crown className="w-6 h-6 mr-2" />
+                  Entrar no Templo
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
-      </section>
+      </div>
 
-      {/* Daily Poem Section - Voz da Pluma */}
-      <section className="py-16 px-6">
-        <div className="max-w-4xl mx-auto">
-          <Card className="abyssal-card">
-            <CardContent className="p-8">
-              <div className="text-center space-y-6">
-                <div className="flex items-center justify-center space-x-3 mb-6">
-                  <Scroll className="h-8 w-8 text-red-400 animate-pulse" />
-                  <h3 className="font-titles text-2xl md:text-3xl font-bold text-white">
-                    Voz da Pluma
-                  </h3>
-                  <Scroll className="h-8 w-8 text-red-400 animate-pulse" />
-                </div>
-                
-                <h4 className="font-titles text-xl md:text-2xl text-red-300 mb-6">
-                  "{dailyPoem.title}"
-                </h4>
-                
-                <div className="font-enns text-lg leading-relaxed text-gray-200 whitespace-pre-line max-w-3xl mx-auto">
-                  {dailyPoem.content}
-                </div>
-                
-                <p className="text-red-400 font-semibold mt-6">
-                  — {dailyPoem.author}
-                </p>
-                
-                <Link href="/voz-da-pluma">
-                  <Button variant="outline" className="mt-6 border-red-400 text-red-400 hover:bg-red-900/20">
-                    <BookOpen className="mr-2 h-4 w-4" />
-                    Explorar Mais Poemas
-                  </Button>
-                </Link>
+      {/* Navigation Sections Grid */}
+      <div className="relative z-10 container mx-auto px-4 py-16">
+        <h2 className="text-4xl font-titles text-yellow-600 text-center mb-12">
+          Portais do Conhecimento
+        </h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sections.map((section, index) => (
+            <Link key={index} href={section.href}>
+              <Card className="bg-black/20 backdrop-blur-md border border-yellow-600/30 hover:border-yellow-500/60 hover:scale-105 transition-all duration-300 cursor-pointer group h-full shadow-lg hover:shadow-2xl">
+                <CardHeader className="text-center pb-4">
+                  <section.icon className={`w-12 h-12 ${section.color} mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 filter drop-shadow-lg`} />
+                  <CardTitle className="font-titles text-xl text-yellow-600 group-hover:text-yellow-400 transition-colors">
+                    {section.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-center">
+                  <p className="text-gray-200 mb-4 leading-relaxed">{section.description}</p>
+                  <div className="text-sm text-yellow-500 font-semibold px-3 py-1 bg-yellow-600/20 rounded-full inline-block">
+                    {section.cost}
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Daily Poem Section */}
+      {dailyPoem && (
+        <div className="relative z-10 container mx-auto px-4 py-16">
+          <Card className="bg-black/20 backdrop-blur-md border border-yellow-600/30 max-w-3xl mx-auto shadow-2xl">
+            <CardHeader className="text-center">
+              <CardTitle className="font-titles text-3xl text-yellow-600 flex items-center justify-center">
+                <Feather className="w-8 h-8 mr-3 text-cyan-400 filter drop-shadow-lg" />
+                Voz da Pluma
+              </CardTitle>
+              <CardDescription className="text-gray-300 text-lg">
+                Poema Místico do Dia
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-center">
+              <h3 className="text-2xl font-bold text-yellow-500 mb-6">{dailyPoem.title}</h3>
+              <div className="text-gray-200 mb-6 whitespace-pre-line font-serif leading-relaxed text-lg">
+                {dailyPoem.content}
               </div>
+              <p className="text-gray-400 italic text-lg">— {dailyPoem.author}</p>
             </CardContent>
           </Card>
         </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="font-titles text-4xl md:text-6xl font-bold mb-6 text-white">
-              Portais do Conhecimento
-            </h2>
-            <p className="font-body text-xl text-red-300 max-w-3xl mx-auto">
-              Explore as diferentes dimensões da sabedoria ancestral através de nossas ferramentas místicas
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <Link key={index} href={feature.href}>
-                  <Card className="abyssal-card hover:scale-105 transition-transform cursor-pointer group h-full">
-                    <CardContent className="p-6 text-center space-y-4">
-                      <div className={`w-16 h-16 mx-auto bg-red-600 rounded-full flex items-center justify-center group-hover:animate-glow-pulse ${
-                        feature.cost === "Premium" ? "bg-gradient-to-r from-yellow-500 to-orange-500" : 
-                        feature.cost === "Restrito" ? "bg-purple-600" : "bg-red-600"
-                      }`}>
-                        <Icon className="h-8 w-8 text-white" />
-                      </div>
-                      <h3 className="font-titles text-xl font-bold text-white">
-                        {feature.title}
-                      </h3>
-                      <p className="font-body text-gray-300 text-sm leading-relaxed">
-                        {feature.description}
-                      </p>
-                      <div className={`text-sm font-bold rounded-full px-4 py-2 ${
-                        feature.cost === "Premium" ? "bg-gradient-to-r from-yellow-500 to-orange-500 text-black" :
-                        feature.cost === "Restrito" ? "bg-purple-600 text-white" :
-                        feature.cost === "Gratuito" ? "bg-green-600 text-white" :
-                        "tkazh-indicator"
-                      }`}>
-                        {feature.cost === "Premium" ? "⭐ Premium" :
-                         feature.cost === "Restrito" ? "🔒 Restrito" :
-                         feature.cost === "Gratuito" ? "✨ Gratuito" :
-                         `💎 ${feature.cost}`}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* T'KAZH Credit System Explanation */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          <Card className="abyssal-card border-red-500/50">
-            <CardContent className="p-8 text-center space-y-6">
-              <div className="flex items-center justify-center space-x-3 mb-6">
-                <Gem className="h-10 w-10 text-red-400" />
-                <h3 className="font-titles text-3xl md:text-4xl font-bold text-white">
-                  Sistema T'KAZH
-                </h3>
-                <Gem className="h-10 w-10 text-red-400" />
-              </div>
-              
-              <p className="font-body text-lg text-gray-200 leading-relaxed max-w-3xl mx-auto">
-                T'KAZH são os créditos místicos do Templo do Abismo. Utilize-os para acessar oráculos, 
-                desbloquear grimórios e participar de rituais especiais. Ganhe T'KAZH completando cursos, 
-                participando de desafios místicos ou através do acesso VIP.
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                <div className="space-y-2">
-                  <div className="tkazh-indicator">
-                    💎 Ganhe T'KAZH
-                  </div>
-                  <p className="text-sm text-gray-300">Conclusão de cursos, desafios, pactos místicos</p>
-                </div>
-                <div className="space-y-2">
-                  <div className="bg-green-600 text-white font-bold rounded-full px-4 py-2">
-                    🔄 Reset Semanal
-                  </div>
-                  <p className="text-sm text-gray-300">Créditos gratuitos renovam toda semana</p>
-                </div>
-                <div className="space-y-2">
-                  <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-black font-bold rounded-full px-4 py-2">
-                    👑 VIP Ilimitado
-                  </div>
-                  <p className="text-sm text-gray-300">Membros VIP têm T'KAZH ilimitado</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <Eye className="w-16 h-16 mx-auto text-red-400 mb-6 animate-glow-pulse" />
-          <h2 className="font-titles text-4xl md:text-5xl font-bold mb-6 text-white">
-            Desperte Sua Natureza Superior
-          </h2>
-          <p className="font-body text-xl text-red-200 mb-8 max-w-2xl mx-auto leading-relaxed">
-            O verdadeiro poder reside no autoconhecimento. Inicie sua jornada através dos mistérios 
-            do Abismo e descubra as chamas da sabedoria que já ardem dentro de você.
-          </p>
-          <div className="space-y-4">
-            <Link href="/login">
-              <Button size="lg" className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white px-10 py-4 text-lg font-bold">
-                <Crown className="w-6 h-6 mr-2" />
-                Iniciar Jornada Mística
-              </Button>
-            </Link>
-            <p className="font-enns text-sm text-red-400 italic">
-              "In tenebris lux" - Na escuridão, a luz
-            </p>
-          </div>
-        </div>
-      </section>
+      )}
 
       <Footer />
     </div>
