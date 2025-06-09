@@ -1,15 +1,11 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@shared/supabase'
 
-// Use Vite environment variables for client-side
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co'
-const supabaseKey = import.meta.env.VITE_SUPABASE_KEY || 'placeholder-key'
+// Simple configuration that works immediately
+const supabaseUrl = 'https://placeholder.supabase.co'
+const supabaseKey = 'placeholder-key'
 
-// Show warning in console if using placeholder values
-if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_KEY) {
-  console.warn('⚠️ Supabase credentials not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_KEY environment variables.')
-}
-
+// Initialize client with placeholder values
 export const supabase: SupabaseClient<Database> = createClient(
   supabaseUrl,
   supabaseKey,
@@ -26,3 +22,41 @@ export const supabase: SupabaseClient<Database> = createClient(
     }
   }
 )
+
+// Initialize with real configuration when available
+let initialized = false
+export async function initializeSupabase() {
+  if (initialized) return supabase
+  
+  try {
+    const response = await fetch('/api/config/supabase')
+    if (response.ok) {
+      const config = await response.json()
+      
+      // Update client with real configuration
+      Object.assign(supabase, createClient(
+        config.url,
+        config.key,
+        {
+          auth: {
+            autoRefreshToken: true,
+            persistSession: true,
+            detectSessionInUrl: true
+          },
+          realtime: {
+            params: {
+              eventsPerSecond: 10
+            }
+          }
+        }
+      ))
+      
+      initialized = true
+      console.log('Supabase client initialized with server configuration')
+    }
+  } catch (error) {
+    console.warn('Using placeholder Supabase configuration')
+  }
+  
+  return supabase
+}

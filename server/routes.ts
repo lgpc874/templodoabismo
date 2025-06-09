@@ -30,6 +30,14 @@ async function requireAuth(req: any, res: Response, next: any) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Configuration endpoint for client
+  app.get('/api/config/supabase', (req: Request, res: Response) => {
+    res.json({
+      url: process.env.SUPABASE_URL,
+      key: process.env.SUPABASE_KEY
+    });
+  });
+
   // PayPal routes
   app.get("/setup", loadPaypalDefault);
   app.post("/order", createPaypalOrder);
