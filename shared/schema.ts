@@ -260,6 +260,78 @@ export const api_configurations = pgTable("api_configurations", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const pages = pgTable("pages", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  content: text("content").notNull(),
+  excerpt: text("excerpt"),
+  pageType: text("page_type").notNull().default("page"), // page, grimoire, scripture, teaching
+  status: text("status").notNull().default("draft"), // draft, published, private
+  featuredImage: text("featured_image"),
+  metaTitle: text("meta_title"),
+  metaDescription: text("meta_description"),
+  customCss: text("custom_css"),
+  customJs: text("custom_js"),
+  parentId: integer("parent_id").references(() => pages.id),
+  sortOrder: integer("sort_order").default(0),
+  viewCount: integer("view_count").default(0),
+  isHomepage: boolean("is_homepage").default(false),
+  requiresAuth: boolean("requires_auth").default(false),
+  authorId: integer("author_id").references(() => users.id),
+  publishedAt: timestamp("published_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const page_revisions = pgTable("page_revisions", {
+  id: serial("id").primaryKey(),
+  pageId: integer("page_id").references(() => pages.id).notNull(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  revisionNote: text("revision_note"),
+  authorId: integer("author_id").references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const media_library = pgTable("media_library", {
+  id: serial("id").primaryKey(),
+  filename: text("filename").notNull(),
+  originalName: text("original_name").notNull(),
+  mimeType: text("mime_type").notNull(),
+  fileSize: integer("file_size").notNull(),
+  width: integer("width"),
+  height: integer("height"),
+  url: text("url").notNull(),
+  thumbnailUrl: text("thumbnail_url"),
+  altText: text("alt_text"),
+  caption: text("caption"),
+  description: text("description"),
+  tags: text("tags").array().default([]),
+  uploadedBy: integer("uploaded_by").references(() => users.id),
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
+});
+
+export const scriptures = pgTable("scriptures", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  content: text("content").notNull(),
+  excerpt: text("excerpt"),
+  category: text("category").notNull(), // luciferian, abyssal, transformation, etc
+  difficulty: text("difficulty").default("beginner"), // beginner, intermediate, advanced
+  estimatedReadTime: integer("estimated_read_time"),
+  isPublic: boolean("is_public").default(false),
+  requiresInitiation: boolean("requires_initiation").default(false),
+  minimumLevel: integer("minimum_level").default(0),
+  downloads: integer("downloads").default(0),
+  ratings: jsonb("ratings").default([]), // Array of {userId, rating, comment}
+  authorId: integer("author_id").references(() => users.id),
+  publishedAt: timestamp("published_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Insert Schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
