@@ -15,7 +15,7 @@ import Bibliotheca from "@/pages/bibliotheca";
 import VozDaPluma from "@/pages/voz-da-pluma";
 
 import LiberProhibitus from "@/pages/liber-prohibitus";
-import ComprarTkazh from "@/pages/comprar-tkazh";
+
 import SimpleAdminLogin from "@/pages/admin/SimpleAdminLogin";
 import AdminDashboard from "@/pages/admin";
 

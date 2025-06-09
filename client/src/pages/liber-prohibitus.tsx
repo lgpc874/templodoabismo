@@ -231,10 +231,6 @@ export default function LiberProhibitus() {
                 </p>
                 <div className="flex items-center justify-center space-x-6 text-sm">
                   <div className="text-center">
-                    <div className="text-lg font-bold text-yellow-500">{user.tkazh_credits}</div>
-                    <div className="text-gray-400">T'KAZH Disponível</div>
-                  </div>
-                  <div className="text-center">
                     <div className="text-lg font-bold text-green-400">
                       {prohibitedTexts.filter(t => canAccessDocument(t.requiredLevel)).length}
                     </div>
