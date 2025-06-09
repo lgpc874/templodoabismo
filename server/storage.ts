@@ -398,7 +398,7 @@ export class DatabaseStorage implements IStorage {
 
   // Courses
   async getCourses(): Promise<Course[]> {
-    return await db.select().from(courses).where(eq(courses.is_published, true));
+    return await db.select().from(courses).where(eq(courses.is_active, true));
   }
 
   async getAllCourses(): Promise<Course[]> {
