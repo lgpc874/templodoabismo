@@ -8,13 +8,13 @@ export default function SiteNavigation() {
   const [location] = useLocation();
 
   const navigationItems = [
-    { href: '/', label: 'Início', icon: Home },
-    { href: '/blog', label: 'Gnosis Abissal', icon: BookOpen },
-    { href: '/oraculo', label: 'Oráculos Abissais', icon: Eye },
+    { href: '/', label: 'Introitus', icon: Home },
+    { href: '/blog', label: 'Gnosis Abyssos', icon: BookOpen },
+    { href: '/oraculo', label: 'Oraculum Tenebrae', icon: Eye },
     { href: '/cursos', label: 'Academia Luciferiana', icon: GraduationCap },
-    { href: '/grimorios', label: 'Biblioteca Abissal', icon: Scroll },
+    { href: '/grimorios', label: 'Bibliotheca Abyssos', icon: Scroll },
     { href: '/bibliotheca', label: 'Bibliotheca Secreta', icon: Star },
-    { href: '/voz-da-pluma', label: 'Voz da Pluma', icon: Feather },
+    { href: '/voz-da-pluma', label: 'Vox Plumae', icon: Feather },
     { href: '/liber-prohibitus', label: 'Liber Prohibitus', icon: Skull },
   ];
 
@@ -72,7 +72,7 @@ export default function SiteNavigation() {
                   size="sm"
                   className="bg-amber-600 hover:bg-amber-700 text-black font-semibold"
                 >
-                  Acesso
+                  Accessus
                 </Button>
               </Link>
             </div>
@@ -144,7 +144,7 @@ export default function SiteNavigation() {
                       className="w-full bg-amber-600 hover:bg-amber-700 text-black font-semibold"
                       onClick={() => setIsOpen(false)}
                     >
-                      Acesso ao Portal
+                      Accessus Portal
                     </Button>
                   </Link>
                 </div>

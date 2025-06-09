@@ -144,7 +144,7 @@ export default function Blog() {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl md:text-7xl font-cinzel font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-purple-500 to-red-400">
-            GNOSIS ABISSAL
+            GNOSIS ABYSSOS
           </h1>
           <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
             Portal de conhecimento público sobre luciferianismo ancestral, gnose ctônica 
