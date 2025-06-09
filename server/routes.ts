@@ -493,6 +493,127 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Blog routes (public)
+  app.get('/api/blog/posts', async (req: Request, res: Response) => {
+    try {
+      const posts = await storage.getBlogPosts(true); // Only published posts
+      res.json(posts);
+    } catch (error) {
+      console.error("Error fetching blog posts:", error);
+      res.status(500).json({ message: "Failed to fetch blog posts" });
+    }
+  });
+
+  app.get('/api/blog/posts/:slug', async (req: Request, res: Response) => {
+    try {
+      const { slug } = req.params;
+      const post = await storage.getBlogPostBySlug(slug);
+      
+      if (!post || !post.published) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      
+      res.json(post);
+    } catch (error) {
+      console.error("Error fetching blog post:", error);
+      res.status(500).json({ message: "Failed to fetch blog post" });
+    }
+  });
+
+  app.get('/api/blog/categories', async (req: Request, res: Response) => {
+    try {
+      const categories = await storage.getBlogCategories();
+      res.json(categories.map(cat => cat.name));
+    } catch (error) {
+      console.error("Error fetching blog categories:", error);
+      res.status(500).json({ message: "Failed to fetch blog categories" });
+    }
+  });
+
+  app.get('/api/blog/tags', async (req: Request, res: Response) => {
+    try {
+      const tags = await storage.getBlogTags();
+      res.json(tags);
+    } catch (error) {
+      console.error("Error fetching blog tags:", error);
+      res.status(500).json({ message: "Failed to fetch blog tags" });
+    }
+  });
+
+  app.post('/api/newsletter/subscribe', async (req: Request, res: Response) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email || !/\S+@\S+\.\S+/.test(email)) {
+        return res.status(400).json({ message: "Email válido é obrigatório" });
+      }
+
+      const subscriber = await storage.subscribeNewsletter({ email });
+      res.json({ message: "Inscrição realizada com sucesso!" });
+    } catch (error: any) {
+      if (error.message?.includes('duplicate key')) {
+        return res.status(400).json({ message: "Este email já está inscrito" });
+      }
+      console.error("Error subscribing to newsletter:", error);
+      res.status(500).json({ message: "Erro ao processar inscrição" });
+    }
+  });
+
+  // Admin blog routes (protected)
+  app.get('/api/admin/blog/posts', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const posts = await storage.getBlogPosts(); // All posts
+      res.json(posts);
+    } catch (error) {
+      console.error("Error fetching admin blog posts:", error);
+      res.status(500).json({ message: "Failed to fetch blog posts" });
+    }
+  });
+
+  app.post('/api/admin/blog/posts', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const postData = req.body;
+      const post = await storage.createBlogPost(postData);
+      res.json(post);
+    } catch (error) {
+      console.error("Error creating blog post:", error);
+      res.status(500).json({ message: "Failed to create blog post" });
+    }
+  });
+
+  app.put('/api/admin/blog/posts/:id', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const post = await storage.updateBlogPost(id, updates);
+      
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      
+      res.json(post);
+    } catch (error) {
+      console.error("Error updating blog post:", error);
+      res.status(500).json({ message: "Failed to update blog post" });
+    }
+  });
+
+  app.delete('/api/admin/blog/posts/:id', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteBlogPost(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      
+      res.json({ message: "Post deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting blog post:", error);
+      res.status(500).json({ message: "Failed to delete blog post" });
+    }
+  });
+
   // Serve uploaded files
   app.use('/uploads', express.static('uploads'));
 

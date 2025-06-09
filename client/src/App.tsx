@@ -13,8 +13,8 @@ import Courses from "@/pages/courses-mystical";
 import Grimoires from "@/pages/grimoires-mystical";
 import Bibliotheca from "@/pages/bibliotheca-mystical";
 import VozDaPluma from "@/pages/voz-da-pluma-mystical";
-
 import LiberProhibitus from "@/pages/liber-prohibitus-mystical";
+import Blog from "@/pages/blog";
 
 import SimpleAdminLogin from "@/pages/admin/SimpleAdminLogin";
 import AdminDashboard from "@/pages/admin";

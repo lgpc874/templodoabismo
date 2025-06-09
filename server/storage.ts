@@ -36,6 +36,17 @@ import {
   type InsertOracleSession,
   type DailyPoem,
   type InsertDailyPoem,
+  blog_posts,
+  blog_categories,
+  blog_tags,
+  newsletter_subscribers,
+  type BlogPost,
+  type InsertBlogPost,
+  type BlogCategory,
+  type InsertBlogCategory,
+  type BlogTag,
+  type NewsletterSubscriber,
+  type InsertNewsletterSubscriber,
 } from "@shared/schema";
 
 import { db } from "./db";
@@ -127,6 +138,22 @@ export interface IStorage {
     totalAssets: number;
     lastBackup: string | null;
   }>;
+  
+  // Blog
+  getBlogPosts(published?: boolean): Promise<BlogPost[]>;
+  getBlogPost(id: number): Promise<BlogPost | undefined>;
+  getBlogPostBySlug(slug: string): Promise<BlogPost | undefined>;
+  createBlogPost(post: InsertBlogPost): Promise<BlogPost>;
+  updateBlogPost(id: number, updates: Partial<InsertBlogPost>): Promise<BlogPost | undefined>;
+  deleteBlogPost(id: number): Promise<boolean>;
+  
+  getBlogCategories(): Promise<BlogCategory[]>;
+  createBlogCategory(category: InsertBlogCategory): Promise<BlogCategory>;
+  
+  getBlogTags(): Promise<string[]>;
+  updateTagUsage(tags: string[]): Promise<void>;
+  
+  subscribeNewsletter(subscriber: InsertNewsletterSubscriber): Promise<NewsletterSubscriber>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -499,6 +526,99 @@ export class DatabaseStorage implements IStorage {
       totalAssets: assetCount.count,
       lastBackup: lastBackup?.createdAt?.toISOString() || null,
     };
+  }
+
+  // Blog methods
+  async getBlogPosts(published?: boolean): Promise<BlogPost[]> {
+    let query = db.select().from(blog_posts);
+    
+    if (published !== undefined) {
+      query = query.where(eq(blog_posts.published, published));
+    }
+    
+    return await query.orderBy(desc(blog_posts.publishedAt));
+  }
+
+  async getBlogPost(id: number): Promise<BlogPost | undefined> {
+    const [post] = await db.select().from(blog_posts).where(eq(blog_posts.id, id));
+    return post;
+  }
+
+  async getBlogPostBySlug(slug: string): Promise<BlogPost | undefined> {
+    const [post] = await db.select().from(blog_posts).where(eq(blog_posts.slug, slug));
+    return post;
+  }
+
+  async createBlogPost(post: InsertBlogPost): Promise<BlogPost> {
+    const [newPost] = await db.insert(blog_posts).values(post).returning();
+    
+    // Update tag usage
+    if (post.tags && post.tags.length > 0) {
+      await this.updateTagUsage(post.tags);
+    }
+    
+    return newPost;
+  }
+
+  async updateBlogPost(id: number, updates: Partial<InsertBlogPost>): Promise<BlogPost | undefined> {
+    const [updatedPost] = await db
+      .update(blog_posts)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(blog_posts.id, id))
+      .returning();
+    
+    // Update tag usage if tags were changed
+    if (updates.tags && updates.tags.length > 0) {
+      await this.updateTagUsage(updates.tags);
+    }
+    
+    return updatedPost;
+  }
+
+  async deleteBlogPost(id: number): Promise<boolean> {
+    const result = await db.delete(blog_posts).where(eq(blog_posts.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  async getBlogCategories(): Promise<BlogCategory[]> {
+    return await db.select().from(blog_categories).orderBy(blog_categories.name);
+  }
+
+  async createBlogCategory(category: InsertBlogCategory): Promise<BlogCategory> {
+    const [newCategory] = await db.insert(blog_categories).values(category).returning();
+    return newCategory;
+  }
+
+  async getBlogTags(): Promise<string[]> {
+    const tags = await db.select({ name: blog_tags.name }).from(blog_tags).orderBy(desc(blog_tags.usageCount));
+    return tags.map(tag => tag.name);
+  }
+
+  async updateTagUsage(tags: string[]): Promise<void> {
+    for (const tagName of tags) {
+      // Check if tag exists
+      const [existingTag] = await db.select().from(blog_tags).where(eq(blog_tags.name, tagName));
+      
+      if (existingTag) {
+        // Increment usage count
+        await db
+          .update(blog_tags)
+          .set({ usageCount: existingTag.usageCount + 1 })
+          .where(eq(blog_tags.id, existingTag.id));
+      } else {
+        // Create new tag
+        await db.insert(blog_tags).values({
+          name: tagName,
+          slug: tagName.toLowerCase().replace(/\s+/g, '-'),
+          usageCount: 1,
+        });
+      }
+    }
+  }
+
+  async subscribeNewsletter(subscriber: InsertNewsletterSubscriber): Promise<NewsletterSubscriber> {
+    const [newSubscriber] = await db.insert(newsletter_subscribers).values(subscriber).returning();
+    return newSubscriber;
   }
 }
 
