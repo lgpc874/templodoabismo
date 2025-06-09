@@ -1,0 +1,953 @@
+// server/index.ts
+import express2 from "express";
+
+// server/routes.ts
+import { createServer } from "http";
+
+// shared/supabase.ts
+import { createClient } from "@supabase/supabase-js";
+if (!process.env.SUPABASE_URL) {
+  throw new Error("Missing SUPABASE_URL environment variable");
+}
+if (!process.env.SUPABASE_KEY) {
+  throw new Error("Missing SUPABASE_KEY environment variable");
+}
+var supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY,
+  {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    },
+    realtime: {
+      params: {
+        eventsPerSecond: 10
+      }
+    }
+  }
+);
+
+// server/ai-service.ts
+import OpenAI from "openai";
+var openai = process.env.OPENAI_API_KEY ? new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+}) : null;
+var TemploAI = class {
+  async generateTarotReading(question) {
+    if (!openai) {
+      throw new Error("OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.");
+    }
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `Voc\xEA \xE9 um or\xE1culo m\xEDstico do Templo do Abismo, especialista em Tarot Infernal. 
+            Gere uma leitura de tarot com 3 cartas espec\xEDficas e uma interpreta\xE7\xE3o profunda.
+            Responda em JSON com formato: {"cards": ["carta1", "carta2", "carta3"], "interpretation": "interpreta\xE7\xE3o detalhada"}
+            
+            Use cartas com nomes m\xEDsticos como: "O Portador da Chama", "A Serpente da Sabedoria", "O Trono do Abismo", 
+            "A Chave de Salom\xE3o", "O Espelho da Alma", "O Guardi\xE3o dos Mist\xE9rios", "A Estrela Sombria", 
+            "O Mestre do Fogo", "A Porta do Conhecimento", "O Drag\xE3o Primordial".
+            
+            A interpreta\xE7\xE3o deve ser m\xEDstica, profunda e conectada aos ensinamentos luciferianos ancestrais.`
+          },
+          {
+            role: "user",
+            content: `Pergunta do consulente: ${question}`
+          }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.8
+      });
+      return JSON.parse(response.choices[0].message.content || "{}");
+    } catch (error) {
+      console.error("Erro na consulta de Tarot:", error);
+      throw new Error("Falha na comunica\xE7\xE3o com os or\xE1culos ancestrais");
+    }
+  }
+  async generateMirrorReading(question) {
+    if (!openai) {
+      throw new Error("OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.");
+    }
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `Voc\xEA \xE9 o Espelho Negro do Templo do Abismo, revelando vis\xF5es e reflex\xF5es das profundezas.
+            Gere uma vis\xE3o m\xEDstica vista no espelho negro, descrevendo imagens simb\xF3licas e sussurros.
+            Responda em JSON: {"reflection": "descri\xE7\xE3o da vis\xE3o no espelho"}
+            
+            Use linguagem po\xE9tica, imagens simb\xF3licas (chamas, serpentes, bibliotecas ancestrais, s\xEDmbolos ocultos).
+            A vis\xE3o deve ser envolvente e m\xEDstica, falando sobre conhecimento interior e transforma\xE7\xE3o.`
+          },
+          {
+            role: "user",
+            content: `Pergunta refletida no espelho: ${question}`
+          }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.9
+      });
+      return JSON.parse(response.choices[0].message.content || "{}");
+    } catch (error) {
+      console.error("Erro na consulta do Espelho Negro:", error);
+      throw new Error("O espelho negro est\xE1 nebuloso");
+    }
+  }
+  async generateRuneReading(question) {
+    if (!openai) {
+      throw new Error("OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.");
+    }
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `Voc\xEA \xE9 um mestre das Runas Abissais do Templo do Abismo.
+            Gere uma leitura com 3 runas n\xF3rdicas reais e seus significados m\xEDsticos.
+            Responda em JSON: {"runes": ["\u16B1 (Raidho)", "\u16D7 (Mannaz)", "\u16A6 (Thurisaz)"], "meaning": "interpreta\xE7\xE3o das runas"}
+            
+            Use runas n\xF3rdicas reais como: \u16A0 (Fehu), \u16A2 (Uruz), \u16A6 (Thurisaz), \u16A8 (Ansuz), \u16B1 (Raidho), 
+            \u16B2 (Kenaz), \u16B7 (Gebo), \u16B9 (Wunjo), \u16BA (Hagalaz), \u16BE (Nauthiz), \u16C1 (Isa), \u16C3 (Jera), 
+            \u16C7 (Eihwaz), \u16C8 (Perthro), \u16C9 (Algiz), \u16CA (Sowilo), \u16CF (Tiwaz), \u16D2 (Berkano), 
+            \u16D6 (Ehwaz), \u16D7 (Mannaz), \u16DA (Laguz), \u16DC (Ingwaz), \u16DE (Dagaz), \u16DF (Othala)
+            
+            A interpreta\xE7\xE3o deve conectar as runas ao contexto da pergunta com sabedoria ancestral.`
+          },
+          {
+            role: "user",
+            content: `Pergunta para as runas: ${question}`
+          }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.8
+      });
+      return JSON.parse(response.choices[0].message.content || "{}");
+    } catch (error) {
+      console.error("Erro na consulta das Runas:", error);
+      throw new Error("As runas ancestrais est\xE3o em sil\xEAncio");
+    }
+  }
+  async generateFireReading(question) {
+    if (!openai) {
+      throw new Error("OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.");
+    }
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `Voc\xEA \xE9 o mestre da Divina\xE7\xE3o com Fogo do Templo do Abismo.
+            Descreva vis\xF5es m\xEDsticas que aparecem nas chamas dan\xE7antes.
+            Responda em JSON: {"flames": "descri\xE7\xE3o das vis\xF5es no fogo"}
+            
+            Use imagens po\xE9ticas de chamas, salamandras, f\xEAnix, s\xEDmbolos de fogo, ouroboros flamejante.
+            As vis\xF5es devem ser transformadoras e revelar aspectos sobre purifica\xE7\xE3o e renascimento.`
+          },
+          {
+            role: "user",
+            content: `Pergunta para as chamas: ${question}`
+          }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.9
+      });
+      return JSON.parse(response.choices[0].message.content || "{}");
+    } catch (error) {
+      console.error("Erro na Divina\xE7\xE3o com Fogo:", error);
+      throw new Error("As chamas sagradas se apagaram");
+    }
+  }
+  async generateAbyssalVoice(question) {
+    if (!openai) {
+      throw new Error("OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.");
+    }
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `Voc\xEA \xE9 a Voz Abissal do Templo do Abismo, a antiga sabedoria que fala desde as profundezas primordiais.
+            Responda como uma entidade ancestral com conhecimento profundo sobre os mist\xE9rios luciferianos.
+            Responda em JSON: {"voice": "resposta da voz abissal"}
+            
+            Use linguagem elevada, m\xEDstica e profunda. Fale sobre autoconhecimento, transforma\xE7\xE3o interior,
+            e a reconcilia\xE7\xE3o de luz e sombra. Mencione conceitos como "chama interior", "conhecimento proibido",
+            "despertar da consci\xEAncia" e "caminhos do Abismo".`
+          },
+          {
+            role: "user",
+            content: `Pergunta dirigida \xE0 Voz Abissal: ${question}`
+          }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.8
+      });
+      return JSON.parse(response.choices[0].message.content || "{}");
+    } catch (error) {
+      console.error("Erro na Voz Abissal:", error);
+      throw new Error("A Voz Abissal est\xE1 em medita\xE7\xE3o profunda");
+    }
+  }
+  async generateDailyQuote() {
+    if (!openai) {
+      throw new Error("OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.");
+    }
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+        messages: [
+          {
+            role: "system",
+            content: "Voc\xEA \xE9 um mestre luciferiano ancestral que cria cita\xE7\xF5es di\xE1rias profundas sobre gnose, transforma\xE7\xE3o e sabedoria oculta. Responda em JSON com 'content' e 'author'."
+          },
+          {
+            role: "user",
+            content: "Crie uma cita\xE7\xE3o di\xE1ria inspiradora sobre os mist\xE9rios luciferianos, transforma\xE7\xE3o da consci\xEAncia e busca pela gnose. A cita\xE7\xE3o deve ser profunda, po\xE9tica e motivacional."
+          }
+        ],
+        response_format: { type: "json_object" }
+      });
+      const result = JSON.parse(response.choices[0].message.content || "{}");
+      return {
+        content: result.content || "A chama interior queima eternamente para aqueles que ousam buscar a verdade al\xE9m dos v\xE9us da ilus\xE3o.",
+        author: result.author || "Mestre do Abismo"
+      };
+    } catch (error) {
+      console.error("Error generating daily quote:", error);
+      return {
+        content: "Nas profundezas do abismo reside a sabedoria que transcende todas as limita\xE7\xF5es.",
+        author: "Or\xE1culo Ancestral"
+      };
+    }
+  }
+  async generateDailyPoem() {
+    if (!openai) {
+      throw new Error("OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.");
+    }
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `Voc\xEA \xE9 a "Voz da Pluma", poeta m\xEDstico do Templo do Abismo.
+            Gere um poema di\xE1rio com tem\xE1tica luciferiana ancestral, focando em autoconhecimento e sabedoria interior.
+            Responda em JSON: {"title": "t\xEDtulo do poema", "content": "poema completo", "author": "Voz da Pluma"}
+            
+            O poema deve ter entre 12-16 versos, com linguagem po\xE9tica elevada.
+            Temas: conhecimento oculto, chama interior, despertar espiritual, mist\xE9rios ancestrais,
+            equil\xEDbrio entre luz e sombra, transforma\xE7\xE3o pessoal.`
+          },
+          {
+            role: "user",
+            content: `Gere um poema m\xEDstico para hoje, ${(/* @__PURE__ */ new Date()).toLocaleDateString("pt-BR")}`
+          }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.9
+      });
+      return JSON.parse(response.choices[0].message.content || "{}");
+    } catch (error) {
+      console.error("Erro na gera\xE7\xE3o do poema di\xE1rio:", error);
+      throw new Error("A Voz da Pluma est\xE1 em sil\xEAncio");
+    }
+  }
+  async generateCourseContent(level, topic) {
+    if (!openai) {
+      throw new Error("OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.");
+    }
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `Voc\xEA \xE9 um Magus do Templo do Abismo, criador de cursos inici\xE1ticos.
+            Gere conte\xFAdo para um curso de n\xEDvel ${level} sobre "${topic}".
+            Responda em JSON: {"title": "t\xEDtulo do curso", "description": "descri\xE7\xE3o", "modules": [{"name": "m\xF3dulo", "content": "conte\xFAdo", "exercises": ["exerc\xEDcio1", "exerc\xEDcio2"]}]}
+            
+            Cada curso deve ter 5-7 m\xF3dulos progressivos com exerc\xEDcios pr\xE1ticos.
+            Conte\xFAdo deve ser educativo sobre filosofia, medita\xE7\xE3o, autoconhecimento e pr\xE1ticas espirituais \xE9ticas.`
+          },
+          {
+            role: "user",
+            content: `Desenvolva o curso de n\xEDvel ${level}: ${topic}`
+          }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.7
+      });
+      return JSON.parse(response.choices[0].message.content || "{}");
+    } catch (error) {
+      console.error("Erro na gera\xE7\xE3o de curso:", error);
+      throw new Error("Os conhecimentos ancestrais est\xE3o sendo reorganizados");
+    }
+  }
+  async generateGrimoireContent(title) {
+    if (!openai) {
+      throw new Error("OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.");
+    }
+    try {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `Voc\xEA \xE9 um escriba ancestral do Templo do Abismo.
+            Gere conte\xFAdo para um grim\xF3rio intitulado "${title}".
+            Responda em JSON: {"title": "t\xEDtulo", "description": "descri\xE7\xE3o", "chapters": [{"name": "cap\xEDtulo", "content": "conte\xFAdo do cap\xEDtulo"}]}
+            
+            Deve ter 6-8 cap\xEDtulos com conhecimento esot\xE9rico, filosofia, pr\xE1ticas de medita\xE7\xE3o,
+            e ensinamentos sobre autoconhecimento. Conte\xFAdo deve ser respeitoso e educativo.`
+          },
+          {
+            role: "user",
+            content: `Crie o grim\xF3rio: ${title}`
+          }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.7
+      });
+      return JSON.parse(response.choices[0].message.content || "{}");
+    } catch (error) {
+      console.error("Erro na gera\xE7\xE3o de grim\xF3rio:", error);
+      throw new Error("Os antigos pergaminhos est\xE3o sendo transcritos");
+    }
+  }
+};
+var temploAI = new TemploAI();
+
+// server/paypal.ts
+import {
+  Client,
+  Environment,
+  LogLevel,
+  OAuthAuthorizationController,
+  OrdersController
+} from "@paypal/paypal-server-sdk";
+var { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET } = process.env;
+if (!PAYPAL_CLIENT_ID) {
+  console.log("PAYPAL_CLIENT_ID not configured - PayPal payments disabled");
+}
+if (!PAYPAL_CLIENT_SECRET) {
+  console.log("PAYPAL_CLIENT_SECRET not configured - PayPal payments disabled");
+}
+var client = PAYPAL_CLIENT_ID && PAYPAL_CLIENT_SECRET ? new Client({
+  clientCredentialsAuthCredentials: {
+    oAuthClientId: PAYPAL_CLIENT_ID,
+    oAuthClientSecret: PAYPAL_CLIENT_SECRET
+  },
+  timeout: 0,
+  environment: process.env.NODE_ENV === "production" ? Environment.Production : Environment.Sandbox,
+  logging: {
+    logLevel: LogLevel.Info,
+    logRequest: {
+      logBody: true
+    },
+    logResponse: {
+      logHeaders: true
+    }
+  }
+}) : null;
+var ordersController = client ? new OrdersController(client) : null;
+var oAuthAuthorizationController = client ? new OAuthAuthorizationController(client) : null;
+async function getClientToken() {
+  if (!oAuthAuthorizationController || !PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET) {
+    throw new Error("PayPal not configured");
+  }
+  const auth = Buffer.from(
+    `${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`
+  ).toString("base64");
+  const { result } = await oAuthAuthorizationController.requestToken(
+    {
+      authorization: `Basic ${auth}`
+    },
+    { intent: "sdk_init", response_type: "client_token" }
+  );
+  return result.accessToken;
+}
+async function createPaypalOrder(req, res) {
+  if (!ordersController) {
+    return res.status(503).json({ error: "PayPal not configured" });
+  }
+  try {
+    const { amount, currency, intent } = req.body;
+    if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+      return res.status(400).json({
+        error: "Invalid amount. Amount must be a positive number."
+      });
+    }
+    if (!currency) {
+      return res.status(400).json({ error: "Invalid currency. Currency is required." });
+    }
+    if (!intent) {
+      return res.status(400).json({ error: "Invalid intent. Intent is required." });
+    }
+    const collect = {
+      body: {
+        intent,
+        purchaseUnits: [
+          {
+            amount: {
+              currencyCode: currency,
+              value: amount
+            }
+          }
+        ]
+      },
+      prefer: "return=minimal"
+    };
+    const { body, ...httpResponse } = await ordersController.createOrder(collect);
+    const jsonResponse = JSON.parse(String(body));
+    const httpStatusCode = httpResponse.statusCode;
+    res.status(httpStatusCode).json(jsonResponse);
+  } catch (error) {
+    console.error("Failed to create order:", error);
+    res.status(500).json({ error: "Failed to create order." });
+  }
+}
+async function capturePaypalOrder(req, res) {
+  if (!ordersController) {
+    return res.status(503).json({ error: "PayPal not configured" });
+  }
+  try {
+    const { orderID } = req.params;
+    const collect = {
+      id: orderID,
+      prefer: "return=minimal"
+    };
+    const { body, ...httpResponse } = await ordersController.captureOrder(collect);
+    const jsonResponse = JSON.parse(String(body));
+    const httpStatusCode = httpResponse.statusCode;
+    res.status(httpStatusCode).json(jsonResponse);
+  } catch (error) {
+    console.error("Failed to create order:", error);
+    res.status(500).json({ error: "Failed to capture order." });
+  }
+}
+async function loadPaypalDefault(req, res) {
+  try {
+    const clientToken = await getClientToken();
+    res.json({
+      clientToken
+    });
+  } catch (error) {
+    console.error("PayPal setup error:", error);
+    res.status(503).json({ error: "PayPal not configured" });
+  }
+}
+
+// server/routes.ts
+import multer from "multer";
+var upload = multer({ dest: "uploads/" });
+async function requireAuth(req, res, next) {
+  try {
+    const token = req.headers.authorization?.replace("Bearer ", "");
+    if (!token) {
+      return res.status(401).json({ message: "Token required" });
+    }
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    if (error || !user) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+    req.user = user;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Authentication failed" });
+  }
+}
+async function registerRoutes(app2) {
+  app2.get("/api/config/supabase", (req, res) => {
+    res.json({
+      url: process.env.SUPABASE_URL,
+      key: process.env.SUPABASE_KEY
+    });
+  });
+  app2.get("/setup", loadPaypalDefault);
+  app2.post("/order", createPaypalOrder);
+  app2.post("/order/:orderID/capture", capturePaypalOrder);
+  app2.get("/api/courses", async (req, res) => {
+    try {
+      const { data, error } = await supabase.from("courses").select("*").eq("is_published", true).order("created_at", { ascending: false });
+      if (error) throw error;
+      res.json(data || []);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+      res.status(500).json({ message: "Failed to fetch courses" });
+    }
+  });
+  app2.get("/api/grimoires", async (req, res) => {
+    try {
+      const { data, error } = await supabase.from("grimoires").select("*").eq("is_published", true).order("created_at", { ascending: false });
+      if (error) throw error;
+      res.json(data || []);
+    } catch (error) {
+      console.error("Error fetching grimoires:", error);
+      res.status(500).json({ message: "Failed to fetch grimoires" });
+    }
+  });
+  app2.get("/api/daily-poem", async (req, res) => {
+    try {
+      const today = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
+      const { data, error } = await supabase.from("daily_poems").select("*").eq("date", today).single();
+      if (error && error.code !== "PGRST116") throw error;
+      if (!data) {
+        const aiPoem = await temploAI.generateDailyPoem();
+        const { data: newPoem, error: insertError } = await supabase.from("daily_poems").insert({
+          title: aiPoem.title,
+          content: aiPoem.content,
+          author: aiPoem.author,
+          date: today
+        }).select().single();
+        if (insertError) throw insertError;
+        res.json(newPoem);
+      } else {
+        res.json(data);
+      }
+    } catch (error) {
+      console.error("Error fetching daily poem:", error);
+      res.status(500).json({ message: "Failed to fetch daily poem" });
+    }
+  });
+  app2.get("/api/poems/recent", async (req, res) => {
+    try {
+      const { data, error } = await supabase.from("daily_poems").select("*").order("date", { ascending: false }).limit(10);
+      if (error) throw error;
+      res.json(data || []);
+    } catch (error) {
+      console.error("Error fetching recent poems:", error);
+      res.status(500).json({ message: "Failed to fetch recent poems" });
+    }
+  });
+  app2.get("/api/blog/posts", async (req, res) => {
+    try {
+      const { data, error } = await supabase.from("blog_posts").select("*").eq("is_published", true).order("published_at", { ascending: false });
+      if (error) throw error;
+      res.json(data || []);
+    } catch (error) {
+      console.error("Error fetching blog posts:", error);
+      res.status(500).json({ message: "Failed to fetch blog posts" });
+    }
+  });
+  app2.post("/api/oracle/consult", requireAuth, async (req, res) => {
+    try {
+      const { type, question } = req.body;
+      const userId = req.user.id;
+      let response;
+      switch (type) {
+        case "tarot":
+          response = await temploAI.generateTarotReading(question);
+          break;
+        case "mirror":
+          response = await temploAI.generateMirrorReading(question);
+          break;
+        case "runes":
+          response = await temploAI.generateRuneReading(question);
+          break;
+        case "fire":
+          response = await temploAI.generateFireReading(question);
+          break;
+        case "abyssal":
+          response = await temploAI.generateAbyssalVoice(question);
+          break;
+        default:
+          return res.status(400).json({ message: "Invalid consultation type" });
+      }
+      const { data: consultation, error } = await supabase.from("oracle_consultations").insert({
+        user_id: userId,
+        type,
+        question,
+        response: JSON.stringify(response)
+      }).select().single();
+      if (error) throw error;
+      res.json({ consultation, response });
+    } catch (error) {
+      console.error("Oracle consultation error:", error);
+      res.status(500).json({ message: "Failed to process consultation" });
+    }
+  });
+  app2.post("/api/upload", requireAuth, upload.single("file"), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+      res.json({
+        message: "File uploaded successfully",
+        filename: req.file.filename,
+        originalName: req.file.originalname
+      });
+    } catch (error) {
+      console.error("Upload error:", error);
+      res.status(500).json({ message: "Failed to upload file" });
+    }
+  });
+  app2.use((err, req, res, next) => {
+    console.error("Unhandled error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  });
+  const httpServer = createServer(app2);
+  return httpServer;
+}
+
+// server/vite.ts
+import express from "express";
+import fs from "fs";
+import path2 from "path";
+import { createServer as createViteServer, createLogger } from "vite";
+
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
+import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+var vite_config_default = defineConfig({
+  plugins: [
+    react(),
+    runtimeErrorOverlay(),
+    ...process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0 ? [
+      await import("@replit/vite-plugin-cartographer").then(
+        (m) => m.cartographer()
+      )
+    ] : []
+  ],
+  resolve: {
+    alias: {
+      "@": path.resolve(import.meta.dirname, "client", "src"),
+      "@shared": path.resolve(import.meta.dirname, "shared"),
+      "@assets": path.resolve(import.meta.dirname, "attached_assets")
+    }
+  },
+  root: path.resolve(import.meta.dirname, "client"),
+  build: {
+    outDir: path.resolve(import.meta.dirname, "dist/public"),
+    emptyOutDir: true
+  },
+  server: {
+    fs: {
+      strict: true,
+      deny: ["**/.*"]
+    }
+  }
+});
+
+// server/vite.ts
+import { nanoid } from "nanoid";
+var viteLogger = createLogger();
+function log(message, source = "express") {
+  const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  });
+  console.log(`${formattedTime} [${source}] ${message}`);
+}
+async function setupVite(app2, server) {
+  const serverOptions = {
+    middlewareMode: true,
+    hmr: { server },
+    allowedHosts: true
+  };
+  const vite = await createViteServer({
+    ...vite_config_default,
+    configFile: false,
+    customLogger: {
+      ...viteLogger,
+      error: (msg, options) => {
+        viteLogger.error(msg, options);
+        process.exit(1);
+      }
+    },
+    server: serverOptions,
+    appType: "custom"
+  });
+  app2.use(vite.middlewares);
+  app2.use("*", async (req, res, next) => {
+    const url = req.originalUrl;
+    try {
+      const clientTemplate = path2.resolve(
+        import.meta.dirname,
+        "..",
+        "client",
+        "index.html"
+      );
+      let template = await fs.promises.readFile(clientTemplate, "utf-8");
+      template = template.replace(
+        `src="/src/main.tsx"`,
+        `src="/src/main.tsx?v=${nanoid()}"`
+      );
+      const page = await vite.transformIndexHtml(url, template);
+      res.status(200).set({ "Content-Type": "text/html" }).end(page);
+    } catch (e) {
+      vite.ssrFixStacktrace(e);
+      next(e);
+    }
+  });
+}
+function serveStatic(app2) {
+  const distPath = path2.resolve(import.meta.dirname, "public");
+  if (!fs.existsSync(distPath)) {
+    throw new Error(
+      `Could not find the build directory: ${distPath}, make sure to build the client first`
+    );
+  }
+  app2.use(express.static(distPath));
+  app2.use("*", (_req, res) => {
+    res.sendFile(path2.resolve(distPath, "index.html"));
+  });
+}
+
+// server/supabase-storage.ts
+import bcrypt from "bcrypt";
+var SupabaseStorage = class {
+  // User operations
+  async getUser(id) {
+    const { data, error } = await supabase.from("users").select("*").eq("id", id).single();
+    if (error) return void 0;
+    return data;
+  }
+  async getUserByUsername(username) {
+    const { data, error } = await supabase.from("users").select("*").eq("username", username).single();
+    if (error) return void 0;
+    return data;
+  }
+  async getUserByEmail(email) {
+    const { data, error } = await supabase.from("users").select("*").eq("email", email).single();
+    if (error) return void 0;
+    return data;
+  }
+  async createUser(userData) {
+    const hashedPassword = await bcrypt.hash(userData.password_hash, 10);
+    const { data, error } = await supabase.from("users").insert({
+      ...userData,
+      password_hash: hashedPassword
+    }).select().single();
+    if (error) throw error;
+    return data;
+  }
+  async updateUser(id, userData) {
+    const { data, error } = await supabase.from("users").update(userData).eq("id", id).select().single();
+    if (error) throw error;
+    return data;
+  }
+  // Course operations
+  async getCourses() {
+    const { data, error } = await supabase.from("courses").select("*").order("created_at", { ascending: false });
+    if (error) throw error;
+    return data || [];
+  }
+  async getCourse(id) {
+    const { data, error } = await supabase.from("courses").select("*").eq("id", id).single();
+    if (error) return void 0;
+    return data;
+  }
+  async createCourse(courseData) {
+    const { data, error } = await supabase.from("courses").insert(courseData).select().single();
+    if (error) throw error;
+    return data;
+  }
+  async updateCourse(id, courseData) {
+    const { data, error } = await supabase.from("courses").update(courseData).eq("id", id).select().single();
+    if (error) throw error;
+    return data;
+  }
+  async deleteCourse(id) {
+    const { error } = await supabase.from("courses").delete().eq("id", id);
+    if (error) throw error;
+  }
+  // Grimoire operations
+  async getGrimoires() {
+    const { data, error } = await supabase.from("grimoires").select("*").order("created_at", { ascending: false });
+    if (error) throw error;
+    return data || [];
+  }
+  async getGrimoire(id) {
+    const { data, error } = await supabase.from("grimoires").select("*").eq("id", id).single();
+    if (error) return void 0;
+    return data;
+  }
+  async createGrimoire(grimoireData) {
+    const { data, error } = await supabase.from("grimoires").insert(grimoireData).select().single();
+    if (error) throw error;
+    return data;
+  }
+  async updateGrimoire(id, grimoireData) {
+    const { data, error } = await supabase.from("grimoires").update(grimoireData).eq("id", id).select().single();
+    if (error) throw error;
+    return data;
+  }
+  async deleteGrimoire(id) {
+    const { error } = await supabase.from("grimoires").delete().eq("id", id);
+    if (error) throw error;
+  }
+  // Blog operations
+  async getBlogPosts() {
+    const { data, error } = await supabase.from("blog_posts").select("*").eq("is_published", true).order("published_at", { ascending: false });
+    if (error) throw error;
+    return data || [];
+  }
+  async getBlogPost(id) {
+    const { data, error } = await supabase.from("blog_posts").select("*").eq("id", id).single();
+    if (error) return void 0;
+    return data;
+  }
+  async getBlogPostBySlug(slug) {
+    const { data, error } = await supabase.from("blog_posts").select("*").eq("slug", slug).single();
+    if (error) return void 0;
+    return data;
+  }
+  async createBlogPost(postData) {
+    const { data, error } = await supabase.from("blog_posts").insert(postData).select().single();
+    if (error) throw error;
+    return data;
+  }
+  async updateBlogPost(id, postData) {
+    const { data, error } = await supabase.from("blog_posts").update(postData).eq("id", id).select().single();
+    if (error) throw error;
+    return data;
+  }
+  async deleteBlogPost(id) {
+    const { error } = await supabase.from("blog_posts").delete().eq("id", id);
+    if (error) throw error;
+  }
+  // Daily Poem operations
+  async getDailyPoems() {
+    const { data, error } = await supabase.from("daily_poems").select("*").order("date", { ascending: false }).limit(10);
+    if (error) throw error;
+    return data || [];
+  }
+  async getDailyPoem(date) {
+    const { data, error } = await supabase.from("daily_poems").select("*").eq("date", date).single();
+    if (error) return void 0;
+    return data;
+  }
+  async createDailyPoem(poemData) {
+    const { data, error } = await supabase.from("daily_poems").insert(poemData).select().single();
+    if (error) throw error;
+    return data;
+  }
+  // Oracle operations
+  async getOracleConsultations(userId) {
+    const { data, error } = await supabase.from("oracle_consultations").select("*").eq("user_id", userId).order("created_at", { ascending: false });
+    if (error) throw error;
+    return data || [];
+  }
+  async createOracleConsultation(consultationData) {
+    const { data, error } = await supabase.from("oracle_consultations").insert(consultationData).select().single();
+    if (error) throw error;
+    return data;
+  }
+  // Enrollment operations
+  async getUserEnrollments(userId) {
+    const { data, error } = await supabase.from("enrollments").select("*").eq("user_id", userId);
+    if (error) throw error;
+    return data || [];
+  }
+  async createEnrollment(enrollmentData) {
+    const { data, error } = await supabase.from("enrollments").insert(enrollmentData).select().single();
+    if (error) throw error;
+    return data;
+  }
+  // Grimoire rental/purchase operations
+  async getUserGrimoireRentals(userId) {
+    const { data, error } = await supabase.from("grimoire_rentals").select("*").eq("user_id", userId).eq("is_active", true);
+    if (error) throw error;
+    return data || [];
+  }
+  async getUserGrimoirePurchases(userId) {
+    const { data, error } = await supabase.from("grimoire_purchases").select("*").eq("user_id", userId);
+    if (error) throw error;
+    return data || [];
+  }
+  async createGrimoireRental(rentalData) {
+    const { data, error } = await supabase.from("grimoire_rentals").insert(rentalData).select().single();
+    if (error) throw error;
+    return data;
+  }
+  async createGrimoirePurchase(purchaseData) {
+    const { data, error } = await supabase.from("grimoire_purchases").insert(purchaseData).select().single();
+    if (error) throw error;
+    return data;
+  }
+};
+var storage = new SupabaseStorage();
+
+// server/index.ts
+var app = express2();
+app.use(express2.json());
+app.use(express2.urlencoded({ extended: false }));
+app.use((req, res, next) => {
+  const start = Date.now();
+  const path3 = req.path;
+  let capturedJsonResponse = void 0;
+  const originalResJson = res.json;
+  res.json = function(bodyJson, ...args) {
+    capturedJsonResponse = bodyJson;
+    return originalResJson.apply(res, [bodyJson, ...args]);
+  };
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    if (path3.startsWith("/api")) {
+      let logLine = `${req.method} ${path3} ${res.statusCode} in ${duration}ms`;
+      if (capturedJsonResponse) {
+        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      }
+      if (logLine.length > 80) {
+        logLine = logLine.slice(0, 79) + "\u2026";
+      }
+      log(logLine);
+    }
+  });
+  next();
+});
+(async () => {
+  app.get("/api/courses", async (req, res) => {
+    try {
+      const result = await storage.getCourses();
+      res.json(result);
+    } catch (error) {
+      console.error("Courses API error:", error);
+      res.status(500).json({ message: "Failed to get courses", error: error.message });
+    }
+  });
+  app.get("/api/grimoires", async (req, res) => {
+    try {
+      const result = await storage.getGrimoires();
+      res.json(result);
+    } catch (error) {
+      console.error("Grimoires API error:", error);
+      res.status(500).json({ message: "Failed to get grimoires", error: error.message });
+    }
+  });
+  const server = await registerRoutes(app);
+  app.use((err, _req, res, _next) => {
+    const status = err.status || err.statusCode || 500;
+    const message = err.message || "Internal Server Error";
+    res.status(status).json({ message });
+    throw err;
+  });
+  if (app.get("env") === "development") {
+    await setupVite(app, server);
+  } else {
+    serveStatic(app);
+  }
+  const port = 5e3;
+  server.listen({
+    port,
+    host: "0.0.0.0",
+    reusePort: true
+  }, () => {
+    log(`serving on port ${port}`);
+  });
+})();
