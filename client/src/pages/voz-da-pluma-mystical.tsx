@@ -300,7 +300,7 @@ export default function VozDaPluma() {
   return (
     <MysticalGate
       title="VOZ DA PLUMA"
-      description="Santuário poético onde as musas sussurram inspirações sagradas através da pluma mística. Portal de contemplação onde versos celestiais nutrem a alma e elevam o espírito através da beleza transcendente das palavras."
+      description="Santuário sombrio onde musas amaldiçoadas sussurram versos que podem corromper ou illuminar a alma. Portal da contemplação abissal onde a beleza emerge das trevas mais profundas da existência."
       mysticText="Que a poesia seja ponte entre o coração humano e o divino infinito"
       icon={<Feather className="w-8 h-8 text-purple-400" />}
     >

@@ -126,9 +126,9 @@ function OracleContent() {
               ORÁCULOS ABISSAIS
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Adentre os mistérios ancestrais através de rituais divinatórios milenares. 
-              Cada consulta é um portal para dimensões ocultas onde entidades primordiais 
-              revelam verdades vedadas aos não-iniciados.
+              Adentre os mistérios primordiais através de rituais divinatórios que rasgam o véu. 
+              Cada consulta abre portais para dimensões sombrias onde entidades ctônicas 
+              sussurram verdades que podem abalar a sanidade dos despreparados.
             </p>
           </div>
 
@@ -295,7 +295,7 @@ export default function Oraculo() {
   return (
     <MysticalGate
       title="ORÁCULOS ABISSAIS"
-      description="Portal sagrado onde iniciados consultam entidades ancestrais através de rituais divinatórios milenares. Cinco métodos oraculares aguardam aqueles que buscam conhecimento além do véu da realidade."
+      description="Portal sagrado onde almas registradas no templo consultam entidades ancestrais através de rituais divinatórios milenares. Cinco métodos oraculares aguardam aqueles que buscam conhecimento além do véu da realidade mortal."
       mysticText="Que os espíritos sussurrem verdades aos corajosos o suficiente para questionar o destino"
       icon={<Star className="w-8 h-8 text-purple-400" />}
     >

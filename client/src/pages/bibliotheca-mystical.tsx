@@ -260,7 +260,7 @@ export default function Bibliotheca() {
   return (
     <MysticalGate
       title="BIBLIOTHECA SECRETA"
-      description="Câmara sagrada dos conhecimentos mais profundos do templo, onde repousam manuscritos proibidos, tratados alquímicos e escrituras perdidas. Apenas iniciados que demonstraram verdadeira dedicação aos mistérios podem adentrar estes arquivos secretos."
+      description="Câmara amaldiçoada onde jazem os conhecimentos que podem despedaçar a mente mortal. Manuscritos que sussurram loucura, tratados que corrompem a alma e escrituras que testam os limites da sanidade humana."
       mysticText="Que apenas os dignos contemplem os segredos dos antigos mestres"
       icon={<BookOpen className="w-8 h-8 text-indigo-400" />}
     >

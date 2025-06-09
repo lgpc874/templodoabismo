@@ -65,7 +65,7 @@ export default function MysticalGate({ title, description, mysticText, children,
             {/* Gate locked message */}
             <div className="flex items-center justify-center mb-6 text-amber-400">
               <Lock className="w-5 h-5 mr-2" />
-              <span className="font-crimson">Portal Selado - Apenas Iniciados</span>
+              <span className="font-crimson">Portal Selado - Apenas Cadastrados</span>
             </div>
 
             {/* Enter button */}
@@ -78,7 +78,7 @@ export default function MysticalGate({ title, description, mysticText, children,
               </Link>
               
               <p className="text-sm text-gray-400">
-                Apenas aqueles que passaram pelos ritos de iniciação podem adentrar estes domínios sagrados.
+                Apenas aqueles que se registraram no templo podem adentrar estes domínios sagrados.
               </p>
             </div>
           </div>

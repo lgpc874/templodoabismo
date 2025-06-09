@@ -148,9 +148,9 @@ function GrimoiresContent() {
               BIBLIOTECA ABISSAL
             </h1>
             <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Repositório sagrado de conhecimentos proibidos onde repousam manuscritos milenares, 
-              grimórios de invocação e escrituras perdidas dos antigos mestres das artes ocultas. 
-              Cada texto é um portal para mistérios ancestrais.
+              Repositório das trevas onde dormem manuscritos amaldiçoados que sussurram segredos mortais. 
+              Grimórios que pulsam com energia ctônica, invocações que podem rasgar o tecido da realidade 
+              e escrituras que testam a sanidade daqueles que ousam contemplá-las.
             </p>
           </div>
 
@@ -302,7 +302,7 @@ export default function Grimoires() {
   return (
     <MysticalGate
       title="BIBLIOTECA ABISSAL"
-      description="Santuário sagrado onde repousam os manuscritos proibidos dos antigos mestres. Grimórios de invocação, tratados alquímicos e escrituras perdidas aguardam aqueles dignos de seus segredos milenares."
+      description="Santuário das trevas onde dormem manuscritos amaldiçoados dos antigos mestres. Grimórios que pulsam com poder ctônico, tratados que podem corromper a alma e escrituras que testam os limites da sanidade mortal."
       mysticText="Que a sabedoria dos ancestrais ilumine o caminho dos buscadores sinceros"
       icon={<Book className="w-8 h-8 text-amber-400" />}
     >

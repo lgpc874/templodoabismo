@@ -156,9 +156,9 @@ function CoursesContent() {
               ACADEMIA LUCIFERIANA
             </h1>
             <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Trilha sagrada de conhecimentos ancestrais onde iniciados ascendem através dos 
-              sete círculos da gnose abissal. Cada curso é um degrau na escada da illuminação, 
-              revelando mistérios vedados aos profanos.
+              Trilha sombria onde almas corajosas descendem através dos sete círculos da gnose abissal. 
+              Cada curso fragmenta a realidade percebida, revelando verdades que podem destruir 
+              a sanidade dos fracos e illuminar apenas os verdadeiramente preparados.
             </p>
           </div>
 
@@ -368,7 +368,7 @@ export default function Courses() {
   return (
     <MysticalGate
       title="ACADEMIA LUCIFERIANA"
-      description="Instituição sagrada de conhecimentos ancestrais onde iniciados percorrem os sete círculos da gnose abissal. Cada curso revela mistérios progressivamente mais profundos, conduzindo o estudante sincero pela trilha da illuminação interior."
+      description="Academia das trevas onde almas registradas transcendem os sete círculos da gnose abissal. Cada curso desvela mistérios que podem fragmentar a mente despreparada, conduzindo apenas os corajosos através da illuminação sombria."
       mysticText="Que a luz interior guie aqueles que buscam transcender as limitações da ignorância"
       icon={<GraduationCap className="w-8 h-8 text-purple-400" />}
     >
