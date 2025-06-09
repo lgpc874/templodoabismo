@@ -26,21 +26,8 @@ interface DailyPoem {
 export default function Home() {
   const sealRef = useRef<HTMLImageElement>(null);
   const [dailyPoem, setDailyPoem] = useState<DailyPoem>({
-    title: "Invocação do Amanhecer Sombrio",
-    content: `Nas profundezas do abismo eterno,
-Onde as sombras dançam sem fim,
-Eu invoco a sabedoria ancestral,
-Para que a luz das trevas brilhe em mim.
-
-Ó Lúcifer, portador da chama,
-Concede-me o conhecimento oculto,
-Que nas entrelinhas do cosmos se esconde,
-E no silêncio dos mistérios é culto.
-
-Que esta noite seja minha aurora,
-E que cada segredo seja revelado,
-No templo sagrado do meu ser,
-Onde o divino e o profano são casados.`,
+    title: "Carregando...",
+    content: "As palavras ancestrais estão sendo invocadas...",
     author: "Voz da Pluma"
   });
 
@@ -53,6 +40,21 @@ Onde o divino e o profano são casados.`,
     else if (hour >= 12 && hour < 18) setTimeOfDay("tarde");
     else if (hour >= 18 && hour < 24) setTimeOfDay("crepúsculo");
     else setTimeOfDay("noite");
+
+    // Load daily poem from AI
+    const loadDailyPoem = async () => {
+      try {
+        const response = await fetch('/api/daily-poem');
+        if (response.ok) {
+          const poem = await response.json();
+          setDailyPoem(poem);
+        }
+      } catch (error) {
+        console.error('Error loading daily poem:', error);
+        // Keep loading state if API fails
+      }
+    };
+    loadDailyPoem();
 
     // Rotating seal animation
     let rotation = 0;

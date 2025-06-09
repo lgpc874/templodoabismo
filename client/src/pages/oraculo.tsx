@@ -107,20 +107,39 @@ export default function Oraculo() {
     
     setIsConsulting(true);
     
-    setTimeout(() => {
-      const readings = oracleReadings[selectedOracle as keyof typeof oracleReadings];
-      const randomReading = readings[Math.floor(Math.random() * readings.length)];
+    try {
+      const response = await fetch('/api/oracles/consult', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          oracleType: selectedOracle,
+          question: question,
+          userId: user?.id
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Falha na consulta ao oráculo');
+      }
+
+      const data = await response.json();
       
       setReading({
         oracle: oracle.name,
         question: question,
-        result: randomReading,
+        result: data.result,
         timestamp: new Date().toLocaleString('pt-BR')
       });
       
       setUserCredits(prev => prev - oracle.cost);
+    } catch (error) {
+      console.error('Oracle consultation error:', error);
+      alert('Erro na consulta ao oráculo. Tente novamente.');
+    } finally {
       setIsConsulting(false);
-    }, 3000);
+    }
   };
 
   return (

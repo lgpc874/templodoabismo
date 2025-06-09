@@ -16,6 +16,7 @@ import path from "path";
 import fs from "fs/promises";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { temploAI } from "./ai-service.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "magus-secretum-jwt-secret";
 const upload = multer({ dest: "uploads/" });
@@ -557,6 +558,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(stats);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch stats" });
+    }
+  });
+
+  // Oracle AI-integrated routes
+  app.post("/api/oracles/consult", async (req, res) => {
+    try {
+      const { oracleType, question, userId } = req.body;
+      
+      if (!oracleType || !question) {
+        return res.status(400).json({ message: "Oracle type and question are required" });
+      }
+
+      let result;
+      
+      switch (oracleType) {
+        case 'tarot_infernal':
+          result = await temploAI.generateTarotReading(question);
+          break;
+        case 'espelho_negro':
+          result = await temploAI.generateMirrorReading(question);
+          break;
+        case 'runas_abissais':
+          result = await temploAI.generateRuneReading(question);
+          break;
+        case 'divinacao_fogo':
+          result = await temploAI.generateFireReading(question);
+          break;
+        case 'voz_abissal':
+          result = await temploAI.generateAbyssalVoice(question);
+          break;
+        default:
+          return res.status(400).json({ message: "Invalid oracle type" });
+      }
+
+      res.json({
+        oracle: oracleType,
+        question,
+        result,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      console.error('Oracle consultation error:', error);
+      res.status(500).json({ message: error.message || "Oracle consultation failed" });
+    }
+  });
+
+  // Daily poem AI generation
+  app.get("/api/daily-poem", async (req, res) => {
+    try {
+      const poem = await temploAI.generateDailyPoem();
+      res.json(poem);
+    } catch (error) {
+      console.error('Daily poem generation error:', error);
+      res.status(500).json({ message: "Failed to generate daily poem" });
+    }
+  });
+
+  // Course content AI generation
+  app.post("/api/admin/courses/generate", requireAdmin, async (req: any, res) => {
+    try {
+      const { level, topic } = req.body;
+      const course = await temploAI.generateCourseContent(level, topic);
+      res.json(course);
+    } catch (error) {
+      console.error('Course generation error:', error);
+      res.status(500).json({ message: "Failed to generate course content" });
+    }
+  });
+
+  // Grimoire content AI generation
+  app.post("/api/admin/grimoires/generate", requireAdmin, async (req: any, res) => {
+    try {
+      const { title } = req.body;
+      const grimoire = await temploAI.generateGrimoireContent(title);
+      res.json(grimoire);
+    } catch (error) {
+      console.error('Grimoire generation error:', error);
+      res.status(500).json({ message: "Failed to generate grimoire content" });
     }
   });
 
