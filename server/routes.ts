@@ -1,12 +1,10 @@
 import type { Express, Request, Response } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./supabase-storage";
+import { supabase } from "@shared/supabase";
 import { temploAI } from "./ai-service";
-import type { CreateUser } from "@shared/supabase";
 import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import multer from "multer";
 
 // JWT secret
 const JWT_SECRET = process.env.JWT_SECRET || 'templo-do-abismo-secret-key';
