@@ -162,6 +162,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Test database connection
+  app.get('/api/test-db', async (req: Request, res: Response) => {
+    try {
+      const result = await db.execute('SELECT COUNT(*) as count FROM courses');
+      res.json({ success: true, count: result.rows[0] });
+    } catch (error: any) {
+      console.error('Database test error:', error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
   // Courses routes
   app.get('/api/courses', async (req: Request, res: Response) => {
     try {
@@ -169,7 +180,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const courses = await storage.getCourses();
       console.log('Courses fetched successfully:', courses.length);
       res.json(courses);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Courses error details:', error);
       res.status(500).json({ message: 'Failed to get courses', error: error.message });
     }

@@ -398,7 +398,15 @@ export class DatabaseStorage implements IStorage {
 
   // Courses
   async getCourses(): Promise<Course[]> {
-    return await db.select().from(courses).where(eq(courses.is_active, true));
+    try {
+      console.log('Storage: Fetching courses from database...');
+      const result = await db.select().from(courses).where(eq(courses.is_active, true));
+      console.log('Storage: Found courses:', result.length);
+      return result;
+    } catch (error) {
+      console.error('Storage: Database error in getCourses:', error);
+      throw error;
+    }
   }
 
   async getAllCourses(): Promise<Course[]> {
