@@ -32,70 +32,23 @@ export default function CoursesNew() {
     retry: false,
   });
 
-  // Mock data for demonstration
-  const mockCourses: Course[] = [
-    {
-      id: 1,
-      title: "Fundamentos do Luciferianismo",
-      short_description: "Uma introdução completa aos princípios fundamentais da filosofia luciferiana e autodivindade.",
-      slug: "fundamentos-luciferianismo",
-      category: "iniciação",
-      difficulty_level: 1,
-      total_levels: 3,
-      full_course_price_brl: "297.00",
-      discount_percentage: 30,
-      estimated_duration_hours: 20,
-      cover_image: "",
-      requirements: ["Mente aberta", "Interesse em filosofia esotérica"],
-      what_you_learn: ["Princípios luciferianos", "Rituais básicos", "Meditação sombria"],
-      is_active: true
-    },
-    {
-      id: 2,
-      title: "Tarot Luciferiano Avançado",
-      short_description: "Domine a arte do Tarot sob a perspectiva luciferiana com técnicas avançadas de interpretação.",
-      slug: "tarot-luciferiano-avancado",
-      category: "divinação",
-      difficulty_level: 3,
-      total_levels: 4,
-      full_course_price_brl: "497.00",
-      discount_percentage: 30,
-      estimated_duration_hours: 35,
-      requirements: ["Conhecimento básico de Tarot", "Curso Fundamentos"],
-      what_you_learn: ["Interpretação avançada", "Rituais com cartas", "Pathing luciferiano"],
-      is_active: true
-    },
-    {
-      id: 3,
-      title: "Magia Cerimonial das Sombras",
-      short_description: "Técnicas avançadas de magia cerimonial, invocações e trabalho com entidades sombrias.",
-      slug: "magia-cerimonial-sombras",
-      category: "magia",
-      difficulty_level: 4,
-      total_levels: 5,
-      full_course_price_brl: "797.00",
-      discount_percentage: 30,
-      estimated_duration_hours: 50,
-      requirements: ["2 anos de prática", "Curso Fundamentos", "Estabilidade emocional"],
-      what_you_learn: ["Rituais avançados", "Invocações", "Trabalho com entidades"],
-      is_active: true
-    },
-    {
-      id: 4,
-      title: "Kundalini Sombria",
-      short_description: "Desperte e trabalhe com a energia kundalini através dos caminhos sombrios da transformação.",
-      slug: "kundalini-sombria",
-      category: "energia",
-      difficulty_level: 5,
-      total_levels: 3,
-      full_course_price_brl: "597.00",
-      discount_percentage: 30,
-      estimated_duration_hours: 40,
-      requirements: ["Experiência em meditação", "Curso Fundamentos", "Supervisor"],
-      what_you_learn: ["Anatomia energética", "Técnicas de despertar", "Proteção psíquica"],
-      is_active: true
-    }
-  ];
+  // Transform database data to match interface
+  const transformedCourses: Course[] = (courses as any[]).map(course => ({
+    id: course.id,
+    title: course.title,
+    short_description: course.short_description || course.description?.substring(0, 150) + "...",
+    slug: course.slug,
+    category: course.category || "luciferiano",
+    difficulty_level: course.difficulty_level || 1,
+    total_levels: course.total_levels || 1,
+    full_course_price_brl: course.full_course_price_brl || "0",
+    discount_percentage: course.discount_percentage || 30,
+    estimated_duration_hours: course.estimated_duration_hours || 10,
+    cover_image: course.cover_image || "",
+    requirements: course.requirements || [],
+    what_you_learn: course.what_you_learn || [],
+    is_active: course.is_active
+  }));
 
   const getDifficultyColor = (level: number) => {
     switch (level) {
@@ -120,8 +73,8 @@ export default function CoursesNew() {
   };
 
   const filteredCourses = selectedCategory === "all" 
-    ? mockCourses 
-    : mockCourses.filter(course => course.category === selectedCategory);
+    ? transformedCourses 
+    : transformedCourses.filter(course => course.category === selectedCategory);
 
   const categories = ["all", "iniciação", "divinação", "magia", "energia"];
   const categoryNames: { [key: string]: string } = {
