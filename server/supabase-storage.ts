@@ -18,7 +18,7 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
-  createUser(userData: Omit<User, 'id' | 'created_at' | 'updated_at'>): Promise<User>;
+  createUser(userData: CreateUser): Promise<User>;
   updateUser(id: string, userData: Partial<User>): Promise<User>;
 
   // Course operations
