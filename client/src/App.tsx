@@ -28,7 +28,9 @@ function Router() {
       <Route path="/sobre" component={Sobre} />
       <Route path="/oraculo" component={Oraculo} />
       <Route path="/courses" component={Courses} />
+      <Route path="/cursos" component={Courses} />
       <Route path="/grimoires" component={Grimoires} />
+      <Route path="/grimorios" component={Grimoires} />
       <Route path="/bibliotheca" component={Bibliotheca} />
       <Route path="/voz-da-pluma" component={VozDaPluma} />
 

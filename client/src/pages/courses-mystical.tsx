@@ -44,9 +44,11 @@ function CoursesContent() {
 
   const enrollMutation = useMutation({
     mutationFn: async (courseId: number) => {
-      return await apiRequest(`/api/courses/${courseId}/enroll`, {
+      const response = await fetch(`/api/courses/${courseId}/enroll`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
       });
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/user/progress'] });

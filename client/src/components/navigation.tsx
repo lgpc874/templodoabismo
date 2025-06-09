@@ -27,8 +27,8 @@ export default function Navigation() {
     { name: "Início", href: "/", icon: Home },
     { name: "Sobre", href: "/sobre", icon: BookOpen },
     { name: "Oráculos", href: "/oraculo", icon: Gem },
-    { name: "Grimórios", href: "/grimoires", icon: Scroll },
-    { name: "Cursos", href: "/courses", icon: GraduationCap },
+    { name: "Grimórios", href: "/grimorios", icon: Scroll },
+    { name: "Cursos", href: "/cursos", icon: GraduationCap },
     { name: "Voz da Pluma", href: "/voz-da-pluma", icon: Scroll },
     { name: "Bibliotheca", href: "/bibliotheca", icon: Library },
   ];
