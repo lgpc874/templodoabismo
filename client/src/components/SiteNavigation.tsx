@@ -31,10 +31,14 @@ export default function SiteNavigation() {
           <div className="flex items-center justify-between">
             <Link href="/">
               <div className="flex items-center space-x-3 cursor-pointer">
-                <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-red-600 rounded-full flex items-center justify-center">
-                  <span className="text-black font-bold text-sm">TA</span>
+                <div className="w-10 h-10">
+                  <img 
+                    src="/seal.png" 
+                    alt="Selo do Templo do Abismo" 
+                    className="w-full h-full object-contain filter drop-shadow-lg"
+                  />
                 </div>
-                <span className="text-amber-400 font-cinzel font-bold text-lg">
+                <span className="text-amber-400 font-bold text-xl font-cinzel-decorative">
                   Templo do Abismo
                 </span>
               </div>
@@ -87,10 +91,14 @@ export default function SiteNavigation() {
           <div className="flex items-center justify-between px-4 py-3">
             <Link href="/">
               <div className="flex items-center space-x-2 cursor-pointer">
-                <div className="w-6 h-6 bg-gradient-to-br from-amber-500 to-red-600 rounded-full flex items-center justify-center">
-                  <span className="text-black font-bold text-xs">TA</span>
+                <div className="w-8 h-8">
+                  <img 
+                    src="/seal.png" 
+                    alt="Selo do Templo do Abismo" 
+                    className="w-full h-full object-contain filter drop-shadow-lg"
+                  />
                 </div>
-                <span className="text-amber-400 font-cinzel font-bold">
+                <span className="text-amber-400 font-bold font-cinzel-decorative">
                   Templo do Abismo
                 </span>
               </div>
