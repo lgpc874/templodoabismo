@@ -7,8 +7,7 @@ export const users = pgTable("users", {
   username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
-  tkazh_credits: integer("tkazh_credits").default(10),
-  free_credits: integer("free_credits").default(3),
+
   initiation_level: integer("initiation_level").default(0),
   personal_seal_generated: boolean("personal_seal_generated").default(false),
   personal_seal_url: text("personal_seal_url"),
@@ -89,7 +88,7 @@ export const courses = pgTable("courses", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   level: integer("level").notNull().default(1),
-  price_tkazh: integer("price_tkazh").notNull().default(0),
+  price_brl: integer("price_brl").notNull().default(0), // Price in Brazilian Real (centavos)
   modules: jsonb("modules").notNull(),
   requirements: text("requirements").array().default([]),
   rewards: text("rewards").array().default([]),
@@ -104,8 +103,8 @@ export const grimoires = pgTable("grimoires", {
   description: text("description").notNull(),
   chapters: jsonb("chapters").notNull(),
   access_level: integer("access_level").default(0),
-  price_tkazh: integer("price_tkazh").default(5),
-  rental_price_tkazh: integer("rental_price_tkazh").default(2),
+  price_brl: integer("price_brl").default(2000), // Purchase price in centavos (R$ 20.00)
+  rental_price_brl: integer("rental_price_brl").default(500), // Rental price in centavos (R$ 5.00)
   rental_days: integer("rental_days").default(7),
   pdf_url: text("pdf_url"),
   cover_image: text("cover_image"),
@@ -156,7 +155,7 @@ export const oracle_sessions = pgTable("oracle_sessions", {
   oracle_type: text("oracle_type").notNull(),
   question: text("question"),
   result: jsonb("result").notNull(),
-  tkazh_cost: integer("tkazh_cost").default(1),
+  cost_brl: integer("cost_brl").default(300), // Cost in centavos (R$ 3.00)
   session_date: timestamp("session_date").defaultNow(),
 });
 
@@ -204,7 +203,7 @@ export const insertCourseSchema = createInsertSchema(courses).pick({
   title: true,
   description: true,
   level: true,
-  price_tkazh: true,
+  price_brl: true,
   modules: true,
   requirements: true,
   rewards: true,
@@ -217,18 +216,16 @@ export const insertGrimoireSchema = createInsertSchema(grimoires).pick({
   description: true,
   chapters: true,
   access_level: true,
-  price_tkazh: true,
+  price_brl: true,
+  rental_price_brl: true,
   pdf_url: true,
   cover_image: true,
   is_active: true,
 });
 
-export const insertOracleSessionSchema = createInsertSchema(oracle_sessions).pick({
-  user_id: true,
-  oracle_type: true,
-  question: true,
-  result: true,
-  tkazh_cost: true,
+export const insertOracleSessionSchema = createInsertSchema(oracle_sessions).omit({
+  id: true,
+  session_date: true,
 });
 
 export const insertDailyPoemSchema = createInsertSchema(daily_poems).pick({
