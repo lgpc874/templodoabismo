@@ -18,7 +18,7 @@ import Blog from "@/pages/blog";
 
 import SimpleAdminLogin from "@/pages/admin/SimpleAdminLogin";
 import AdminDashboard from "@/pages/admin";
-import AdminPanel from "@/pages/admin-panel";
+import AdminControl from "@/pages/admin-control";
 
 function Router() {
   return (
@@ -40,7 +40,7 @@ function Router() {
 
       <Route path="/magus-secretum" component={SimpleAdminLogin} />
       <Route path="/admin" component={AdminDashboard} />
-      <Route path="/sanctum-administratoris" component={AdminPanel} />
+      <Route path="/sanctum-administratoris" component={AdminControl} />
       <Route component={NotFound} />
     </Switch>
   );
