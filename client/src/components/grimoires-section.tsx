@@ -120,8 +120,8 @@ export default function GrimoiresSection() {
                   ))}
                 </ul>
                 <button className={`w-full py-2 font-cinzel-regular transition-all ${typeInfo.buttonClass}`}>
-                  {type === 'premium' && typeGrimoires[0]?.price_tkazh ? 
-                    `${typeInfo.buttonText} - R$ ${typeGrimoires[0].price_tkazh}` : 
+                  {type === 'premium' && typeGrimoires[0]?.price_brl ? 
+                    `${typeInfo.buttonText} - R$ ${(typeGrimoires[0].price_brl / 100).toFixed(2)}` : 
                     typeInfo.buttonText
                   }
                 </button>
