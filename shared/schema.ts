@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, jsonb, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -187,6 +187,49 @@ export const liber_access = pgTable("liber_access", {
   expires_at: timestamp("expires_at"),
 });
 
+export const blog_posts = pgTable("blog_posts", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  excerpt: text("excerpt").notNull(),
+  content: text("content").notNull(),
+  author: varchar("author", { length: 100 }).notNull(),
+  category: varchar("category", { length: 50 }).notNull(),
+  tags: text("tags").array().notNull().default([]),
+  featured: boolean("featured").default(false),
+  published: boolean("published").default(false),
+  readTime: integer("read_time").notNull(),
+  publishedAt: timestamp("published_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const blog_categories = pgTable("blog_categories", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 50 }).notNull().unique(),
+  description: text("description"),
+  slug: varchar("slug", { length: 50 }).notNull().unique(),
+  color: varchar("color", { length: 7 }).default("#6366f1"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const blog_tags = pgTable("blog_tags", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 30 }).notNull().unique(),
+  slug: varchar("slug", { length: 30 }).notNull().unique(),
+  usageCount: integer("usage_count").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const newsletter_subscribers = pgTable("newsletter_subscribers", {
+  id: serial("id").primaryKey(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  subscribedAt: timestamp("subscribed_at").defaultNow(),
+  active: boolean("active").default(true),
+  confirmationToken: varchar("confirmation_token", { length: 100 }),
+  confirmedAt: timestamp("confirmed_at"),
+});
+
 // Insert Schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -275,6 +318,26 @@ export const insertBackupSchema = createInsertSchema(backups).pick({
   createdBy: true,
 });
 
+export const insertBlogPostSchema = createInsertSchema(blog_posts).omit({
+  id: true,
+  publishedAt: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertBlogCategorySchema = createInsertSchema(blog_categories).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertNewsletterSubscriberSchema = createInsertSchema(newsletter_subscribers).omit({
+  id: true,
+  subscribedAt: true,
+  active: true,
+  confirmationToken: true,
+  confirmedAt: true,
+});
+
 // Auth schemas
 export const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -308,3 +371,12 @@ export type DailyPoem = typeof daily_poems.$inferSelect;
 export type InsertDailyPoem = z.infer<typeof insertDailyPoemSchema>;
 export type UserProgress = typeof user_progress.$inferSelect;
 export type LiberAccess = typeof liber_access.$inferSelect;
+
+// Blog types
+export type BlogPost = typeof blog_posts.$inferSelect;
+export type InsertBlogPost = z.infer<typeof insertBlogPostSchema>;
+export type BlogCategory = typeof blog_categories.$inferSelect;
+export type InsertBlogCategory = z.infer<typeof insertBlogCategorySchema>;
+export type BlogTag = typeof blog_tags.$inferSelect;
+export type NewsletterSubscriber = typeof newsletter_subscribers.$inferSelect;
+export type InsertNewsletterSubscriber = z.infer<typeof insertNewsletterSubscriberSchema>;
