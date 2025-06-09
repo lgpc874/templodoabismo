@@ -24,6 +24,13 @@ export interface User {
   updated_at: string
 }
 
+export interface CreateUser {
+  username: string
+  email: string
+  password_hash: string
+  is_admin?: boolean
+}
+
 export interface Course {
   id: number
   title: string

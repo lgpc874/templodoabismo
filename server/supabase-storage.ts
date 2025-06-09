@@ -1,6 +1,7 @@
 import { supabase } from "@shared/supabase";
 import type {
   User,
+  CreateUser,
   Course,
   Grimoire,
   BlogPost,
@@ -97,7 +98,7 @@ export class SupabaseStorage implements IStorage {
     return data;
   }
 
-  async createUser(userData: Omit<User, 'id' | 'created_at' | 'updated_at'>): Promise<User> {
+  async createUser(userData: CreateUser): Promise<User> {
     const hashedPassword = await bcrypt.hash(userData.password_hash, 10);
     
     const { data, error } = await supabase

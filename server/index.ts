@@ -1,9 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { db } from "./db";
-import { courses, grimoires } from "@shared/schema";
-import { eq } from "drizzle-orm";
+import { storage } from "./supabase-storage";
 
 const app = express();
 app.use(express.json());
@@ -40,10 +38,10 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Core API endpoints with direct database access
+  // Core API endpoints using Supabase storage
   app.get('/api/courses', async (req, res) => {
     try {
-      const result = await db.select().from(courses).where(eq(courses.is_active, true));
+      const result = await storage.getCourses();
       res.json(result);
     } catch (error: any) {
       console.error('Courses API error:', error);
@@ -51,63 +49,9 @@ app.use((req, res, next) => {
     }
   });
 
-  // New course system endpoints
-  app.get('/api/courses-new', async (req, res) => {
-    try {
-      const result = await db.execute(`
-        SELECT id, title, short_description, slug, category, difficulty_level, 
-               total_levels, full_course_price_brl, discount_percentage, 
-               estimated_duration_hours, cover_image, requirements, what_you_learn, is_active
-        FROM courses 
-        WHERE is_active = true 
-        ORDER BY difficulty_level, title
-      `);
-      res.json(result.rows);
-    } catch (error: any) {
-      console.error('Courses New API error:', error);
-      res.status(500).json({ message: 'Failed to get courses', error: error.message });
-    }
-  });
-
-  app.get('/api/course/:slug', async (req, res) => {
-    try {
-      const { slug } = req.params;
-      
-      // Get course details
-      const courseQuery = `
-        SELECT * FROM courses WHERE slug = '${slug}' AND is_active = true
-      `;
-      const courseResult = await db.execute(courseQuery);
-      
-      if (courseResult.rows.length === 0) {
-        return res.status(404).json({ message: 'Course not found' });
-      }
-      
-      const course = courseResult.rows[0];
-      
-      // Get course levels
-      const levelsQuery = `
-        SELECT * FROM course_levels 
-        WHERE course_id = ${course.id} AND is_active = true 
-        ORDER BY level_number
-      `;
-      const levelsResult = await db.execute(levelsQuery);
-      
-      const courseWithLevels = {
-        ...course,
-        levels: levelsResult.rows
-      };
-      
-      res.json(courseWithLevels);
-    } catch (error: any) {
-      console.error('Course Detail API error:', error);
-      res.status(500).json({ message: 'Failed to get course details', error: error.message });
-    }
-  });
-
   app.get('/api/grimoires', async (req, res) => {
     try {
-      const result = await db.select().from(grimoires).where(eq(grimoires.is_active, true));
+      const result = await storage.getGrimoires();
       res.json(result);
     } catch (error: any) {
       console.error('Grimoires API error:', error);
