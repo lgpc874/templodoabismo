@@ -6,10 +6,9 @@ import { temploAI } from "./ai-service";
 import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
 import multer from "multer";
 
-// JWT secret
-const JWT_SECRET = process.env.JWT_SECRET || 'templo-do-abismo-secret-key';
+const upload = multer({ dest: 'uploads/' });
 
-// Auth middleware
+// Supabase auth middleware
 async function requireAuth(req: any, res: Response, next: any) {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
@@ -17,25 +16,17 @@ async function requireAuth(req: any, res: Response, next: any) {
       return res.status(401).json({ message: 'Token required' });
     }
     
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
-    const user = await storage.getUser(decoded.userId);
+    const { data: { user }, error } = await supabase.auth.getUser(token);
     
-    if (!user) {
-      return res.status(401).json({ message: 'User not found' });
+    if (error || !user) {
+      return res.status(401).json({ message: 'Invalid token' });
     }
     
     req.user = user;
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Invalid token' });
+    res.status(401).json({ message: 'Authentication failed' });
   }
-}
-
-async function requireAdmin(req: any, res: Response, next: any) {
-  if (!req.user?.is_admin) {
-    return res.status(403).json({ message: 'Admin access required' });
-  }
-  next();
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -44,11 +35,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/order", createPaypalOrder);
   app.post("/order/:orderID/capture", capturePaypalOrder);
 
-  // Basic API routes
+  // Basic API routes using direct Supabase calls
   app.get('/api/courses', async (req: Request, res: Response) => {
     try {
-      const courses = await storage.getCourses();
-      res.json(courses);
+      const { data, error } = await supabase
+        .from('courses')
+        .select('*')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      res.json(data || []);
     } catch (error: any) {
       console.error('Error fetching courses:', error);
       res.status(500).json({ message: 'Failed to fetch courses' });
@@ -57,125 +54,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/grimoires', async (req: Request, res: Response) => {
     try {
-      const grimoires = await storage.getGrimoires();
-      res.json(grimoires);
+      const { data, error } = await supabase
+        .from('grimoires')
+        .select('*')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      res.json(data || []);
     } catch (error: any) {
       console.error('Error fetching grimoires:', error);
       res.status(500).json({ message: 'Failed to fetch grimoires' });
     }
   });
 
-  // Auth routes
-  app.post('/api/auth/register', async (req: Request, res: Response) => {
-    try {
-      const { username, email, password } = req.body;
-      
-      // Check if user exists
-      const existingUser = await storage.getUserByEmail(email);
-      if (existingUser) {
-        return res.status(400).json({ message: 'User already exists' });
-      }
-
-      // Create user
-      const userData: CreateUser = {
-        username,
-        email,
-        password_hash: password, // Will be hashed in storage
-        is_admin: false
-      };
-      
-      const user = await storage.createUser(userData);
-      
-      // Generate token
-      const token = jwt.sign({ userId: user.id }, JWT_SECRET);
-      
-      res.json({ 
-        token, 
-        user: { 
-          id: user.id, 
-          username: user.username, 
-          email: user.email,
-          is_admin: user.is_admin 
-        } 
-      });
-    } catch (error: any) {
-      console.error('Registration error:', error);
-      res.status(500).json({ message: 'Registration failed' });
-    }
-  });
-
-  app.post('/api/auth/login', async (req: Request, res: Response) => {
-    try {
-      const { email, password } = req.body;
-      
-      const user = await storage.getUserByEmail(email);
-      if (!user) {
-        return res.status(401).json({ message: 'Invalid credentials' });
-      }
-      
-      const isValid = await bcrypt.compare(password, user.password_hash);
-      if (!isValid) {
-        return res.status(401).json({ message: 'Invalid credentials' });
-      }
-      
-      const token = jwt.sign({ userId: user.id }, JWT_SECRET);
-      
-      res.json({ 
-        token, 
-        user: { 
-          id: user.id, 
-          username: user.username, 
-          email: user.email,
-          is_admin: user.is_admin 
-        } 
-      });
-    } catch (error: any) {
-      console.error('Login error:', error);
-      res.status(500).json({ message: 'Login failed' });
-    }
-  });
-
   // Daily content routes
-  app.get('/api/daily-quote', async (req: Request, res: Response) => {
-    try {
-      const today = new Date().toISOString().split('T')[0];
-      let poem = await storage.getDailyPoem(today);
-      
-      if (!poem) {
-        // Generate new daily quote using AI
-        const aiQuote = await temploAI.generateDailyQuote();
-        poem = await storage.createDailyPoem({
-          title: "Citação Diária",
-          content: aiQuote.content,
-          author: aiQuote.author,
-          date: today
-        });
-      }
-      
-      res.json(poem);
-    } catch (error: any) {
-      console.error('Error fetching daily quote:', error);
-      res.status(500).json({ message: 'Failed to fetch daily quote' });
-    }
-  });
-
   app.get('/api/daily-poem', async (req: Request, res: Response) => {
     try {
       const today = new Date().toISOString().split('T')[0];
-      let poem = await storage.getDailyPoem(today);
       
-      if (!poem) {
+      const { data, error } = await supabase
+        .from('daily_poems')
+        .select('*')
+        .eq('date', today)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+      
+      if (!data) {
         // Generate new daily poem using AI
         const aiPoem = await temploAI.generateDailyPoem();
-        poem = await storage.createDailyPoem({
-          title: aiPoem.title,
-          content: aiPoem.content,
-          author: aiPoem.author,
-          date: today
-        });
+        const { data: newPoem, error: insertError } = await supabase
+          .from('daily_poems')
+          .insert({
+            title: aiPoem.title,
+            content: aiPoem.content,
+            author: aiPoem.author,
+            date: today
+          })
+          .select()
+          .single();
+
+        if (insertError) throw insertError;
+        res.json(newPoem);
+      } else {
+        res.json(data);
       }
-      
-      res.json(poem);
     } catch (error: any) {
       console.error('Error fetching daily poem:', error);
       res.status(500).json({ message: 'Failed to fetch daily poem' });
@@ -184,8 +108,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/poems/recent', async (req: Request, res: Response) => {
     try {
-      const poems = await storage.getDailyPoems();
-      res.json(poems);
+      const { data, error } = await supabase
+        .from('daily_poems')
+        .select('*')
+        .order('date', { ascending: false })
+        .limit(10);
+
+      if (error) throw error;
+      res.json(data || []);
     } catch (error: any) {
       console.error('Error fetching recent poems:', error);
       res.status(500).json({ message: 'Failed to fetch recent poems' });
@@ -195,27 +125,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Blog routes
   app.get('/api/blog/posts', async (req: Request, res: Response) => {
     try {
-      const posts = await storage.getBlogPosts();
-      res.json(posts);
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('is_published', true)
+        .order('published_at', { ascending: false });
+
+      if (error) throw error;
+      res.json(data || []);
     } catch (error: any) {
       console.error('Error fetching blog posts:', error);
       res.status(500).json({ message: 'Failed to fetch blog posts' });
-    }
-  });
-
-  app.get('/api/blog/posts/:slug', async (req: Request, res: Response) => {
-    try {
-      const { slug } = req.params;
-      const post = await storage.getBlogPostBySlug(slug);
-      
-      if (!post) {
-        return res.status(404).json({ message: 'Post not found' });
-      }
-      
-      res.json(post);
-    } catch (error: any) {
-      console.error('Error fetching blog post:', error);
-      res.status(500).json({ message: 'Failed to fetch blog post' });
     }
   });
 
@@ -246,13 +166,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(400).json({ message: 'Invalid consultation type' });
       }
       
-      const consultation = await storage.createOracleConsultation({
-        user_id: userId,
-        type,
-        question,
-        response: JSON.stringify(response)
-      });
-      
+      const { data: consultation, error } = await supabase
+        .from('oracle_consultations')
+        .insert({
+          user_id: userId,
+          type,
+          question,
+          response: JSON.stringify(response)
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
       res.json({ consultation, response });
     } catch (error: any) {
       console.error('Oracle consultation error:', error);
@@ -260,43 +185,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/oracle/history', requireAuth, async (req: any, res: Response) => {
+  // File upload example
+  app.post('/api/upload', requireAuth, upload.single('file'), async (req: any, res: Response) => {
     try {
-      const userId = req.user.id;
-      const history = await storage.getOracleConsultations(userId);
-      res.json(history);
-    } catch (error: any) {
-      console.error('Error fetching oracle history:', error);
-      res.status(500).json({ message: 'Failed to fetch oracle history' });
-    }
-  });
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
 
-  // Course enrollment routes
-  app.post('/api/courses/:id/enroll', requireAuth, async (req: any, res: Response) => {
-    try {
-      const courseId = parseInt(req.params.id);
-      const userId = req.user.id;
-      
-      const enrollment = await storage.createEnrollment({
-        user_id: userId,
-        course_id: courseId
+      // Here you would typically upload to Supabase Storage
+      // For now, just return success
+      res.json({ 
+        message: 'File uploaded successfully',
+        filename: req.file.filename,
+        originalName: req.file.originalname
       });
-      
-      res.json(enrollment);
     } catch (error: any) {
-      console.error('Enrollment error:', error);
-      res.status(500).json({ message: 'Failed to enroll in course' });
-    }
-  });
-
-  app.get('/api/user/progress', requireAuth, async (req: any, res: Response) => {
-    try {
-      const userId = req.user.id;
-      const enrollments = await storage.getUserEnrollments(userId);
-      res.json(enrollments);
-    } catch (error: any) {
-      console.error('Error fetching user progress:', error);
-      res.status(500).json({ message: 'Failed to fetch user progress' });
+      console.error('Upload error:', error);
+      res.status(500).json({ message: 'Failed to upload file' });
     }
   });
 

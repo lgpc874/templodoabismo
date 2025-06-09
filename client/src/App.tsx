@@ -21,6 +21,7 @@ import Bibliotheca from "@/pages/bibliotheca-mystical";
 import VozDaPluma from "@/pages/voz-da-pluma-mystical";
 import LiberProhibitus from "@/pages/liber-prohibitus-mystical";
 import Blog from "@/pages/blog";
+import SupabaseLoginExample from "@/components/SupabaseLoginExample";
 
 import AdminControl from "@/pages/admin-control";
 
@@ -45,6 +46,7 @@ function Router() {
       <Route path="/blog" component={Blog} />
       <Route path="/gnosis" component={Blog} />
       <Route path="/liber-prohibitus" component={LiberProhibitus} />
+      <Route path="/supabase-demo" component={SupabaseLoginExample} />
 
       <Route path="/sanctum-administratoris" component={AdminControl} />
       <Route component={NotFound} />
