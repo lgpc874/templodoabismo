@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Feather, Share2, Instagram, Facebook, Twitter, Download } from "lucide-react";
-import Navigation from "../components/navigation";
+import SiteNavigation from "../components/SiteNavigation";
 import { useToast } from "../hooks/use-toast";
 
 interface DailyPoem {
@@ -150,7 +150,7 @@ export default function VozDaPluma() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <Navigation />
+      <SiteNavigation />
       
       {/* Fixed Central Rotating Seal */}
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">

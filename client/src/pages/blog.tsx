@@ -114,37 +114,45 @@ export default function Blog() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-black via-purple-950/20 to-black">
-        <div className="container mx-auto px-4 py-16">
-          <div className="animate-pulse">
-            <div className="h-12 bg-gray-800 rounded mb-8"></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-64 bg-gray-800 rounded"></div>
-              ))}
-            </div>
-          </div>
+      <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
+        <div className="fixed inset-0 overflow-hidden z-0">
+          <div className="mystical-particles"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+        </div>
+        <div className="relative z-10 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-400 mx-auto mb-4"></div>
+          <p className="text-gray-400">Carregando artigos...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-purple-950/20 to-black">
+    <div className="min-h-screen relative overflow-hidden">
       <SiteNavigation />
       
-      {/* Mystical Background Effects */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-red-600/5 rounded-full blur-3xl animate-pulse delay-2000"></div>
+      {/* Fixed Central Rotating Seal */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <div className="rotating-seal w-96 h-96 opacity-10">
+          <img 
+            src="/seal.png" 
+            alt="Selo da Gnosis" 
+            className="w-full h-full object-contain filter drop-shadow-lg"
+          />
+        </div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-16">
+      {/* Mystical floating particles */}
+      <div className="fixed inset-0 overflow-hidden z-0">
+        <div className="mystical-particles"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-16 pt-24">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-7xl font-cinzel font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-purple-500 to-red-400">
-            GNOSIS ABYSSOS
+          <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 mb-4">
+            Gnosis Abyssos
           </h1>
           <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
             Portal de conhecimento público sobre luciferianismo ancestral, gnose ctônica 
