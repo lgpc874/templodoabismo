@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Scroll, Flame, Star, Eye, Moon, Crown, BookOpen } from "lucide-react";
 import SiteNavigation from "../components/SiteNavigation";
+import Footer from "../components/footer";
 import { Link } from "wouter";
 
 interface DailyQuote {
@@ -159,13 +160,7 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="relative z-10 mt-20 py-8 border-t border-amber-500/20 bg-black/20 backdrop-blur-lg">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-gray-400 text-sm">
-            © 2024 Templo do Abismo. Todos os direitos reservados aos mistérios ancestrais.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

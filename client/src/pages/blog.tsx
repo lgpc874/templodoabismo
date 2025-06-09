@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import SiteNavigation from '@/components/SiteNavigation';
+import Footer from '@/components/footer';
 
 interface BlogPost {
   id: number;
@@ -360,6 +361,9 @@ export default function Blog() {
           <NewsletterForm />
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

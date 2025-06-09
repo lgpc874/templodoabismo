@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Clock, Star, Users, ArrowRight } from "lucide-react";
 import SiteNavigation from "@/components/SiteNavigation";
+import Footer from "@/components/footer";
 
 interface Course {
   id: number;
@@ -244,6 +245,9 @@ export default function CoursesNew() {
           </div>
         </div>
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

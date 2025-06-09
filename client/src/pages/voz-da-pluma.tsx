@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Feather, Share2, Instagram, Facebook, Twitter, Download } from "lucide-react";
 import SiteNavigation from "../components/SiteNavigation";
+import Footer from "../components/footer";
 import { useToast } from "../hooks/use-toast";
 
 interface DailyPoem {
