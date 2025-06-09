@@ -48,6 +48,43 @@ async function requireAdmin(req: any, res: Response, next: any) {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
+  // Working API endpoints - must be first to avoid routing conflicts
+  app.get('/api/courses', async (req: Request, res: Response) => {
+    try {
+      console.log('Fetching courses...');
+      const result = await db.execute(`
+        SELECT id, title, description, level, price_brl, modules, requirements, rewards, type, is_active, created_at
+        FROM courses 
+        WHERE is_active = true 
+        ORDER BY level, title
+      `);
+      console.log('Courses fetched:', result.rows.length);
+      res.json(result.rows);
+    } catch (error: any) {
+      console.error('Courses error:', error);
+      res.status(500).json({ message: 'Failed to get courses', error: error.message });
+    }
+  });
+
+  app.get('/api/grimoires', async (req: Request, res: Response) => {
+    try {
+      console.log('Fetching grimoires...');
+      const result = await db.execute(`
+        SELECT id, title, description, author, level, purchase_price_brl, rental_price_brl, 
+               chapter_price_brl, rental_days, total_chapters, cover_image, category, 
+               enable_chapter_purchase, enable_online_reading, is_active, created_at
+        FROM grimoires 
+        WHERE is_active = true 
+        ORDER BY level, title
+      `);
+      console.log('Grimoires fetched:', result.rows.length);
+      res.json(result.rows);
+    } catch (error: any) {
+      console.error('Grimoires error:', error);
+      res.status(500).json({ message: 'Failed to get grimoires', error: error.message });
+    }
+  });
+  
   // Authentication routes
   app.post('/api/auth/register', async (req: Request, res: Response) => {
     try {
@@ -176,23 +213,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Courses routes
-  app.get('/api/courses', async (req: Request, res: Response) => {
-    try {
-      console.log('API: Attempting to fetch courses directly...');
-      const result = await db.execute(`
-        SELECT id, title, description, level, price_brl, modules, requirements, rewards, type, is_active, created_at
-        FROM courses 
-        WHERE is_active = true 
-        ORDER BY level, title
-      `);
-      console.log('API: Courses fetched successfully:', result.rows.length);
-      res.json(result.rows);
-    } catch (error: any) {
-      console.error('API: Courses error details:', error);
-      res.status(500).json({ message: 'Failed to get courses', error: error.message });
-    }
-  });
+
 
   app.post('/api/courses/:id/enroll', requireAuth, async (req: any, res: Response) => {
     try {
