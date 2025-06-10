@@ -70,41 +70,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email } = req.body;
       
+      console.log('Making admin request for email:', email);
+      
       if (!email) {
         return res.status(400).json({ error: 'Email is required' });
       }
 
-      // Check if there are any admins in the system
-      const { data: existingAdmins } = await supabase
+      // First check if users table exists and get all users
+      const { data: allUsers, error: allUsersError } = await supabase
         .from('users')
-        .select('id')
-        .eq('is_admin', true);
+        .select('id, email, is_admin');
 
-      if (existingAdmins && existingAdmins.length > 0) {
+      console.log('All users query result:', { allUsers, allUsersError });
+
+      if (allUsersError) {
+        console.error('Error querying users table:', allUsersError);
+        return res.status(500).json({ error: 'Database error: ' + allUsersError.message });
+      }
+
+      // Check if there are any admins in the system
+      const existingAdmins = allUsers?.filter(user => user.is_admin) || [];
+      
+      if (existingAdmins.length > 0) {
         return res.status(403).json({ error: 'Admin already exists in the system' });
       }
 
-      // Find user by email and make them admin
-      const { data: userData, error: findError } = await supabase
-        .from('users')
-        .select('*')
-        .eq('email', email)
-        .single();
+      // Find user by email
+      const userData = allUsers?.find(user => user.email === email);
 
-      if (findError || !userData) {
-        return res.status(404).json({ error: 'User not found' });
+      if (!userData) {
+        return res.status(404).json({ error: 'User not found with email: ' + email });
       }
 
-      // Update user to admin
-      const { data: updatedUser, error: updateError } = await supabase
+      console.log('Found user to promote:', userData);
+
+      // Update user to admin using service role client
+      const { data: updatedUser, error: updateError } = await supabaseAdmin
         .from('users')
         .update({ is_admin: true })
         .eq('id', userData.id)
         .select()
         .single();
 
+      console.log('Update result:', { updatedUser, updateError });
+
       if (updateError) {
-        return res.status(500).json({ error: 'Failed to update user' });
+        console.error('Update error:', updateError);
+        return res.status(500).json({ error: 'Failed to update user: ' + updateError.message });
       }
 
       res.json({ 
@@ -115,7 +127,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     } catch (error: any) {
       console.error('Make admin error:', error);
-      res.status(500).json({ error: 'Failed to make user admin' });
+      res.status(500).json({ error: 'Failed to make user admin: ' + error.message });
     }
   });
 
