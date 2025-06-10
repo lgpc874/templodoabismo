@@ -3,6 +3,7 @@ import { Scroll, Flame, Star, Eye, Moon, Crown, BookOpen } from "lucide-react";
 
 import Footer from "../components/footer";
 import { Link } from "wouter";
+import { CentralLogo } from '@/components/CentralLogo';
 
 export default function Home() {
   // Fetch real content from Supabase only
@@ -21,11 +22,12 @@ export default function Home() {
         {[...Array(25)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-red-500/40 rounded-full particle-effect"
+            className="absolute w-1 h-1 particle rounded-full particle-effect"
             style={{
               left: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 15}s`,
-              animationDuration: `${12 + Math.random() * 8}s`
+              animationDuration: `${12 + Math.random() * 8}s`,
+              background: 'radial-gradient(circle, rgba(251, 191, 36, 0.8) 0%, transparent 70%)'
             }}
           />
         ))}
@@ -47,36 +49,8 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Selo Central Fixo */}
-      <div className="fixed top-1/2 left-1/2 z-0 transform -translate-x-1/2 -translate-y-1/2" style={{marginTop: '2rem'}}>
-        {/* Outer rotating ring */}
-        <div className="absolute w-80 h-80 opacity-8 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="animate-spin-slow-reverse text-amber-500/15 text-[20rem] leading-none flex items-center justify-center h-full">
-            ◯
-          </div>
-        </div>
-        
-        {/* Middle layer with mystical symbols */}
-        <div className="absolute w-72 h-72 opacity-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="animate-spin-slow text-red-400/20 text-[18rem] leading-none flex items-center justify-center h-full">
-            ☿
-          </div>
-        </div>
-        
-        {/* Main central seal */}
-        <div className="rotating-seal absolute w-64 h-64 opacity-15 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="animate-spin-slow text-red-500/30 text-[16rem] leading-none flex items-center justify-center h-full">
-            ⸸
-          </div>
-        </div>
-        
-        {/* Inner pulsing core */}
-        <div className="absolute w-16 h-16 opacity-25 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="text-red-300/40 text-4xl leading-none flex items-center justify-center h-full">
-            ●
-          </div>
-        </div>
-      </div>
+      {/* Logo Central Girando */}
+      <CentralLogo />
 
       {/* Mystical Energy Lines */}
       <div className="fixed inset-0 z-0 pointer-events-none">

@@ -7,6 +7,7 @@ import { Gem, Eye, Flame, Search, FileText, MessageCircle, Crown, CreditCard } f
 import { Link } from "wouter";
 import PaymentGateway from "@/components/PaymentGateway";
 import Footer from "@/components/Footer";
+import { CentralLogo } from '@/components/CentralLogo';
 
 const oracleTypes = [
   {
@@ -70,11 +71,12 @@ export default function Oracle() {
         {[...Array(25)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-red-500/40 rounded-full particle-effect"
+            className="absolute w-1 h-1 particle rounded-full particle-effect"
             style={{
               left: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 15}s`,
-              animationDuration: `${12 + Math.random() * 8}s`
+              animationDuration: `${12 + Math.random() * 8}s`,
+              background: 'radial-gradient(circle, rgba(251, 191, 36, 0.8) 0%, transparent 70%)'
             }}
           />
         ))}
@@ -96,17 +98,8 @@ export default function Oracle() {
         ))}
       </div>
 
-      {/* Selo Central Fixo */}
-      <div className="fixed top-1/2 left-1/2 z-0 transform -translate-x-1/2 -translate-y-1/2" style={{marginTop: '2rem'}}>
-        {/* Logo Central Rotativa */}
-        <div className="rotating-seal absolute w-64 h-64 opacity-8 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <img 
-            src="/seal.png" 
-            alt="Selo do Templo do Abismo" 
-            className="w-full h-full object-contain filter drop-shadow-lg"
-          />
-        </div>
-      </div>
+      {/* Logo Central Girando */}
+      <CentralLogo />
 
       {/* Mystical Energy Lines */}
       <div className="fixed inset-0 z-0 pointer-events-none">
