@@ -15,8 +15,7 @@ const oracleTypes = [
     icon: Gem,
     color: 'from-purple-600 to-indigo-600',
     route: '/oraculo/ritual/tarot',
-    freeConsultations: 3,
-    premiumPrice: 29.90
+    pricePerConsultation: 9.90
   },
   {
     id: 'mirror',
@@ -25,8 +24,7 @@ const oracleTypes = [
     icon: Search,
     color: 'from-blue-600 to-cyan-600',
     route: '/oraculo/ritual/espelho',
-    freeConsultations: 2,
-    premiumPrice: 39.90
+    pricePerConsultation: 12.90
   },
   {
     id: 'runes',
@@ -35,8 +33,7 @@ const oracleTypes = [
     icon: FileText,
     color: 'from-amber-600 to-orange-600',
     route: '/oraculo/ritual/runas',
-    freeConsultations: 2,
-    premiumPrice: 34.90
+    pricePerConsultation: 11.90
   },
   {
     id: 'fire',
@@ -45,8 +42,7 @@ const oracleTypes = [
     icon: Flame,
     color: 'from-red-600 to-rose-600',
     route: '/oraculo/ritual/fogo',
-    freeConsultations: 2,
-    premiumPrice: 37.90
+    pricePerConsultation: 13.90
   },
   {
     id: 'voice',
@@ -55,8 +51,7 @@ const oracleTypes = [
     icon: Eye,
     color: 'from-gray-600 to-slate-700',
     route: '/oraculo/ritual/voz',
-    freeConsultations: 1,
-    premiumPrice: 49.90
+    pricePerConsultation: 15.90
   }
 ];
 
@@ -136,31 +131,25 @@ export default function Oracle() {
                     {oracle.description}
                   </p>
                   
-                  {/* Free consultations info */}
-                  <div className="bg-amber-900/20 p-3 rounded-lg border border-amber-700/30 mb-4">
-                    <div className="flex items-center justify-center gap-2 text-amber-300 text-sm">
-                      <Crown className="w-4 h-4" />
-                      <span>{oracle.freeConsultations} consultas gratuitas</span>
+                  {/* Pricing info */}
+                  <div className="bg-red-900/20 p-3 rounded-lg border border-red-700/30 mb-4">
+                    <div className="flex items-center justify-center gap-2 text-red-300 text-sm">
+                      <CreditCard className="w-4 h-4" />
+                      <span>R$ {oracle.pricePerConsultation} por consulta</span>
                     </div>
                   </div>
 
                   {/* Action buttons */}
                   <div className="space-y-2">
-                    <Link href={oracle.route} className="block">
-                      <Button className="w-full bg-amber-900/50 hover:bg-amber-800/70 text-amber-200 border-amber-700">
-                        Consulta Gratuita
-                      </Button>
-                    </Link>
-                    
                     <Button 
                       onClick={() => {
                         setSelectedOracle(oracle);
                         setShowPayment(true);
                       }}
-                      className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white"
+                      className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white"
                     >
                       <CreditCard className="w-4 h-4 mr-2" />
-                      Premium R$ {oracle.premiumPrice}
+                      Realizar Consulta - R$ {oracle.pricePerConsultation}
                     </Button>
                   </div>
                 </div>
@@ -187,39 +176,39 @@ export default function Oracle() {
           <DialogContent className="bg-black/95 border-amber-700/50 max-w-2xl">
             <DialogHeader>
               <DialogTitle className="text-2xl font-cinzel-decorative text-amber-400">
-                Consulta Premium: {selectedOracle?.name}
+                Consulta: {selectedOracle?.name}
               </DialogTitle>
             </DialogHeader>
             
             {selectedOracle && (
               <div className="space-y-6">
-                <div className="bg-amber-900/20 p-4 rounded-lg border border-amber-700/30">
-                  <h4 className="text-lg font-semibold text-amber-300 mb-2">Acesso Premium Inclui:</h4>
-                  <ul className="text-amber-200/70 text-sm space-y-2">
-                    <li>• Consultas ilimitadas por 30 dias</li>
-                    <li>• Respostas mais detalhadas e personalizadas</li>
-                    <li>• Acesso prioritário aos oráculos</li>
-                    <li>• Histórico completo de consultas</li>
-                    <li>• Interpretações avançadas</li>
+                <div className="bg-red-900/20 p-4 rounded-lg border border-red-700/30">
+                  <h4 className="text-lg font-semibold text-red-300 mb-2">Esta Consulta Inclui:</h4>
+                  <ul className="text-red-200/70 text-sm space-y-2">
+                    <li>• Resposta personalizada e detalhada</li>
+                    <li>• Interpretação completa dos símbolos</li>
+                    <li>• Orientação específica para sua situação</li>
+                    <li>• Acesso imediato após o pagamento</li>
+                    <li>• Consulta salva no seu histórico</li>
                   </ul>
                   <div className="flex justify-between items-center mt-4">
-                    <span className="text-amber-400 font-bold text-xl">
-                      R$ {selectedOracle.premiumPrice}
+                    <span className="text-red-400 font-bold text-xl">
+                      R$ {selectedOracle.pricePerConsultation}
                     </span>
-                    <Badge variant="outline" className="border-purple-600 text-purple-300">
-                      Acesso Premium
+                    <Badge variant="outline" className="border-red-600 text-red-300">
+                      Consulta Individual
                     </Badge>
                   </div>
                 </div>
 
                 <PaymentGateway
-                  amount={selectedOracle.premiumPrice}
+                  amount={selectedOracle.pricePerConsultation}
                   currency="BRL"
-                  description={`Consulta Premium: ${selectedOracle.name}`}
+                  description={`Consulta: ${selectedOracle.name}`}
                   onSuccess={(paymentData) => {
                     console.log('Pagamento realizado:', paymentData);
                     setShowPayment(false);
-                    // Redirect to premium oracle access
+                    // Redirect to oracle consultation
                   }}
                   onError={(error) => {
                     console.error('Erro no pagamento:', error);
