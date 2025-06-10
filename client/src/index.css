@@ -340,29 +340,53 @@ body.mood-void {
   }
 }
 
-/* Ensure popovers never overflow viewport */
+/* Popover scroll improvements */
 [data-radix-popper-content-wrapper] {
-  max-height: calc(100vh - 120px);
-  overflow-y: auto;
+  max-height: calc(100vh - 120px) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain !important;
+}
+
+/* Ensure popover content is scrollable */
+[data-radix-popper-content-wrapper] > div {
+  max-height: inherit !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
 }
 
 /* Custom scrollbar for popover content */
-[data-radix-popper-content-wrapper]::-webkit-scrollbar {
-  width: 4px;
+[data-radix-popper-content-wrapper]::-webkit-scrollbar,
+[data-radix-popper-content-wrapper] > div::-webkit-scrollbar {
+  width: 6px;
 }
 
-[data-radix-popper-content-wrapper]::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
+[data-radix-popper-content-wrapper]::-webkit-scrollbar-track,
+[data-radix-popper-content-wrapper] > div::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
 }
 
-[data-radix-popper-content-wrapper]::-webkit-scrollbar-thumb {
-  background: rgba(245, 158, 11, 0.3);
-  border-radius: 2px;
+[data-radix-popper-content-wrapper]::-webkit-scrollbar-thumb,
+[data-radix-popper-content-wrapper] > div::-webkit-scrollbar-thumb {
+  background: rgba(245, 158, 11, 0.4);
+  border-radius: 3px;
 }
 
-[data-radix-popper-content-wrapper]::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 158, 11, 0.5);
+[data-radix-popper-content-wrapper]::-webkit-scrollbar-thumb:hover,
+[data-radix-popper-content-wrapper] > div::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 158, 11, 0.6);
+}
+
+/* Mobile scroll indicators */
+@media (max-width: 768px) {
+  [data-radix-popper-content-wrapper]::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  [data-radix-popper-content-wrapper]::-webkit-scrollbar-thumb {
+    background: rgba(245, 158, 11, 0.6);
+  }
 }
 
 /* Templo do Abismo Animations */

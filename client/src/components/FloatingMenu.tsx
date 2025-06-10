@@ -65,7 +65,7 @@ const FloatingMenu: React.FC = () => {
         </PopoverTrigger>
         
         <PopoverContent 
-          className="w-64 sm:w-72 md:w-80 bg-black/95 backdrop-blur-lg border-amber-500/30 text-white" 
+          className="w-64 sm:w-72 md:w-80 max-h-[80vh] overflow-y-auto bg-black/95 backdrop-blur-lg border-amber-500/30 text-white" 
           side="left" 
           align="start"
           sideOffset={8}
