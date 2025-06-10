@@ -1,357 +1,493 @@
-import { useState } from "react";
-import { Feather, Share2, Instagram, Facebook, Twitter, Download } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Feather, Share2, Instagram, Facebook, Twitter, Download, Sparkles, Clock, Image as ImageIcon, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "../hooks/use-toast";
-import { useDailyPoem, useRecentPoems } from "@/hooks/useSupabaseData";
+import { apiRequest } from "@/lib/queryClient";
 
-interface DailyPoem {
-  id: number;
+interface DailyContent {
+  id: string;
+  type: 'dica' | 'poema' | 'ritual' | 'conjuracao';
   title: string;
   content: string;
   author: string;
   date: string;
   image_url?: string;
+  generated_at: string;
 }
 
-const mockPoems: DailyPoem[] = [
-  {
-    id: 1,
-    title: "Lux Tenebris",
-    content: "Nas profundezas do silêncio eterno, onde sussurra a verdade ancestral, a chama dourada da gnose desperta, revelando os mistérios do conhecimento primordial.",
-    author: "Mestre Astaroth",
-    date: "2024-01-15"
-  },
-  {
-    id: 2,
-    title: "Serpens Sophia",
-    content: "A serpente da sabedoria desenrola seus anéis cósmicos, cada escama uma lição do abismo, cada movimento uma dança entre luz e sombra.",
-    author: "Sacerdotisa Lilith",
-    date: "2024-01-14"
-  },
-  {
-    id: 3,
-    title: "Ignis Aeternus",
-    content: "O fogo eterno queima no altar do coração, consumindo ilusões e forjando a alma na fornalha da verdade luciferiana.",
-    author: "Mago Baphomet",
-    date: "2024-01-13"
-  }
-];
+interface ShareData {
+  text: string;
+  hashtags: string[];
+  image?: string;
+}
 
 export default function VozDaPluma() {
   const { toast } = useToast();
-  const [selectedPoem, setSelectedPoem] = useState<DailyPoem | null>(null);
+  const [todayContent, setTodayContent] = useState<DailyContent | null>(null);
+  const [recentContent, setRecentContent] = useState<DailyContent[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const { data: todayPoem, isLoading } = useDailyPoem();
-  const { data: recentPoems = mockPoems } = useRecentPoems();
+  // Carrega conteúdo do dia ao carregar a página
+  useEffect(() => {
+    loadTodayContent();
+    loadRecentContent();
+  }, []);
 
-  const shareToSocial = (platform: string, poem: DailyPoem) => {
-    const text = `"${poem.content}" - ${poem.author}`;
-    const hashtags = "#TemploDoAbismo #VozDaPluma #Luciferiano #Sabedoria";
+  const loadTodayContent = async () => {
+    try {
+      const response = await apiRequest('GET', '/api/voz-pluma/today');
+      setTodayContent(response);
+    } catch (error) {
+      console.error('Erro ao carregar conteúdo do dia:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadRecentContent = async () => {
+    try {
+      const response = await apiRequest('GET', '/api/voz-pluma/recent');
+      setRecentContent(response);
+    } catch (error) {
+      console.error('Erro ao carregar conteúdo recente:', error);
+    }
+  };
+
+  const generateNewContent = async () => {
+    setIsGenerating(true);
+    try {
+      const response = await apiRequest('POST', '/api/voz-pluma/generate');
+      setTodayContent(response);
+      await loadRecentContent();
+      
+      toast({
+        title: "Novo conteúdo gerado!",
+        description: "A Voz da Pluma trouxe novas revelações místicas.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro na manifestação",
+        description: "Não foi possível gerar novo conteúdo no momento.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const generateContentImage = async (content: DailyContent): Promise<string> => {
+    const canvas = canvasRef.current;
+    if (!canvas) throw new Error('Canvas não disponível');
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('Contexto do canvas não disponível');
+
+    // Configurar canvas
+    canvas.width = 1080;
+    canvas.height = 1080;
+
+    // Fundo gradiente místico
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#0a0a0a');
+    gradient.addColorStop(0.5, '#1a0a1a');
+    gradient.addColorStop(1, '#0a0a0a');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Bordas decorativas
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
+
+    // Símbolos místicos nos cantos
+    ctx.fillStyle = '#d4af37';
+    ctx.font = '40px serif';
+    ctx.textAlign = 'center';
     
+    // Símbolo superior
+    const typeSymbols = {
+      'dica': '⚡',
+      'poema': '🕯️',
+      'ritual': '🔮',
+      'conjuracao': '⭐'
+    };
+    
+    ctx.fillText(typeSymbols[content.type] || '✨', canvas.width / 2, 120);
+
+    // Título
+    ctx.fillStyle = '#d4af37';
+    ctx.font = 'bold 48px serif';
+    ctx.textAlign = 'center';
+    
+    const titleLines = wrapText(ctx, content.title, canvas.width - 160, 50);
+    let yPosition = 220;
+    titleLines.forEach(line => {
+      ctx.fillText(line, canvas.width / 2, yPosition);
+      yPosition += 60;
+    });
+
+    // Conteúdo principal
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '32px serif';
+    yPosition += 40;
+    
+    const contentLines = wrapText(ctx, content.content, canvas.width - 160, 32);
+    contentLines.forEach(line => {
+      ctx.fillText(line, canvas.width / 2, yPosition);
+      yPosition += 45;
+    });
+
+    // Autor
+    ctx.fillStyle = '#d4af37';
+    ctx.font = 'italic 28px serif';
+    ctx.fillText(`- ${content.author}`, canvas.width / 2, yPosition + 60);
+
+    // Tipo de conteúdo
+    ctx.fillStyle = '#888888';
+    ctx.font = '24px sans-serif';
+    const typeText = content.type.charAt(0).toUpperCase() + content.type.slice(1);
+    ctx.fillText(typeText, canvas.width / 2, yPosition + 100);
+
+    // Marca d'água - Templo do Abismo
+    ctx.fillStyle = 'rgba(212, 175, 55, 0.7)';
+    ctx.font = 'bold 28px serif';
+    ctx.fillText('TEMPLO DO ABISMO', canvas.width / 2, canvas.height - 60);
+
+    return canvas.toDataURL('image/png');
+  };
+
+  const wrapText = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number, fontSize: number): string[] => {
+    const words = text.split(' ');
+    const lines: string[] = [];
+    let currentLine = '';
+
+    for (const word of words) {
+      const testLine = currentLine + (currentLine ? ' ' : '') + word;
+      const metrics = ctx.measureText(testLine);
+      
+      if (metrics.width > maxWidth && currentLine) {
+        lines.push(currentLine);
+        currentLine = word;
+      } else {
+        currentLine = testLine;
+      }
+    }
+    
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+    
+    return lines;
+  };
+
+  const downloadContentImage = async (content: DailyContent) => {
+    try {
+      const imageDataUrl = await generateContentImage(content);
+      
+      const link = document.createElement('a');
+      link.download = `templo-do-abismo-${content.type}-${content.date}.png`;
+      link.href = imageDataUrl;
+      link.click();
+
+      toast({
+        title: "Imagem baixada!",
+        description: "O conteúdo foi salvo em seu dispositivo.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro no download",
+        description: "Não foi possível gerar a imagem.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const shareToSocial = (platform: string, content: DailyContent) => {
+    const shareData: ShareData = {
+      text: getShareText(content),
+      hashtags: getShareHashtags(content.type),
+    };
+
     let url = "";
-    
+    const encodedText = encodeURIComponent(shareData.text);
+    const encodedHashtags = encodeURIComponent(shareData.hashtags.join(' '));
+
     switch (platform) {
-      case "instagram":
-        navigator.clipboard.writeText(`${text}\n\n${hashtags}`);
+      case 'twitter':
+        url = `https://twitter.com/intent/tweet?text=${encodedText}&hashtags=${shareData.hashtags.join(',')}`;
+        break;
+      case 'facebook':
+        url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodedText}`;
+        break;
+      case 'instagram':
+        // Para Instagram, copiamos o texto e abrimos o app
+        navigator.clipboard.writeText(`${shareData.text}\n\n${shareData.hashtags.join(' ')}`);
         toast({
-          title: "Copiado para área de transferência",
-          description: "Cole no Instagram Stories ou feed.",
+          title: "Texto copiado!",
+          description: "Cole no Instagram junto com a imagem baixada.",
         });
         return;
-        
-      case "facebook":
-        url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(text)}`;
-        break;
-        
-      case "twitter":
-        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&hashtags=${encodeURIComponent("TemploDoAbismo,VozDaPluma")}`;
-        break;
-        
-      case "whatsapp":
-        url = `https://wa.me/?text=${encodeURIComponent(text + "\n\n" + hashtags)}`;
-        break;
     }
-    
+
     if (url) {
-      window.open(url, '_blank');
+      window.open(url, '_blank', 'width=600,height=400');
     }
   };
 
-  const downloadPoem = (poem: DailyPoem) => {
-    const content = `${poem.title}\n\n${poem.content}\n\n— ${poem.author}\n${poem.date}`;
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${poem.title}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    toast({
-      title: "Poema baixado",
-      description: "O arquivo foi salvo em seus downloads.",
-    });
+  const getShareText = (content: DailyContent): string => {
+    const typeTexts = {
+      'dica': '💡 Dica Mística do Dia',
+      'poema': '🕯️ Verso da Pluma Dourada',
+      'ritual': '🔮 Ritual Ancestral',
+      'conjuracao': '⭐ Conjuração Luciferiana'
+    };
+
+    return `${typeTexts[content.type]}\n\n"${content.content}"\n\n- ${content.author}\n\nTemplo do Abismo`;
   };
+
+  const getShareHashtags = (type: string): string[] => {
+    const baseHashtags = ['#TemploDoAbismo', '#VozDaPluma', '#Luciferiano', '#Sabedoria'];
+    
+    const typeHashtags = {
+      'dica': ['#DicaMistica', '#Gnose'],
+      'poema': ['#PoesiaMistica', '#PlumaDourada'],
+      'ritual': ['#RitualAncestral', '#Magia'],
+      'conjuracao': ['#Conjuracao', '#Invocacao']
+    };
+
+    return [...baseHashtags, ...(typeHashtags[type] || [])];
+  };
+
+  const getTypeColor = (type: string): string => {
+    const colors = {
+      'dica': 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+      'poema': 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+      'ritual': 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+      'conjuracao': 'bg-red-500/20 text-red-400 border-red-500/30'
+    };
+    return colors[type] || 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+  };
+
+  const getTypeIcon = (type: string) => {
+    const icons = {
+      'dica': '⚡',
+      'poema': '🕯️',
+      'ritual': '🔮',
+      'conjuracao': '⭐'
+    };
+    return icons[type] || '✨';
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-black via-purple-950 to-black p-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center">
+            <Feather className="w-16 h-16 text-amber-400 mx-auto mb-4 animate-pulse" />
+            <h1 className="text-4xl font-cinzel-decorative text-amber-400 mb-8">Voz da Pluma</h1>
+            <div className="text-amber-300">Canalizando as revelações matinais...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Fixed Central Rotating Seal */}
-      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
-        <div className="rotating-seal w-96 h-96 opacity-20">
-          <img 
-            src="/seal.png" 
-            alt="Selo do Templo do Abismo" 
-            className="w-full h-full object-contain filter drop-shadow-lg"
-          />
-        </div>
-      </div>
-
-      {/* Mystical floating particles */}
-      <div className="fixed inset-0 overflow-hidden z-0">
-        <div className="mystical-particles"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
-      </div>
-
-      {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 pt-20">
-        {/* Hero Section */}
-        <div className="text-center mb-12 max-w-5xl">
-          <div className="mb-8">
-            <div className="text-amber-400 text-6xl mb-4">𖤍</div>
-            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
-              VOZ DA PLUMA
-            </h1>
-            <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
-              <span>☿</span>
-              <span>⚹</span>
-              <span>𖤍</span>
-              <span>⚹</span>
-              <span>☿</span>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-black via-purple-950 to-black p-8">
+      <canvas ref={canvasRef} style={{ display: 'none' }} />
+      
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <Feather className="w-16 h-16 text-amber-400 mx-auto mb-4" />
+          <h1 className="text-4xl font-cinzel-decorative text-amber-400 mb-4">Voz da Pluma</h1>
+          <p className="text-amber-300 text-lg mb-6">
+            Revelações Matinais Canalizadas pelas Correntes Abissais
+          </p>
           
-          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
-              Versos da Sabedoria Ancestral
-            </h2>
-            
-            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
-              Cada verso é uma <strong className="text-amber-400">chave dourada</strong> que abre as portas da percepção. 
-              Deixe que a <strong className="text-red-400">poesia luciferiana</strong> desperte em ti a centelha divina do conhecimento oculto.
-            </p>
-            
-            <div className="text-center">
-              <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
-              <p className="text-lg font-cinzel-decorative text-amber-300">
-                "Verba Volant, Scripta Manent"
-              </p>
-              <p className="text-sm text-gray-400 font-crimson italic mt-2">
-                As palavras voam, os escritos permanecem
-              </p>
-            </div>
-          </div>
+          <Button 
+            onClick={generateNewContent}
+            disabled={isGenerating}
+            className="bg-amber-600 hover:bg-amber-700 text-black font-semibold"
+          >
+            {isGenerating ? (
+              <>
+                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                Canalizando...
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4 mr-2" />
+                Gerar Novo Conteúdo
+              </>
+            )}
+          </Button>
         </div>
 
-        {/* Today's Featured Poem */}
-        {(todayPoem || recentPoems[0]) && (
-          <div className="floating-card max-w-4xl mx-auto mb-12 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-            <div className="p-8 text-center">
-              <div className="flex items-center justify-center mb-6">
-                <Feather className="w-8 h-8 text-amber-400 mr-3" />
-                <h3 className="text-2xl font-cinzel-decorative text-amber-300">
-                  Verso do Dia
-                </h3>
-              </div>
-              
-              {(() => {
-                const poem = todayPoem || recentPoems[0];
-                return (
-                  <div className="space-y-6">
-                    <h4 className="text-xl font-bold text-amber-400 mb-4">
-                      {poem.title}
-                    </h4>
-                    
-                    <blockquote className="text-lg text-gray-300 italic leading-relaxed border-l-4 border-amber-500/30 pl-6 py-4">
-                      "{poem.content}"
-                    </blockquote>
-                    
-                    <div className="flex items-center justify-center space-x-4 text-gray-400">
-                      <span>— {poem.author}</span>
-                      <span>•</span>
-                      <span>{new Date(poem.date).toLocaleDateString('pt-BR')}</span>
-                    </div>
-                    
-                    {/* Share buttons */}
-                    <div className="flex justify-center space-x-4 pt-4">
-                      <button
-                        onClick={() => shareToSocial('twitter', poem)}
-                        className="p-2 rounded-full bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 transition-colors"
-                        title="Compartilhar no Twitter"
-                      >
-                        <Twitter className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={() => shareToSocial('facebook', poem)}
-                        className="p-2 rounded-full bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 transition-colors"
-                        title="Compartilhar no Facebook"
-                      >
-                        <Facebook className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={() => shareToSocial('instagram', poem)}
-                        className="p-2 rounded-full bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 transition-colors"
-                        title="Copiar para Instagram"
-                      >
-                        <Instagram className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={() => downloadPoem(poem)}
-                        className="p-2 rounded-full bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 transition-colors"
-                        title="Baixar poema"
-                      >
-                        <Download className="w-5 h-5" />
-                      </button>
+        {/* Conteúdo Principal de Hoje */}
+        {todayContent && (
+          <Card className="bg-black/50 border-amber-500/30 mb-12">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{getTypeIcon(todayContent.type)}</span>
+                  <div>
+                    <CardTitle className="text-2xl text-amber-400 font-cinzel-decorative">
+                      {todayContent.title}
+                    </CardTitle>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Badge className={getTypeColor(todayContent.type)}>
+                        {todayContent.type.charAt(0).toUpperCase() + todayContent.type.slice(1)}
+                      </Badge>
+                      <span className="text-sm text-gray-400">
+                        <Clock className="w-4 h-4 inline mr-1" />
+                        {new Date(todayContent.date).toLocaleDateString('pt-BR')}
+                      </span>
                     </div>
                   </div>
-                );
-              })()}
+                </div>
+              </div>
+            </CardHeader>
+            
+            <CardContent>
+              <blockquote className="text-lg text-amber-100 italic mb-4 border-l-4 border-amber-500 pl-4">
+                "{todayContent.content}"
+              </blockquote>
+              
+              <div className="text-right text-amber-300 font-semibold mb-6">
+                — {todayContent.author}
+              </div>
+
+              {/* Botões de Ação */}
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  onClick={() => downloadContentImage(todayContent)}
+                  variant="outline"
+                  className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Baixar Imagem
+                </Button>
+
+                <Button
+                  onClick={() => shareToSocial('twitter', todayContent)}
+                  variant="outline"
+                  className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
+                >
+                  <Twitter className="w-4 h-4 mr-2" />
+                  Twitter
+                </Button>
+
+                <Button
+                  onClick={() => shareToSocial('facebook', todayContent)}
+                  variant="outline"
+                  className="border-blue-600/30 text-blue-400 hover:bg-blue-600/10"
+                >
+                  <Facebook className="w-4 h-4 mr-2" />
+                  Facebook
+                </Button>
+
+                <Button
+                  onClick={() => shareToSocial('instagram', todayContent)}
+                  variant="outline"
+                  className="border-pink-500/30 text-pink-400 hover:bg-pink-500/10"
+                >
+                  <Instagram className="w-4 h-4 mr-2" />
+                  Instagram
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Publicações Recentes */}
+        {recentContent.length > 0 && (
+          <div>
+            <h2 className="text-2xl font-cinzel-decorative text-amber-400 mb-6">
+              Revelações Anteriores
+            </h2>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {recentContent.slice(0, 6).map((content) => (
+                <Card key={content.id} className="bg-black/30 border-purple-500/30 hover:border-amber-500/30 transition-colors">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xl">{getTypeIcon(content.type)}</span>
+                      <Badge className={getTypeColor(content.type)} variant="outline">
+                        {content.type.charAt(0).toUpperCase() + content.type.slice(1)}
+                      </Badge>
+                    </div>
+                    <CardTitle className="text-lg text-amber-400 line-clamp-2">
+                      {content.title}
+                    </CardTitle>
+                  </CardHeader>
+                  
+                  <CardContent>
+                    <p className="text-gray-300 text-sm line-clamp-3 mb-3">
+                      "{content.content}"
+                    </p>
+                    
+                    <div className="text-xs text-amber-300 mb-3">
+                      — {content.author}
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => downloadContentImage(content)}
+                        size="sm"
+                        variant="ghost"
+                        className="text-amber-400 hover:text-amber-300"
+                      >
+                        <Download className="w-3 h-3 mr-1" />
+                        Baixar
+                      </Button>
+                      
+                      <Button
+                        onClick={() => shareToSocial('twitter', content)}
+                        size="sm"
+                        variant="ghost"
+                        className="text-blue-400 hover:text-blue-300"
+                      >
+                        <Share2 className="w-3 h-3 mr-1" />
+                        Compartilhar
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         )}
 
-        {/* Recent Poems Grid */}
-        <div className="max-w-6xl w-full">
-          <h3 className="text-3xl font-cinzel-decorative text-amber-300 text-center mb-8 floating-title-slow">
-            Arquivo dos Versos Sagrados
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recentPoems.slice(1).map((poem: DailyPoem) => (
-              <div 
-                key={poem.id} 
-                className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300"
-                onClick={() => setSelectedPoem(poem)}
-              >
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-lg font-bold text-amber-400 line-clamp-1">
-                      {poem.title}
-                    </h4>
-                    <Feather className="w-5 h-5 text-amber-500 group-hover:text-amber-300 transition-colors" />
-                  </div>
-                  
-                  <blockquote className="text-sm text-gray-300 italic leading-relaxed mb-4 line-clamp-4">
-                    "{poem.content}"
-                  </blockquote>
-                  
-                  <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span>— {poem.author}</span>
-                    <span>{new Date(poem.date).toLocaleDateString('pt-BR')}</span>
-                  </div>
-                  
-                  <div className="mt-4 flex justify-center space-x-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        shareToSocial('twitter', poem);
-                      }}
-                      className="p-1 rounded bg-amber-600/10 hover:bg-amber-600/20 text-amber-400 transition-colors"
-                    >
-                      <Share2 className="w-3 h-3" />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        downloadPoem(poem);
-                      }}
-                      className="p-1 rounded bg-amber-600/10 hover:bg-amber-600/20 text-amber-400 transition-colors"
-                    >
-                      <Download className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Mystical Quote */}
-        <div className="floating-card max-w-2xl mx-auto mt-12 p-8 bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-          <div className="text-center">
-            <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
-            <p className="text-lg text-gray-300 italic leading-relaxed mb-4">
-              "A poesia é a linguagem dos deuses falando através do véu da eternidade"
-            </p>
-            <p className="text-amber-400 font-semibold">
-              — Axioma do Templo
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Poem Detail Modal */}
-      {selectedPoem && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-          onClick={() => setSelectedPoem(null)}
-        >
-          <div 
-            className="floating-card max-w-2xl w-full bg-black/60 backdrop-blur-lg border border-amber-500/30 rounded-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-8 text-center">
-              <div className="flex items-center justify-center mb-6">
-                <Feather className="w-8 h-8 text-amber-400 mr-3" />
-                <h3 className="text-2xl font-cinzel-decorative text-amber-300">
-                  {selectedPoem.title}
+        {/* Informações sobre Automação */}
+        <Card className="bg-gradient-to-r from-purple-900/30 to-black/30 border-purple-500/30 mt-12">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <Clock className="w-8 h-8 text-purple-400 mt-1" />
+              <div>
+                <h3 className="text-xl font-semibold text-purple-400 mb-2">
+                  Revelações Automáticas
                 </h3>
+                <p className="text-gray-300 mb-3">
+                  A Voz da Pluma manifesta automaticamente todos os dias:
+                </p>
+                <ul className="text-sm text-gray-400 space-y-1">
+                  <li>• <strong>Manhã (7h):</strong> Dica Mística do Dia</li>
+                  <li>• <strong>Manhã (9h):</strong> Verso da Pluma Dourada</li>
+                  <li>• <strong>Manhã (11h):</strong> Ritual ou Conjuração Ancestral</li>
+                </ul>
+                <p className="text-xs text-purple-300 mt-3">
+                  Cada revelação pode ser baixada como imagem com marca d'água e compartilhada nas redes sociais.
+                </p>
               </div>
-              
-              <blockquote className="text-lg text-gray-300 italic leading-relaxed border-l-4 border-amber-500/30 pl-6 py-4 mb-6">
-                "{selectedPoem.content}"
-              </blockquote>
-              
-              <div className="flex items-center justify-center space-x-4 text-gray-400 mb-6">
-                <span>— {selectedPoem.author}</span>
-                <span>•</span>
-                <span>{new Date(selectedPoem.date).toLocaleDateString('pt-BR')}</span>
-              </div>
-              
-              <div className="flex justify-center space-x-4">
-                <button
-                  onClick={() => shareToSocial('twitter', selectedPoem)}
-                  className="px-4 py-2 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 rounded-lg transition-colors flex items-center space-x-2"
-                >
-                  <Twitter className="w-4 h-4" />
-                  <span>Twitter</span>
-                </button>
-                <button
-                  onClick={() => shareToSocial('facebook', selectedPoem)}
-                  className="px-4 py-2 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 rounded-lg transition-colors flex items-center space-x-2"
-                >
-                  <Facebook className="w-4 h-4" />
-                  <span>Facebook</span>
-                </button>
-                <button
-                  onClick={() => downloadPoem(selectedPoem)}
-                  className="px-4 py-2 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 rounded-lg transition-colors flex items-center space-x-2"
-                >
-                  <Download className="w-4 h-4" />
-                  <span>Baixar</span>
-                </button>
-              </div>
-              
-              <button
-                onClick={() => setSelectedPoem(null)}
-                className="mt-6 px-6 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-colors"
-              >
-                Fechar
-              </button>
             </div>
-          </div>
-        </div>
-      )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
