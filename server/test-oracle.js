@@ -1,4 +1,4 @@
-import { temploAI } from './ai-service';
+import { temploAI } from './ai-service.ts';
 
 async function testOracleAI() {
   console.log('Testing Oracle AI functionality...');

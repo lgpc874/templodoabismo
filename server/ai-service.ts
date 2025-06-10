@@ -80,7 +80,10 @@ export class TemploAI {
       return JSON.parse(response.choices[0].message.content || '{}');
     } catch (error) {
       console.error('Erro na consulta de Tarot:', error);
-      throw new Error('Falha na comunicação com os oráculos ancestrais');
+      return {
+        cards: ["The Oracle Awaits", "Path of Preparation", "Key of Access"],
+        interpretation: "O Oracle permanece em silêncio, aguardando a configuração adequada das chaves místicas. Para revelar os segredos do Tarot Infernal, é necessário estabelecer a conexão com os oráculos ancestrais através da chave de acesso OpenAI."
+      };
     }
   }
 
@@ -116,7 +119,9 @@ export class TemploAI {
       return JSON.parse(response.choices[0].message.content || '{}');
     } catch (error) {
       console.error('Erro na consulta do Espelho Negro:', error);
-      throw new Error('O espelho negro está nebuloso');
+      return {
+        reflection: "O Espelho do Abismo permanece velado, aguardando a chave de acesso aos mistérios ancestrais. Configure a conexão OpenAI para contemplar as verdades ocultas em seu reflexo interior."
+      };
     }
   }
 
@@ -157,7 +162,10 @@ export class TemploAI {
       return JSON.parse(response.choices[0].message.content || '{}');
     } catch (error) {
       console.error('Erro na consulta das Runas:', error);
-      throw new Error('As runas ancestrais estão em silêncio');
+      return {
+        runes: ["ᚺᚨᚷᚨᛚᚨᛉ", "ᚨᚾᛋᚢᛉ", "ᛟᚦᚨᛚᚨ"],
+        meaning: "As runas ancestrais aguardam a chave de acesso aos segredos primordiais. Configure a conexão OpenAI para desvelar a sabedoria dos antigos símbolos nórdicos."
+      };
     }
   }
 
@@ -193,7 +201,9 @@ export class TemploAI {
       return JSON.parse(response.choices[0].message.content || '{}');
     } catch (error) {
       console.error('Erro na Divinação com Fogo:', error);
-      throw new Error('As chamas sagradas se apagaram');
+      return {
+        flames: "As chamas do conhecimento aguardam o combustível adequado. Configure a chave OpenAI para acender o fogo sagrado da sabedoria ancestral e contemplar as visões nas labaredas etéreas."
+      };
     }
   }
 
@@ -230,7 +240,9 @@ export class TemploAI {
       return JSON.parse(response.choices[0].message.content || '{}');
     } catch (error) {
       console.error('Erro na Voz Abissal:', error);
-      throw new Error('A Voz Abissal está em meditação profunda');
+      return {
+        voice: "As vozes do abismo sussurram em silêncio, aguardando a chave que desbloqueará seus segredos ancestrais. Configure a conexão OpenAI para ouvir os ecos eternos das profundezas primordiais."
+      };
     }
   }
 
