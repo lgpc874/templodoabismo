@@ -330,6 +330,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Oracle ritual consultation with entities
+  app.post('/api/oracle/ritual-consult', async (req: any, res: Response) => {
+    try {
+      const { question, oracleType, entityName, conversationHistory } = req.body;
+      
+      if (!question?.trim() || !oracleType || !entityName) {
+        return res.status(400).json({ 
+          error: 'Question, oracle type, and entity name are required' 
+        });
+      }
+
+      const result = await temploAI.generateRitualResponse(question.trim(), oracleType, entityName);
+      
+      res.json({
+        success: true,
+        response: result.response,
+        farewell: result.farewell,
+        entityName,
+        oracleType,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Error in ritual consultation:', error);
+      res.status(500).json({ error: 'Failed to perform ritual consultation' });
+    }
+  });
+
   // Get oracle history for user
   app.get('/api/oracle/history', requireAuth, async (req: any, res: Response) => {
     try {
