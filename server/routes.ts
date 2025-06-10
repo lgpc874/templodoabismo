@@ -32,10 +32,21 @@ async function requireAuth(req: any, res: Response, next: any) {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configuration endpoint for client
   app.get('/api/config/supabase', (req: Request, res: Response) => {
-    res.json({
-      url: process.env.SUPABASE_URL,
-      key: process.env.SUPABASE_KEY
+    const url = process.env.SUPABASE_URL;
+    const key = process.env.SUPABASE_KEY;
+    
+    console.log('Supabase config request:', { 
+      hasUrl: !!url, 
+      hasKey: !!key,
+      urlPrefix: url?.substring(0, 20) + '...'
     });
+    
+    if (!url || !key) {
+      console.error('Missing Supabase configuration');
+      return res.status(500).json({ error: 'Supabase configuration missing' });
+    }
+    
+    res.json({ url, key });
   });
 
   // PayPal routes

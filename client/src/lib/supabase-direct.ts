@@ -14,9 +14,23 @@ export async function createDirectSupabaseClient() {
   // Fallback to API endpoint
   console.log('Fetching Supabase config from API');
   const response = await fetch('/api/config/supabase');
-  const config = await response.json();
   
-  console.log('Supabase config:', { url: config.url, hasKey: !!config.key });
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Config API error:', response.status, errorText);
+    throw new Error(`Failed to fetch config: ${response.status} ${errorText}`);
+  }
+  
+  const config = await response.json();
+  console.log('Supabase config received:', { 
+    url: config.url, 
+    hasKey: !!config.key,
+    urlValid: config.url?.includes('supabase')
+  });
+  
+  if (!config.url || !config.key) {
+    throw new Error('Invalid Supabase configuration received');
+  }
   
   return createClient(config.url, config.key);
 }
