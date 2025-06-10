@@ -481,9 +481,8 @@ export function registerAdminRoutes(app: Express) {
 
   app.post('/api/admin/voz-pluma/publish-article', requireAuth, requireAdmin, async (req: Request, res: Response) => {
     try {
-      const { customPrompt } = req.body;
-      await vozPlumaScheduler.publishNow(customPrompt);
-      res.json({ success: true });
+      const content = await vozPlumaService.generateAndSaveContent();
+      res.json({ success: true, content });
     } catch (error) {
       console.error('Error publishing article:', error);
       res.status(500).json({ error: 'Failed to publish article' });
@@ -629,6 +628,5 @@ export function registerAdminRoutes(app: Express) {
     }
   });
 
-  // Initialize content scheduler on startup
-  vozPlumaScheduler.start();
+  // Note: Scheduler is automatically started in index.ts
 }
