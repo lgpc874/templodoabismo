@@ -77,8 +77,11 @@ export class TemploAI {
           cards: cardNames,
           interpretation: response.choices[0].message.content || "O Oráculo se mantém em silêncio neste momento. Consulte novamente quando sua energia estiver mais alinhada."
         };
-      } catch (error) {
-        console.log('OpenAI indisponível para consulta de Tarot');
+      } catch (error: any) {
+        console.error('OpenAI API Error:', error?.error || error);
+        if (error?.error?.type === 'insufficient_quota') {
+          console.log('OpenAI quota exceeded - fallback to authentic oracle guidance');
+        }
       }
     }
     
