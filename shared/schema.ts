@@ -467,32 +467,8 @@ export const scriptures = pgTable("scriptures", {
 });
 
 // Insert Schemas
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  email: true,
-  password: true,
-  magical_name: true,
-  member_type: true,
-  role: true,
-});
-
-export const insertCourseSchema = createInsertSchema(courses).pick({
-  title: true,
-  short_description: true,
-  full_description: true,
-  slug: true,
-  category: true,
-  difficulty_level: true,
-  total_levels: true,
-  full_course_price_brl: true,
-  discount_percentage: true,
-  estimated_duration_hours: true,
-  cover_image: true,
-  preview_video_url: true,
-  requirements: true,
-  what_you_learn: true,
-  is_active: true,
-});
+export const insertUserSchema = createInsertSchema(users);
+export const insertCourseSchema = createInsertSchema(courses);
 
 export const insertCourseLevelSchema = createInsertSchema(courseLevels).pick({
   course_id: true,

@@ -141,7 +141,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log('Found user to promote:', userData);
 
       // Update user to admin using service role client
-      const { data: updatedUser, error: updateError } = await supabaseAdmin
+      const { data: updatedUser, error: updateError } = await supabase
         .from('users')
         .update({ role: 'admin' })
         .eq('id', userData.id)

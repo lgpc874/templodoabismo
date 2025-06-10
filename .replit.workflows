@@ -1,3 +1,4 @@
-[workflows."Start application"]
-name = "Start application"
-run = "npm run dev"
+workflows:
+  - name: "Start application"
+    command: "npm run dev"
+    description: "Start the full-stack application"
