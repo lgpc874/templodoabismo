@@ -135,46 +135,44 @@ export default function Bibliotheca() {
         </div>
 
         {/* Search and Filter */}
-        <Card className="abyssal-card-transparent max-w-4xl mx-auto mb-12">
-          <CardContent className="py-6">
-            <div className="flex flex-col md:flex-row gap-4 mb-6">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <Input
-                  placeholder="Buscar por título, autor ou conteúdo..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-black/50 border-yellow-600/50 text-white"
-                />
-              </div>
+        <div className="floating-card max-w-4xl mx-auto mb-12 p-6">
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-400 w-5 h-5" />
+              <Input
+                placeholder="Buscar por título, autor ou conteúdo..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-black/50 border-amber-500/50 text-white placeholder:text-gray-400"
+              />
+            </div>
+            <Button
+              variant="outline"
+              className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
+            >
+              <Filter className="w-4 h-4 mr-2" />
+              Filtros Avançados
+            </Button>
+          </div>
+          
+          <div className="flex flex-wrap gap-2">
+            {categories.map((category) => (
               <Button
-                variant="outline"
-                className="border-yellow-600/50 text-yellow-600 hover:bg-yellow-600/10"
+                key={category.value}
+                variant={selectedCategory === category.value ? "default" : "outline"}
+                size="sm"
+                className={`${
+                  selectedCategory === category.value
+                    ? 'bg-amber-600 hover:bg-amber-700 text-black'
+                    : 'border-amber-500/50 text-amber-400 hover:bg-amber-500/10'
+                }`}
+                onClick={() => setSelectedCategory(category.value)}
               >
-                <Filter className="w-4 h-4 mr-2" />
-                Filtros Avançados
+                {category.label}
               </Button>
-            </div>
-            
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <Button
-                  key={category.value}
-                  variant={selectedCategory === category.value ? "default" : "outline"}
-                  size="sm"
-                  className={`${
-                    selectedCategory === category.value
-                      ? 'bg-yellow-600 hover:bg-yellow-700 text-black'
-                      : 'border-yellow-600/50 text-yellow-600 hover:bg-yellow-600/10'
-                  }`}
-                  onClick={() => setSelectedCategory(category.value)}
-                >
-                  {category.label}
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+            ))}
+          </div>
+        </div>
 
         {/* Results Info */}
         <div className="text-center mb-8">
@@ -247,104 +245,104 @@ export default function Bibliotheca() {
         </div>
 
         {filteredDocuments.length === 0 && (
-          <Card className="abyssal-card-transparent max-w-md mx-auto">
-            <CardContent className="text-center py-12">
-              <Library className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-titles text-yellow-600 mb-2">
-                Nenhum documento encontrado
-              </h3>
-              <p className="text-gray-400 mb-4">
-                Tente ajustar os filtros ou termos de busca.
-              </p>
-              <Button 
-                variant="outline"
-                className="border-yellow-600/50 text-yellow-600"
-                onClick={() => {
-                  setSearchTerm("");
-                  setSelectedCategory("all");
-                }}
-              >
-                Limpar Filtros
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="floating-card text-center py-12 max-w-md mx-auto">
+            <Library className="w-16 h-16 text-amber-400 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-amber-400 mb-2 font-['Cinzel_Decorative']">
+              Nenhum documento encontrado
+            </h3>
+            <p className="text-gray-300 mb-4">
+              Tente ajustar os filtros ou termos de busca.
+            </p>
+            <Button 
+              variant="outline"
+              className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
+              onClick={() => {
+                setSearchTerm("");
+                setSelectedCategory("all");
+              }}
+            >
+              Limpar Filtros
+            </Button>
+          </div>
         )}
 
         {/* Featured Collections */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
-          <Card className="abyssal-card-transparent">
-            <CardHeader>
-              <CardTitle className="text-xl font-titles text-yellow-600">
-                Coleção Essencial
-              </CardTitle>
-              <CardDescription className="text-gray-300">
-                Textos fundamentais para iniciantes
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2 mb-4">
-                <div className="flex items-center text-sm text-gray-300">
-                  <BookOpen className="w-4 h-4 mr-2 text-blue-400" />
-                  15 documentos essenciais
-                </div>
-                <div className="flex items-center text-sm text-gray-300">
-                  <Clock className="w-4 h-4 mr-2 text-green-400" />
-                  Leitura estimada: 8 horas
-                </div>
+          <div className="floating-card p-6">
+            <h3 className="text-xl font-bold text-amber-400 mb-2 font-['Cinzel_Decorative']">
+              Coleção Essencial
+            </h3>
+            <p className="text-gray-300 mb-4">
+              Textos fundamentais para iniciantes
+            </p>
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center text-sm text-gray-300">
+                <BookOpen className="w-4 h-4 mr-2 text-amber-400" />
+                15 documentos essenciais
               </div>
-              <Button className="w-full bg-yellow-600 hover:bg-yellow-700 text-black">
-                Acessar Coleção
-              </Button>
-            </CardContent>
-          </Card>
+              <div className="flex items-center text-sm text-gray-300">
+                <Clock className="w-4 h-4 mr-2 text-amber-400" />
+                Leitura estimada: 8 horas
+              </div>
+            </div>
+            <Button className="w-full bg-amber-600 hover:bg-amber-700 text-black">
+              Acessar Coleção
+            </Button>
+          </div>
 
-          <Card className="abyssal-card-transparent">
-            <CardHeader>
-              <CardTitle className="text-xl font-titles text-yellow-600">
-                Novos Lançamentos
-              </CardTitle>
-              <CardDescription className="text-gray-300">
-                Últimas adições à biblioteca
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2 mb-4">
-                <div className="flex items-center text-sm text-gray-300">
-                  <BookOpen className="w-4 h-4 mr-2 text-blue-400" />
-                  6 novos documentos
-                </div>
-                <div className="flex items-center text-sm text-gray-300">
-                  <Clock className="w-4 h-4 mr-2 text-green-400" />
-                  Adicionados esta semana
-                </div>
+          <div className="floating-card p-6">
+            <h3 className="text-xl font-bold text-amber-400 mb-2 font-['Cinzel_Decorative']">
+              Novos Lançamentos
+            </h3>
+            <p className="text-gray-300 mb-4">
+              Últimas adições à biblioteca
+            </p>
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center text-sm text-gray-300">
+                <BookOpen className="w-4 h-4 mr-2 text-amber-400" />
+                6 novos documentos
               </div>
-              <Button 
-                variant="outline"
-                className="w-full border-yellow-600/50 text-yellow-600 hover:bg-yellow-600/10"
-              >
-                Ver Novidades
-              </Button>
-            </CardContent>
-          </Card>
+              <div className="flex items-center text-sm text-gray-300">
+                <Clock className="w-4 h-4 mr-2 text-amber-400" />
+                Adicionados esta semana
+              </div>
+            </div>
+            <Button 
+              variant="outline"
+              className="w-full border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
+            >
+              Ver Novidades
+            </Button>
+          </div>
         </div>
 
         {/* Access Notice */}
-        <Card className="abyssal-card-transparent max-w-2xl mx-auto mt-12">
-          <CardContent className="text-center py-8">
-            <Library className="w-12 h-12 text-yellow-600 mx-auto mb-4" />
-            <h3 className="text-xl font-titles text-yellow-600 mb-4">
-              Acesso Livre ao Conhecimento
-            </h3>
-            <p className="text-gray-300 leading-relaxed">
-              A Bibliotheca Secreta oferece acesso gratuito a uma vasta coleção de textos esotéricos, 
-              artigos acadêmicos e documentos históricos. Todo o conteúdo está disponível para download 
-              e estudo, contribuindo para a preservação e disseminação do conhecimento ancestral.
-            </p>
-          </CardContent>
-        </Card>
+        <div className="floating-card text-center py-8 max-w-2xl mx-auto mt-12">
+          <Library className="w-12 h-12 text-amber-400 mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-amber-400 mb-4 font-['Cinzel_Decorative']">
+            Acesso Livre ao Conhecimento
+          </h3>
+          <p className="text-gray-300 leading-relaxed">
+            A Bibliotheca Secreta oferece acesso gratuito a uma vasta coleção de textos esotéricos, 
+            artigos acadêmicos e documentos históricos. Todo o conteúdo está disponível para download 
+            e estudo, contribuindo para a preservação e disseminação do conhecimento ancestral.
+          </p>
+        </div>
       </div>
 
-      <Footer />
+      {/* Footer */}
+      <footer className="relative z-10 bg-black/50 border-t border-amber-500/30 mt-20">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <p className="text-gray-400 text-sm">
+              © 2024 Templo do Abismo. Todos os direitos reservados.
+            </p>
+            <p className="text-gray-500 text-xs mt-2">
+              Portal dedicado aos ensinamentos luciferianos ancestrais
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
