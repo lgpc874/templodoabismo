@@ -75,11 +75,7 @@ export default function GrimoiresSupabase() {
 
   const handlePurchase = async (grimoireId: number, price: number) => {
     if (!isAuthenticated) {
-      toast({
-        title: "Acesso requerido",
-        description: "Faça login para adquirir grimórios",
-        variant: "destructive",
-      });
+      window.location.href = '/login';
       return;
     }
 
@@ -92,11 +88,7 @@ export default function GrimoiresSupabase() {
 
   const handleRent = async (grimoireId: number, price: number) => {
     if (!isAuthenticated) {
-      toast({
-        title: "Acesso requerido",
-        description: "Faça login para alugar grimórios",
-        variant: "destructive",
-      });
+      window.location.href = '/login';
       return;
     }
 

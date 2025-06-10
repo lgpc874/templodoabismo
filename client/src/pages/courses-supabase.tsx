@@ -146,13 +146,17 @@ export default function CoursesSupabase() {
                       {/* Action Button */}
                       <Button
                         className={`w-full ${
-                          !canAccess
-                            ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                            : isEnrolled
+                          isEnrolled
                             ? "bg-green-700 hover:bg-green-600 text-white"
                             : "bg-gradient-to-r from-gold/80 to-orange-600/80 hover:from-gold hover:to-orange-600 text-black"
                         } font-cinzel-regular`}
-                        disabled={!canAccess}
+                        onClick={() => {
+                          if (course.price > 0 && !isAuthenticated) {
+                            window.location.href = '/login';
+                            return;
+                          }
+                          // Handle enrollment/purchase logic here
+                        }}
                       >
                         {!canAccess ? (
                           <>

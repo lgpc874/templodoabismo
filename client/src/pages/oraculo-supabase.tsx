@@ -95,15 +95,6 @@ export default function OraculoSupabase() {
   };
 
   const handleConsultation = async () => {
-    if (!isAuthenticated) {
-      toast({
-        title: "Acesso requerido",
-        description: "Faça login para consultar o oráculo",
-        variant: "destructive",
-      });
-      return;
-    }
-
     if (!question.trim()) {
       toast({
         title: "Pergunta necessária",
@@ -114,10 +105,10 @@ export default function OraculoSupabase() {
     }
 
     const oracle = oracleTypes.find(o => o.id === selectedOracle);
-    if (!oracle || !canAccessOracle(oracle.level)) {
+    if (!oracle) {
       toast({
-        title: "Acesso restrito",
-        description: `Este oráculo requer iniciação de nível ${oracle?.level}`,
+        title: "Erro no oráculo",
+        description: "Tipo de oráculo não encontrado",
         variant: "destructive",
       });
       return;
@@ -158,13 +149,19 @@ export default function OraculoSupabase() {
           break;
       }
 
-      // Save consultation to Supabase
-      await createConsultation.mutateAsync({
-        user_id: user!.id,
-        type: selectedOracle,
-        question: question.trim(),
-        result
-      });
+      // Save consultation to Supabase if user is authenticated
+      if (isAuthenticated && user) {
+        try {
+          await createConsultation.mutateAsync({
+            user_id: user.id,
+            type: selectedOracle,
+            question: question.trim(),
+            result
+          });
+        } catch (error) {
+          console.log('Could not save consultation to history:', error);
+        }
+      }
 
       setCurrentResult(result);
       toast({
