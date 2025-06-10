@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Feather, Share2, Instagram, Facebook, Twitter, Download, Sparkles, Clock, Image as ImageIcon, RefreshCw } from "lucide-react";
+import { Feather, Share2, Instagram, Facebook, Twitter, Download, Clock, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,7 +28,7 @@ export default function VozDaPluma() {
   const [todayContent, setTodayContent] = useState<DailyContent | null>(null);
   const [recentContent, setRecentContent] = useState<DailyContent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isGenerating, setIsGenerating] = useState(false);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Carrega conteúdo do dia ao carregar a página
@@ -60,27 +60,7 @@ export default function VozDaPluma() {
     }
   };
 
-  const generateNewContent = async () => {
-    setIsGenerating(true);
-    try {
-      const response = await apiRequest('POST', '/api/voz-pluma/generate');
-      setTodayContent(response);
-      await loadRecentContent();
-      
-      toast({
-        title: "Novo conteúdo gerado!",
-        description: "A Voz da Pluma trouxe novas revelações místicas.",
-      });
-    } catch (error) {
-      toast({
-        title: "Erro na manifestação",
-        description: "Não foi possível gerar novo conteúdo no momento.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+
 
   const generateContentImage = async (content: DailyContent): Promise<string> => {
     const canvas = canvasRef.current;
@@ -312,23 +292,9 @@ export default function VozDaPluma() {
             Revelações Matinais Canalizadas pelas Correntes Abissais
           </p>
           
-          <Button 
-            onClick={generateNewContent}
-            disabled={isGenerating}
-            className="bg-amber-600 hover:bg-amber-700 text-black font-semibold"
-          >
-            {isGenerating ? (
-              <>
-                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                Canalizando...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4 mr-2" />
-                Gerar Novo Conteúdo
-              </>
-            )}
-          </Button>
+          <div className="text-amber-300/80 text-sm">
+            Conteúdo gerado automaticamente todas as manhãs às 7h
+          </div>
         </div>
 
         {/* Conteúdo Principal de Hoje */}
