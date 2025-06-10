@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import multer from 'multer';
 import { temploAI } from './ai-service';
 import { supabase } from './supabase-client';
-import { supabaseAdmin } from './supabase-admin';
+import { supabaseAdmin } from './supabase-client';
 import { registerAdminRoutes } from './admin-routes';
 import { setupAdminRoutes } from './admin-system';
 import { vozPlumaScheduler } from './scheduler';

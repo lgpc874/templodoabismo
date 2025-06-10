@@ -1,6 +1,6 @@
 import { Request, Response, Express } from 'express';
 import { eq } from 'drizzle-orm';
-import { supabaseAdmin } from './supabase-admin';
+import { supabaseAdmin } from './supabase-client';
 import { sitePages, educationalCourses, sacredGrimoires, users } from '../shared/schema';
 
 async function requireAuth(req: any, res: Response, next: any) {

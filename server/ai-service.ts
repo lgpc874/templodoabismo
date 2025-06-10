@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { supabaseAdmin } from "./supabase-admin";
+import { supabaseAdmin } from "./supabase-client";
 
 const openai = process.env.OPENAI_API_KEY ? new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

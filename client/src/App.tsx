@@ -24,6 +24,7 @@ import Gnosis from "@/pages/blog-new";
 
 
 import Register from "@/pages/register";
+import Cursos from "@/pages/cursos";
 import OracleTest from "@/pages/oracle-test";
 import OracleTarot from "./pages/oracle-tarot";
 import OracleMirror from "./pages/oracle-mirror";
