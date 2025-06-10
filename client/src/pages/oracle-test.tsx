@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Eye, Flame, Runes, Sparkles, MessageCircle } from 'lucide-react';
+import { Loader2, Eye, Flame, Zap, Sparkles, MessageCircle } from 'lucide-react';
 
 interface OracleResult {
   cards?: string[];
@@ -26,7 +26,7 @@ export default function OracleTest() {
   const oracleTypes = [
     { value: 'tarot', label: 'Leitura de Tarô', icon: Sparkles },
     { value: 'mirror', label: 'Espelho do Abismo', icon: Eye },
-    { value: 'runes', label: 'Runas Ancestrais', icon: Runes },
+    { value: 'runes', label: 'Runas Ancestrais', icon: Zap },
     { value: 'fire', label: 'Chamas Reveladoras', icon: Flame },
     { value: 'voice', label: 'Voz Abissal', icon: MessageCircle }
   ];
