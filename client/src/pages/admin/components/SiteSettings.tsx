@@ -12,6 +12,24 @@ import { Settings, Globe, Shield, Zap, Database, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
+interface SystemInfo {
+  status: string;
+  uptime: number;
+  memory_usage: number;
+  disk_usage: number;
+  node_version: string;
+  app_version: string;
+  database_type: string;
+  environment: string;
+}
+
+interface SettingsData {
+  general?: any;
+  appearance?: any;
+  security?: any;
+  content?: any;
+}
+
 export function SiteSettings() {
   const [generalSettings, setGeneralSettings] = useState({
     site_title: "Templo do Abismo",
@@ -58,7 +76,7 @@ export function SiteSettings() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: currentSettings } = useQuery({
+  const { data: currentSettings } = useQuery<SettingsData>({
     queryKey: ["/api/admin/site-settings"]
   });
 
@@ -72,7 +90,7 @@ export function SiteSettings() {
     }
   }, [currentSettings]);
 
-  const { data: systemInfo } = useQuery({
+  const { data: systemInfo } = useQuery<SystemInfo>({
     queryKey: ["/api/admin/system-info"],
   });
 

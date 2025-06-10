@@ -15,6 +15,7 @@ interface ChatMessage {
   timestamp: Date;
   oracleType?: string;
   entityName?: string;
+  isPremium?: boolean;
 }
 
 export default function OracleChat() {
