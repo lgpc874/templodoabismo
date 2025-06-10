@@ -23,7 +23,7 @@ import {
   Save,
   TestTube,
   Wand2,
-  Crystal,
+  Gem,
   Flame,
   Eye,
   Scroll,
@@ -49,7 +49,7 @@ import {
   PieChart,
   DollarSign,
   CreditCard,
-  PaypalIcon,
+
   ArrowUp,
   ArrowDown,
   RefreshCw,
@@ -326,7 +326,7 @@ export default function AdminControl() {
     };
     
     if (selectedPage) {
-      pageData.id = selectedPage.id;
+      (pageData as any).id = selectedPage.id;
     }
     
     savePageMutation.mutate(pageData);
@@ -345,7 +345,7 @@ export default function AdminControl() {
     };
     
     if (selectedCourse) {
-      courseData.id = selectedCourse.id;
+      (courseData as any).id = selectedCourse.id;
     }
     
     saveCourseMutation.mutate(courseData);
@@ -364,7 +364,7 @@ export default function AdminControl() {
     };
     
     if (selectedGrimoire) {
-      grimoireData.id = selectedGrimoire.id;
+      (grimoireData as any).id = selectedGrimoire.id;
     }
     
     saveGrimoireMutation.mutate(grimoireData);
@@ -372,7 +372,7 @@ export default function AdminControl() {
 
   useEffect(() => {
     if (oracleSettingsData) {
-      setOracleSettings(oracleSettingsData);
+      setOracleSettings(oracleSettingsData as OracleSettings[]);
     }
   }, [oracleSettingsData]);
 
@@ -432,7 +432,7 @@ export default function AdminControl() {
                 Grimórios
               </TabsTrigger>
               <TabsTrigger value="oracles" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-300">
-                <Crystal className="w-4 h-4 mr-1" />
+                <Gem className="w-4 h-4 mr-1" />
                 Oráculos
               </TabsTrigger>
               <TabsTrigger value="users" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-300">
@@ -542,7 +542,7 @@ export default function AdminControl() {
               <Card className="bg-black/40 border border-amber-500/20">
                 <CardHeader>
                   <CardTitle className="text-amber-300 flex items-center">
-                    <Crystal className="w-5 h-5 mr-2" />
+                    <Gem className="w-5 h-5 mr-2" />
                     Controle dos Sistemas Oraculares
                   </CardTitle>
                 </CardHeader>
