@@ -120,8 +120,8 @@ const Header: React.FC = () => {
             })}
           </nav>
 
-          {/* User Menu */}
-          <div className="flex items-center space-x-4">
+          {/* Desktop User Menu - Hidden on mobile */}
+          <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -167,7 +167,7 @@ const Header: React.FC = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="hidden md:flex items-center space-x-2">
+              <div className="flex items-center space-x-2">
                 <Link href="/login">
                   <Button 
                     variant="ghost" 
