@@ -10,47 +10,39 @@ const oracleTypes = [
     description: 'Consulte as cartas ancestrais que revelam os caminhos do destino',
     icon: Gem,
     color: 'from-purple-600 to-indigo-600',
-    route: '/oraculo/tarot'
+    route: '/oraculo/ritual/tarot'
   },
   {
     id: 'mirror',
     name: 'Espelho do Abismo',
-    description: 'Contemple as verdades ocultas em seu reflexo interior',
+    description: 'Converse diretamente com Speculum, o Refletor das Profundezas',
     icon: Search,
     color: 'from-blue-600 to-cyan-600',
-    route: '/oraculo/espelho'
+    route: '/oraculo/ritual/espelho'
   },
   {
     id: 'runes',
     name: 'Runas Ancestrais',
-    description: 'Decifre os símbolos nórdicos que sussurram sabedoria antiga',
+    description: 'Dialogue com Runicus, o Escriba das Runas Primordiais',
     icon: FileText,
     color: 'from-amber-600 to-orange-600',
-    route: '/oraculo/runas'
+    route: '/oraculo/ritual/runas'
   },
   {
     id: 'fire',
     name: 'Chamas Reveladoras',
-    description: 'Vislumbre visões nas labaredas do fogo sagrado',
+    description: 'Converse com Ignis, o Senhor das Chamas que Purificam',
     icon: Flame,
     color: 'from-red-600 to-rose-600',
-    route: '/oraculo/fogo'
+    route: '/oraculo/ritual/fogo'
   },
   {
     id: 'voice',
     name: 'Voz do Abismo',
-    description: 'Escute os sussurros das profundezas primordiais',
+    description: 'Dialogue com Abyssos, a Voz Primordial das Profundezas',
     icon: Eye,
     color: 'from-gray-600 to-slate-700',
-    route: '/oraculo/voz'
-  },
-  {
-    id: 'chat',
-    name: 'Oráculo Conversacional',
-    description: 'Dialogue diretamente com as entidades ancestrais através do chat místico',
-    icon: MessageCircle,
-    color: 'from-emerald-600 to-teal-600',
-    route: '/oraculo/chat'
+    route: '/oraculo/ritual/voz'
   }
 ];
 

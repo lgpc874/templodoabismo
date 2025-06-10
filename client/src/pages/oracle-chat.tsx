@@ -13,7 +13,8 @@ interface ChatMessage {
   type: 'user' | 'oracle';
   content: string;
   timestamp: Date;
-  isPremium?: boolean;
+  oracleType?: string;
+  entityName?: string;
 }
 
 export default function OracleChat() {

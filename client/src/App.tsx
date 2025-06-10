@@ -35,7 +35,7 @@ import OracleMirror from "./pages/oracle-mirror";
 import OracleRunes from "./pages/oracle-runes";
 import OracleFire from "./pages/oracle-fire";
 import OracleVoice from "./pages/oracle-voice";
-import OracleChat from "./pages/oracle-chat";
+import OracleRitualChat from "./pages/oracle-ritual-chat";
 
 function Router() {
   return (
@@ -63,12 +63,7 @@ function Router() {
           <Route path="/gnosis" component={Gnosis} />
           <Route path="/liber-prohibitus" component={LiberProhibitus} />
           <Route path="/oracle-test" component={OracleTest} />
-          <Route path="/oraculo/tarot" component={OracleTarot} />
-          <Route path="/oraculo/espelho" component={OracleMirror} />
-          <Route path="/oraculo/runas" component={OracleRunes} />
-          <Route path="/oraculo/fogo" component={OracleFire} />
-          <Route path="/oraculo/voz" component={OracleVoice} />
-          <Route path="/oraculo/chat" component={OracleChat} />
+          <Route path="/oraculo/ritual/:type" component={OracleRitualChat} />
           <Route path="/setup-admin" component={SetupAdmin} />
           <Route path="/emergency-admin" component={EmergencyAdmin} />
           <Route path="/admin-login" component={AdminLogin} />
