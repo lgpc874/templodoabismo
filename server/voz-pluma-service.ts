@@ -1,4 +1,4 @@
-import { supabaseAdmin } from './supabase-admin';
+import { supabaseAdmin } from './supabase-client';
 import OpenAI from 'openai';
 import type { VozPlumaManifestation, InsertVozPlumaManifestation } from '@shared/schema-fixed';
 
