@@ -21,14 +21,13 @@ async function testVozPlumaDatabase() {
   try {
     // 1. Test basic connection
     console.log('1. Testing Supabase connection...');
-    const { data: tables, error: tablesError } = await supabase
-      .from('information_schema.tables')
-      .select('table_name')
-      .eq('table_schema', 'public')
+    const { data: testData, error: connectionError } = await supabase
+      .from('voz_pluma_manifestations')
+      .select('count')
       .limit(1);
     
-    if (tablesError) {
-      console.error('❌ Connection failed:', tablesError.message);
+    if (connectionError) {
+      console.error('❌ Connection failed:', connectionError.message);
       return;
     }
     console.log('✅ Supabase connection successful');

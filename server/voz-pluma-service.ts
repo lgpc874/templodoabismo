@@ -65,8 +65,7 @@ export class VozPlumaService {
         title: result.title || `Manifestação ${time}`,
         content: result.content || 'Conteúdo em preparação...',
         author: result.author || 'Escriba do Templo',
-        posted_date: today,
-        is_current: true
+        posted_date: today
       };
 
     } catch (error) {
