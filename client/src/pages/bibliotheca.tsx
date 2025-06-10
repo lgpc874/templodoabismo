@@ -199,7 +199,7 @@ export default function Bibliotheca() {
             </h3>
             <p className="text-gray-300">
               A biblioteca está sendo preparada com conteúdo autêntico. 
-              Novos grimórios serão adicionados em breve pelo sistema administrativo.
+              Novos grimórios serão adicionados em breve pelo Magus do Templo.
             </p>
           </div>
         )}
