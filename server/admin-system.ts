@@ -2,6 +2,14 @@ import { supabase } from './supabase-client';
 import { temploAI } from './ai-service';
 import { voxPlumaAI } from './ai-vox-service';
 import type { Express, Request, Response } from 'express';
+
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+    email?: string;
+    [key: string]: any;
+  };
+}
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -142,7 +150,7 @@ export function setupAdminRoutes(app: Express) {
     }
   });
 
-  app.post('/api/admin/pages', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+  app.post('/api/admin/pages', requireAuth, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { title, content, status = 'draft', featured_image } = req.body;
       const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -237,7 +245,7 @@ export function setupAdminRoutes(app: Express) {
     }
   });
 
-  app.post('/api/admin/courses', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+  app.post('/api/admin/courses', requireAuth, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { 
         title, 
@@ -386,7 +394,7 @@ export function setupAdminRoutes(app: Express) {
   });
 
   // ============ UPLOAD DE IMAGENS ============
-  app.post('/api/admin/upload', requireAuth, requireAdmin, upload.single('image'), async (req: Request, res: Response) => {
+  app.post('/api/admin/upload', requireAuth, requireAdmin, upload.single('image'), async (req: AuthenticatedRequest, res: Response) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: 'Nenhum arquivo enviado' });
