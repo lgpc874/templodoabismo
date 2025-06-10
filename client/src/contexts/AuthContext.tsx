@@ -198,10 +198,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         setUser(userData);
         setSupabaseUser(data.user);
-        
-        // Get the user data from backend
-        const userData = await backendResponse.json();
-        setUser(userData);
         return true;
       }
       
