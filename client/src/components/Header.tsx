@@ -4,7 +4,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { 
   LogOut, 
+  LogIn,
   User, 
+  UserPlus,
   Settings, 
   Home,
   Book,
@@ -235,7 +237,23 @@ const Header: React.FC = () => {
                     <span className="text-base font-medium">Sair</span>
                   </button>
                 </div>
+              ) : (
+                <div className="pt-3 border-t border-amber-800/20 space-y-2">
+                  <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="flex items-center space-x-3 w-full px-3 py-3 rounded-md text-gray-300 hover:text-amber-400 hover:bg-amber-900/20 transition-all duration-200">
+                      <User className="w-5 h-5" />
+                      <span className="text-base font-medium">Entrar</span>
+                    </button>
+                  </Link>
+                  <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="flex items-center space-x-3 w-full px-3 py-3 rounded-md text-gray-300 hover:text-amber-400 hover:bg-amber-900/20 transition-all duration-200">
+                      <User className="w-5 h-5" />
+                      <span className="text-base font-medium">Registrar</span>
+                    </button>
+                  </Link>
+                </div>
               )}
+              
             </div>
           </div>
         )}

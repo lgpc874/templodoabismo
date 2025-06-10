@@ -76,144 +76,224 @@ export default function OracleTest() {
     if (!result) return null;
 
     return (
-      <Card className="mt-6 bg-black/40 border-red-900/30">
-        <CardHeader>
-          <CardTitle className="text-red-400">Revelação do Oracle</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {result.cards && (
-            <div>
-              <h4 className="font-semibold text-red-300 mb-2">Cartas Reveladas:</h4>
-              <div className="flex flex-wrap gap-2">
-                {result.cards.map((card, index) => (
-                  <span key={index} className="bg-red-900/20 px-3 py-1 rounded text-red-200 text-sm">
-                    {card}
-                  </span>
-                ))}
+      <div className="floating-card mt-8 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+        <div className="p-6">
+          <h3 className="text-2xl font-cinzel-decorative text-amber-400 mb-6">
+            Revelação do Oracle
+          </h3>
+          
+          <div className="space-y-6">
+            {result.cards && (
+              <div>
+                <h4 className="font-semibold text-amber-300 mb-3">Cartas Reveladas:</h4>
+                <div className="flex flex-wrap gap-2">
+                  {result.cards.map((card, index) => (
+                    <span key={index} className="bg-amber-900/20 px-3 py-1 rounded text-amber-200 text-sm">
+                      {card}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {result.interpretation && (
-            <div>
-              <h4 className="font-semibold text-red-300 mb-2">Interpretação:</h4>
-              <p className="text-red-100 leading-relaxed">{result.interpretation}</p>
-            </div>
-          )}
-
-          {result.reflection && (
-            <div>
-              <h4 className="font-semibold text-red-300 mb-2">Reflexão do Espelho:</h4>
-              <p className="text-red-100 leading-relaxed">{result.reflection}</p>
-            </div>
-          )}
-
-          {result.runes && (
-            <div>
-              <h4 className="font-semibold text-red-300 mb-2">Runas Reveladas:</h4>
-              <div className="flex flex-wrap gap-2 mb-3">
-                {result.runes.map((rune, index) => (
-                  <span key={index} className="bg-red-900/20 px-3 py-1 rounded text-red-200 text-sm">
-                    {rune}
-                  </span>
-                ))}
+            {result.interpretation && (
+              <div>
+                <h4 className="font-semibold text-amber-300 mb-3">Interpretação:</h4>
+                <p className="text-gray-300 leading-relaxed">{result.interpretation}</p>
               </div>
-              {result.meaning && (
-                <p className="text-red-100 leading-relaxed">{result.meaning}</p>
-              )}
-            </div>
-          )}
+            )}
 
-          {result.flames && (
-            <div>
-              <h4 className="font-semibold text-red-300 mb-2">Visão das Chamas:</h4>
-              <p className="text-red-100 leading-relaxed">{result.flames}</p>
-            </div>
-          )}
+            {result.reflection && (
+              <div>
+                <h4 className="font-semibold text-amber-300 mb-3">Reflexão do Espelho:</h4>
+                <p className="text-gray-300 leading-relaxed">{result.reflection}</p>
+              </div>
+            )}
 
-          {result.voice && (
-            <div>
-              <h4 className="font-semibold text-red-300 mb-2">Voz do Abismo:</h4>
-              <p className="text-red-100 leading-relaxed italic">{result.voice}</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            {result.runes && (
+              <div>
+                <h4 className="font-semibold text-amber-300 mb-3">Runas Reveladas:</h4>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {result.runes.map((rune, index) => (
+                    <span key={index} className="bg-amber-900/20 px-3 py-1 rounded text-amber-200 text-sm">
+                      {rune}
+                    </span>
+                  ))}
+                </div>
+                {result.meaning && (
+                  <p className="text-gray-300 leading-relaxed">{result.meaning}</p>
+                )}
+              </div>
+            )}
+
+            {result.flames && (
+              <div>
+                <h4 className="font-semibold text-amber-300 mb-3">Visão das Chamas:</h4>
+                <p className="text-gray-300 leading-relaxed">{result.flames}</p>
+              </div>
+            )}
+
+            {result.voice && (
+              <div>
+                <h4 className="font-semibold text-amber-300 mb-3">Voz do Abismo:</h4>
+                <p className="text-gray-300 leading-relaxed italic">{result.voice}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     );
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-red-950/20 to-black p-6">
-      <div className="max-w-2xl mx-auto">
-        <Card className="bg-black/60 border-red-900/50">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-red-400">Teste do Oracle IA</CardTitle>
-            <CardDescription className="text-red-200">
-              Teste direto das funcionalidades de inteligência artificial do Oracle
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-red-300 mb-2">
-                Tipo de Consulta
-              </label>
-              <Select value={oracleType} onValueChange={setOracleType}>
-                <SelectTrigger className="bg-black/40 border-red-800/50 text-red-100">
-                  <SelectValue placeholder="Escolha o tipo de consulta" />
-                </SelectTrigger>
-                <SelectContent className="bg-black border-red-800/50">
-                  {oracleTypes.map((type) => {
-                    const Icon = type.icon;
-                    return (
-                      <SelectItem key={type.value} value={type.value} className="text-red-100 focus:bg-red-900/20">
-                        <div className="flex items-center gap-2">
-                          <Icon className="w-4 h-4" />
-                          {type.label}
-                        </div>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Fixed Central Rotating Seal */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <div className="rotating-seal w-96 h-96 opacity-20">
+          <img 
+            src="/seal.png" 
+            alt="Selo do Templo do Abismo" 
+            className="w-full h-full object-contain filter drop-shadow-lg"
+          />
+        </div>
+      </div>
 
-            <div>
-              <label className="block text-sm font-medium text-red-300 mb-2">
-                Sua Pergunta
-              </label>
-              <Textarea
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                placeholder="Faça sua pergunta ao Oracle..."
-                className="bg-black/40 border-red-800/50 text-red-100 placeholder:text-red-400/60"
-                rows={4}
-              />
-            </div>
+      {/* Mystical floating particles */}
+      <div className="fixed inset-0 overflow-hidden z-0">
+        <div className="mystical-particles"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+      </div>
 
-            {error && (
-              <div className="bg-red-900/20 border border-red-700 text-red-200 px-4 py-3 rounded">
-                {error}
+      {/* Main content */}
+      <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-4 pt-20">
+        {/* Hero Section */}
+        <div className="text-center mb-12 max-w-4xl">
+          <div className="mb-8">
+            <div className="text-amber-400 text-6xl mb-4">🔮</div>
+            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
+              TESTE DO ORACLE IA
+            </h1>
+            <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
+              <span>☿</span>
+              <span>⚹</span>
+              <span>𖤍</span>
+              <span>⚹</span>
+              <span>☿</span>
+            </div>
+          </div>
+          
+          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
+              Sistema de Teste de Consultas Oraculares
+            </h2>
+            
+            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
+              Interface de <strong className="text-amber-400">desenvolvimento</strong> para testar as 
+              <strong className="text-red-400"> consultas místicas</strong> e verificar respostas da IA.
+            </p>
+            
+            <div className="text-center">
+              <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+              <p className="text-lg font-cinzel-decorative text-amber-300">
+                "Veritas per Experimentum"
+              </p>
+              <p className="text-sm text-gray-400 font-crimson italic mt-2">
+                Verdade através do experimento
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Oracle Test Interface */}
+        <div className="floating-card max-w-4xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <div className="p-8">
+            <h3 className="text-2xl font-cinzel-decorative text-amber-300 mb-6">
+              Interface de Teste
+            </h3>
+
+            <div className="space-y-6">
+              {/* Oracle Type Selection */}
+              <div>
+                <label className="block text-amber-300 font-medium mb-3">
+                  Tipo de Consulta
+                </label>
+                <Select value={oracleType} onValueChange={setOracleType}>
+                  <SelectTrigger className="bg-black/40 border-amber-500/30 text-gray-300">
+                    <SelectValue placeholder="Escolha o tipo de consulta..." />
+                  </SelectTrigger>
+                  <SelectContent className="bg-black/90 border-amber-500/30">
+                    {oracleTypes.map((type) => {
+                      const Icon = type.icon;
+                      return (
+                        <SelectItem key={type.value} value={type.value}>
+                          <div className="flex items-center space-x-2">
+                            <Icon className="w-4 h-4" />
+                            <span>{type.label}</span>
+                          </div>
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
               </div>
-            )}
 
-            <Button
-              onClick={handleConsultation}
-              disabled={isLoading || !question.trim() || !oracleType}
-              className="w-full bg-red-900 hover:bg-red-800 text-white"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Consultando o Oracle...
-                </>
-              ) : (
-                'Consultar Oracle'
+              {/* Question Input */}
+              <div>
+                <label className="block text-amber-300 font-medium mb-3">
+                  Sua Pergunta
+                </label>
+                <Textarea
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  placeholder="Digite sua pergunta para o Oracle..."
+                  className="bg-black/40 border-amber-500/30 text-gray-300 placeholder:text-gray-500 min-h-[100px]"
+                />
+              </div>
+
+              {/* Error Display */}
+              {error && (
+                <div className="bg-red-900/20 border border-red-500/30 rounded p-4">
+                  <p className="text-red-300">{error}</p>
+                </div>
               )}
-            </Button>
 
-            {renderResult()}
-          </CardContent>
-        </Card>
+              {/* Submit Button */}
+              <Button
+                onClick={handleConsultation}
+                disabled={isLoading || !question.trim() || !oracleType}
+                className="w-full bg-amber-600 hover:bg-amber-700 text-black font-medium py-3"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Consultando Oracle...
+                  </>
+                ) : (
+                  <>
+                    <Eye className="w-5 h-5 mr-2" />
+                    Consultar Oracle
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Results */}
+        {renderResult()}
+
+        {/* Development Note */}
+        <div className="floating-card max-w-2xl mx-auto mt-12 p-8 bg-amber-900/20 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <div className="text-center">
+            <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+            <p className="text-lg text-gray-300 italic leading-relaxed mb-4">
+              "Esta interface permite testar e validar as respostas do sistema de IA antes da implementação final"
+            </p>
+            <p className="text-amber-400 font-semibold">
+              — Sistema de Desenvolvimento
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

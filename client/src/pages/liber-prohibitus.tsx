@@ -1,6 +1,4 @@
 import { useState } from "react";
-import Navigation from "@/components/navigation";
-import Footer from "@/components/footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -132,232 +130,187 @@ export default function LiberProhibitus() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <Navigation />
-      
+      {/* Fixed Central Rotating Seal */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <div className="rotating-seal w-96 h-96 opacity-20">
+          <img 
+            src="/seal.png" 
+            alt="Selo do Templo do Abismo" 
+            className="w-full h-full object-contain filter drop-shadow-lg"
+          />
+        </div>
+      </div>
+
+      {/* Mystical floating particles */}
       <div className="fixed inset-0 overflow-hidden z-0">
         <div className="mystical-particles"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
       </div>
-      
-      <div className="relative z-10 container mx-auto px-4 py-24">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-titles text-red-500 mb-4 flame-text-clean">
-            LIBER PROHIBITUS
-          </h1>
-          <p className="text-xl text-gray-200 font-serif">
-            Conhecimentos Restritos aos Mais Preparados
-          </p>
+
+      {/* Main content */}
+      <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-4 pt-20">
+        {/* Hero Section */}
+        <div className="text-center mb-12 max-w-4xl">
+          <div className="mb-8">
+            <div className="text-red-500 text-6xl mb-4">💀</div>
+            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-red-500 mystical-glow mb-6 floating-title">
+              LIBER PROHIBITUS
+            </h1>
+            <div className="flex justify-center items-center space-x-8 text-red-400 text-3xl mb-6">
+              <span>☿</span>
+              <span>⚹</span>
+              <span>𖤍</span>
+              <span>⚹</span>
+              <span>☿</span>
+            </div>
+          </div>
+          
+          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-red-500/20 rounded-xl">
+            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-red-300 mb-6 floating-title-slow">
+              Conhecimentos Restritos aos Mais Preparados
+            </h2>
+            
+            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
+              Textos <strong className="text-red-400">extremamente perigosos</strong> que foram banidos por 
+              <strong className="text-amber-400"> eras inteiras</strong>. Acesso restrito apenas para iniciados de alto nível.
+            </p>
+            
+            <div className="text-center">
+              <div className="text-red-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+              <p className="text-lg font-cinzel-decorative text-red-300">
+                "Scientia Potentia Est"
+              </p>
+              <p className="text-sm text-gray-400 font-crimson italic mt-2">
+                Conhecimento é poder
+              </p>
+            </div>
+          </div>
         </div>
 
-        {/* Warning Banner */}
-        <Card className="bg-red-950/20 border-red-500/50 max-w-4xl mx-auto mb-12">
-          <CardContent className="py-6">
-            <div className="flex items-center justify-center mb-4">
-              <AlertTriangle className="w-8 h-8 text-red-500 mr-3" />
-              <h2 className="text-2xl font-bold text-red-500">AVISO CRÍTICO</h2>
-            </div>
-            <div className="text-center space-y-2 text-gray-200">
-              <p className="font-semibold">
-                Os textos contidos no Liber Prohibitus são EXTREMAMENTE PERIGOSOS
-              </p>
-              <p className="text-sm">
-                • Podem causar danos psicológicos permanentes<br/>
-                • Consequências espirituais irreversíveis<br/>
-                • Risco de possessão ou fragmentação da alma<br/>
-                • Acesso restrito apenas a Iniciados de Nível 6+
-              </p>
-              <p className="text-red-400 font-bold text-lg mt-4">
-                PROSSIGA SOB SUA PRÓPRIA RESPONSABILIDADE
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {!user ? (
-          <Card className="abyssal-card-transparent max-w-md mx-auto">
-            <CardHeader className="text-center">
-              <Lock className="w-16 h-16 text-red-500 mx-auto mb-4" />
-              <CardTitle className="text-2xl font-titles text-red-500">Acesso Negado</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-gray-200 mb-6">
-                O Liber Prohibitus requer autenticação no templo para verificar seu nível de iniciação.
-              </p>
-              <Button 
-                className="bg-red-600 hover:bg-red-700 text-white font-bold"
-                onClick={() => window.location.href = '/login'}
-              >
-                Entrar no Templo
-              </Button>
-            </CardContent>
-          </Card>
-        ) : !canAccess ? (
-          <Card className="abyssal-card-transparent max-w-md mx-auto">
-            <CardHeader className="text-center">
+        {/* Access Warning */}
+        {!canAccess && (
+          <div className="floating-card max-w-4xl w-full mb-8 bg-red-900/20 backdrop-blur-lg border border-red-500/30 rounded-xl">
+            <div className="p-6 text-center">
               <Shield className="w-16 h-16 text-red-500 mx-auto mb-4" />
-              <CardTitle className="text-2xl font-titles text-red-500">Nível Insuficiente</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-gray-200 mb-4">
-                O Liber Prohibitus requer nível 6 de iniciação ou superior.
+              <h3 className="text-2xl font-cinzel-decorative text-red-400 mb-4">
+                Acesso Restrito
+              </h3>
+              <p className="text-gray-300 mb-4">
+                Esta seção contém conhecimentos perigosos. Você precisa atingir pelo menos o nível 6 de iniciação.
               </p>
-              <p className="text-red-400 mb-6">
-                Seu nível atual: {user.initiation_level}
+              <p className="text-sm text-gray-500">
+                Seu nível atual: {user?.initiation_level || 0}
               </p>
-              <div className="space-y-3">
-                <Button 
-                  variant="outline"
-                  className="w-full border-yellow-600 text-yellow-600"
-                  onClick={() => window.location.href = '/courses'}
-                >
-                  Avançar na Iniciação
-                </Button>
-                <p className="text-xs text-gray-400">
-                  Recomendamos fortemente alcançar o nível máximo antes de tentar acessar estes textos
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <>
-            {/* Access Level Display */}
-            <Card className="abyssal-card-transparent max-w-2xl mx-auto mb-12">
-              <CardContent className="text-center py-6">
-                <Crown className="w-12 h-12 text-purple-400 mx-auto mb-4" />
-                <h3 className="text-xl font-titles text-yellow-600 mb-2">
-                  Acesso Autorizado
-                </h3>
-                <p className="text-gray-300 mb-4">
-                  Nível de Iniciação: {user.initiation_level} / 7
-                </p>
-                <div className="flex items-center justify-center space-x-6 text-sm">
-                  <div className="text-center">
-                    <div className="text-lg font-bold text-green-400">
-                      {prohibitedTexts.filter(t => canAccessDocument(t.requiredLevel)).length}
-                    </div>
-                    <div className="text-gray-400">Textos Acessíveis</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            </div>
+          </div>
+        )}
 
-            {/* Prohibited Texts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {prohibitedTexts.map((text) => {
-                const DangerIcon = getDangerIcon(text.dangerLevel);
-                const canAccessThis = canAccessDocument(text.requiredLevel);
-                
-                return (
-                  <Card key={text.id} className="bg-red-950/10 border-red-800/30 h-full">
-                    <CardHeader>
-                      <div className="flex items-start justify-between mb-3">
-                        <Badge 
-                          variant="outline" 
-                          className={`border-red-500/50 ${getDangerColor(text.dangerLevel)}`}
-                        >
-                          <DangerIcon className="w-3 h-3 mr-1" />
-                          {text.dangerLevel}
-                        </Badge>
-                        <Badge 
-                          variant={canAccessThis ? "default" : "secondary"}
-                          className={canAccessThis ? "bg-green-600" : "bg-red-600"}
-                        >
-                          Nível {text.requiredLevel}
-                        </Badge>
-                      </div>
-                      
-                      <CardTitle className="text-xl font-titles text-red-400 mb-2">
-                        {text.title}
-                      </CardTitle>
-                      
-                      <CardDescription className="text-gray-300">
-                        Autor: {text.author}
-                      </CardDescription>
-                    </CardHeader>
-                    
-                    <CardContent>
-                      <div className="space-y-4">
-                        <p className="text-gray-200 text-sm leading-relaxed">
-                          {text.description}
-                        </p>
-                        
-                        <div className="bg-red-950/20 border border-red-800/30 rounded-lg p-3">
-                          <div className="flex items-center mb-2">
-                            <AlertTriangle className="w-4 h-4 text-red-400 mr-2" />
-                            <span className="text-red-400 font-semibold text-sm">Aviso:</span>
+        {/* Prohibited Texts */}
+        {canAccess && (
+          <div className="floating-card max-w-6xl w-full bg-black/30 backdrop-blur-lg border border-red-500/20 rounded-xl">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-cinzel-decorative text-red-300">
+                  Textos Proibidos
+                </h3>
+                <Badge variant="outline" className="border-red-500/30 text-red-300">
+                  {prohibitedTexts.length} documentos disponíveis
+                </Badge>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {prohibitedTexts.map((doc) => {
+                  const DangerIcon = getDangerIcon(doc.dangerLevel);
+                  const canAccessDoc = canAccessDocument(doc.requiredLevel);
+                  
+                  return (
+                    <Card key={doc.id} className="bg-black/20 border-red-500/20 hover:border-red-400/40 transition-colors">
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <CardTitle className="text-red-400 text-lg leading-tight">
+                            {doc.title}
+                          </CardTitle>
+                          <div className="flex items-center">
+                            <DangerIcon className="w-5 h-5 mr-2" />
+                            <Badge className={`${getDangerColor(doc.dangerLevel)} bg-red-900/20`}>
+                              {doc.dangerLevel}
+                            </Badge>
                           </div>
-                          <p className="text-red-300 text-xs">
-                            {text.warning}
-                          </p>
                         </div>
-                        
-                        {selectedDocument === text.id ? (
-                          <div className="bg-black/50 border border-yellow-600/30 rounded-lg p-4">
-                            <h4 className="text-yellow-600 font-semibold mb-2">Conteúdo Revelado:</h4>
-                            <div className="text-gray-200 font-mono text-sm">
-                              {text.content}
-                            </div>
-                            <p className="text-xs text-gray-400 mt-2">
-                              Conteúdo parcialmente censurado por segurança
+                        <CardDescription className="text-gray-300">
+                          Por: {doc.author}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          <p className="text-gray-300 text-sm">
+                            {doc.description}
+                          </p>
+                          
+                          <div className="bg-red-900/20 p-3 rounded border border-red-500/20">
+                            <p className="text-red-300 text-sm">
+                              <strong>⚠️ Aviso:</strong> {doc.warning}
                             </p>
                           </div>
-                        ) : (
-                          <div className="flex items-center justify-between pt-4 border-t border-red-800/20">
-                            <div className="text-xl font-bold text-red-400">
-                              R$ {(text.price_brl / 100).toFixed(2)}
+
+                          <div className="flex items-center justify-between text-sm">
+                            <div className="text-gray-400">
+                              Nível requerido: {doc.requiredLevel}
                             </div>
-                            
-                            {!canAccessThis ? (
-                              <Button disabled className="opacity-50 cursor-not-allowed">
-                                <Lock className="w-4 h-4 mr-2" />
-                                Nível {text.requiredLevel} Requerido
-                              </Button>
-                            ) : (
-                              <Button 
-                                className="bg-red-600 hover:bg-red-700 text-white"
-                                onClick={() => accessDocument(text)}
-                              >
-                                <Eye className="w-4 h-4 mr-2" />
-                                Revelar Conteúdo
-                              </Button>
-                            )}
+                            <div className="text-2xl font-bold text-red-400">
+                              R$ {(doc.price_brl / 100).toFixed(2)}
+                            </div>
                           </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+
+                          {canAccessDoc ? (
+                            <Button 
+                              onClick={() => accessDocument(doc)}
+                              className="w-full bg-red-600 hover:bg-red-700 text-white"
+                            >
+                              <Lock className="w-4 h-4 mr-2" />
+                              Acessar Documento
+                            </Button>
+                          ) : (
+                            <Button 
+                              disabled 
+                              className="w-full bg-gray-800 text-gray-500"
+                            >
+                              <Shield className="w-4 h-4 mr-2" />
+                              Nível Insuficiente
+                            </Button>
+                          )}
+
+                          {selectedDocument === doc.id && (
+                            <div className="mt-4 p-4 bg-red-950/30 border border-red-500/20 rounded">
+                              <h5 className="text-red-300 font-semibold mb-2">Conteúdo:</h5>
+                              <p className="text-red-200 font-mono text-sm">
+                                {doc.content}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
             </div>
-
-            {/* Disclaimer */}
-            <Card className="bg-red-950/10 border-red-800/30 max-w-4xl mx-auto mt-16">
-              <CardContent className="py-8">
-                <div className="text-center space-y-4">
-                  <Skull className="w-12 h-12 text-red-500 mx-auto" />
-                  <h3 className="text-xl font-titles text-red-400">
-                    Isenção de Responsabilidade
-                  </h3>
-                  <div className="text-gray-300 text-sm space-y-2 max-w-2xl mx-auto">
-                    <p>
-                      O Templo do Abismo não se responsabiliza por quaisquer consequências físicas, 
-                      mentais, espirituais ou dimensionais resultantes do uso destes textos.
-                    </p>
-                    <p>
-                      Ao acessar o Liber Prohibitus, você aceita total responsabilidade por suas ações 
-                      e reconhece os riscos inerentes ao conhecimento proibido.
-                    </p>
-                    <p className="text-red-400 font-semibold">
-                      "Aquele que olha muito tempo para o abismo, o abismo também olha para ele." - Nietzsche
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </>
+          </div>
         )}
-      </div>
 
-      <Footer />
+        {/* Final Warning */}
+        <div className="floating-card max-w-2xl mx-auto mt-12 p-8 bg-red-900/20 backdrop-blur-lg border border-red-500/20 rounded-xl">
+          <div className="text-center">
+            <div className="text-red-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+            <p className="text-lg text-gray-300 italic leading-relaxed mb-4">
+              "Aqueles que buscam conhecimento proibido devem estar preparados para pagar o preço com sua própria essência"
+            </p>
+            <p className="text-red-400 font-semibold">
+              — Guardião dos Textos Sombrios
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
