@@ -148,18 +148,6 @@ export default function Navigation() {
                   Sair
                 </Button>
               </div>
-            ) : (
-              <div className="pt-4 border-t border-red-900/30">
-                <Link href="/login">
-                  <Button 
-                    variant="destructive" 
-                    className="w-full bg-red-800 hover:bg-red-700"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Entrar
-                  </Button>
-                </Link>
-              </div>
             )}
           </div>
         </div>

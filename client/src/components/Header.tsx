@@ -235,19 +235,6 @@ const Header: React.FC = () => {
                     <span className="text-base font-medium">Sair</span>
                   </button>
                 </div>
-              ) : (
-                <div className="pt-3 border-t border-amber-800/20 space-y-2">
-                  <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                    <button className="flex items-center justify-center w-full px-3 py-3 rounded-md text-gray-300 hover:text-amber-400 hover:bg-amber-900/20 transition-all duration-200">
-                      <span className="text-base font-medium">Entrar</span>
-                    </button>
-                  </Link>
-                  <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
-                    <button className="flex items-center justify-center w-full px-3 py-3 rounded-md bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 text-white transition-all duration-200">
-                      <span className="text-base font-medium">Registrar</span>
-                    </button>
-                  </Link>
-                </div>
               )}
             </div>
           </div>
