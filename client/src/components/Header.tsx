@@ -52,7 +52,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-amber-800/20 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/80">
+    <header className="sticky top-0 z-50 w-full bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/80">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-center">
           {/* Centered Logo */}
