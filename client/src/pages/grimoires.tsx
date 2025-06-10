@@ -110,10 +110,7 @@ export default function GrimoiresPage() {
   // Purchase mutation
   const purchaseMutation = useMutation({
     mutationFn: async (data: { grimoireId: number; type: string; chapterId?: number }) => {
-      return await apiRequest('/api/grimoires/purchase', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+      return await apiRequest('/api/grimoires/purchase', 'POST', data);
     },
     onSuccess: () => {
       toast({
@@ -164,8 +161,8 @@ export default function GrimoiresPage() {
   };
 
   const getUserAccess = (grimoireId: number) => {
-    if (!userAccess) return null;
-    return userAccess.find((access: UserAccess) => access.grimoire_id === grimoireId);
+    if (!userAccess || !Array.isArray(userAccess)) return null;
+    return userAccess.find((access: any) => access.grimoire_id === grimoireId);
   };
 
   const hasValidAccess = (grimoireId: number, type: string) => {
@@ -591,11 +588,11 @@ export default function GrimoiresPage() {
                   <h3 className="text-lg font-medium mb-4 text-red-400">Descrição do Grimório</h3>
                   <p className="text-gray-300 mb-6">{selectedGrimoire?.description}</p>
                   
-                  {selectedGrimoire?.enable_chapter_purchase && chapters && (
+                  {selectedGrimoire?.enable_chapter_purchase && chapters && Array.isArray(chapters) && (
                     <div>
                       <h4 className="text-md font-medium mb-3 text-purple-400">Capítulos Disponíveis:</h4>
                       <div className="space-y-2">
-                        {chapters.map((chapter: GrimoireChapter) => (
+                        {chapters.map((chapter: any) => (
                           <div key={chapter.id} className="flex justify-between items-center p-3 bg-gray-800 rounded border border-gray-700">
                             <div>
                               <h5 className="font-medium">
