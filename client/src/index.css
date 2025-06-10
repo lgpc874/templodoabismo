@@ -194,6 +194,12 @@
 }
 
 /* Efeitos Esotéricos Sutis para o Selo Central */
+.mood-templo .rotating-seal {
+  filter: 
+    drop-shadow(0 0 12px rgba(220, 38, 38, 0.25)) 
+    brightness(0.8) saturate(0.9);
+}
+
 .mood-abyssal .rotating-seal {
   filter: 
     drop-shadow(0 0 15px rgba(138, 43, 226, 0.3)) 
@@ -224,71 +230,65 @@
     brightness(1.0) saturate(1.1);
 }
 
-.mood-void .rotating-seal {
-  filter: 
-    drop-shadow(0 0 8px rgba(105, 105, 105, 0.25)) 
-    brightness(0.7) saturate(0.6);
+/* Cards Transparentes e Flutuantes */
+.mood-templo .floating-card {
+  background: 
+    linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(128, 128, 128, 0.01) 50%, rgba(64, 64, 64, 0.02) 100%),
+    rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.1),
+    inset 0 1px 10px rgba(255, 255, 255, 0.02);
 }
 
-/* Cards Esotéricos com Efeitos Sutis */
 .mood-abyssal .floating-card {
   background: 
-    linear-gradient(135deg, rgba(75, 0, 130, 0.08) 0%, rgba(138, 43, 226, 0.06) 50%, rgba(25, 25, 112, 0.05) 100%),
-    rgba(0, 0, 0, 0.85);
-  border: 1px solid rgba(138, 43, 226, 0.25);
+    linear-gradient(135deg, rgba(75, 0, 130, 0.06) 0%, rgba(138, 43, 226, 0.04) 50%, rgba(25, 25, 112, 0.03) 100%),
+    rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(138, 43, 226, 0.15);
   box-shadow: 
-    0 4px 20px rgba(75, 0, 130, 0.15),
-    inset 0 1px 10px rgba(138, 43, 226, 0.05);
+    0 4px 20px rgba(75, 0, 130, 0.1),
+    inset 0 1px 10px rgba(138, 43, 226, 0.03);
 }
 
 .mood-infernal .floating-card {
   background: 
-    linear-gradient(135deg, rgba(139, 0, 0, 0.08) 0%, rgba(178, 34, 34, 0.06) 50%, rgba(128, 0, 0, 0.05) 100%),
-    rgba(0, 0, 0, 0.85);
-  border: 1px solid rgba(139, 0, 0, 0.25);
+    linear-gradient(135deg, rgba(139, 0, 0, 0.06) 0%, rgba(178, 34, 34, 0.04) 50%, rgba(128, 0, 0, 0.03) 100%),
+    rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(139, 0, 0, 0.15);
   box-shadow: 
-    0 4px 20px rgba(139, 0, 0, 0.15),
-    inset 0 1px 10px rgba(178, 34, 34, 0.05);
+    0 4px 20px rgba(139, 0, 0, 0.1),
+    inset 0 1px 10px rgba(178, 34, 34, 0.03);
 }
 
 .mood-lunar .floating-card {
   background: 
-    linear-gradient(135deg, rgba(72, 61, 139, 0.08) 0%, rgba(123, 104, 238, 0.06) 50%, rgba(25, 25, 112, 0.05) 100%),
-    rgba(0, 0, 0, 0.85);
-  border: 1px solid rgba(72, 61, 139, 0.25);
+    linear-gradient(135deg, rgba(72, 61, 139, 0.06) 0%, rgba(123, 104, 238, 0.04) 50%, rgba(25, 25, 112, 0.03) 100%),
+    rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(72, 61, 139, 0.15);
   box-shadow: 
-    0 4px 20px rgba(72, 61, 139, 0.15),
-    inset 0 1px 10px rgba(123, 104, 238, 0.05);
+    0 4px 20px rgba(72, 61, 139, 0.1),
+    inset 0 1px 10px rgba(123, 104, 238, 0.03);
 }
 
 .mood-stellar .floating-card {
   background: 
-    linear-gradient(135deg, rgba(106, 90, 205, 0.08) 0%, rgba(147, 112, 219, 0.06) 50%, rgba(72, 61, 139, 0.05) 100%),
-    rgba(0, 0, 0, 0.85);
-  border: 1px solid rgba(106, 90, 205, 0.25);
+    linear-gradient(135deg, rgba(106, 90, 205, 0.06) 0%, rgba(147, 112, 219, 0.04) 50%, rgba(72, 61, 139, 0.03) 100%),
+    rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(106, 90, 205, 0.15);
   box-shadow: 
-    0 4px 20px rgba(106, 90, 205, 0.15),
-    inset 0 1px 10px rgba(147, 112, 219, 0.05);
+    0 4px 20px rgba(106, 90, 205, 0.1),
+    inset 0 1px 10px rgba(147, 112, 219, 0.03);
 }
 
 .mood-divine .floating-card {
   background: 
-    linear-gradient(135deg, rgba(184, 134, 11, 0.08) 0%, rgba(218, 165, 32, 0.06) 50%, rgba(139, 69, 19, 0.05) 100%),
-    rgba(0, 0, 0, 0.85);
-  border: 1px solid rgba(184, 134, 11, 0.25);
+    linear-gradient(135deg, rgba(184, 134, 11, 0.06) 0%, rgba(218, 165, 32, 0.04) 50%, rgba(139, 69, 19, 0.03) 100%),
+    rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(184, 134, 11, 0.15);
   box-shadow: 
-    0 4px 20px rgba(184, 134, 11, 0.15),
-    inset 0 1px 10px rgba(218, 165, 32, 0.05);
-}
-
-.mood-void .floating-card {
-  background: 
-    linear-gradient(135deg, rgba(105, 105, 105, 0.06) 0%, rgba(128, 128, 128, 0.04) 50%, rgba(47, 79, 79, 0.03) 100%),
-    rgba(0, 0, 0, 0.9);
-  border: 1px solid rgba(105, 105, 105, 0.2);
-  box-shadow: 
-    0 4px 20px rgba(105, 105, 105, 0.1),
-    inset 0 1px 10px rgba(128, 128, 128, 0.03);
+    0 4px 20px rgba(184, 134, 11, 0.1),
+    inset 0 1px 10px rgba(218, 165, 32, 0.03);
 }
 
 /* Selo mantém apenas rotação básica, sem animações extras */
@@ -462,56 +462,68 @@
     inset 0 0 25px rgba(234, 179, 8, 0.05);
 }
 
-/* Sistema de Ambientes Místicos Esotéricos */
+/* Efeito de Buraco Negro e Ambientes Esotéricos */
+body {
+  background: 
+    radial-gradient(circle at 50% 50%, transparent 20%, rgba(0, 0, 0, 0.4) 30%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 1) 80%),
+    radial-gradient(ellipse 200% 100% at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.95) 70%),
+    #000000;
+  transition: all 2s ease-in-out;
+}
+
+body.mood-templo {
+  background: 
+    radial-gradient(circle at 50% 50%, transparent 20%, rgba(0, 0, 0, 0.4) 30%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 1) 80%),
+    radial-gradient(ellipse 200% 100% at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.95) 70%),
+    #000000;
+  transition: all 2s ease-in-out;
+}
+
 body.mood-abyssal {
   background: 
-    radial-gradient(circle at 30% 80%, rgba(75, 0, 130, 0.15) 0%, transparent 60%),
-    radial-gradient(circle at 70% 20%, rgba(138, 43, 226, 0.12) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(25, 25, 112, 0.08) 0%, rgba(0, 0, 0, 0.95) 50%, rgba(0, 0, 0, 1) 100%);
+    radial-gradient(circle at 50% 50%, rgba(75, 0, 130, 0.15) 15%, rgba(138, 43, 226, 0.08) 25%, transparent 35%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 1) 80%),
+    radial-gradient(ellipse 200% 100% at 50% 50%, rgba(75, 0, 130, 0.1) 30%, rgba(0, 0, 0, 0.95) 70%),
+    #000000;
   transition: all 2s ease-in-out;
 }
 
 body.mood-infernal {
   background: 
-    radial-gradient(circle at 20% 30%, rgba(139, 0, 0, 0.18) 0%, transparent 60%),
-    radial-gradient(circle at 80% 70%, rgba(205, 92, 92, 0.12) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(128, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.95) 50%, rgba(0, 0, 0, 1) 100%);
+    radial-gradient(circle at 50% 50%, rgba(139, 0, 0, 0.2) 15%, rgba(220, 20, 60, 0.12) 25%, transparent 35%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 1) 80%),
+    radial-gradient(ellipse 200% 100% at 50% 50%, rgba(139, 0, 0, 0.15) 30%, rgba(0, 0, 0, 0.95) 70%),
+    #000000;
   transition: all 2s ease-in-out;
 }
 
 body.mood-lunar {
   background: 
-    radial-gradient(circle at 50% 20%, rgba(72, 61, 139, 0.15) 0%, transparent 60%),
-    radial-gradient(circle at 30% 80%, rgba(123, 104, 238, 0.1) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(25, 25, 112, 0.08) 0%, rgba(0, 0, 0, 0.95) 50%, rgba(0, 0, 0, 1) 100%);
+    radial-gradient(circle at 50% 50%, rgba(72, 61, 139, 0.18) 15%, rgba(123, 104, 238, 0.1) 25%, transparent 35%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 1) 80%),
+    radial-gradient(ellipse 200% 100% at 50% 50%, rgba(72, 61, 139, 0.12) 30%, rgba(0, 0, 0, 0.95) 70%),
+    #000000;
   transition: all 2s ease-in-out;
 }
 
 body.mood-stellar {
   background: 
-    radial-gradient(circle at 60% 40%, rgba(106, 90, 205, 0.12) 0%, transparent 60%),
-    radial-gradient(circle at 20% 80%, rgba(147, 112, 219, 0.08) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(72, 61, 139, 0.06) 0%, rgba(0, 0, 0, 0.95) 50%, rgba(0, 0, 0, 1) 100%);
+    radial-gradient(circle at 50% 50%, rgba(106, 90, 205, 0.16) 15%, rgba(147, 112, 219, 0.09) 25%, transparent 35%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 1) 80%),
+    radial-gradient(ellipse 200% 100% at 50% 50%, rgba(106, 90, 205, 0.1) 30%, rgba(0, 0, 0, 0.95) 70%),
+    #000000;
   transition: all 2s ease-in-out;
 }
 
 body.mood-divine {
   background: 
-    radial-gradient(circle at 40% 30%, rgba(184, 134, 11, 0.15) 0%, transparent 60%),
-    radial-gradient(circle at 80% 70%, rgba(218, 165, 32, 0.1) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(139, 69, 19, 0.08) 0%, rgba(0, 0, 0, 0.95) 50%, rgba(0, 0, 0, 1) 100%);
-  transition: all 2s ease-in-out;
-}
-
-body.mood-void {
-  background: 
-    radial-gradient(circle at 50% 50%, rgba(105, 105, 105, 0.08) 0%, transparent 60%),
-    radial-gradient(circle at 20% 30%, rgba(128, 128, 128, 0.05) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(47, 79, 79, 0.06) 0%, rgba(0, 0, 0, 0.98) 50%, rgba(0, 0, 0, 1) 100%);
+    radial-gradient(circle at 50% 50%, rgba(184, 134, 11, 0.2) 15%, rgba(218, 165, 32, 0.12) 25%, transparent 35%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 1) 80%),
+    radial-gradient(ellipse 200% 100% at 50% 50%, rgba(184, 134, 11, 0.15) 30%, rgba(0, 0, 0, 0.95) 70%),
+    #000000;
   transition: all 2s ease-in-out;
 }
 
 /* Partículas Místicas Esotéricas Sutis */
+.mood-templo .mystical-particles {
+  display: none;
+}
+
 .mood-abyssal .mystical-particles {
   background-image: 
     radial-gradient(1px 1px at 25px 35px, rgba(138, 43, 226, 0.3), transparent 30%),

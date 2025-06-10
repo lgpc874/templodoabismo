@@ -28,58 +28,58 @@ interface MoodOption {
 
 const moodOptions: MoodOption[] = [
   {
+    id: 'templo',
+    name: 'Templo',
+    icon: Eye,
+    description: 'Santuário principal do templo',
+    bgGradient: 'from-black to-black',
+    particleColor: 'none',
+    sealOpacity: 0.12
+  },
+  {
     id: 'abyssal',
-    name: 'Abissal',
+    name: 'Umbral Profundo',
     icon: Skull,
-    description: 'Trevas profundas do abismo',
+    description: 'Nas profundezas das trevas abissais',
     bgGradient: 'from-black via-purple-950/30 to-black',
     particleColor: 'purple',
     sealOpacity: 0.15
   },
   {
     id: 'infernal',
-    name: 'Infernal',
+    name: 'Chamas Ctônicas',
     icon: Flame,
-    description: 'Chamas ardentes do inferno',
+    description: 'Nas fornalhas do plano inferior',
     bgGradient: 'from-black via-red-950/40 to-orange-950/20',
     particleColor: 'red',
-    sealOpacity: 0.25
+    sealOpacity: 0.18
   },
   {
     id: 'lunar',
-    name: 'Lunar',
+    name: 'Lua Negra',
     icon: Moon,
-    description: 'Mistérios da lua negra',
+    description: 'Sob os véus da lua sombria',
     bgGradient: 'from-black via-blue-950/30 to-indigo-950/20',
     particleColor: 'blue',
-    sealOpacity: 0.10
+    sealOpacity: 0.14
   },
   {
     id: 'stellar',
-    name: 'Estelar',
+    name: 'Void Cósmico',
     icon: Zap,
-    description: 'Energias cósmicas ancestrais',
+    description: 'Entre as estrelas mortas do cosmos',
     bgGradient: 'from-black via-violet-950/30 to-purple-950/20',
     particleColor: 'violet',
-    sealOpacity: 0.20
+    sealOpacity: 0.16
   },
   {
     id: 'divine',
-    name: 'Divino',
+    name: 'Trono Luciferiano',
     icon: Crown,
-    description: 'Poder supremo luciferiano',
+    description: 'No poder supremo do portador da luz',
     bgGradient: 'from-black via-amber-950/30 to-yellow-950/20',
     particleColor: 'amber',
-    sealOpacity: 0.30
-  },
-  {
-    id: 'void',
-    name: 'Vazio',
-    icon: Eye,
-    description: 'Silêncio do vazio primordial',
-    bgGradient: 'from-black via-gray-950/20 to-black',
-    particleColor: 'gray',
-    sealOpacity: 0.05
+    sealOpacity: 0.20
   }
 ];
 

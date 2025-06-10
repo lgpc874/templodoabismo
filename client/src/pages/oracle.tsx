@@ -95,8 +95,8 @@ export default function Oracle() {
         ))}
       </div>
 
-      {/* Selo Central Perfeitamente Centralizado */}
-      <div className="fixed top-1/2 left-1/2 z-0" style={{transform: 'translate(-50%, -50%)'}}>
+      {/* Selo Central no Buraco Negro */}
+      <div className="fixed left-1/2 z-0" style={{top: '55%', transform: 'translate(-50%, -50%)'}}>
         {/* Outer rotating ring */}
         <div className="absolute opacity-8" style={{
           width: '32rem', 
@@ -105,7 +105,7 @@ export default function Oracle() {
           left: '50%',
           transform: 'translate(-50%, -50%)'
         }}>
-          <div className="animate-spin-slow-reverse text-amber-500/20 text-[32rem] leading-none flex items-center justify-center h-full">
+          <div className="animate-spin-slow-reverse text-amber-500/15 text-[32rem] leading-none flex items-center justify-center h-full">
             ◯
           </div>
         </div>
@@ -118,33 +118,33 @@ export default function Oracle() {
           left: '50%',
           transform: 'translate(-50%, -50%)'
         }}>
-          <div className="animate-spin-slow text-red-400/25 text-[28rem] leading-none flex items-center justify-center h-full">
+          <div className="animate-spin-slow text-red-400/20 text-[28rem] leading-none flex items-center justify-center h-full">
             ☿
           </div>
         </div>
         
         {/* Main central seal */}
-        <div className="rotating-seal absolute opacity-12" style={{
+        <div className="rotating-seal absolute opacity-15" style={{
           width: '24rem', 
           height: '24rem',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)'
         }}>
-          <div className="animate-spin-slow text-red-500/40 text-[24rem] leading-none flex items-center justify-center h-full">
+          <div className="animate-spin-slow text-red-500/30 text-[24rem] leading-none flex items-center justify-center h-full">
             ⸸
           </div>
         </div>
         
         {/* Inner pulsing core */}
-        <div className="absolute opacity-20" style={{
+        <div className="absolute opacity-25" style={{
           width: '4rem', 
           height: '4rem',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)'
         }}>
-          <div className="text-red-300/50 text-4xl leading-none flex items-center justify-center h-full">
+          <div className="text-red-300/40 text-4xl leading-none flex items-center justify-center h-full">
             ●
           </div>
         </div>
@@ -167,13 +167,13 @@ export default function Oracle() {
       {/* Main content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 pt-20">
         {/* Hero Section */}
-        <div className="text-center mb-12 max-w-5xl">
+        <div className="text-center mb-12 max-w-5xl bg-black/5 backdrop-blur-sm rounded-2xl p-8 border border-white/5">
           <div className="mb-8">
-            <div className="text-amber-400 text-6xl mb-4">⛧</div>
-            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400/80 mb-6 floating-title">
+            <div className="text-amber-400/60 text-6xl mb-4">⛧</div>
+            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400/70 mb-6 floating-title">
               ORACULUM TENEBRAE
             </h1>
-            <div className="flex justify-center items-center space-x-8 text-amber-500/70 text-3xl mb-6">
+            <div className="flex justify-center items-center space-x-8 text-amber-500/60 text-3xl mb-6">
               <span>☿</span>
               <span>⚹</span>
               <span>𖤍</span>
@@ -182,22 +182,22 @@ export default function Oracle() {
             </div>
           </div>
           
-          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300/75 mb-6 floating-title-slow">
+          <div className="floating-card p-8 space-y-6 bg-black/10 backdrop-blur-md border border-amber-500/15 rounded-xl">
+            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300/65 mb-6 floating-title-slow">
               Desperte os Véus Entre Mundos
             </h2>
             
-            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
-              Adentre o <strong className="text-amber-400">sanctum divinatório</strong> onde as forças primordiais sussurram através de antigos rituais oraculares. 
-              Cada método de consulta conecta-te diretamente às <strong className="text-red-400">correntes ctônicas</strong> que fluem através dos véus da realidade.
+            <p className="text-xl text-gray-300/80 leading-relaxed font-crimson mb-6">
+              Adentre o <strong className="text-amber-400/80">sanctum divinatório</strong> onde as forças primordiais sussurram através de antigos rituais oraculares. 
+              Cada método de consulta conecta-te diretamente às <strong className="text-red-400/80">correntes ctônicas</strong> que fluem através dos véus da realidade.
             </p>
             
             <div className="text-center">
-              <div className="text-amber-400/70 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
-              <p className="text-lg font-cinzel-decorative text-amber-300/70">
+              <div className="text-amber-400/60 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+              <p className="text-lg font-cinzel-decorative text-amber-300/60">
                 "Veritas Per Tenebras Revelatur"
               </p>
-              <p className="text-sm text-gray-400/80 font-crimson italic mt-2">
+              <p className="text-sm text-gray-400/70 font-crimson italic mt-2">
                 A verdade é revelada através das trevas
               </p>
             </div>
@@ -211,7 +211,7 @@ export default function Oracle() {
             return (
               <div 
                 key={oracle.id} 
-                className="floating-card group transform hover:scale-105 transition-all duration-500 animate-float relative overflow-hidden"
+                className="floating-card group transform hover:scale-105 transition-all duration-500 animate-float relative overflow-hidden bg-black/8 backdrop-blur-sm border border-white/10 rounded-xl"
                 style={{
                   animationDelay: `${index * 0.5}s`,
                   animationDuration: `${6 + index * 0.5}s`
@@ -221,31 +221,31 @@ export default function Oracle() {
                 <div className="absolute inset-0 mystical-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 
                 {/* Glowing border effect */}
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-red-500/20 via-amber-500/20 to-red-500/20 opacity-0 group-hover:opacity-100 animate-glow-pulse transition-opacity duration-500" />
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-red-500/10 via-amber-500/10 to-red-500/10 opacity-0 group-hover:opacity-100 animate-glow-pulse transition-opacity duration-500" />
                 
                 <div className="relative p-6 text-center space-y-4">
                   {/* Enhanced icon with floating animation */}
                   <div className="relative">
                     <div className="absolute inset-0 animate-glow-pulse">
-                      <IconComponent className="w-12 h-12 mx-auto text-red-500/30" />
+                      <IconComponent className="w-12 h-12 mx-auto text-red-500/20" />
                     </div>
-                    <IconComponent className="w-12 h-12 mx-auto mb-4 text-red-500 animate-flicker relative z-10" />
+                    <IconComponent className="w-12 h-12 mx-auto mb-4 text-red-500/70 relative z-10" />
                   </div>
                   
                   {/* Title with mystical glow */}
-                  <h3 className="text-xl font-bold text-amber-400 mb-3 group-hover:text-amber-300 transition-colors duration-300 animate-flicker">
+                  <h3 className="text-xl font-bold text-amber-400/70 mb-3 group-hover:text-amber-300/80 transition-colors duration-300">
                     {oracle.name}
                   </h3>
                   
-                  <p className="text-gray-300 text-sm leading-relaxed mb-4 group-hover:text-gray-200 transition-colors duration-300">
+                  <p className="text-gray-300/70 text-sm leading-relaxed mb-4 group-hover:text-gray-200/80 transition-colors duration-300">
                     {oracle.description}
                   </p>
                   
                   {/* Enhanced pricing info with glow effect */}
-                  <div className="bg-red-900/20 p-3 rounded-lg border border-red-700/30 mb-4 group-hover:bg-red-900/30 group-hover:border-red-600/50 transition-all duration-300 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/10 to-transparent group-hover:animate-pulse" />
-                    <div className="flex items-center justify-center gap-2 text-red-300 text-sm relative z-10">
-                      <CreditCard className="w-4 h-4 animate-glow-pulse" />
+                  <div className="bg-red-900/10 p-3 rounded-lg border border-red-700/20 mb-4 group-hover:bg-red-900/15 group-hover:border-red-600/30 transition-all duration-300 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/5 to-transparent group-hover:animate-pulse" />
+                    <div className="flex items-center justify-center gap-2 text-red-300/70 text-sm relative z-10">
+                      <CreditCard className="w-4 h-4" />
                       <span>R$ {oracle.pricePerConsultation} por consulta</span>
                     </div>
                   </div>
