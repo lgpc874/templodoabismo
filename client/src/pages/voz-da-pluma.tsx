@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Download, Clock, Twitter, Facebook, Instagram, Share2, Feather, Sun, Sunrise, Zap } from 'lucide-react';
+import { Download, Clock, Twitter, Facebook, Instagram, Share2, Feather, Sun, Sunrise, Zap, ArrowLeft } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
+import { Link } from 'wouter';
+import Footer from '../components/footer';
 
 interface VozPlumaManifestation {
   id: number;
@@ -24,6 +26,9 @@ export default function VozDaPluma() {
   const { data: manifestations = [], isLoading } = useQuery<VozPlumaManifestation[]>({
     queryKey: ['/api/voz-pluma/manifestations'],
   });
+
+  // Ordenar manifestações por horário
+  const sortedManifestations = manifestations.sort((a, b) => a.manifestation_time.localeCompare(b.manifestation_time));
 
   const downloadContentImage = async (content: VozPlumaManifestation) => {
     try {
@@ -239,60 +244,94 @@ export default function VozDaPluma() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-purple-950 to-black">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Fixed Central Rotating Seal - Your Custom Image */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <div className="rotating-seal w-96 h-96 opacity-20">
+          <img 
+            src="/seal.png" 
+            alt="Selo do Templo do Abismo" 
+            className="w-full h-full object-contain filter drop-shadow-lg"
+          />
+        </div>
+      </div>
+
+      {/* Mystical floating particles */}
+      <div className="fixed inset-0 overflow-hidden z-0">
+        <div className="mystical-particles"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+      </div>
+
+      {/* Main content */}
+      <div className="relative z-10 min-h-screen px-4 pt-16">
+        {/* Navigation back to home */}
+        <div className="absolute top-6 left-6">
+          <Link to="/">
+            <Button variant="ghost" size="sm" className="text-amber-400 hover:text-amber-300 hover:bg-amber-400/10">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retornar ao Templo
+            </Button>
+          </Link>
+        </div>
+
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Feather className="w-8 h-8 text-amber-400" />
-            <h1 className="text-4xl font-cinzel-decorative text-amber-400">
-              Voz da Pluma
-            </h1>
-            <Feather className="w-8 h-8 text-amber-400" />
+        <div className="text-center mb-16 pt-8">
+          <div className="text-amber-400 text-4xl mb-4">🪶</div>
+          <h1 className="text-5xl md:text-6xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
+            VOZ DA PLUMA
+          </h1>
+          <div className="flex justify-center items-center space-x-8 text-amber-500 text-2xl mb-6">
+            <span>☽</span>
+            <span>⚹</span>
+            <span>𖤍</span>
+            <span>⚹</span>
+            <span>☾</span>
           </div>
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-            Três manifestações diárias emanadas das profundezas do conhecimento ancestral
+          <p className="text-purple-300 text-lg max-w-3xl mx-auto font-cinzel">
+            Três manifestações diárias emanadas das profundezas do conhecimento ancestral.<br/>
+            <span className="text-amber-400">Rituais ancestrais manifestam-se apenas nos domingos.</span>
           </p>
         </div>
 
         {/* Grid das Três Manifestações */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-12">
-          {Object.entries(manifestationsByTime).map(([time, manifestation]) => {
-            const config = getManifestationConfig(time);
-            
-            return (
-              <Card 
-                key={time} 
-                className={`bg-gradient-to-br ${config.color} ${config.borderColor} hover:${config.borderColor.replace('/30', '/50')} transition-all duration-300 ${config.bgGlow} backdrop-blur-sm`}
-              >
-                <CardHeader className="text-center pb-4">
-                  <div className={`flex items-center justify-center gap-2 mb-3 ${config.timeColor}`}>
-                    {config.icon}
-                    <span className="text-lg font-semibold">{time}</span>
-                  </div>
-                  <CardTitle className="text-xl font-cinzel-decorative text-amber-400 mb-2">
-                    {config.title}
-                  </CardTitle>
-                  
-                  {manifestation ? (
-                    <div className="space-y-2">
-                      <h3 className="text-lg text-gray-200 font-medium">
-                        {manifestation.title}
-                      </h3>
-                      <p className="text-sm text-purple-300">
-                        {new Date(manifestation.posted_date).toLocaleDateString('pt-BR')}
-                      </p>
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-3 gap-8 mb-16">
+            {Object.entries(manifestationsByTime).map(([time, manifestation]) => {
+              const config = getManifestationConfig(time);
+              
+              return (
+                <Card 
+                  key={time} 
+                  className="bg-black/40 backdrop-blur-sm border border-amber-500/30 hover:border-amber-500/50 transition-all duration-300 mystical-glow"
+                >
+                  <CardHeader className="text-center pb-4">
+                    <div className={`flex items-center justify-center gap-2 mb-3 ${config.timeColor}`}>
+                      {config.icon}
+                      <span className="text-lg font-semibold">{time}</span>
                     </div>
-                  ) : (
-                    <p className="text-gray-400 text-sm">
-                      Aguardando manifestação...
-                    </p>
-                  )}
-                </CardHeader>
-                
-                {manifestation && (
-                  <CardContent className="text-center space-y-4">
-                    <blockquote className="text-gray-200 leading-relaxed italic">
+                    <CardTitle className="text-xl font-cinzel-decorative text-amber-400 mb-2">
+                      {config.title}
+                    </CardTitle>
+                    
+                    {manifestation ? (
+                      <div className="space-y-2">
+                        <h3 className="text-lg text-purple-200 font-medium font-cinzel">
+                          {manifestation.title}
+                        </h3>
+                        <p className="text-sm text-amber-400">
+                          {new Date(manifestation.posted_date).toLocaleDateString('pt-BR')}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-purple-400 text-sm">
+                        Aguardando manifestação...
+                      </p>
+                    )}
+                  </CardHeader>
+                  
+                  {manifestation && (
+                    <CardContent className="text-center space-y-4">
+                      <blockquote className="text-purple-200 leading-relaxed italic font-cinzel">
                       "{manifestation.content}"
                     </blockquote>
                     
@@ -338,36 +377,41 @@ export default function VozDaPluma() {
         </div>
 
         {/* Informações sobre o Sistema */}
-        <Card className="bg-gradient-to-r from-purple-900/30 to-black/30 border-purple-500/30">
+        <Card className="bg-black/40 backdrop-blur-sm border border-purple-500/30 mystical-glow">
           <CardContent className="p-6">
             <div className="flex items-start gap-4">
-              <Clock className="w-8 h-8 text-purple-400 mt-1" />
+              <Clock className="w-8 h-8 text-amber-400 mt-1" />
               <div>
-                <h3 className="text-xl font-semibold text-purple-400 mb-2">
+                <h3 className="text-xl font-cinzel-decorative text-amber-400 mb-2">
                   Manifestações Automáticas
                 </h3>
-                <p className="text-gray-300 mb-3">
+                <p className="text-purple-300 mb-3 font-cinzel">
                   A Voz da Pluma se manifesta automaticamente três vezes ao dia:
                 </p>
                 <div className="grid md:grid-cols-3 gap-4 text-sm">
                   <div className="flex items-center gap-2 text-purple-300">
                     <Sunrise className="w-4 h-4" />
-                    <span><strong>7h:</strong> Dica Mística</span>
+                    <span><strong>07:00:</strong> Dica Mística</span>
                   </div>
                   <div className="flex items-center gap-2 text-amber-300">
                     <Sun className="w-4 h-4" />
-                    <span><strong>9h:</strong> Verso da Pluma</span>
+                    <span><strong>09:00:</strong> Verso da Pluma</span>
                   </div>
                   <div className="flex items-center gap-2 text-red-300">
                     <Zap className="w-4 h-4" />
-                    <span><strong>11h:</strong> Ritual Ancestral</span>
+                    <span><strong>11:00:</strong> Ritual Ancestral (Domingos)</span>
                   </div>
                 </div>
+                <p className="text-amber-400 text-xs mt-3 italic">
+                  "As manifestações são substituídas diariamente, mantendo sempre o conteúdo mais atual das energias presentes."
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      <Footer />
     </div>
   );
 }

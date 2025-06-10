@@ -11,6 +11,7 @@ export class VozPlumaService {
   // Gerar conteúdo específico para cada horário
   async generateManifestation(time: string): Promise<InsertVozPlumaManifestation> {
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const dayOfWeek = new Date().getDay(); // 0 = domingo, 1 = segunda, etc.
     
     let type: string;
     let prompt: string;
@@ -25,8 +26,20 @@ export class VozPlumaService {
         prompt = `Escreva um verso poético da "Pluma Dourada" - uma poesia curta sobre sabedoria ancestral, despertar da consciência ou conexão com o divino interior. Deve ser elegante, místico e profundo. 4-6 linhas no máximo.`;
         break;
       case '11:00':
+        // Rituais apenas aos domingos
+        if (dayOfWeek !== 0) {
+          return {
+            manifestation_time: time,
+            type: 'pausa',
+            title: 'Momento de Reflexão',
+            content: 'Os rituais ancestrais manifestam-se apenas nos domingos, quando o véu entre os mundos se torna mais tênue. Hoje, permita-se simplesmente estar presente e contemplar a sabedoria já recebida.',
+            author: 'Guardião do Silêncio',
+            posted_date: today,
+            is_current: true
+          };
+        }
         type = 'ritual';
-        prompt = `Descreva um ritual ou prática ancestral simples que pode ser realizada em casa. Focado em meditação, reflexão ou conexão espiritual. Inclua passos práticos mas mantenha a linguagem poética e mística. Máximo 3-4 frases.`;
+        prompt = `Descreva um ritual ancestral simples para iniciar a semana com poder e clareza espiritual. Focado em proteção, purificação ou conexão com as forças ancestrais. Inclua passos práticos mas mantenha a linguagem poética e mística. Este ritual deve ser adequado para um domingo. Máximo 3-4 frases.`;
         break;
       default:
         throw new Error('Horário de manifestação inválido');
