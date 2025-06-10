@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { supabaseAdmin } from "./supabase-client";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
 let openai: OpenAI | null = null;
@@ -17,7 +18,7 @@ try {
 export interface OracleConsultation {
   type: string;
   question: string;
-  userId?: number;
+  userId?: string;
 }
 
 export interface TarotReading {
@@ -466,6 +467,81 @@ A combinação destas runas sugere que é tempo de honrar tanto tua força inter
     }
     
     return fallbackGrimoire;
+  }
+
+  // Salvar consulta do oráculo no Supabase
+  async saveOracleConsultation(consultation: OracleConsultation, response: any): Promise<void> {
+    try {
+      const { error } = await supabaseAdmin
+        .from('oracle_consultations')
+        .insert({
+          user_id: consultation.userId,
+          consultation_type: consultation.type,
+          question: consultation.question,
+          response: response,
+          created_at: new Date().toISOString()
+        });
+
+      if (error) {
+        console.error("Erro ao salvar consulta do oráculo:", error);
+      }
+    } catch (error) {
+      console.error("Erro no processo de salvamento da consulta:", error);
+    }
+  }
+
+  // Buscar histórico de consultas do usuário
+  async getUserOracleHistory(userId: string, limit: number = 10): Promise<any[]> {
+    try {
+      const { data, error } = await supabaseAdmin
+        .from('oracle_consultations')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (error) {
+        console.error("Erro ao buscar histórico do oráculo:", error);
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      console.error("Erro no processo de busca do histórico:", error);
+      return [];
+    }
+  }
+
+  // Consulta completa com salvamento automático
+  async performOracleConsultation(consultation: OracleConsultation): Promise<any> {
+    let response: any;
+
+    switch (consultation.type) {
+      case 'tarot':
+        response = await this.generateTarotReading(consultation.question);
+        break;
+      case 'runes':
+        response = await this.generateRuneReading(consultation.question);
+        break;
+      case 'fire':
+        response = await this.generateFireReading(consultation.question);
+        break;
+      case 'mirror':
+        response = await this.generateMirrorReading(consultation.question);
+        break;
+      case 'abyssal_voice':
+        response = await this.generateAbyssalVoice(consultation.question);
+        break;
+      default:
+        throw new Error('Tipo de consulta não reconhecido');
+    }
+
+    // Salvar a consulta se userId for fornecido
+    if (consultation.userId) {
+      await this.saveOracleConsultation(consultation, response);
+    }
+
+    return response;
   }
 }
 
