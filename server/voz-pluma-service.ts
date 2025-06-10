@@ -18,28 +18,23 @@ export class VozPlumaService {
     
     switch (time) {
       case '07:00':
-        type = 'dica';
-        prompt = `Crie uma dica mística luciferiana para começar o dia. Deve ser uma orientação prática e inspiradora sobre autoconhecimento, poder pessoal ou desenvolvimento espiritual. Formato: Um título conciso e um texto de 2-3 frases. Não mencione "Lúcifer" diretamente, use linguagem sutil e poética.`;
+        // Rituais ancestrais apenas aos domingos às 7h da manhã
+        if (dayOfWeek === 0) {
+          type = 'ritual';
+          prompt = `Descreva um ritual ancestral simples para iniciar a semana dominical com poder e clareza espiritual. Focado em proteção, purificação ou conexão com as forças ancestrais. Inclua passos práticos mas mantenha a linguagem poética e mística. Este ritual deve ser adequado para começar um domingo. Máximo 3-4 frases.`;
+        } else {
+          type = 'dica';
+          prompt = `Crie uma dica mística luciferiana para começar o dia. Deve ser uma orientação prática e inspiradora sobre autoconhecimento, poder pessoal ou desenvolvimento espiritual. Formato: Um título conciso e um texto de 2-3 frases. Não mencione "Lúcifer" diretamente, use linguagem sutil e poética.`;
+        }
         break;
       case '09:00':
         type = 'verso';
         prompt = `Escreva um verso poético da "Pluma Dourada" - uma poesia curta sobre sabedoria ancestral, despertar da consciência ou conexão com o divino interior. Deve ser elegante, místico e profundo. 4-6 linhas no máximo.`;
         break;
       case '11:00':
-        // Rituais apenas aos domingos
-        if (dayOfWeek !== 0) {
-          return {
-            manifestation_time: time,
-            type: 'pausa',
-            title: 'Momento de Reflexão',
-            content: 'Os rituais ancestrais manifestam-se apenas nos domingos, quando o véu entre os mundos se torna mais tênue. Hoje, permita-se simplesmente estar presente e contemplar a sabedoria já recebida.',
-            author: 'Guardião do Silêncio',
-            posted_date: today,
-            is_current: true
-          };
-        }
-        type = 'ritual';
-        prompt = `Descreva um ritual ancestral simples para iniciar a semana com poder e clareza espiritual. Focado em proteção, purificação ou conexão com as forças ancestrais. Inclua passos práticos mas mantenha a linguagem poética e mística. Este ritual deve ser adequado para um domingo. Máximo 3-4 frases.`;
+        // Às 11h sempre será uma reflexão complementar
+        type = 'reflexao';
+        prompt = `Crie uma reflexão espiritual profunda para o meio da manhã. Deve inspirar contemplação sobre a jornada interior, os mistérios da existência ou a conexão com o divino. Use linguagem poética e filosófica. 2-3 frases máximo.`;
         break;
       default:
         throw new Error('Horário de manifestação inválido');
@@ -106,9 +101,14 @@ export class VozPlumaService {
         author: "Poeta das Profundezas"
       },
       ritual: {
-        title: "Prática Ancestral",
-        content: "Acenda uma vela branca e contemple sua chama por alguns minutos. Respire profundamente e conecte-se com a energia que flui através de você, honrando a sabedoria dos antigos.",
+        title: "Prática Ancestral Dominical",
+        content: "Acenda uma vela branca e contemple sua chama por alguns minutos. Respire profundamente e conecte-se com a energia que flui através de você, honrando a sabedoria dos antigos para iniciar esta semana.",
         author: "Mestre dos Rituais"
+      },
+      reflexao: {
+        title: "Reflexão Matinal",
+        content: "No meio da manhã, permita-se uma pausa contemplativa. Observe os pensamentos que fluem como rio e reconheça a sabedoria que emerge do silêncio interior.",
+        author: "Sábio das Profundezas"
       }
     };
 

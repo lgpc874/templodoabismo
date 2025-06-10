@@ -187,12 +187,27 @@ export default function VozDaPluma() {
     }
   };
 
-  const getManifestationConfig = (time: string) => {
+  const getManifestationConfig = (time: string, manifestation?: VozPlumaManifestation) => {
+    const today = new Date();
+    const isSunday = today.getDay() === 0;
+    
     switch (time) {
       case '07:00':
+        if (isSunday || (manifestation && manifestation.type === 'ritual')) {
+          return {
+            icon: <Zap className="w-6 h-6" />,
+            title: 'Rituais Ancestrais',
+            description: 'Manifestados todos os domingos às 7h da manhã',
+            color: 'from-red-900/50 to-orange-900/30',
+            borderColor: 'border-red-500/30',
+            timeColor: 'text-red-400',
+            bgGlow: 'bg-red-500/5'
+          };
+        }
         return {
           icon: <Sunrise className="w-6 h-6" />,
           title: 'Dica Mística do Dia',
+          description: '',
           color: 'from-purple-900/50 to-indigo-900/30',
           borderColor: 'border-purple-500/30',
           timeColor: 'text-purple-400',
@@ -202,6 +217,7 @@ export default function VozDaPluma() {
         return {
           icon: <Sun className="w-6 h-6" />,
           title: 'Verso da Pluma Dourada',
+          description: '',
           color: 'from-amber-900/50 to-orange-900/30',
           borderColor: 'border-amber-500/30',
           timeColor: 'text-amber-400',
@@ -209,12 +225,13 @@ export default function VozDaPluma() {
         };
       case '11:00':
         return {
-          icon: <Zap className="w-6 h-6" />,
-          title: 'Ritual Ancestral',
-          color: 'from-red-900/50 to-rose-900/30',
-          borderColor: 'border-red-500/30',
-          timeColor: 'text-red-400',
-          bgGlow: 'bg-red-500/5'
+          icon: <Feather className="w-6 h-6" />,
+          title: 'Reflexão Matinal',
+          description: '',
+          color: 'from-purple-900/50 to-violet-900/30',
+          borderColor: 'border-purple-500/30',
+          timeColor: 'text-purple-400',
+          bgGlow: 'bg-purple-500/5'
         };
       default:
         return {
@@ -289,7 +306,7 @@ export default function VozDaPluma() {
           </div>
           <p className="text-purple-300 text-lg max-w-3xl mx-auto font-cinzel">
             Três manifestações diárias emanadas das profundezas do conhecimento ancestral.<br/>
-            <span className="text-amber-400">Rituais ancestrais manifestam-se apenas nos domingos.</span>
+            <span className="text-amber-400">Rituais ancestrais manifestam-se aos domingos às 7h da manhã.</span>
           </p>
         </div>
 
@@ -297,7 +314,7 @@ export default function VozDaPluma() {
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-3 gap-8 mb-16">
             {Object.entries(manifestationsByTime).map(([time, manifestation]) => {
-              const config = getManifestationConfig(time);
+              const config = getManifestationConfig(time, manifestation);
               
               return (
                 <Card 
@@ -312,6 +329,11 @@ export default function VozDaPluma() {
                     <CardTitle className="text-xl font-cinzel-decorative text-amber-400 mb-2">
                       {config.title}
                     </CardTitle>
+                    {config.description && (
+                      <p className="text-xs text-red-300 italic mb-2">
+                        {config.description}
+                      </p>
+                    )}
                     
                     {manifestation ? (
                       <div className="space-y-2">
