@@ -78,68 +78,88 @@ O curso é estruturado para guiá-lo desde os conceitos básicos até práticas 
     full_course_price_brl: "297.00",
     discount_percentage: 30,
     estimated_duration_hours: 20,
-    requirements: ["Mente aberta", "Interesse em filosofia esotérica", "Comprometimento com estudos"],
+    requirements: [
+      "Mente aberta para conceitos espirituais alternativos",
+      "Dedicação para estudos esotéricos",
+      "Maturidade emocional e psicológica"
+    ],
     what_you_learn: [
-      "Princípios fundamentais do Luciferianismo",
-      "História e desenvolvimento da tradição",
-      "Símbolos e arquétipos luciferianos",
-      "Técnicas de meditação sombria",
-      "Rituais básicos de autodivindade",
-      "Desenvolvimento da vontade pessoal"
+      "Fundamentos da filosofia luciferiana",
+      "Técnicas básicas de meditação e ritual",
+      "História e tradições da gnose luciferiana",
+      "Práticas de autodivindade e empoderamento pessoal"
     ],
     levels: [
       {
         id: 1,
         level_number: 1,
-        title: "Nível 1: Fundamentos Teóricos",
-        description: "Introdução aos conceitos básicos, história e filosofia luciferiana.",
+        title: "Despertar da Consciência",
+        description: "Introdução aos conceitos básicos do Luciferianismo",
         price_brl: "97.00",
         duration_hours: 6,
-        materials_included: ["Manual PDF (50 páginas)", "3 Áudios de meditação", "Certificado de conclusão"],
+        materials_included: ["E-book Introdutório", "Áudios Guiados", "Exercícios Práticos"],
         unlock_requirements: [],
         is_unlocked: true,
         is_purchased: false,
         is_completed: false,
         modules: [
-          { id: "1.1", title: "História do Luciferianismo", duration: 45, type: "video", is_completed: false },
-          { id: "1.2", title: "Conceitos Fundamentais", duration: 60, type: "video", is_completed: false },
-          { id: "1.3", title: "Símbolos e Arquétipos", duration: 30, type: "reading", is_completed: false }
+          { id: "1-1", title: "História do Luciferianismo", duration: 90, type: "video", is_completed: false },
+          { id: "1-2", title: "Princípios Fundamentais", duration: 120, type: "video", is_completed: false },
+          { id: "1-3", title: "Primeira Meditação", duration: 45, type: "audio", is_completed: false }
         ]
       },
       {
         id: 2,
         level_number: 2,
-        title: "Nível 2: Práticas Iniciais",
-        description: "Introdução às práticas básicas e rituais de autodivindade.",
-        price_brl: "147.00",
+        title: "Caminhos da Sombra",
+        description: "Aprofundamento nas práticas luciferianas",
+        price_brl: "127.00",
         duration_hours: 8,
-        materials_included: ["Manual PDF (75 páginas)", "5 Áudios rituais", "Kit básico de símbolos", "Certificado"],
-        unlock_requirements: ["Conclusão do Nível 1"],
+        materials_included: ["Grimório Digital", "Rituais Guiados", "Consulta Individual"],
+        unlock_requirements: ["Completar Nível 1"],
         is_unlocked: false,
         is_purchased: false,
         is_completed: false,
         modules: [
-          { id: "2.1", title: "Meditação Sombria", duration: 40, type: "video", is_completed: false },
-          { id: "2.2", title: "Rituais Básicos", duration: 55, type: "video", is_completed: false },
-          { id: "2.3", title: "Desenvolvimento da Vontade", duration: 35, type: "exercise", is_completed: false }
+          { id: "2-1", title: "Rituais Básicos", duration: 120, type: "video", is_completed: false },
+          { id: "2-2", title: "Trabalho com Sombras", duration: 90, type: "video", is_completed: false },
+          { id: "2-3", title: "Prática Ritual", duration: 60, type: "audio", is_completed: false }
+        ]
+      },
+      {
+        id: 3,
+        level_number: 3,
+        title: "Maestria Interior",
+        description: "Técnicas avançadas de transformação",
+        price_brl: "167.00",
+        duration_hours: 10,
+        materials_included: ["Grimório Avançado", "Sessões ao Vivo", "Certificado de Conclusão"],
+        unlock_requirements: ["Completar Níveis 1 e 2"],
+        is_unlocked: false,
+        is_purchased: false,
+        is_completed: false,
+        modules: [
+          { id: "3-1", title: "Rituais Avançados", duration: 150, type: "video", is_completed: false },
+          { id: "3-2", title: "Autodivindade", duration: 120, type: "video", is_completed: false },
+          { id: "3-3", title: "Iniciação Final", duration: 90, type: "live", is_completed: false }
         ]
       }
     ]
   };
 
-  const { data: course = mockCourse, isLoading } = useQuery({
-    queryKey: [`/api/courses/${params?.slug}`],
-    enabled: !!params?.slug,
-    retry: false
-  });
+  const handleEnrollment = (levelId: number) => {
+    toast({
+      title: "Matrícula iniciada",
+      description: "Redirecionando para o pagamento...",
+    });
+  };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
-        <div className="text-amber-500 animate-pulse text-xl">Carregando curso...</div>
-      </div>
-    );
-  }
+  const handleFullCourseEnrollment = () => {
+    toast({
+      title: "Curso completo selecionado",
+      description: "Redirecionando para o pagamento com desconto...",
+    });
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -163,11 +183,11 @@ O curso é estruturado para guiá-lo desde os conceitos básicos até práticas 
       {/* Main content */}
       <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-4 pt-20">
         {/* Hero Section */}
-        <div className="text-center mb-12 max-w-6xl">
+        <div className="text-center mb-12 max-w-4xl">
           <div className="mb-8">
             <div className="text-amber-400 text-6xl mb-4">📚</div>
-            <h1 className="text-4xl md:text-6xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
-              {course.title}
+            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
+              CURSUS INITIATICUS
             </h1>
             <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
               <span>☿</span>
@@ -179,76 +199,76 @@ O curso é estruturado para guiá-lo desde os conceitos básicos até práticas 
           </div>
           
           <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-            <h2 className="text-2xl md:text-3xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
-              {course.short_description}
+            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
+              {mockCourse.title}
             </h2>
             
-            <div className="flex flex-wrap justify-center gap-4 mb-6">
-              <Badge variant="outline" className="border-amber-500/30 text-amber-300">
-                {course.category}
-              </Badge>
-              <Badge variant="outline" className="border-amber-500/30 text-amber-300">
-                Nível {course.difficulty_level}
-              </Badge>
-              <Badge variant="outline" className="border-amber-500/30 text-amber-300">
-                {course.estimated_duration_hours}h totais
-              </Badge>
-              <Badge variant="outline" className="border-amber-500/30 text-amber-300">
-                {course.total_levels} níveis
-              </Badge>
-            </div>
+            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
+              {mockCourse.short_description}
+            </p>
             
             <div className="text-center">
               <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
               <p className="text-lg font-cinzel-decorative text-amber-300">
-                "Scientia Potentia Est"
+                "Sapientia Est Potentia"
               </p>
               <p className="text-sm text-gray-400 font-crimson italic mt-2">
-                Conhecimento é poder
+                O conhecimento é poder
               </p>
             </div>
           </div>
         </div>
 
-        {/* Course Overview Cards */}
-        <div className="max-w-6xl w-full mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Course Info */}
-            <div className="floating-card bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl p-6">
-              <div className="text-center">
-                <BookOpen className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-                <h3 className="text-xl font-cinzel-decorative text-amber-300 mb-2">Conteúdo</h3>
-                <p className="text-3xl font-bold text-amber-400 mb-2">{course.total_levels}</p>
-                <p className="text-gray-400">Níveis progressivos</p>
+        {/* Course Stats */}
+        <div className="floating-card max-w-6xl w-full mb-8 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <div className="p-6">
+            <div className="flex items-center gap-2 mb-6 justify-center flex-wrap">
+              <Badge variant="outline" className="border-amber-500/30 text-amber-300 bg-amber-500/10 capitalize">
+                {mockCourse.category}
+              </Badge>
+              <div className="flex items-center">
+                {[...Array(mockCourse.difficulty_level)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                ))}
+                {[...Array(3 - mockCourse.difficulty_level)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 text-gray-400" />
+                ))}
               </div>
             </div>
-
-            {/* Duration */}
-            <div className="floating-card bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl p-6">
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="text-center">
-                <Clock className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-                <h3 className="text-xl font-cinzel-decorative text-amber-300 mb-2">Duração</h3>
-                <p className="text-3xl font-bold text-amber-400 mb-2">{course.estimated_duration_hours}h</p>
-                <p className="text-gray-400">Estudo autônomo</p>
+                <Clock className="w-12 h-12 text-amber-400 mx-auto mb-2" />
+                <h3 className="text-lg font-cinzel-decorative text-amber-300">Duração</h3>
+                <p className="text-2xl font-bold text-amber-400">{mockCourse.estimated_duration_hours}h</p>
+                <p className="text-sm text-gray-400">Total</p>
               </div>
-            </div>
-
-            {/* Investment */}
-            <div className="floating-card bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl p-6">
               <div className="text-center">
-                <Star className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-                <h3 className="text-xl font-cinzel-decorative text-amber-300 mb-2">Investimento</h3>
-                <p className="text-3xl font-bold text-amber-400 mb-2">R$ {course.full_course_price_brl}</p>
-                <p className="text-gray-400">Curso completo</p>
+                <BookOpen className="w-12 h-12 text-amber-400 mx-auto mb-2" />
+                <h3 className="text-lg font-cinzel-decorative text-amber-300">Níveis</h3>
+                <p className="text-2xl font-bold text-amber-400">{mockCourse.total_levels}</p>
+                <p className="text-sm text-gray-400">Progressivos</p>
+              </div>
+              <div className="text-center">
+                <Users className="w-12 h-12 text-amber-400 mx-auto mb-2" />
+                <h3 className="text-lg font-cinzel-decorative text-amber-300">Iniciados</h3>
+                <p className="text-2xl font-bold text-amber-400">1,247</p>
+                <p className="text-sm text-gray-400">Estudantes</p>
+              </div>
+              <div className="text-center">
+                <Award className="w-12 h-12 text-amber-400 mx-auto mb-2" />
+                <h3 className="text-lg font-cinzel-decorative text-amber-300">Certificado</h3>
+                <p className="text-2xl font-bold text-amber-400">✓</p>
+                <p className="text-sm text-gray-400">Incluído</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Main Content Tabs */}
+        {/* Course Content Tabs */}
         <div className="floating-card max-w-6xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
           <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-black/40 border border-amber-600/30">
+            <TabsList className="grid w-full grid-cols-4 bg-black/40 border border-amber-600/30">
               <TabsTrigger 
                 value="overview"
                 className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-200 text-gray-400"
@@ -262,7 +282,13 @@ O curso é estruturado para guiá-lo desde os conceitos básicos até práticas 
                 Currículo
               </TabsTrigger>
               <TabsTrigger 
-                value="enrollment"
+                value="levels"
+                className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-200 text-gray-400"
+              >
+                Níveis
+              </TabsTrigger>
+              <TabsTrigger 
+                value="enroll"
                 className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-200 text-gray-400"
               >
                 Matrícula
@@ -270,36 +296,34 @@ O curso é estruturado para guiá-lo desde os conceitos básicos até práticas 
             </TabsList>
 
             <TabsContent value="overview" className="p-6">
-              <div className="space-y-8">
+              <div className="space-y-6">
                 <div>
-                  <h3 className="text-2xl font-cinzel-decorative text-amber-300 mb-4">Sobre o Curso</h3>
-                  <div className="prose prose-invert max-w-none">
-                    <p className="text-gray-300 leading-relaxed whitespace-pre-line">
-                      {course.full_description}
-                    </p>
-                  </div>
+                  <h3 className="text-2xl font-cinzel-decorative text-amber-300 mb-4">Sobre este Curso</h3>
+                  <p className="text-gray-300 leading-relaxed whitespace-pre-line">
+                    {mockCourse.full_description}
+                  </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <h4 className="text-xl font-cinzel-decorative text-amber-300 mb-4">O que você aprenderá</h4>
+                    <h4 className="text-xl font-cinzel-decorative text-amber-300 mb-3">Requisitos</h4>
                     <ul className="space-y-2">
-                      {course.what_you_learn.map((item, index) => (
-                        <li key={index} className="flex items-start">
-                          <CheckCircle className="w-5 h-5 text-amber-400 mr-3 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-300">{item}</span>
+                      {mockCourse.requirements.map((req, index) => (
+                        <li key={index} className="flex items-start text-gray-300">
+                          <CheckCircle className="w-5 h-5 text-amber-400 mr-2 mt-0.5 flex-shrink-0" />
+                          {req}
                         </li>
                       ))}
                     </ul>
                   </div>
 
                   <div>
-                    <h4 className="text-xl font-cinzel-decorative text-amber-300 mb-4">Pré-requisitos</h4>
+                    <h4 className="text-xl font-cinzel-decorative text-amber-300 mb-3">O que você aprenderá</h4>
                     <ul className="space-y-2">
-                      {course.requirements.map((req, index) => (
-                        <li key={index} className="flex items-start">
-                          <ArrowRight className="w-5 h-5 text-amber-400 mr-3 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-300">{req}</span>
+                      {mockCourse.what_you_learn.map((item, index) => (
+                        <li key={index} className="flex items-start text-gray-300">
+                          <Star className="w-5 h-5 text-amber-400 mr-2 mt-0.5 flex-shrink-0" />
+                          {item}
                         </li>
                       ))}
                     </ul>
@@ -310,24 +334,17 @@ O curso é estruturado para guiá-lo desde os conceitos básicos até práticas 
 
             <TabsContent value="curriculum" className="p-6">
               <div className="space-y-6">
-                <h3 className="text-2xl font-cinzel-decorative text-amber-300 mb-6">Estrutura do Curso</h3>
+                <h3 className="text-2xl font-cinzel-decorative text-amber-300 mb-4">Estrutura do Curso</h3>
                 
-                {course.levels.map((level) => (
+                {mockCourse.levels.map((level) => (
                   <Card key={level.id} className="bg-black/20 border-amber-500/20">
                     <CardHeader>
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-amber-400 flex items-center">
-                          {level.is_completed ? (
-                            <CheckCircle className="w-6 h-6 text-green-400 mr-3" />
-                          ) : level.is_unlocked ? (
-                            <Play className="w-6 h-6 text-amber-400 mr-3" />
-                          ) : (
-                            <Lock className="w-6 h-6 text-gray-400 mr-3" />
-                          )}
-                          {level.title}
+                        <CardTitle className="text-amber-400">
+                          Nível {level.level_number}: {level.title}
                         </CardTitle>
                         <Badge variant="outline" className="border-amber-500/30 text-amber-300">
-                          R$ {level.price_brl}
+                          {level.duration_hours}h
                         </Badge>
                       </div>
                       <CardDescription className="text-gray-300">
@@ -335,37 +352,25 @@ O curso é estruturado para guiá-lo desde os conceitos básicos até práticas 
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between text-sm text-gray-400">
-                          <span>📚 {level.duration_hours}h de conteúdo</span>
-                          <span>📄 {level.materials_included.length} materiais inclusos</span>
-                        </div>
-
-                        <div className="space-y-2">
-                          <h5 className="font-semibold text-amber-300">Módulos:</h5>
-                          {level.modules.map((module) => (
-                            <div key={module.id} className="flex items-center justify-between py-2 px-3 bg-black/20 rounded">
-                              <div className="flex items-center">
-                                {module.is_completed ? (
-                                  <CheckCircle className="w-4 h-4 text-green-400 mr-2" />
-                                ) : (
-                                  <Play className="w-4 h-4 text-gray-400 mr-2" />
-                                )}
-                                <span className="text-gray-300">{module.title}</span>
-                              </div>
-                              <span className="text-sm text-gray-400">{module.duration}min</span>
+                      <div className="space-y-3">
+                        {level.modules.map((module) => (
+                          <div key={module.id} className="flex items-center justify-between p-3 bg-black/20 rounded border border-amber-500/10">
+                            <div className="flex items-center">
+                              {module.type === 'video' && <Play className="w-4 h-4 text-amber-400 mr-2" />}
+                              {module.type === 'audio' && <BookOpen className="w-4 h-4 text-amber-400 mr-2" />}
+                              {module.type === 'live' && <Users className="w-4 h-4 text-amber-400 mr-2" />}
+                              <span className="text-gray-300">{module.title}</span>
                             </div>
-                          ))}
-                        </div>
-
-                        {level.unlock_requirements.length > 0 && (
-                          <div className="border-t border-amber-500/20 pt-4">
-                            <p className="text-sm text-gray-400">
-                              <Lock className="w-4 h-4 inline mr-1" />
-                              Requisitos: {level.unlock_requirements.join(", ")}
-                            </p>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-sm text-gray-400">{module.duration}min</span>
+                              {level.is_unlocked ? (
+                                <CheckCircle className="w-4 h-4 text-amber-400" />
+                              ) : (
+                                <Lock className="w-4 h-4 text-gray-500" />
+                              )}
+                            </div>
                           </div>
-                        )}
+                        ))}
                       </div>
                     </CardContent>
                   </Card>
@@ -373,85 +378,169 @@ O curso é estruturado para guiá-lo desde os conceitos básicos até práticas 
               </div>
             </TabsContent>
 
-            <TabsContent value="enrollment" className="p-6">
-              <div className="space-y-8">
-                <h3 className="text-2xl font-cinzel-decorative text-amber-300 mb-6 text-center">
-                  Opções de Matrícula
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Individual Level Purchase */}
-                  <Card className="bg-black/20 border-amber-500/20">
-                    <CardHeader className="text-center">
-                      <CardTitle className="text-amber-400">Compra Individual</CardTitle>
-                      <CardDescription className="text-gray-300">
-                        Adquira apenas o nível desejado
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {course.levels.map((level) => (
-                        <div key={level.id} className="flex items-center justify-between p-3 bg-black/20 rounded">
+            <TabsContent value="levels" className="p-6">
+              <div className="space-y-6">
+                <h3 className="text-2xl font-cinzel-decorative text-amber-300 mb-4">Níveis de Aprendizado</h3>
+                
+                <div className="grid gap-6">
+                  {mockCourse.levels.map((level) => (
+                    <Card key={level.id} className={`bg-black/20 border-amber-500/20 ${!level.is_unlocked ? 'opacity-75' : ''}`}>
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
                           <div>
-                            <p className="font-semibold text-amber-300">{level.title}</p>
-                            <p className="text-sm text-gray-400">{level.duration_hours}h • {level.modules.length} módulos</p>
+                            <CardTitle className="text-amber-400 flex items-center">
+                              {!level.is_unlocked && <Lock className="w-5 h-5 mr-2" />}
+                              Nível {level.level_number}: {level.title}
+                            </CardTitle>
+                            <CardDescription className="text-gray-300 mt-2">
+                              {level.description}
+                            </CardDescription>
                           </div>
                           <div className="text-right">
-                            <p className="text-lg font-bold text-amber-400">R$ {level.price_brl}</p>
-                            <Button 
-                              size="sm" 
-                              className="bg-amber-600 hover:bg-amber-700 text-black"
-                              disabled={!level.is_unlocked}
-                            >
-                              {level.is_unlocked ? "Comprar" : "Bloqueado"}
-                            </Button>
+                            <div className="text-2xl font-bold text-amber-400">
+                              R$ {level.price_brl}
+                            </div>
+                            <div className="text-sm text-gray-400">
+                              {level.duration_hours} horas
+                            </div>
                           </div>
                         </div>
-                      ))}
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          <div>
+                            <h5 className="text-amber-300 font-semibold mb-2">Materiais Incluídos:</h5>
+                            <ul className="space-y-1">
+                              {level.materials_included.map((material, index) => (
+                                <li key={index} className="flex items-center text-gray-300 text-sm">
+                                  <CheckCircle className="w-4 h-4 text-amber-400 mr-2" />
+                                  {material}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          
+                          {level.unlock_requirements.length > 0 && (
+                            <div>
+                              <h5 className="text-red-300 font-semibold mb-2">Requisitos:</h5>
+                              <ul className="space-y-1">
+                                {level.unlock_requirements.map((req, index) => (
+                                  <li key={index} className="flex items-center text-gray-300 text-sm">
+                                    <Lock className="w-4 h-4 text-red-400 mr-2" />
+                                    {req}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          <Button
+                            onClick={() => handleEnrollment(level.id)}
+                            disabled={!level.is_unlocked}
+                            className="w-full bg-amber-600 hover:bg-amber-700 text-black"
+                          >
+                            {level.is_purchased ? "Acessar Nível" : "Matricular-se"}
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="enroll" className="p-6">
+              <div className="space-y-6">
+                <h3 className="text-2xl font-cinzel-decorative text-amber-300 mb-4">Opções de Matrícula</h3>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Individual Levels */}
+                  <Card className="bg-black/20 border-amber-500/20">
+                    <CardHeader>
+                      <CardTitle className="text-amber-400">Níveis Individuais</CardTitle>
+                      <CardDescription className="text-gray-300">
+                        Compre cada nível separadamente
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {mockCourse.levels.map((level) => (
+                          <div key={level.id} className="flex items-center justify-between p-3 bg-black/20 rounded border border-amber-500/10">
+                            <div>
+                              <div className="text-amber-300 font-semibold">Nível {level.level_number}</div>
+                              <div className="text-sm text-gray-400">{level.title}</div>
+                            </div>
+                            <div className="text-amber-400 font-bold">R$ {level.price_brl}</div>
+                          </div>
+                        ))}
+                        <div className="border-t border-amber-500/20 pt-4">
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-300">Total Individual:</span>
+                            <span className="text-xl font-bold text-amber-400">
+                              R$ {mockCourse.levels.reduce((sum, level) => sum + parseFloat(level.price_brl), 0).toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
 
-                  {/* Full Course Package */}
-                  <Card className="bg-gradient-to-br from-amber-900/20 to-orange-900/20 border-amber-400/30 relative">
-                    <div className="absolute top-4 right-4">
-                      <Badge className="bg-amber-600 text-black">
-                        {course.discount_percentage}% OFF
-                      </Badge>
-                    </div>
-                    <CardHeader className="text-center">
-                      <CardTitle className="text-amber-300 text-xl">Curso Completo</CardTitle>
-                      <CardDescription className="text-gray-300">
-                        Acesso total a todos os níveis
-                      </CardDescription>
+                  {/* Full Course */}
+                  <Card className="bg-amber-900/20 border-amber-500/30 ring-2 ring-amber-500/50">
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle className="text-amber-400">Curso Completo</CardTitle>
+                          <CardDescription className="text-gray-300">
+                            Todos os níveis com desconto
+                          </CardDescription>
+                        </div>
+                        <Badge className="bg-red-600/20 text-red-300 border-red-500/30">
+                          {mockCourse.discount_percentage}% OFF
+                        </Badge>
+                      </div>
                     </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="text-center">
-                        <p className="text-4xl font-bold text-amber-400 mb-2">
-                          R$ {course.full_course_price_brl}
-                        </p>
-                        <p className="text-gray-400">
-                          {course.estimated_duration_hours}h de conteúdo • {course.total_levels} níveis
-                        </p>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="text-center">
+                          <div className="text-sm text-gray-400 line-through">
+                            De: R$ {mockCourse.levels.reduce((sum, level) => sum + parseFloat(level.price_brl), 0).toFixed(2)}
+                          </div>
+                          <div className="text-3xl font-bold text-amber-400">
+                            R$ {mockCourse.full_course_price_brl}
+                          </div>
+                          <div className="text-sm text-green-400">
+                            Economia de R$ {(mockCourse.levels.reduce((sum, level) => sum + parseFloat(level.price_brl), 0) - parseFloat(mockCourse.full_course_price_brl)).toFixed(2)}
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex items-center text-amber-300 text-sm">
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Acesso a todos os 3 níveis
+                          </div>
+                          <div className="flex items-center text-amber-300 text-sm">
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Todos os materiais incluídos
+                          </div>
+                          <div className="flex items-center text-amber-300 text-sm">
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Certificado de conclusão
+                          </div>
+                          <div className="flex items-center text-amber-300 text-sm">
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Suporte prioritário
+                          </div>
+                        </div>
+
+                        <Button
+                          onClick={handleFullCourseEnrollment}
+                          className="w-full bg-amber-600 hover:bg-amber-700 text-black font-semibold h-12"
+                        >
+                          <ShoppingCart className="w-5 h-5 mr-2" />
+                          Matricular-se no Curso Completo
+                        </Button>
                       </div>
-
-                      <div className="space-y-2">
-                        <h5 className="font-semibold text-amber-300">Inclui:</h5>
-                        <ul className="space-y-1 text-sm text-gray-300">
-                          <li>✓ Acesso vitalício a todos os níveis</li>
-                          <li>✓ Todos os materiais e recursos</li>
-                          <li>✓ Certificados de conclusão</li>
-                          <li>✓ Suporte da comunidade</li>
-                          <li>✓ Atualizações futuras incluídas</li>
-                        </ul>
-                      </div>
-
-                      <Button className="w-full bg-amber-600 hover:bg-amber-700 text-black font-semibold py-3">
-                        <ShoppingCart className="w-5 h-5 mr-2" />
-                        Adquirir Curso Completo
-                      </Button>
-
-                      <p className="text-xs text-center text-gray-500">
-                        Garantia de 30 dias ou seu dinheiro de volta
-                      </p>
                     </CardContent>
                   </Card>
                 </div>
@@ -465,10 +554,10 @@ O curso é estruturado para guiá-lo desde os conceitos básicos até práticas 
           <div className="text-center">
             <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
             <p className="text-lg text-gray-300 italic leading-relaxed mb-4">
-              "O verdadeiro aprendizado acontece quando a teoria encontra a prática na fornalha da experiência"
+              "O verdadeiro conhecimento não é transmitido, mas despertado no coração do buscador sincero"
             </p>
             <p className="text-amber-400 font-semibold">
-              — Máxima do Templo
+              — Mestre do Templo
             </p>
           </div>
         </div>

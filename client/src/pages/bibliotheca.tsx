@@ -1,125 +1,181 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
-  BookOpen, 
-  Search, 
-  Filter,
-  Download,
-  Eye,
-  Clock,
-  Star,
-  Library,
-  Scroll,
-  FileText,
-  Award
+  BookOpen, Search, Filter, Download, Star, Eye, Skull, 
+  AlertTriangle, Lock, Crown, Flame, Shield
 } from "lucide-react";
 
 export default function Bibliotheca() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedLevel, setSelectedLevel] = useState("all");
 
-  const documents = [
+  const mockDocuments = [
     {
       id: 1,
-      title: "Filosofia Luciferiana: Uma Introdução",
-      author: "Mestre Astaroth",
-      category: "filosofia",
-      type: "artigo",
-      pages: 15,
-      rating: 4.9,
-      downloads: 1245,
-      description: "Exploração dos fundamentos filosóficos do luciferianismo moderno"
+      title: "Necronomicon Vetitus",
+      author: "Al-Hazred ibn Yusuf",
+      description: "O livro proibido dos nomes mortos. Contém conhecimentos que precedem a criação e invocações que desafiam a própria realidade.",
+      type: "grimório",
+      category: "forbidden",
+      pages: 666,
+      downloads: 13,
+      rating: 5.0,
+      price: "Acesso Restrito",
+      level: "⚠️ EXTREMO",
+      warning: "Leitura pode causar alterações permanentes na percepção da realidade"
     },
     {
       id: 2,
-      title: "História dos Cultos Ancestrais",
-      author: "Dr. Occultus",
-      category: "historia",
-      type: "ensaio",
-      pages: 32,
-      rating: 4.7,
-      downloads: 892,
-      description: "Análise histórica dos cultos e tradições esotéricas ancestrais"
+      title: "Liber Umbra Mortis",
+      author: "Magister Mortuum",
+      description: "Rituais necromânticos ancestrais. Comunicação com os mortos e manipulação das energias post-mortem das almas perdidas.",
+      type: "manual",
+      category: "necromancy",
+      pages: 444,
+      downloads: 7,
+      rating: 4.9,
+      price: "Selo Sangüíneo",
+      level: "⚠️ PERIGOSO",
+      warning: "Práticas podem atrair entidades hostis do plano astral"
     },
     {
       id: 3,
-      title: "Meditação e Estados Alterados",
-      author: "Sacerdotisa Luna",
-      category: "pratica",
-      type: "guia",
-      pages: 24,
-      rating: 4.8,
-      downloads: 1567,
-      description: "Técnicas práticas para alcançar estados alterados de consciência"
+      title: "Codex Daemonium Primordialis",
+      author: "Ordo Serpentis Nigrae",
+      description: "Catálogo completo dos demônios primordiais e seus selos de comando. Hierarquias infernais reveladas pela primeira vez.",
+      type: "escritura",
+      category: "demonology",
+      pages: 999,
+      downloads: 21,
+      rating: 5.0,
+      price: "Pacto Ritual",
+      level: "⚠️ EXTREMO",
+      warning: "Conhecimento destinado apenas aos Grão-Mestres Iniciados"
     },
     {
       id: 4,
-      title: "Simbolismo Oculto na Arte",
-      author: "Prof. Hermético",
-      category: "simbolismo",
-      type: "estudo",
-      pages: 45,
-      rating: 4.6,
-      downloads: 634,
-      description: "Análise do simbolismo esotérico presente na arte através dos séculos"
+      title: "Ars Goetia Completa",
+      author: "Rex Salomonis",
+      description: "A verdadeira Arte Goética. 72 demônios e seus poderes secretos. Selos originais nunca antes revelados ao mundo profano.",
+      type: "tratado",
+      category: "goetia",
+      pages: 333,
+      downloads: 18,
+      rating: 4.8,
+      price: "Sangue & Ouro",
+      level: "⚠️ PERIGOSO",
+      warning: "Uso incorreto pode resultar em possessão ou morte espiritual"
     },
     {
       id: 5,
-      title: "Mitologia Comparada: Serpentes e Dragões",
-      author: "Dra. Serpentis",
-      category: "mitologia",
-      type: "pesquisa",
-      pages: 38,
-      rating: 4.9,
-      downloads: 723,
-      description: "Estudo comparativo das figuras serpentinas e draconianas nas mitologias"
+      title: "Apocalypsis Luciferiana",
+      author: "Pontifex Maximus Tenebrarum",
+      description: "Profecias do fim dos tempos segundo a tradição luciferiana. O despertar da Besta e a Nova Era das Trevas Eternas.",
+      type: "profecia",
+      category: "apocalyptic",
+      pages: 777,
+      downloads: 3,
+      rating: 5.0,
+      price: "Alma Iniciática",
+      level: "⚠️ EXTREMO",
+      warning: "Revelações podem causar terror existencial permanente"
     },
     {
       id: 6,
-      title: "Alquimia Psicológica",
-      author: "Magus Jung",
-      category: "psicologia",
-      type: "artigo",
-      pages: 28,
-      rating: 4.8,
-      downloads: 1089,
-      description: "Aplicação dos princípios alquímicos na psicologia profunda"
+      title: "Ritualia Sanguinaria",
+      author: "Magus Cruor",
+      description: "Rituais de sangue dos antigos cultos. Oferendas de vida para obter poder absoluto sobre a matéria e espírito.",
+      type: "manual",
+      category: "blood_magic",
+      pages: 234,
+      downloads: 9,
+      rating: 4.7,
+      price: "Juramento Eterno",
+      level: "⚠️ PERIGOSO",
+      warning: "Práticas envolvem riscos físicos e espirituais extremos"
+    },
+    {
+      id: 7,
+      title: "Clavis Inferni",
+      author: "Guardião das Chaves",
+      description: "As chaves verdadeiras do inferno. Portais dimensionais e passagens para os planos sombrios da existência cósmica.",
+      type: "grimório",
+      category: "portals",
+      pages: 555,
+      downloads: 1,
+      rating: 5.0,
+      price: "Preço Inominável",
+      level: "⚠️ EXTREMO",
+      warning: "Abertura de portais pode ser irreversível"
+    },
+    {
+      id: 8,
+      title: "Corpus Hermeticum Tenebrarum",
+      author: "Hermes Trismegistus Niger",
+      description: "A versão sombria dos ensinamentos herméticos. Alquimia negra e transmutação através das trevas primordiais.",
+      type: "tratado",
+      category: "dark_alchemy",
+      pages: 411,
+      downloads: 11,
+      rating: 4.9,
+      price: "Conhecimento Selado",
+      level: "⚠️ PERIGOSO",
+      warning: "Transformações alquímicas podem ser irreversíveis"
     }
   ];
 
   const categories = [
     { value: "all", label: "Todas as Categorias" },
-    { value: "filosofia", label: "Filosofia" },
-    { value: "historia", label: "História" },
-    { value: "pratica", label: "Práticas" },
-    { value: "simbolismo", label: "Simbolismo" },
-    { value: "mitologia", label: "Mitologia" },
-    { value: "psicologia", label: "Psicologia" }
+    { value: "forbidden", label: "📖 Livros Proibidos" },
+    { value: "necromancy", label: "💀 Necromancia" },
+    { value: "demonology", label: "👹 Demonologia" },
+    { value: "goetia", label: "🔥 Arte Goética" },
+    { value: "apocalyptic", label: "⚡ Profecias" },
+    { value: "blood_magic", label: "🩸 Magia Sanguínea" },
+    { value: "portals", label: "🌀 Portais" },
+    { value: "dark_alchemy", label: "⚗️ Alquimia Negra" }
   ];
 
-  const filteredDocuments = documents.filter(doc => {
-    const matchesSearch = searchTerm === "" || 
-      doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doc.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doc.description.toLowerCase().includes(searchTerm.toLowerCase());
-    
+  const levels = [
+    { value: "all", label: "Todos os Níveis" },
+    { value: "⚠️ PERIGOSO", label: "⚠️ PERIGOSO" },
+    { value: "⚠️ EXTREMO", label: "⚠️ EXTREMO" }
+  ];
+
+  const filteredDocuments = mockDocuments.filter(doc => {
+    const matchesSearch = doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         doc.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         doc.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "all" || doc.category === selectedCategory;
+    const matchesLevel = selectedLevel === "all" || doc.level === selectedLevel;
     
-    return matchesSearch && matchesCategory;
+    return matchesSearch && matchesCategory && matchesLevel;
   });
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case "artigo": return <FileText className="w-4 h-4" />;
-      case "ensaio": return <Scroll className="w-4 h-4" />;
-      case "guia": return <BookOpen className="w-4 h-4" />;
-      case "estudo": return <Award className="w-4 h-4" />;
-      case "pesquisa": return <Star className="w-4 h-4" />;
-      default: return <FileText className="w-4 h-4" />;
+      case "grimório": return "📜";
+      case "manual": return "📋";
+      case "escritura": return "📿";
+      case "tratado": return "📚";
+      case "profecia": return "🔮";
+      default: return "📖";
+    }
+  };
+
+  const getDangerLevel = (level: string) => {
+    switch (level) {
+      case "⚠️ EXTREMO": 
+        return "bg-red-900/30 text-red-300 border-red-500/50 animate-pulse";
+      case "⚠️ PERIGOSO": 
+        return "bg-orange-900/30 text-orange-300 border-orange-500/50";
+      default: 
+        return "bg-gray-900/30 text-gray-300 border-gray-500/50";
     }
   };
 
@@ -147,11 +203,11 @@ export default function Bibliotheca() {
         {/* Hero Section */}
         <div className="text-center mb-12 max-w-4xl">
           <div className="mb-8">
-            <div className="text-amber-400 text-6xl mb-4">📚</div>
-            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
+            <div className="text-red-500 text-6xl mb-4">📚</div>
+            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-red-500 mystical-glow mb-6 floating-title">
               BIBLIOTHECA ARCANA
             </h1>
-            <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
+            <div className="flex justify-center items-center space-x-8 text-red-400 text-3xl mb-6">
               <span>☿</span>
               <span>⚹</span>
               <span>𖤍</span>
@@ -160,71 +216,125 @@ export default function Bibliotheca() {
             </div>
           </div>
           
-          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
-              Arquivo Digital do Conhecimento Sagrado
+          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-red-500/20 rounded-xl">
+            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-red-300 mb-6 floating-title-slow">
+              Os Segredos Mais Selados do Mundo
             </h2>
             
             <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
-              Uma coleção curada de <strong className="text-amber-400">documentos esotéricos</strong>, 
-              <strong className="text-red-400"> estudos acadêmicos</strong> e textos fundamentais 
-              da tradição luciferiana.
+              Aqui repousam os <strong className="text-red-400">conhecimentos proibidos</strong> que foram 
+              banidos da luz do mundo. Textos <strong className="text-amber-400">perigosos e arcanos</strong> que 
+              guardam os mistérios mais sombrios da existência.
             </p>
             
             <div className="text-center">
-              <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
-              <p className="text-lg font-cinzel-decorative text-amber-300">
-                "Scientia Est Lux"
+              <div className="text-red-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+              <p className="text-lg font-cinzel-decorative text-red-300">
+                "Scientia Potentia Est"
               </p>
               <p className="text-sm text-gray-400 font-crimson italic mt-2">
-                O conhecimento é luz
+                O conhecimento é poder
               </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Critical Warning */}
+        <div className="floating-card max-w-4xl w-full mb-8 bg-red-900/20 backdrop-blur-lg border border-red-500/30 rounded-xl">
+          <div className="p-6">
+            <div className="flex items-center justify-center mb-4">
+              <AlertTriangle className="w-8 h-8 text-red-400 mr-3" />
+              <h3 className="text-2xl font-cinzel-decorative text-red-300">ADVERTÊNCIA SOLENE</h3>
+              <AlertTriangle className="w-8 h-8 text-red-400 ml-3" />
+            </div>
+            
+            <div className="space-y-4 text-center">
+              <p className="text-gray-300 leading-relaxed">
+                Os documentos contidos nesta biblioteca são de <strong className="text-red-400">natureza extremamente perigosa</strong>. 
+                Seu uso inadequado pode resultar em consequências irreversíveis para o praticante e seu entorno.
+              </p>
+              
+              <div className="grid md:grid-cols-3 gap-4 mt-6">
+                <div className="p-4 bg-red-950/30 border border-red-500/20 rounded">
+                  <Skull className="w-8 h-8 text-red-400 mx-auto mb-2" />
+                  <h4 className="text-red-300 font-semibold mb-2">Riscos Espirituais</h4>
+                  <p className="text-gray-400 text-sm">Possessão, maldições, perda da alma</p>
+                </div>
+                
+                <div className="p-4 bg-orange-950/30 border border-orange-500/20 rounded">
+                  <Eye className="w-8 h-8 text-orange-400 mx-auto mb-2" />
+                  <h4 className="text-orange-300 font-semibold mb-2">Riscos Mentais</h4>
+                  <p className="text-gray-400 text-sm">Loucura, terror existencial, fragmentação psíquica</p>
+                </div>
+                
+                <div className="p-4 bg-purple-950/30 border border-purple-500/20 rounded">
+                  <Shield className="w-8 h-8 text-purple-400 mx-auto mb-2" />
+                  <h4 className="text-purple-300 font-semibold mb-2">Responsabilidade</h4>
+                  <p className="text-gray-400 text-sm">O usuário assume total responsabilidade</p>
+                </div>
+              </div>
+              
+              <div className="mt-6 p-4 bg-black/40 border border-red-500/30 rounded">
+                <p className="text-red-300 font-semibold text-sm">
+                  ⚠️ ESTE CONTEÚDO É DESTINADO APENAS PARA FINS EDUCACIONAIS E HISTÓRICOS. 
+                  O TEMPLO DO ABISMO NÃO SE RESPONSABILIZA POR USO INDEVIDO OU CONSEQUÊNCIAS DECORRENTES.
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Search and Filters */}
-        <div className="floating-card max-w-4xl w-full mb-8 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+        <div className="floating-card max-w-6xl w-full mb-8 bg-black/30 backdrop-blur-lg border border-red-500/20 rounded-xl">
           <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="md:col-span-2">
-                <div className="relative">
-                  <Search className="absolute left-3 top-2.5 h-5 w-5 text-amber-400" />
-                  <Input
-                    placeholder="Buscar documentos, autores ou temas..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 bg-black/40 border-amber-500/30 text-gray-300 placeholder:text-gray-500"
-                  />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-red-400 w-5 h-5" />
+                <Input
+                  placeholder="Buscar nos arquivos proibidos..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-black/40 border-red-500/30 text-gray-300 placeholder:text-gray-500 focus:border-red-500"
+                />
               </div>
-              <div>
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="bg-black/40 border-amber-500/30 text-gray-300">
-                    <Filter className="w-4 h-4 mr-2 text-amber-400" />
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-black/90 border-amber-500/30">
-                    {categories.map((category) => (
-                      <SelectItem key={category.value} value={category.value}>
-                        {category.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="bg-black/40 border-red-500/30 text-gray-300">
+                  <SelectValue placeholder="Categoria" />
+                </SelectTrigger>
+                <SelectContent className="bg-black/90 border-red-500/30">
+                  {categories.map((category) => (
+                    <SelectItem key={category.value} value={category.value} className="text-gray-300 focus:bg-red-500/20">
+                      {category.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+                <SelectTrigger className="bg-black/40 border-red-500/30 text-gray-300">
+                  <SelectValue placeholder="Nível de Perigo" />
+                </SelectTrigger>
+                <SelectContent className="bg-black/90 border-red-500/30">
+                  {levels.map((level) => (
+                    <SelectItem key={level.value} value={level.value} className="text-gray-300 focus:bg-red-500/20">
+                      {level.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
 
         {/* Documents Grid */}
-        <div className="floating-card max-w-6xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+        <div className="floating-card max-w-6xl w-full bg-black/30 backdrop-blur-lg border border-red-500/20 rounded-xl">
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-cinzel-decorative text-amber-300">
-                Documentos Disponíveis
+              <h3 className="text-2xl font-cinzel-decorative text-red-300">
+                Arquivos Classificados
               </h3>
-              <Badge variant="outline" className="border-amber-500/30 text-amber-300">
+              <Badge variant="outline" className="border-red-500/30 text-red-300 bg-red-500/10">
                 {filteredDocuments.length} documentos encontrados
               </Badge>
             </div>
@@ -232,13 +342,13 @@ export default function Bibliotheca() {
             {filteredDocuments.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredDocuments.map((doc) => (
-                  <Card key={doc.id} className="bg-black/20 border-amber-500/20 hover:border-amber-400/40 transition-colors">
+                  <Card key={doc.id} className="bg-black/20 border-red-500/20 hover:border-red-400/40 transition-colors">
                     <CardHeader>
                       <div className="flex items-start justify-between">
-                        <CardTitle className="text-amber-400 text-lg leading-tight">
+                        <CardTitle className="text-red-400 text-lg leading-tight">
                           {doc.title}
                         </CardTitle>
-                        <Badge variant="outline" className="border-amber-500/30 text-amber-300 flex items-center">
+                        <Badge variant="outline" className="border-red-500/30 text-red-300 flex items-center">
                           {getTypeIcon(doc.type)}
                           <span className="ml-1 capitalize">{doc.type}</span>
                         </Badge>
@@ -260,31 +370,41 @@ export default function Bibliotheca() {
                           </div>
                           <div className="flex items-center">
                             <Download className="w-3 h-3 mr-1" />
-                            {doc.downloads}
+                            {doc.downloads} acessos
                           </div>
                         </div>
                         
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
-                            <Star className="w-4 h-4 text-amber-400 mr-1" />
-                            <span className="text-amber-400 font-semibold">{doc.rating}</span>
+                            <Star className="w-4 h-4 text-red-400 mr-1" />
+                            <span className="text-red-400 font-semibold">{doc.rating}</span>
                           </div>
-                          <Badge 
-                            variant="secondary" 
-                            className="bg-amber-600/20 text-amber-200 capitalize"
-                          >
-                            {categories.find(c => c.value === doc.category)?.label}
+                          <Badge className={getDangerLevel(doc.level)}>
+                            {doc.level}
                           </Badge>
                         </div>
 
+                        {doc.warning && (
+                          <div className="p-3 bg-red-900/20 border border-red-500/30 rounded text-xs">
+                            <div className="flex items-start">
+                              <AlertTriangle className="w-4 h-4 text-red-400 mr-2 mt-0.5 flex-shrink-0" />
+                              <span className="text-red-300">{doc.warning}</span>
+                            </div>
+                          </div>
+                        )}
+
                         <div className="flex gap-2 pt-2">
-                          <Button size="sm" className="flex-1 bg-amber-600 hover:bg-amber-700 text-black">
-                            <Eye className="w-4 h-4 mr-2" />
-                            Visualizar
+                          <Button 
+                            size="sm" 
+                            className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                          >
+                            <Lock className="w-4 h-4 mr-2" />
+                            Solicitar Acesso
                           </Button>
-                          <Button size="sm" variant="outline" className="border-amber-500/30 text-amber-300">
-                            <Download className="w-4 h-4" />
-                          </Button>
+                        </div>
+
+                        <div className="text-center text-xs text-gray-500">
+                          Preço: <span className="text-red-400 font-semibold">{doc.price}</span>
                         </div>
                       </div>
                     </CardContent>
@@ -292,65 +412,23 @@ export default function Bibliotheca() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12">
-                <Library className="w-16 h-16 mx-auto text-amber-400 opacity-50 mb-4" />
-                <h4 className="text-xl font-semibold text-amber-300 mb-2">
-                  Nenhum documento encontrado
-                </h4>
-                <p className="text-gray-400">
-                  Tente ajustar os filtros ou termos de busca
-                </p>
+              <div className="text-center text-gray-400 py-12">
+                <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                <p>Nenhum documento encontrado com os filtros selecionados</p>
               </div>
             )}
           </div>
         </div>
 
-        {/* Categories Overview */}
-        <div className="floating-card max-w-6xl w-full mt-8 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-          <div className="p-6">
-            <h3 className="text-2xl font-cinzel-decorative text-amber-300 mb-6 text-center">
-              Categorias de Conhecimento
-            </h3>
-            
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {categories.slice(1).map((category) => {
-                const count = documents.filter(doc => doc.category === category.value).length;
-                return (
-                  <div 
-                    key={category.value}
-                    className="text-center p-4 bg-black/20 rounded-lg border border-amber-500/20 hover:border-amber-400/40 transition-colors cursor-pointer"
-                    onClick={() => setSelectedCategory(category.value)}
-                  >
-                    <div className="text-2xl text-amber-400 mb-2">
-                      {category.value === "filosofia" && "🔮"}
-                      {category.value === "historia" && "📜"}
-                      {category.value === "pratica" && "🕯️"}
-                      {category.value === "simbolismo" && "🔯"}
-                      {category.value === "mitologia" && "🐲"}
-                      {category.value === "psicologia" && "🧠"}
-                    </div>
-                    <h4 className="text-amber-300 font-semibold text-sm mb-1">
-                      {category.label}
-                    </h4>
-                    <p className="text-xs text-gray-400">
-                      {count} documento{count !== 1 ? 's' : ''}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Mystical Quote */}
-        <div className="floating-card max-w-2xl mx-auto mt-12 p-8 bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+        {/* Final Warning */}
+        <div className="floating-card max-w-2xl mx-auto mt-12 p-8 bg-red-900/20 backdrop-blur-lg border border-red-500/20 rounded-xl">
           <div className="text-center">
-            <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+            <div className="text-red-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
             <p className="text-lg text-gray-300 italic leading-relaxed mb-4">
-              "Uma biblioteca não é apenas um depósito de livros, mas um templo da sabedoria onde as almas buscam a iluminação"
+              "Há conhecimentos que não devem ser despertados, pois uma vez liberados, não podem ser novamente adormecidos"
             </p>
-            <p className="text-amber-400 font-semibold">
-              — Guardião da Bibliotheca
+            <p className="text-red-400 font-semibold">
+              — Guardião dos Arquivos Proibidos
             </p>
           </div>
         </div>
