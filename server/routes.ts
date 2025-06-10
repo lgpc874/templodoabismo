@@ -2,8 +2,10 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import multer from 'multer';
 import { temploAI } from './ai-service';
-import { supabaseAdmin } from './supabase-client';
+import { supabase } from './supabase-client';
 import { registerAdminRoutes } from './admin-routes';
+import { setupAdminRoutes } from './admin-system';
+import { vozPlumaScheduler } from './scheduler';
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -49,6 +51,9 @@ async function requireAdmin(req: any, res: Response, next: any) {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Register all admin routes
   registerAdminRoutes(app);
+  
+  // Setup complete admin system
+  setupAdminRoutes(app);
 
   // Emergency admin access endpoint - must be first
   app.post('/api/emergency-admin', async (req: Request, res: Response) => {

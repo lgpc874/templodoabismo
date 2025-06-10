@@ -1,92 +1,106 @@
-import { voxPlumaAI } from "./ai-vox-service";
-import { supabaseAdmin } from "./supabase-client";
+import { supabase } from './supabase-client';
+import { voxPlumaAI } from './ai-vox-service';
 
-class ContentScheduler {
-  private poemInterval: NodeJS.Timeout | null = null;
-  private articleInterval: NodeJS.Timeout | null = null;
+class VozPlumaScheduler {
+  private intervalId: NodeJS.Timeout | null = null;
+  private isRunning = false;
 
-  async startSchedulers() {
-    // Obter configurações do banco
-    const { data: configs } = await supabaseAdmin
-      .from('site_config')
-      .select('key, value')
-      .in('key', ['voz_pluma_enabled', 'voz_pluma_frequency_hours', 'voz_pluma_auto_publish']);
-
-    const configMap = new Map(configs?.map(c => [c.key, c.value]) || []);
+  async start() {
+    if (this.isRunning) return;
     
-    const isEnabled = configMap.get('voz_pluma_enabled') === true;
-    const isAutoPublish = configMap.get('voz_pluma_auto_publish') === true;
-    const frequencyHours = Number(configMap.get('voz_pluma_frequency_hours')) || 24;
-
-    if (!isEnabled || !isAutoPublish) {
-      console.log('Voz da Pluma agendamento desabilitado');
-      return;
-    }
-
-    // Publicar poemas a cada hora
-    this.poemInterval = setInterval(async () => {
-      try {
-        await voxPlumaAI.publishPoem();
-        console.log('Poema automático publicado');
-      } catch (error) {
-        console.error('Erro ao publicar poema automático:', error);
-      }
+    console.log('Iniciando Voz da Pluma Scheduler...');
+    this.isRunning = true;
+    
+    // Executar primeira verificação imediatamente
+    await this.checkAndPublish();
+    
+    // Verificar a cada hora
+    this.intervalId = setInterval(async () => {
+      await this.checkAndPublish();
     }, 60 * 60 * 1000); // 1 hora
+  }
 
-    // Publicar artigos baseado na frequência configurada
-    this.articleInterval = setInterval(async () => {
-      try {
-        await voxPlumaAI.publishArticle();
-        console.log('Artigo automático publicado');
-      } catch (error) {
-        console.error('Erro ao publicar artigo automático:', error);
+  stop() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+    this.isRunning = false;
+    console.log('Voz da Pluma Scheduler parado.');
+  }
+
+  private async checkAndPublish() {
+    try {
+      // Buscar configurações
+      const { data: settings } = await supabase
+        .from('site_settings')
+        .select('*')
+        .eq('category', 'voz_pluma');
+
+      if (!settings || settings.length === 0) {
+        console.log('Configurações da Voz da Pluma não encontradas');
+        return;
       }
-    }, frequencyHours * 60 * 60 * 1000);
 
-    console.log(`Agendamento iniciado: poemas a cada hora, artigos a cada ${frequencyHours}h`);
-  }
+      const settingsMap = settings.reduce((acc: any, setting: any) => {
+        acc[setting.key] = JSON.parse(setting.value);
+        return acc;
+      }, {});
 
-  stopSchedulers() {
-    if (this.poemInterval) {
-      clearInterval(this.poemInterval);
-      this.poemInterval = null;
+      const autoEnabled = settingsMap.voz_pluma_auto;
+      const interval = parseInt(settingsMap.voz_pluma_interval || '3600'); // padrão 1 hora
+      const customPrompt = settingsMap.voz_pluma_prompt;
+
+      if (!autoEnabled) {
+        console.log('Publicação automática da Voz da Pluma desabilitada');
+        return;
+      }
+
+      // Verificar última publicação
+      const { data: lastPublication } = await supabase
+        .from('blog_posts')
+        .select('created_at')
+        .eq('category', 'voz-pluma')
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      const now = new Date();
+      const shouldPublish = !lastPublication || 
+        lastPublication.length === 0 || 
+        (now.getTime() - new Date(lastPublication[0].created_at).getTime()) >= (interval * 1000);
+
+      if (shouldPublish) {
+        console.log('Publicando novo conteúdo da Voz da Pluma...');
+        await voxPlumaAI.publishPoem(customPrompt);
+        console.log('Conteúdo da Voz da Pluma publicado com sucesso');
+      } else {
+        console.log('Intervalo de publicação da Voz da Pluma ainda não atingido');
+      }
+
+    } catch (error) {
+      console.error('Erro no scheduler da Voz da Pluma:', error);
     }
-    if (this.articleInterval) {
-      clearInterval(this.articleInterval);
-      this.articleInterval = null;
-    }
-    console.log('Agendamento parado');
   }
 
-  async restartSchedulers() {
-    this.stopSchedulers();
-    await this.startSchedulers();
-  }
-
-  // Publicar poema manual pelo admin
-  async publishPoemNow(customPrompt?: string): Promise<void> {
-    if (customPrompt) {
-      // Para poemas personalizados, usar o service de artigos com adaptação
-      const poemPrompt = `Crie um poema místico sobre: ${customPrompt}
-      
-      O poema deve:
-      - Ter entre 12-20 versos
-      - Usar linguagem elevada e simbólica
-      - Incorporar elementos espirituais
-      - Ter um título poético e impactante
-      
-      Responda no formato JSON com: title, content, author (um nome místico fictício), category`;
-      
-      await voxPlumaAI.publishArticle(poemPrompt);
-    } else {
-      await voxPlumaAI.publishPoem();
+  async publishNow(customPrompt?: string) {
+    try {
+      await voxPlumaAI.publishPoem(customPrompt);
+      return { success: true, message: 'Conteúdo publicado com sucesso' };
+    } catch (error) {
+      console.error('Erro ao publicar conteúdo:', error);
+      return { success: false, error: error.message };
     }
   }
 
-  // Publicar artigo manual pelo admin
-  async publishArticleNow(customPrompt?: string): Promise<void> {
-    await voxPlumaAI.publishArticle(customPrompt);
+  getStatus() {
+    return {
+      isRunning: this.isRunning,
+      hasInterval: !!this.intervalId
+    };
   }
 }
 
-export const contentScheduler = new ContentScheduler();
+export const vozPlumaScheduler = new VozPlumaScheduler();
+
+// Auto-iniciar o scheduler
+vozPlumaScheduler.start();
