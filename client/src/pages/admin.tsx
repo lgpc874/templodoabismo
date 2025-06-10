@@ -27,6 +27,43 @@ import {
   Eye
 } from 'lucide-react';
 
+interface AdminStats {
+  totalUsers: number;
+  totalPages: number;
+  totalCourses: number;
+  totalGrimoires: number;
+  totalArticles: number;
+  totalPublications: number;
+  totalVisits: number;
+  monthlyGrowth: number;
+  activeUsers: number;
+  totalRevenue: string;
+  popularPages: Array<{name: string; views: number}>;
+  recentActivity: Array<{action: string; timestamp: string; user: string}>;
+}
+
+interface AdminPage {
+  id: string;
+  title: string;
+  slug: string;
+  status: string;
+  created_at: string;
+}
+
+interface AdminCourse {
+  id: string;
+  title: string;
+  status: string;
+  price: number;
+  created_at: string;
+}
+
+interface VoxSettings {
+  voz_pluma_interval: number;
+  voz_pluma_auto: boolean;
+  voz_pluma_prompt: string;
+}
+
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [editingPage, setEditingPage] = useState(null);
@@ -40,24 +77,20 @@ export default function AdminPanel() {
   const queryClient = useQueryClient();
 
   // Queries
-  const { data: stats } = useQuery({
-    queryKey: ['/api/admin/stats'],
-    queryFn: () => apiRequest('GET', '/api/admin/stats')
+  const { data: stats } = useQuery<AdminStats>({
+    queryKey: ['/api/admin/stats']
   });
 
-  const { data: pages } = useQuery({
-    queryKey: ['/api/admin/pages'],
-    queryFn: () => apiRequest('GET', '/api/admin/pages')
+  const { data: pages } = useQuery<AdminPage[]>({
+    queryKey: ['/api/admin/pages']
   });
 
-  const { data: courses } = useQuery({
-    queryKey: ['/api/admin/courses'],
-    queryFn: () => apiRequest('GET', '/api/admin/courses')
+  const { data: courses } = useQuery<AdminCourse[]>({
+    queryKey: ['/api/admin/courses']
   });
 
   const { data: voxSettingsData } = useQuery({
-    queryKey: ['/api/admin/voz-pluma/settings'],
-    queryFn: () => apiRequest('/api/admin/voz-pluma/settings')
+    queryKey: ['/api/admin/voz-pluma/settings']
   });
 
   // Mutations
@@ -243,11 +276,11 @@ export default function AdminPanel() {
 
               <Card className="bg-gray-900/50 border-gray-800">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Consultas Oráculos</CardTitle>
+                  <CardTitle className="text-sm font-medium">Visitas Totais</CardTitle>
                   <BarChart3 className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-blue-500">{stats?.totalConsultations || 0}</div>
+                  <div className="text-2xl font-bold text-blue-500">{stats?.totalVisits || 0}</div>
                 </CardContent>
               </Card>
             </div>
