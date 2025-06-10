@@ -1,7 +1,5 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useSupabaseAuth } from '@/hooks/useSupabaseAuth';
-import { getSupabase } from '@/lib/supabase';
+import { createDirectSupabaseClient } from '@/lib/supabase-direct';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface User {
@@ -23,11 +21,20 @@ interface AuthContextType {
   loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  supabaseUser: null,
+  login: async () => false,
+  register: async () => false,
+  logout: async () => {},
+  updateUser: () => {},
+  isAuthenticated: false,
+  loading: false,
+});
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
@@ -35,38 +42,85 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const { 
-    user: supabaseUser, 
-    loading, 
-    isAuthenticated: supabaseAuthenticated,
-    signIn,
-    signUp,
-    signOut
-  } = useSupabaseAuth();
+  const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [supabaseClient, setSupabaseClient] = useState<any>(null);
 
+  // Initialize Supabase client
   useEffect(() => {
-    if (supabaseUser && supabaseAuthenticated) {
-      // Create or update user profile based on Supabase user
-      const userData: User = {
-        id: supabaseUser.id,
-        username: supabaseUser.user_metadata?.username || supabaseUser.email?.split('@')[0] || 'Iniciado',
-        email: supabaseUser.email || '',
-        initiation_level: 1,
-        personal_seal_generated: false
-      };
-      setUser(userData);
-    } else {
-      setUser(null);
+    let subscription: any = null;
+
+    async function initializeSupabase() {
+      try {
+        const client = await createDirectSupabaseClient();
+        setSupabaseClient(client);
+        
+        // Get initial session
+        const { data: { session } } = await client.auth.getSession();
+        const currentUser = session?.user ?? null;
+        setSupabaseUser(currentUser);
+        
+        if (currentUser) {
+          const userData: User = {
+            id: currentUser.id,
+            username: currentUser.user_metadata?.username || currentUser.email?.split('@')[0] || 'Iniciado',
+            email: currentUser.email || '',
+            initiation_level: 1,
+            personal_seal_generated: false
+          };
+          setUser(userData);
+        }
+        
+        // Listen for auth changes
+        const { data } = client.auth.onAuthStateChange((_event: any, session: any) => {
+          const authUser = session?.user ?? null;
+          setSupabaseUser(authUser);
+          
+          if (authUser) {
+            const userData: User = {
+              id: authUser.id,
+              username: authUser.user_metadata?.username || authUser.email?.split('@')[0] || 'Iniciado',
+              email: authUser.email || '',
+              initiation_level: 1,
+              personal_seal_generated: false
+            };
+            setUser(userData);
+          } else {
+            setUser(null);
+          }
+        });
+        
+        subscription = data.subscription;
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to initialize Supabase:', error);
+        setLoading(false);
+      }
     }
-  }, [supabaseUser, supabaseAuthenticated]);
+
+    initializeSupabase();
+
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
+  }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
+    if (!supabaseClient) return false;
+    
     try {
-      const { data, error } = await signIn(email, password);
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
       if (error) {
         console.error('Login error:', error);
         return false;
       }
+      
       return !!data.user;
     } catch (error) {
       console.error('Login error:', error);
@@ -75,31 +129,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const register = async (username: string, email: string, password: string): Promise<boolean> => {
+    if (!supabaseClient) {
+      console.error('Supabase client not initialized');
+      return false;
+    }
+    
     try {
-      const { data, error } = await signUp(email, password, { username });
+      console.log('Starting registration for:', email);
+      const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            username: username
+          }
+        }
+      });
+      
       if (error) {
-        console.error('Register error:', error.message || error);
-        throw new Error(error.message || 'Erro no registro');
+        console.error('Supabase signup error:', error);
+        return false;
       }
       
-      if (data.user) {
-        // Create user profile after successful registration
-        // Profile will be created automatically by Supabase triggers
+      if (data?.user) {
         console.log('User registered successfully:', data.user.id);
-        
         return true;
       }
+      
+      console.warn('No user returned from signup');
       return false;
     } catch (error: any) {
-      console.error('Register error:', error.message || error);
-      throw error;
+      console.error('Registration exception:', error);
+      return false;
     }
   };
 
   const logout = async (): Promise<void> => {
+    if (!supabaseClient) return;
+    
     try {
-      await signOut();
+      await supabaseClient.auth.signOut();
       setUser(null);
+      setSupabaseUser(null);
     } catch (error) {
       console.error('Logout error:', error);
     }
