@@ -18,11 +18,11 @@ import CourseDetail from "@/pages/course-detail";
 import Profile from "@/pages/profile";
 import StudentProfile from "@/pages/student-profile";
 import GrimoiresOld from "@/pages/grimoires-mystical";
-import Grimoires from "@/pages/grimoires-supabase";
+import Grimoires from "@/pages/grimoires-new";
 import Bibliotheca from "@/pages/bibliotheca-mystical";
 import VozDaPluma from "@/pages/voz-da-pluma";
 import LiberProhibitus from "@/pages/liber-prohibitus-mystical";
-import BlogSupabase from "@/pages/blog-supabase";
+import Blog from "@/pages/blog-new";
 import SupabaseDemo from "@/components/SupabaseDemo";
 
 import AdminControl from "@/pages/admin-control";
@@ -52,8 +52,8 @@ function Router() {
           <Route path="/grimorios" component={Grimoires} />
           <Route path="/bibliotheca" component={Bibliotheca} />
           <Route path="/voz-da-pluma" component={VozDaPluma} />
-          <Route path="/blog" component={BlogSupabase} />
-          <Route path="/gnosis" component={BlogSupabase} />
+          <Route path="/blog" component={Blog} />
+          <Route path="/gnosis" component={Blog} />
           <Route path="/liber-prohibitus" component={LiberProhibitus} />
           <Route path="/supabase-demo" component={SupabaseDemo} />
           <Route path="/oracle-test" component={OracleTest} />
