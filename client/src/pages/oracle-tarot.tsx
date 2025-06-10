@@ -51,8 +51,42 @@ export default function OracleTarot() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-purple-950/20 to-black text-white">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen relative overflow-hidden bg-black/8 backdrop-blur-sm">
+      {/* Ambiente Esotérico */}
+      <div className="mystical-particles fixed inset-0 z-0" />
+      
+      {/* Selo Central Fixo */}
+      <div className="fixed top-1/2 left-1/2 z-0 transform -translate-x-1/2 -translate-y-1/2" style={{marginTop: '2rem'}}>
+        {/* Outer rotating ring */}
+        <div className="absolute w-80 h-80 opacity-8 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="animate-spin-slow-reverse text-amber-500/15 text-[20rem] leading-none flex items-center justify-center h-full">
+            ◯
+          </div>
+        </div>
+        
+        {/* Middle layer with mystical symbols */}
+        <div className="absolute w-72 h-72 opacity-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="animate-spin-slow text-red-400/20 text-[18rem] leading-none flex items-center justify-center h-full">
+            ☿
+          </div>
+        </div>
+        
+        {/* Main central seal */}
+        <div className="rotating-seal absolute w-64 h-64 opacity-15 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="animate-spin-slow text-red-500/30 text-[16rem] leading-none flex items-center justify-center h-full">
+            ⸸
+          </div>
+        </div>
+        
+        {/* Inner pulsing core */}
+        <div className="absolute w-16 h-16 opacity-25 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="text-red-300/40 text-4xl leading-none flex items-center justify-center h-full">
+            ●
+          </div>
+        </div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/oraculo">
@@ -80,29 +114,29 @@ export default function OracleTarot() {
 
         {/* Consultation Interface */}
         <div className="max-w-4xl mx-auto">
-          <Card className="floating-card bg-black/30 backdrop-blur-lg border-amber-500/20">
+          <Card className="floating-card bg-black/8 backdrop-blur-sm border border-white/10">
             <CardHeader className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center">
-                <Gem className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-600/30 to-indigo-600/30 rounded-full flex items-center justify-center">
+                <Gem className="w-8 h-8 text-white/70" />
               </div>
-              <CardTitle className="text-2xl font-cinzel-decorative text-amber-300">
+              <CardTitle className="text-2xl font-cinzel-decorative text-amber-400/70">
                 Consulta das Cartas
               </CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardDescription className="text-gray-400/70">
                 Concentre-se em sua pergunta e permita que as cartas revelem os mistérios
               </CardDescription>
             </CardHeader>
             
             <CardContent className="space-y-6">
               <div>
-                <label className="block text-amber-300 font-medium mb-3">
+                <label className="block text-amber-400/70 font-medium mb-3">
                   Sua Pergunta ao Tarot
                 </label>
                 <Textarea
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                   placeholder="Faça sua pergunta às cartas ancestrais..."
-                  className="bg-black/40 border-amber-500/30 text-gray-300 min-h-[120px]"
+                  className="bg-black/10 border-white/20 text-gray-300/70 min-h-[120px]"
                   disabled={isLoading}
                 />
               </div>

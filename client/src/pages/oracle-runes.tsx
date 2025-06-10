@@ -51,8 +51,23 @@ export default function OracleRunes() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-amber-950/20 to-black text-white">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen relative overflow-hidden bg-black/8 backdrop-blur-sm">
+      <div className="mystical-particles fixed inset-0 z-0" />
+      <div className="fixed top-1/2 left-1/2 z-0 transform -translate-x-1/2 -translate-y-1/2" style={{marginTop: '2rem'}}>
+        <div className="absolute w-80 h-80 opacity-8 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="animate-spin-slow-reverse text-amber-500/15 text-[20rem] leading-none flex items-center justify-center h-full">◯</div>
+        </div>
+        <div className="absolute w-72 h-72 opacity-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="animate-spin-slow text-red-400/20 text-[18rem] leading-none flex items-center justify-center h-full">☿</div>
+        </div>
+        <div className="rotating-seal absolute w-64 h-64 opacity-15 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="animate-spin-slow text-red-500/30 text-[16rem] leading-none flex items-center justify-center h-full">⸸</div>
+        </div>
+        <div className="absolute w-16 h-16 opacity-25 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="text-red-300/40 text-4xl leading-none flex items-center justify-center h-full">●</div>
+        </div>
+      </div>
+      <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="text-center mb-8">
           <Link href="/oraculo">
             <Button variant="ghost" className="mb-4 text-amber-300 hover:text-amber-400">
