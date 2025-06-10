@@ -237,11 +237,11 @@ export default function AdminControl() {
 
   // Mutations
   const savePageMutation = useMutation({
-    mutationFn: (page: Partial<Page>) => {
+    mutationFn: async (page: Partial<Page>) => {
       if (page.id) {
-        return apiRequest('PUT', `/api/admin/pages/${page.id}`, page);
+        return await apiRequest('PUT', `/api/admin/pages/${page.id}`, page);
       } else {
-        return apiRequest('POST', '/api/admin/pages', page);
+        return await apiRequest('POST', '/api/admin/pages', page);
       }
     },
     onSuccess: () => {
@@ -458,8 +458,8 @@ export default function AdminControl() {
                     <Users className="h-4 w-4 text-amber-500" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-white">{stats?.totalUsers || 0}</div>
-                    <p className="text-xs text-gray-400">+{stats?.monthlyGrowth || 0}% este mês</p>
+                    <div className="text-2xl font-bold text-white">{(stats as any)?.totalUsers || 0}</div>
+                    <p className="text-xs text-gray-400">+{(stats as any)?.monthlyGrowth || 0}% este mês</p>
                   </CardContent>
                 </Card>
 
@@ -469,7 +469,7 @@ export default function AdminControl() {
                     <BookOpen className="h-4 w-4 text-amber-500" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-white">{stats?.totalCourses || 0}</div>
+                    <div className="text-2xl font-bold text-white">{(stats as any)?.totalCourses || 0}</div>
                     <p className="text-xs text-gray-400">Disponíveis na plataforma</p>
                   </CardContent>
                 </Card>
@@ -480,7 +480,7 @@ export default function AdminControl() {
                     <Scroll className="h-4 w-4 text-amber-500" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-white">{stats?.totalGrimoires || 0}</div>
+                    <div className="text-2xl font-bold text-white">{(stats as any)?.totalGrimoires || 0}</div>
                     <p className="text-xs text-gray-400">Textos sagrados catalogados</p>
                   </CardContent>
                 </Card>
@@ -491,7 +491,7 @@ export default function AdminControl() {
                     <DollarSign className="h-4 w-4 text-amber-500" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-white">R$ {stats?.totalRevenue || '0,00'}</div>
+                    <div className="text-2xl font-bold text-white">R$ {(stats as any)?.totalRevenue || '0,00'}</div>
                     <p className="text-xs text-gray-400">Este mês</p>
                   </CardContent>
                 </Card>
@@ -504,7 +504,7 @@ export default function AdminControl() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {stats?.popularPages?.map((page, index) => (
+                      {(stats as any)?.popularPages?.map((page: any, index: number) => (
                         <div key={index} className="flex items-center justify-between">
                           <span className="text-white text-sm">{page.name}</span>
                           <Badge variant="secondary" className="bg-amber-600/20 text-amber-300">
@@ -522,7 +522,7 @@ export default function AdminControl() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {stats?.recentActivity?.map((activity, index) => (
+                      {(stats as any)?.recentActivity?.map((activity: any, index: number) => (
                         <div key={index} className="flex flex-col space-y-1">
                           <span className="text-white text-sm">{activity.action}</span>
                           <div className="flex justify-between text-xs text-gray-400">
