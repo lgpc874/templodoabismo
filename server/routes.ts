@@ -65,6 +65,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ url, key });
   });
 
+  // Special endpoint to make first user admin
+  app.post('/api/make-admin', async (req: Request, res: Response) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
+      }
+
+      // Check if there are any admins in the system
+      const { data: existingAdmins } = await supabase
+        .from('users')
+        .select('id')
+        .eq('is_admin', true);
+
+      if (existingAdmins && existingAdmins.length > 0) {
+        return res.status(403).json({ error: 'Admin already exists in the system' });
+      }
+
+      // Find user by email and make them admin
+      const { data: userData, error: findError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', email)
+        .single();
+
+      if (findError || !userData) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      // Update user to admin
+      const { data: updatedUser, error: updateError } = await supabase
+        .from('users')
+        .update({ is_admin: true })
+        .eq('id', userData.id)
+        .select()
+        .single();
+
+      if (updateError) {
+        return res.status(500).json({ error: 'Failed to update user' });
+      }
+
+      res.json({ 
+        success: true, 
+        message: 'User successfully promoted to admin',
+        user: updatedUser 
+      });
+
+    } catch (error: any) {
+      console.error('Make admin error:', error);
+      res.status(500).json({ error: 'Failed to make user admin' });
+    }
+  });
+
   // === AUTHENTICATION ENDPOINTS ===
   
   // Alternative registration endpoint that bypasses middleware issues

@@ -66,6 +66,55 @@ const AdminPanel: React.FC = () => {
     price: 0
   });
 
+  // Check if user is logged in
+  if (!user) {
+    return (
+      <div className="min-h-screen relative overflow-hidden">
+        {/* Fixed Central Rotating Seal */}
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+          <div className="rotating-seal w-96 h-96 opacity-20">
+            <img 
+              src="/seal.png" 
+              alt="Selo do Templo do Abismo" 
+              className="w-full h-full object-contain filter drop-shadow-lg"
+            />
+          </div>
+        </div>
+
+        {/* Mystical floating particles */}
+        <div className="fixed inset-0 overflow-hidden z-0">
+          <div className="mystical-particles"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+        </div>
+
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
+          <div className="floating-card p-8 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl text-center max-w-md">
+            <Shield className="w-16 h-16 mx-auto text-amber-400 mb-4" />
+            <h1 className="text-3xl font-cinzel-decorative text-amber-400 mystical-glow mb-4">
+              SANCTUM ADMINISTRATORIS
+            </h1>
+            <p className="text-gray-300 mb-6">
+              Acesso restrito aos mestres do templo. Faça login para continuar.
+            </p>
+            <div className="space-y-4">
+              <a href="/login">
+                <Button className="w-full bg-amber-600 hover:bg-amber-700 text-black">
+                  Entrar no Sanctum
+                </Button>
+              </a>
+              <a href="/register">
+                <Button variant="outline" className="w-full border-amber-500/30 text-amber-300 hover:bg-amber-500/10">
+                  Registrar-se
+                </Button>
+              </a>
+            </div>
+            <div className="text-amber-400 text-2xl mt-6">𖤍 ⸸ 𖤍</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Check if user is admin
   if (!user?.is_admin) {
     return (
@@ -88,15 +137,23 @@ const AdminPanel: React.FC = () => {
         </div>
 
         <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-          <div className="floating-card p-8 bg-black/30 backdrop-blur-lg border border-red-500/20 rounded-xl text-center">
+          <div className="floating-card p-8 bg-black/30 backdrop-blur-lg border border-red-500/20 rounded-xl text-center max-w-md">
             <Shield className="w-16 h-16 mx-auto text-red-400 mb-4" />
             <h1 className="text-3xl font-cinzel-decorative text-red-400 mystical-glow mb-4">
               ACCESSUS DENEGATUS
             </h1>
             <p className="text-gray-300 mb-4">
-              Você não possui as permissões necessárias para acessar o sanctum administrativo.
+              Olá <strong className="text-amber-400">{user.username}</strong>, você não possui as permissões necessárias para acessar o sanctum administrativo.
             </p>
-            <div className="text-red-400 text-2xl">⛧ ⸸ ⛧</div>
+            <p className="text-sm text-gray-400 mb-6">
+              Apenas mestres do templo com privilégios administrativos podem acessar esta área.
+            </p>
+            <a href="/">
+              <Button className="bg-amber-600 hover:bg-amber-700 text-black">
+                Retornar ao Templo
+              </Button>
+            </a>
+            <div className="text-red-400 text-2xl mt-6">⛧ ⸸ ⛧</div>
           </div>
         </div>
       </div>

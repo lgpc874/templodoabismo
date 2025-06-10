@@ -26,6 +26,7 @@ import AdminControl from "@/pages/admin-control";
 import Register from "@/pages/register";
 import AdminPanel from "@/pages/admin";
 import OracleTest from "@/pages/oracle-test";
+import SetupAdmin from "@/pages/setup-admin";
 
 function Router() {
   return (
@@ -52,6 +53,7 @@ function Router() {
           <Route path="/gnosis" component={Blog} />
           <Route path="/liber-prohibitus" component={LiberProhibitus} />
           <Route path="/oracle-test" component={OracleTest} />
+          <Route path="/setup-admin" component={SetupAdmin} />
           <Route path="/admin" component={AdminPanel} />
           <Route path="/sanctum-administratoris" component={AdminControl} />
           <Route component={NotFound} />
