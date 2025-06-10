@@ -61,9 +61,12 @@ export default function Oracle() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Mystical Particles Background */}
+      {/* Enhanced Mystical Particles with Mood Effects */}
+      <div className="fixed inset-0 z-0 pointer-events-none mystical-particles"></div>
+
+      {/* Dynamic Atmosphere Particles */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(25)].map((_, i) => (
           <div
             key={i}
             className="absolute w-1 h-1 bg-red-500/40 rounded-full particle-effect"
@@ -76,17 +79,17 @@ export default function Oracle() {
         ))}
       </div>
 
-      {/* Floating Smoke Effects */}
+      {/* Enhanced Floating Smoke Effects */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        {[...Array(6)].map((_, i) => (
+        {[...Array(8)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-20 h-20 opacity-10 smoke-effect"
+            className="absolute w-24 h-24 opacity-15 smoke-effect"
             style={{
               left: `${Math.random() * 100}%`,
-              bottom: '-80px',
+              bottom: '-96px',
               animationDelay: `${Math.random() * 8}s`,
-              background: 'radial-gradient(circle, rgba(239,68,68,0.4) 0%, transparent 70%)'
+              background: 'radial-gradient(circle, rgba(239,68,68,0.5) 0%, transparent 70%)'
             }}
           />
         ))}
