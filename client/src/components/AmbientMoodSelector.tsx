@@ -7,10 +7,7 @@ import {
   Skull, 
   Zap, 
   Eye, 
-  Crown,
-  Volume2,
-  VolumeX,
-  Settings
+  Crown
 } from 'lucide-react';
 import {
   Popover,
@@ -37,8 +34,7 @@ const moodOptions: MoodOption[] = [
     description: 'Trevas profundas do abismo',
     bgGradient: 'from-black via-purple-950/30 to-black',
     particleColor: 'purple',
-    sealOpacity: 0.15,
-    audioUrl: '/audio/abyssal-ambience.mp3'
+    sealOpacity: 0.15
   },
   {
     id: 'infernal',
@@ -47,8 +43,7 @@ const moodOptions: MoodOption[] = [
     description: 'Chamas ardentes do inferno',
     bgGradient: 'from-black via-red-950/40 to-orange-950/20',
     particleColor: 'red',
-    sealOpacity: 0.25,
-    audioUrl: '/audio/infernal-flames.mp3'
+    sealOpacity: 0.25
   },
   {
     id: 'lunar',
@@ -57,8 +52,7 @@ const moodOptions: MoodOption[] = [
     description: 'Mistérios da lua negra',
     bgGradient: 'from-black via-blue-950/30 to-indigo-950/20',
     particleColor: 'blue',
-    sealOpacity: 0.10,
-    audioUrl: '/audio/lunar-night.mp3'
+    sealOpacity: 0.10
   },
   {
     id: 'stellar',
@@ -67,8 +61,7 @@ const moodOptions: MoodOption[] = [
     description: 'Energias cósmicas ancestrais',
     bgGradient: 'from-black via-violet-950/30 to-purple-950/20',
     particleColor: 'violet',
-    sealOpacity: 0.20,
-    audioUrl: '/audio/stellar-void.mp3'
+    sealOpacity: 0.20
   },
   {
     id: 'divine',
@@ -77,8 +70,7 @@ const moodOptions: MoodOption[] = [
     description: 'Poder supremo luciferiano',
     bgGradient: 'from-black via-amber-950/30 to-yellow-950/20',
     particleColor: 'amber',
-    sealOpacity: 0.30,
-    audioUrl: '/audio/divine-power.mp3'
+    sealOpacity: 0.30
   },
   {
     id: 'void',
@@ -87,8 +79,7 @@ const moodOptions: MoodOption[] = [
     description: 'Silêncio do vazio primordial',
     bgGradient: 'from-black via-gray-950/20 to-black',
     particleColor: 'gray',
-    sealOpacity: 0.05,
-    audioUrl: '/audio/void-silence.mp3'
+    sealOpacity: 0.05
   }
 ];
 
@@ -98,9 +89,6 @@ interface AmbientMoodSelectorProps {
 
 export default function AmbientMoodSelector({ onMoodChange }: AmbientMoodSelectorProps) {
   const [selectedMood, setSelectedMood] = useState<MoodOption>(moodOptions[0]);
-  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
-  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
-  const [volume, setVolume] = useState(0.3);
 
   useEffect(() => {
     // Apply mood to the document body
@@ -115,28 +103,8 @@ export default function AmbientMoodSelector({ onMoodChange }: AmbientMoodSelecto
     onMoodChange?.(selectedMood);
   }, [selectedMood, onMoodChange]);
 
-  useEffect(() => {
-    // Audio functionality disabled for now - would require actual audio files
-    // Future implementation would handle ambient soundscapes here
-    if (currentAudio) {
-      currentAudio.pause();
-      setCurrentAudio(null);
-    }
-  }, [selectedMood]);
-
   const handleMoodSelect = (mood: MoodOption) => {
     setSelectedMood(mood);
-  };
-
-  const toggleAudio = () => {
-    setIsAudioEnabled(!isAudioEnabled);
-  };
-
-  const handleVolumeChange = (newVolume: number) => {
-    setVolume(newVolume);
-    if (currentAudio) {
-      currentAudio.volume = newVolume;
-    }
   };
 
   return (
@@ -162,42 +130,6 @@ export default function AmbientMoodSelector({ onMoodChange }: AmbientMoodSelecto
               <p className="text-sm text-gray-400">
                 Escolha a atmosfera do templo
               </p>
-            </div>
-
-            {/* Audio Controls */}
-            <div className="flex items-center justify-between p-3 bg-gray-900/50 rounded-lg border border-gray-700/50">
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={toggleAudio}
-                  className="text-amber-400 hover:text-amber-300"
-                >
-                  {isAudioEnabled ? (
-                    <Volume2 className="w-4 h-4" />
-                  ) : (
-                    <VolumeX className="w-4 h-4" />
-                  )}
-                </Button>
-                <span className="text-sm text-gray-300">
-                  {isAudioEnabled ? 'Áudio Ativo' : 'Áudio Silenciado'}
-                </span>
-              </div>
-              
-              {isAudioEnabled && (
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs text-gray-400">Volume</span>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value={volume}
-                    onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                    className="w-16 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
-                  />
-                </div>
-              )}
             </div>
 
             {/* Mood Grid */}

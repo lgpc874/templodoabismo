@@ -225,6 +225,30 @@
 }
 
 /* Ambient Mood System Styles */
+body.mood-abyssal {
+  background: radial-gradient(ellipse at center, rgba(88, 28, 135, 0.15) 0%, rgba(30, 10, 45, 0.8) 50%, rgba(0, 0, 0, 1) 100%);
+}
+
+body.mood-infernal {
+  background: radial-gradient(ellipse at center, rgba(220, 38, 38, 0.15) 0%, rgba(60, 15, 15, 0.8) 50%, rgba(0, 0, 0, 1) 100%);
+}
+
+body.mood-lunar {
+  background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.12) 0%, rgba(15, 30, 60, 0.8) 50%, rgba(0, 0, 0, 1) 100%);
+}
+
+body.mood-stellar {
+  background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.15) 0%, rgba(30, 20, 60, 0.8) 50%, rgba(0, 0, 0, 1) 100%);
+}
+
+body.mood-divine {
+  background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.12) 0%, rgba(60, 45, 15, 0.8) 50%, rgba(0, 0, 0, 1) 100%);
+}
+
+body.mood-void {
+  background: radial-gradient(ellipse at center, rgba(75, 85, 99, 0.08) 0%, rgba(20, 25, 30, 0.8) 50%, rgba(0, 0, 0, 1) 100%);
+}
+
 .mood-abyssal .mystical-particles {
   background-image: 
     radial-gradient(2px 2px at 20px 30px, rgba(147, 51, 234, 0.4), transparent),
