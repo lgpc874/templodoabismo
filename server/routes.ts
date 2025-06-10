@@ -65,6 +65,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ url, key });
   });
 
+  // Emergency admin access endpoint
+  app.post('/api/emergency-admin', async (req: Request, res: Response) => {
+    try {
+      const { email, password } = req.body;
+      
+      if (email !== 'admin@templodoabismo.com' || password !== 'admin123') {
+        return res.status(401).json({ error: 'Invalid emergency credentials' });
+      }
+      
+      // Return admin user data directly
+      const adminUser = {
+        id: 1,
+        email: 'admin@templodoabismo.com',
+        username: 'admin',
+        role: 'admin',
+        initiation_level: 10,
+        personal_seal_generated: true
+      };
+      
+      res.json({ user: adminUser, token: 'emergency-admin-token' });
+    } catch (error) {
+      res.status(500).json({ error: 'Emergency admin failed' });
+    }
+  });
+
   // Special endpoint to make first user admin
   app.post('/api/make-admin', async (req: Request, res: Response) => {
     try {

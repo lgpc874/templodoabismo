@@ -8,6 +8,7 @@ interface User {
   email: string;
   initiation_level: number;
   personal_seal_generated: boolean;
+  role?: string;
   is_admin?: boolean;
 }
 

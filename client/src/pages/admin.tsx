@@ -52,6 +52,10 @@ const AdminPanel: React.FC = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
+  // Check for emergency admin session
+  const emergencyAdmin = localStorage.getItem('emergency-admin');
+  const emergencyUser = emergencyAdmin ? JSON.parse(emergencyAdmin) : null;
+  
   const [newCourse, setNewCourse] = useState({
     title: '',
     description: '',
@@ -115,8 +119,11 @@ const AdminPanel: React.FC = () => {
     );
   }
 
-  // Check if user is admin
-  if (!user?.role || user.role !== 'admin') {
+  // Check if user is admin (normal login or emergency admin)
+  const isAdmin = (user?.role === 'admin') || (emergencyUser?.role === 'admin');
+  const currentUser = user || emergencyUser;
+  
+  if (!isAdmin) {
     return (
       <div className="min-h-screen relative overflow-hidden">
         {/* Fixed Central Rotating Seal */}
@@ -143,7 +150,7 @@ const AdminPanel: React.FC = () => {
               ACCESSUS DENEGATUS
             </h1>
             <p className="text-gray-300 mb-4">
-              Olá <strong className="text-amber-400">{user.username}</strong>, você não possui as permissões necessárias para acessar o sanctum administrativo.
+              Olá <strong className="text-amber-400">{currentUser?.username || 'visitante'}</strong>, você não possui as permissões necessárias para acessar o sanctum administrativo.
             </p>
             <p className="text-sm text-gray-400 mb-6">
               Apenas mestres do templo com privilégios administrativos podem acessar esta área.
