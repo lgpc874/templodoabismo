@@ -1,6 +1,6 @@
 import { supabaseAdmin } from './supabase-admin';
 import OpenAI from 'openai';
-import type { VozPlumaManifestation, InsertVozPlumaManifestation } from '@shared/schema';
+import type { VozPlumaManifestation, InsertVozPlumaManifestation } from '@shared/schema-fixed';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

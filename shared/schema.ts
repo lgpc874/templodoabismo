@@ -494,37 +494,10 @@ export const scriptures = pgTable("scriptures", {
 // Insert Schemas
 export const insertUserSchema = createInsertSchema(users);
 export const insertCourseSchema = createInsertSchema(courses);
-
 export const insertCourseLevelSchema = createInsertSchema(courseLevels);
+export const insertCourseEnrollmentSchema = createInsertSchema(courseEnrollments);
 
-export const insertCourseEnrollmentSchema = createInsertSchema(courseEnrollments).pick({
-  user_id: true,
-  course_id: true,
-  enrollment_type: true,
-  level_id: true,
-  purchase_price_brl: true,
-});
-
-export const insertGrimoireSchema = createInsertSchema(grimoires).pick({
-  title: true,
-  description: true,
-  author: true,
-  level: true,
-  access_level: true,
-  purchase_price_brl: true,
-  rental_price_brl: true,
-  chapter_price_brl: true,
-  rental_days: true,
-  total_chapters: true,
-  pdf_url: true,
-  cover_image: true,
-  enable_rental: true,
-  enable_purchase: true,
-  enable_chapter_purchase: true,
-  enable_online_reading: true,
-  tags: true,
-  is_active: true,
-});
+export const insertGrimoireSchema = createInsertSchema(grimoires);
 
 export const insertGrimoireChapterSchema = createInsertSchema(grimoireChapters).pick({
   grimoire_id: true,
