@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tarot, Mirror, Runes, Fire, MessageSquare, CreditCard, Star, Crown, Eye, Flame } from "lucide-react";
+import { Sparkles, Eye, Zap, Flame, MessageSquare, CreditCard, Star, Crown, Search } from "lucide-react";
 import { Link } from "wouter";
 import Footer from "../components/footer";
 import { CentralLogo } from '@/components/CentralLogo';
@@ -11,7 +11,7 @@ const oracleTypes = [
     id: 'tarot',
     name: 'Tarot Infernal',
     description: 'Consulte as cartas ancestrais que revelam os caminhos ocultos através dos véus da realidade. Cada arcano maior e menor carrega os segredos primordiais.',
-    icon: Tarot,
+    icon: Sparkles,
     pricePerConsultation: 25.00,
     route: '/oracle/tarot'
   },
@@ -19,7 +19,7 @@ const oracleTypes = [
     id: 'mirror',
     name: 'Espelho do Abismo',
     description: 'Contemple o reflexo de sua alma nas águas negras do conhecimento. O espelho revela verdades que a mente consciente oculta.',
-    icon: Mirror,
+    icon: Eye,
     pricePerConsultation: 20.00,
     route: '/oracle/mirror'
   },
@@ -27,7 +27,7 @@ const oracleTypes = [
     id: 'runes',
     name: 'Runas Ancestrais',
     description: 'Desperte os símbolos sagrados gravados nos ossos da terra. Cada runa carrega o poder dos antigos e sussurra destinos.',
-    icon: Runes,
+    icon: Zap,
     pricePerConsultation: 30.00,
     route: '/oracle/runes'
   },
@@ -35,7 +35,7 @@ const oracleTypes = [
     id: 'fire',
     name: 'Chamas Reveladoras',
     description: 'Contemple as danças hipnóticas do fogo sagrado. Nas chamas crepitantes, os espíritos ancestrais revelam visões do porvir.',
-    icon: Fire,
+    icon: Flame,
     pricePerConsultation: 35.00,
     route: '/oracle/fire'
   },
@@ -202,7 +202,7 @@ export default function Oracle() {
                         size="sm"
                         className="w-full bg-gradient-to-r from-red-900/30 to-amber-900/30 text-amber-300/80 border border-amber-600/30 hover:from-red-800/40 hover:to-amber-800/40 hover:text-amber-200/90 hover:border-amber-500/40 transition-all duration-300"
                       >
-                        <Eye className="w-4 h-4 mr-2" />
+                        <Search className="w-4 h-4 mr-2" />
                         Consultar
                       </Button>
                     </Link>
