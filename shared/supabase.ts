@@ -231,6 +231,18 @@ export const supabase: SupabaseClient<Database> = createClient(
   }
 )
 
+// Admin client with service role key for privileged operations
+export const supabaseAdmin: SupabaseClient<Database> = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+)
+
 // Database types for better TypeScript support
 export interface User {
   id: string
