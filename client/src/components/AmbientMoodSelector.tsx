@@ -108,32 +108,33 @@ export default function AmbientMoodSelector({ onMoodChange }: AmbientMoodSelecto
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50">
+    <div className="fixed top-20 left-4 z-50">
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             size="sm"
-            className="bg-black/80 backdrop-blur-lg border-amber-500/30 text-amber-300 hover:bg-amber-500/10"
+            className="bg-black/90 backdrop-blur-lg border-amber-500/30 text-amber-300 hover:bg-amber-500/10 px-3 py-2 text-xs md:text-sm"
           >
-            <selectedMood.icon className="w-4 h-4 mr-2" />
-            Ambiente
+            <selectedMood.icon className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
+            <span className="hidden sm:inline">Ambiente</span>
+            <span className="sm:hidden">Amb</span>
           </Button>
         </PopoverTrigger>
         
-        <PopoverContent className="w-80 bg-black/95 backdrop-blur-lg border-amber-500/30 text-white">
-          <div className="space-y-4">
+        <PopoverContent className="w-72 md:w-80 bg-black/95 backdrop-blur-lg border-amber-500/30 text-white ml-2" side="right" align="start">
+          <div className="space-y-3">
             <div className="text-center">
-              <h3 className="text-lg font-cinzel-decorative text-amber-400 mb-1">
-                Seletor de Ambiente Místico
+              <h3 className="text-sm md:text-lg font-cinzel-decorative text-amber-400 mb-1">
+                Ambiente Místico
               </h3>
-              <p className="text-sm text-gray-400">
-                Escolha a atmosfera do templo
+              <p className="text-xs md:text-sm text-gray-400">
+                Escolha a atmosfera
               </p>
             </div>
 
             {/* Mood Grid */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2 md:gap-3">
               {moodOptions.map((mood) => {
                 const Icon = mood.icon;
                 const isSelected = selectedMood.id === mood.id;
@@ -148,16 +149,16 @@ export default function AmbientMoodSelector({ onMoodChange }: AmbientMoodSelecto
                     }`}
                     onClick={() => handleMoodSelect(mood)}
                   >
-                    <CardContent className="p-3 text-center">
-                      <Icon className={`w-6 h-6 mx-auto mb-2 ${
+                    <CardContent className="p-2 md:p-3 text-center">
+                      <Icon className={`w-4 h-4 md:w-6 md:h-6 mx-auto mb-1 md:mb-2 ${
                         isSelected ? 'text-amber-400' : 'text-gray-400'
                       }`} />
-                      <h4 className={`text-sm font-cinzel font-semibold mb-1 ${
+                      <h4 className={`text-xs md:text-sm font-cinzel font-semibold mb-1 ${
                         isSelected ? 'text-amber-300' : 'text-gray-300'
                       }`}>
                         {mood.name}
                       </h4>
-                      <p className="text-xs text-gray-500 leading-tight">
+                      <p className="text-xs text-gray-500 leading-tight hidden md:block">
                         {mood.description}
                       </p>
                     </CardContent>
@@ -167,14 +168,14 @@ export default function AmbientMoodSelector({ onMoodChange }: AmbientMoodSelecto
             </div>
 
             {/* Current Selection Info */}
-            <div className="text-center p-3 bg-amber-500/10 rounded-lg border border-amber-500/30">
-              <div className="flex items-center justify-center space-x-2 mb-1">
-                <selectedMood.icon className="w-4 h-4 text-amber-400" />
-                <span className="text-sm font-cinzel text-amber-300">
+            <div className="text-center p-2 md:p-3 bg-amber-500/10 rounded-lg border border-amber-500/30">
+              <div className="flex items-center justify-center space-x-1 md:space-x-2 mb-1">
+                <selectedMood.icon className="w-3 h-3 md:w-4 md:h-4 text-amber-400" />
+                <span className="text-xs md:text-sm font-cinzel text-amber-300">
                   {selectedMood.name} Ativo
                 </span>
               </div>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-400 hidden md:block">
                 {selectedMood.description}
               </p>
             </div>
