@@ -196,7 +196,7 @@ export default function GrimoiresPage() {
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-              <p className="text-gray-400">Carregando Grimórios...</p>
+              <p className="text-gray-400">Carregando Grimoriorum...</p>
             </div>
           </div>
         </div>
@@ -228,10 +228,10 @@ export default function GrimoiresPage() {
         <div className="container mx-auto px-6">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 mb-4">
-              Bibliotheca Abyssos
+              Grimoriorum Arcanum
             </h1>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Textos ancestrais e grimórios luciferinos para sua jornada de conhecimento
+              Textos ancestrais e grimórios arcanos para sua jornada de conhecimento
             </p>
           </div>
         </div>
