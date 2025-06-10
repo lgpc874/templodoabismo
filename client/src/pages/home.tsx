@@ -6,7 +6,7 @@ import { Link } from "wouter";
 
 export default function Home() {
   // Fetch real content from Supabase only
-  const { data: recentPosts } = useQuery({
+  const { data: recentPosts } = useQuery<any[]>({
     queryKey: ["/api/voz-pluma/recent"],
     staleTime: 5 * 60 * 1000, // 5 minutes
   });

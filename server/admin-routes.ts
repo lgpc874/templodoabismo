@@ -267,17 +267,7 @@ export function registerAdminRoutes(app: Express) {
   });
 
   // Generate Course with AI
-  app.post('/api/generate/course', requireAuth, requireAdmin, async (req: Request, res: Response) => {
-    try {
-      const { topic, level } = req.body;
-      
-      const courseContent = await temploAI.generateCourseContent(level, topic);
-      res.json(courseContent);
-    } catch (error) {
-      console.error('Error generating course:', error);
-      res.status(500).json({ error: 'Failed to generate course' });
-    }
-  });
+  // Course generation removed - all content managed through Supabase CMS
 
   // Users Management
   app.get('/api/admin/users', requireAuth, requireAdmin, async (req: Request, res: Response) => {
