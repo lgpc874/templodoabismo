@@ -31,17 +31,32 @@ export default function CoursesSupabase() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-950">
-      <SiteNavigation />
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Fixed Central Rotating Seal */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <div className="rotating-seal w-96 h-96 opacity-20">
+          <img 
+            src="/seal.png" 
+            alt="Selo do Templo do Abismo" 
+            className="w-full h-full object-contain filter drop-shadow-lg"
+          />
+        </div>
+      </div>
+
+      {/* Mystical floating particles */}
+      <div className="fixed inset-0 overflow-hidden z-0">
+        <div className="mystical-particles"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+      </div>
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="relative z-10 container mx-auto px-4 py-8 pt-20">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-cinzel-decorative text-gold mb-4">
-            Arcanum Studiorum
+          <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 animate-pulse font-['Cinzel_Decorative']">
+            DISCIPLINAE LUCIFERIANAE
           </h1>
-          <p className="text-xl text-gray-300 font-crimson max-w-2xl mx-auto">
-            Conhecimentos ancestrais e práticas luciferianas para a evolução espiritual
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            Sete círculos de conhecimento forbidden onde almas destemidas transcendem os limites da consciência mortal através da gnose luciferiana.
           </p>
         </div>
 

@@ -55,13 +55,26 @@ const Header: React.FC = () => {
           {/* Logo */}
           <Link href="/">
             <div className="flex items-center space-x-3 cursor-pointer">
-              <div className="w-8 h-8 relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-400 via-red-500 to-purple-600 rounded-full animate-pulse"></div>
-                <div className="absolute inset-1 bg-black rounded-full flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-amber-400" />
+              <div className="w-10 h-10 relative flex items-center justify-center">
+                {/* Rotating background seal */}
+                <div className="absolute inset-0 animate-spin-slow">
+                  <svg viewBox="0 0 100 100" className="w-full h-full text-amber-400/80">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="2"/>
+                    <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth="1"/>
+                    <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" strokeWidth="1"/>
+                    <path d="M50 5 L55 25 L50 15 L45 25 Z" fill="currentColor"/>
+                    <path d="M95 50 L75 55 L85 50 L75 45 Z" fill="currentColor"/>
+                    <path d="M50 95 L45 75 L50 85 L55 75 Z" fill="currentColor"/>
+                    <path d="M5 50 L25 45 L15 50 L25 55 Z" fill="currentColor"/>
+                    <circle cx="50" cy="50" r="8" fill="currentColor"/>
+                  </svg>
+                </div>
+                {/* Central symbol */}
+                <div className="relative z-10 w-6 h-6 flex items-center justify-center bg-black rounded-full border border-amber-400/50">
+                  <Shield className="w-3 h-3 text-amber-400" />
                 </div>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-amber-400 to-red-500 bg-clip-text text-transparent">
+              <span className="text-xl font-bold bg-gradient-to-r from-amber-400 to-red-500 bg-clip-text text-transparent font-['Cinzel_Decorative']">
                 Templo do Abismo
               </span>
             </div>

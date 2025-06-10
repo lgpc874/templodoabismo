@@ -33,6 +33,20 @@
   --admin-sidebar-active: hsl(217.2, 32.6%, 17.5%);
 }
 
+/* Custom animations for rotating seal */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
 .dark {
   --background: hsl(240, 10%, 3.9%);
   --foreground: hsl(0, 0%, 98%);
@@ -329,6 +343,15 @@
   background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(40, 40, 40, 0.85));
   border: 1px solid rgba(220, 38, 38, 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+}
+
+.floating-card {
+  @apply bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-xl shadow-2xl hover:bg-black/30 hover:border-amber-500/40;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 0 20px rgba(234, 179, 8, 0.1),
+    0 0 40px rgba(234, 179, 8, 0.05),
+    inset 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
 
