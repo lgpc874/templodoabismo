@@ -12,10 +12,41 @@ export default function Home() {
   });
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-black/8 backdrop-blur-sm">
-      {/* Ambiente Esotérico */}
-      <div className="mystical-particles fixed inset-0 z-0" />
-      
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Enhanced Mystical Particles with Mood Effects */}
+      <div className="fixed inset-0 z-0 pointer-events-none mystical-particles"></div>
+
+      {/* Dynamic Atmosphere Particles */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        {[...Array(25)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-red-500/40 rounded-full particle-effect"
+            style={{
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 15}s`,
+              animationDuration: `${12 + Math.random() * 8}s`
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Enhanced Floating Smoke Effects */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        {[...Array(8)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-24 h-24 opacity-15 smoke-effect"
+            style={{
+              left: `${Math.random() * 100}%`,
+              bottom: '-96px',
+              animationDelay: `${Math.random() * 8}s`,
+              background: 'radial-gradient(circle, rgba(239,68,68,0.5) 0%, transparent 70%)'
+            }}
+          />
+        ))}
+      </div>
+
       {/* Selo Central Fixo */}
       <div className="fixed top-1/2 left-1/2 z-0 transform -translate-x-1/2 -translate-y-1/2" style={{marginTop: '2rem'}}>
         {/* Outer rotating ring */}
@@ -47,6 +78,20 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Mystical Energy Lines */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-red-500/15 to-transparent animate-flicker" />
+        <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-amber-500/15 to-transparent animate-flicker" style={{animationDelay: '1.5s'}} />
+        <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-500/15 to-transparent animate-flicker" style={{animationDelay: '2.5s'}} />
+        <div className="absolute bottom-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/15 to-transparent animate-flicker" style={{animationDelay: '3.5s'}} />
+      </div>
+
+      {/* Atmospheric Gradient Overlay */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/60 via-transparent to-black/80"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-radial from-transparent via-red-900/5 to-black/40"></div>
+      </div>
+
       {/* Main content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 pt-20">
         {/* Saudação Esotérica Completa */}
@@ -65,7 +110,7 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="floating-card p-8 space-y-6 bg-black/8 backdrop-blur-sm border border-white/10 rounded-xl">
+          <div className="text-center mb-12 max-w-5xl bg-black/5 backdrop-blur-sm rounded-2xl p-8 border border-white/5">
             <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-400/70 mb-6 floating-title-slow">
               Ave, Buscador das Trevas Sagradas
             </h2>
