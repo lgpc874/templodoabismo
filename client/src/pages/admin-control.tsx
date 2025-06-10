@@ -38,8 +38,12 @@ interface Page {
   content: string;
   type: 'course' | 'grimoire' | 'page';
   status: 'draft' | 'published';
+  meta_description?: string;
+  featured_image?: string;
+  author_id?: number;
   created_at: string;
   updated_at: string;
+  published_at?: string;
 }
 
 interface Course {
@@ -47,10 +51,32 @@ interface Course {
   title: string;
   description: string;
   slug: string;
+  content?: string;
   difficulty_level: number;
   price_brl: string;
+  duration_hours?: number;
+  requirements?: string[];
+  what_you_learn?: string[];
+  status: 'draft' | 'published';
+  featured_image?: string;
+  author_id?: number;
+  created_at: string;
+  updated_at: string;
+  published_at?: string;
+}
+
+interface Grimoire {
+  id: number;
+  title: string;
+  content: string;
+  slug: string;
+  category: string;
+  access_level: number;
+  is_forbidden: boolean;
+  author?: string;
   status: 'draft' | 'published';
   created_at: string;
+  updated_at: string;
 }
 
 interface SiteStats {
@@ -87,6 +113,12 @@ export default function AdminControl() {
   const { data: courses = [] } = useQuery<Course[]>({
     queryKey: ['/api/admin/courses'],
     queryFn: () => apiRequest('GET', '/api/admin/courses')
+  });
+
+  // Fetch grimoires
+  const { data: grimoires = [] } = useQuery<Grimoire[]>({
+    queryKey: ['/api/admin/grimoires'],
+    queryFn: () => apiRequest('GET', '/api/admin/grimoires')
   });
 
   // Page mutations
@@ -146,6 +178,32 @@ export default function AdminControl() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/courses'] });
       toast({ title: "Curso removido com sucesso!" });
+    }
+  });
+
+  // Grimoire mutations
+  const createGrimoireMutation = useMutation({
+    mutationFn: (data: Partial<Grimoire>) => apiRequest('POST', '/api/admin/grimoires', data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/grimoires'] });
+      toast({ title: "Grimório criado com sucesso!" });
+    }
+  });
+
+  const updateGrimoireMutation = useMutation({
+    mutationFn: ({ id, ...data }: Partial<Grimoire> & { id: number }) => 
+      apiRequest('PUT', `/api/admin/grimoires/${id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/grimoires'] });
+      toast({ title: "Grimório atualizado com sucesso!" });
+    }
+  });
+
+  const deleteGrimoire = useMutation({
+    mutationFn: (id: number) => apiRequest('DELETE', `/api/admin/grimoires/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/grimoires'] });
+      toast({ title: "Grimório removido com sucesso!" });
     }
   });
 
@@ -420,21 +478,63 @@ export default function AdminControl() {
               </div>
             </TabsContent>
 
-            {/* Grimoires Tab */}
+            {/* Grimoires Management Tab */}
             <TabsContent value="grimoires" className="space-y-6">
-              <h2 className="text-2xl font-cinzel-decorative text-amber-300">Textos do Liber Prohibitus</h2>
-              <p className="text-gray-400">
-                Gerencie os textos sagrados e proibidos da biblioteca
-              </p>
-              
-              <div className="floating-card p-6 bg-black/30 backdrop-blur-lg border border-red-500/20 rounded-xl text-center">
-                <Scroll className="w-12 h-12 text-red-400 mx-auto mb-4" />
-                <p className="text-xl text-gray-300">
-                  Sistema de grimórios em desenvolvimento
-                </p>
-                <p className="text-gray-400 mt-2">
-                  Em breve você poderá gerenciar todos os textos sagrados
-                </p>
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-cinzel-decorative text-amber-300">Gerenciar Grimórios</h2>
+                <Button 
+                  onClick={() => {
+                    setEditingGrimoire(null);
+                    setShowGrimoireDialog(true);
+                  }}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Novo Grimório
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
+                {grimoires.map((grimoire) => (
+                  <Card key={grimoire.id} className="floating-card bg-black/40 border-red-500/30">
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-red-400">{grimoire.title}</CardTitle>
+                          <CardDescription className="text-gray-300">
+                            {grimoire.category} • Nível {grimoire.access_level}
+                            {grimoire.is_forbidden && " • ⚠️ PROIBIDO"}
+                          </CardDescription>
+                          {grimoire.author && (
+                            <p className="text-sm text-gray-400 mt-1">Por: {grimoire.author}</p>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge variant={grimoire.status === 'published' ? 'default' : 'secondary'}>
+                            {grimoire.status === 'published' ? 'Publicado' : 'Rascunho'}
+                          </Badge>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setEditingGrimoire(grimoire);
+                              setShowGrimoireDialog(true);
+                            }}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => deleteGrimoire.mutate(grimoire.id)}
+                          >
+                            <Trash2 className="w-4 h-4 text-red-400" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </Card>
+                ))}
               </div>
             </TabsContent>
 
