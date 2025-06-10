@@ -248,7 +248,9 @@
 }
 
 .mood-umbral .border-amber-500\/30,
-.mood-umbral .border-amber-700\/30 {
+.mood-umbral .border-amber-700\/30,
+.mood-umbral .border-amber-500\/15,
+.mood-umbral .border-white\/5 {
   border-color: rgb(147 51 234 / 0.3) !important;
 }
 
@@ -277,7 +279,9 @@
 }
 
 .mood-chamas .border-amber-500\/30,
-.mood-chamas .border-amber-700\/30 {
+.mood-chamas .border-amber-700\/30,
+.mood-chamas .border-amber-500\/15,
+.mood-chamas .border-white\/5 {
   border-color: rgb(220 38 38 / 0.3) !important;
 }
 
@@ -306,7 +310,9 @@
 }
 
 .mood-lua-negra .border-amber-500\/30,
-.mood-lua-negra .border-amber-700\/30 {
+.mood-lua-negra .border-amber-700\/30,
+.mood-lua-negra .border-amber-500\/15,
+.mood-lua-negra .border-white\/5 {
   border-color: rgb(148 163 184 / 0.3) !important;
 }
 
@@ -335,7 +341,9 @@
 }
 
 .mood-void-cosmico .border-amber-500\/30,
-.mood-void-cosmico .border-amber-700\/30 {
+.mood-void-cosmico .border-amber-700\/30,
+.mood-void-cosmico .border-amber-500\/15,
+.mood-void-cosmico .border-white\/5 {
   border-color: rgb(139 92 246 / 0.3) !important;
 }
 
@@ -417,6 +425,47 @@
 
 .mood-void-cosmico .via-amber-500\/15 {
   --tw-gradient-via: rgb(139 92 246 / 0.15) !important;
+}
+
+/* Bordas adicionais para containers específicos */
+.mood-umbral .border,
+.mood-umbral .border-t,
+.mood-umbral .border-b,
+.mood-umbral .border-l,
+.mood-umbral .border-r,
+.mood-umbral .border-gray-800\/50,
+.mood-umbral .border-red-700\/30 {
+  border-color: rgb(147 51 234 / 0.3) !important;
+}
+
+.mood-chamas .border,
+.mood-chamas .border-t,
+.mood-chamas .border-b,
+.mood-chamas .border-l,
+.mood-chamas .border-r,
+.mood-chamas .border-gray-800\/50,
+.mood-chamas .border-red-700\/30 {
+  border-color: rgb(220 38 38 / 0.3) !important;
+}
+
+.mood-lua-negra .border,
+.mood-lua-negra .border-t,
+.mood-lua-negra .border-b,
+.mood-lua-negra .border-l,
+.mood-lua-negra .border-r,
+.mood-lua-negra .border-gray-800\/50,
+.mood-lua-negra .border-red-700\/30 {
+  border-color: rgb(148 163 184 / 0.3) !important;
+}
+
+.mood-void-cosmico .border,
+.mood-void-cosmico .border-t,
+.mood-void-cosmico .border-b,
+.mood-void-cosmico .border-l,
+.mood-void-cosmico .border-r,
+.mood-void-cosmico .border-gray-800\/50,
+.mood-void-cosmico .border-red-700\/30 {
+  border-color: rgb(139 92 246 / 0.3) !important;
 }
 
 /* Fundo preto rubro com símbolos místicos */
