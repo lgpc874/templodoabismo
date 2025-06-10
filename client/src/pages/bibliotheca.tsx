@@ -3,10 +3,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
   BookOpen, Download, Star, Eye, Skull, 
-  AlertTriangle, Lock, Shield
+  AlertTriangle, Lock, Shield, ChevronLeft, ChevronRight
 } from "lucide-react";
+import { useState } from "react";
 
 export default function Bibliotheca() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const documentsPerPage = 6;
 
   const mockDocuments = [
     {
@@ -502,6 +505,18 @@ export default function Bibliotheca() {
     return "bg-orange-600/20 text-orange-300 border-orange-500/30";
   };
 
+  // Pagination logic
+  const totalPages = Math.ceil(mockDocuments.length / documentsPerPage);
+  const startIndex = (currentPage - 1) * documentsPerPage;
+  const endIndex = startIndex + documentsPerPage;
+  const currentDocuments = mockDocuments.slice(startIndex, endIndex);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of documents section
+    document.querySelector('.documents-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Fixed Central Rotating Seal - Exact same as home */}
@@ -526,7 +541,7 @@ export default function Bibliotheca() {
         {/* Header - Following exact home page structure */}
         <div className="text-center mb-12 max-w-5xl">
           <div className="mb-8">
-            <div className="text-amber-400 text-6xl mb-4">📚</div>
+            <div className="text-amber-400 text-6xl mb-4">𖤍</div>
             <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
               BIBLIOTHECA ARCANUM
             </h1>
@@ -572,19 +587,24 @@ export default function Bibliotheca() {
         </div>
 
         {/* Documents Grid */}
-        <div className="floating-card max-w-6xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+        <div className="floating-card max-w-6xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl documents-section">
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-cinzel-decorative text-amber-300">
                 Arquivos Ultra-Classificados
               </h3>
-              <Badge variant="outline" className="border-amber-500/30 text-amber-300 bg-amber-500/10">
-                {mockDocuments.length} documentos disponíveis
-              </Badge>
+              <div className="flex items-center space-x-4">
+                <Badge variant="outline" className="border-amber-500/30 text-amber-300 bg-amber-500/10">
+                  Página {currentPage} de {totalPages}
+                </Badge>
+                <Badge variant="outline" className="border-amber-500/30 text-amber-300 bg-amber-500/10">
+                  {mockDocuments.length} documentos totais
+                </Badge>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockDocuments.map((doc) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {currentDocuments.map((doc) => (
                   <Card key={doc.id} className="bg-black/20 border-amber-500/20 hover:border-amber-400/40 transition-all duration-300 transform hover:scale-105">
                     <CardHeader>
                       <div className="flex items-start justify-between">
@@ -637,10 +657,6 @@ export default function Bibliotheca() {
                         </div>
                         
                         <div className="space-y-2">
-                          <div className="text-xs text-gray-400">
-                            <span className="font-semibold">Preço:</span> {doc.price}
-                          </div>
-                          
                           <Button 
                             size="sm" 
                             className="w-full bg-red-600 hover:bg-red-700 text-white"
@@ -654,6 +670,49 @@ export default function Bibliotheca() {
                     </CardContent>
                   </Card>
                 ))}
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="flex items-center justify-center space-x-4 pt-6 border-t border-amber-500/20">
+              <Button
+                variant="outline"
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="border-amber-500/30 text-amber-300 hover:bg-amber-500/10 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="w-4 h-4 mr-2" />
+                Anterior
+              </Button>
+
+              <div className="flex items-center space-x-2">
+                {[...Array(totalPages)].map((_, index) => {
+                  const page = index + 1;
+                  return (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      onClick={() => goToPage(page)}
+                      className={`w-10 h-10 ${
+                        currentPage === page
+                          ? "bg-amber-500 text-black hover:bg-amber-400"
+                          : "border-amber-500/30 text-amber-300 hover:bg-amber-500/10"
+                      }`}
+                    >
+                      {page}
+                    </Button>
+                  );
+                })}
+              </div>
+
+              <Button
+                variant="outline"
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="border-amber-500/30 text-amber-300 hover:bg-amber-500/10 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Próxima
+                <ChevronRight className="w-4 h-4 ml-2" />
+              </Button>
             </div>
           </div>
         </div>
