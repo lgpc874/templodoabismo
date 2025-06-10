@@ -449,9 +449,7 @@ export default function VozDaPluma() {
                   <li>• <strong>Manhã (9h):</strong> Verso da Pluma Dourada</li>
                   <li>• <strong>Manhã (11h):</strong> Ritual ou Conjuração Ancestral</li>
                 </ul>
-                <p className="text-xs text-purple-300 mt-3">
-                  Cada revelação pode ser baixada como imagem com marca d'água e compartilhada nas redes sociais.
-                </p>
+
               </div>
             </div>
           </CardContent>
