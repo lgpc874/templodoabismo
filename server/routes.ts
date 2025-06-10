@@ -388,10 +388,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // === ORACLE CONSULTATION WITH AI ===
-  app.post('/api/oracle/consult', requireAuth, async (req: any, res: Response) => {
+  app.post('/api/oracle/test', async (req: any, res: Response) => {
     try {
       const { type, question } = req.body;
-      const userId = req.user.id;
+      const userId = req.user?.id;
 
       if (!question || question.trim().length === 0) {
         return res.status(400).json({ error: 'Question is required' });
@@ -418,21 +418,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(400).json({ error: 'Invalid consultation type' });
       }
 
-      // Save consultation to database
-      const { data, error } = await supabase
-        .from('oracle_consultations')
-        .insert({
-          user_id: userId,
-          type,
-          question,
-          response: JSON.stringify(result),
-          created_at: new Date().toISOString()
-        })
-        .select()
-        .single();
+      // Save consultation to database if user is available
+      if (userId) {
+        try {
+          const { data, error } = await supabase
+            .from('oracle_consultations')
+            .insert({
+              user_id: userId,
+              type,
+              question,
+              response: JSON.stringify(result),
+              created_at: new Date().toISOString()
+            })
+            .select()
+            .single();
 
-      if (error) {
-        console.error('Error saving consultation:', error);
+          if (error) {
+            console.error('Error saving consultation:', error);
+          }
+        } catch (dbError) {
+          console.warn('Failed to save consultation to database:', dbError);
+        }
       }
 
       res.json({ success: true, result });
