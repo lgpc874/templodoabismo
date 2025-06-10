@@ -370,6 +370,48 @@
     0 0 30px rgba(139, 92, 246, 0.1);
 }
 
+/* Templo - dourado intensificado */
+.mood-templo .text-amber-400,
+.mood-templo .text-amber-300,
+.mood-templo .text-amber-500 {
+  color: rgb(255 191 0) !important; /* dourado intenso */
+  text-shadow: 
+    0 0 8px rgba(255, 191, 0, 0.4),
+    0 0 16px rgba(255, 191, 0, 0.3),
+    0 0 24px rgba(255, 191, 0, 0.2);
+}
+
+.mood-templo .text-amber-400\/70,
+.mood-templo .text-amber-300\/65,
+.mood-templo .text-amber-500\/60 {
+  color: rgb(255 191 0 / 0.85) !important;
+}
+
+.mood-templo .text-amber-400\/80 {
+  color: rgb(255 191 0 / 0.9) !important;
+}
+
+.mood-templo .mystical-glow {
+  text-shadow: 
+    0 0 12px rgba(255, 191, 0, 0.5),
+    0 0 20px rgba(255, 191, 0, 0.4),
+    0 0 30px rgba(255, 191, 0, 0.3);
+}
+
+.mood-templo .border-amber-500\/30,
+.mood-templo .border-amber-700\/30,
+.mood-templo .border-amber-500\/15 {
+  border-color: rgb(255 191 0 / 0.4) !important;
+}
+
+.mood-templo .bg-gradient-to-r.from-amber-400.to-red-500 {
+  background: linear-gradient(to right, rgb(255 191 0), rgb(255 140 0)) !important;
+}
+
+.mood-templo .from-red-400.to-purple-500 {
+  background: linear-gradient(to right, rgb(255 191 0), rgb(255 140 0)) !important;
+}
+
 /* Trono Luciferiano - mantém dourado mais intenso */
 .mood-trono-luciferiano .text-amber-400,
 .mood-trono-luciferiano .text-amber-300,
