@@ -1090,6 +1090,27 @@ body.mood-divine {
   }
 }
 
+/* Remove decorative lines from titles */
+.font-cinzel-decorative,
+.floating-title,
+h1, h2, h3 {
+  text-decoration: none !important;
+}
+
+.font-cinzel-decorative::after,
+.floating-title::after,
+h1::after, h2::after, h3::after {
+  display: none !important;
+  content: none !important;
+}
+
+.font-cinzel-decorative::before,
+.floating-title::before,
+h1::before, h2::before, h3::before {
+  display: none !important;
+  content: none !important;
+}
+
 /* Enhanced floating for mystical titles */
 @keyframes mysticalFloat {
   0%, 100% { 
