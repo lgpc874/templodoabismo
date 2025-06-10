@@ -3,12 +3,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
   BookOpen, Download, Star, Eye, Skull, 
-  AlertTriangle, Lock, Shield, ArrowLeft
+  AlertTriangle, Lock, Shield
 } from "lucide-react";
-import { Link } from "wouter";
 
 export default function Bibliotheca() {
-  const documents = [
+
+  const mockDocuments = [
     {
       id: 1,
       title: "Chronicon Abyssos Primordialis",
@@ -503,7 +503,10 @@ export default function Bibliotheca() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen p-4 relative">
+      {/* Mystical Background with floating animations */}
+      <div className="fixed inset-0 bg-gradient-to-b from-gray-900 via-purple-900/20 to-black z-0"></div>
+      
       {/* Fixed Central Rotating Seal */}
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
         <div className="rotating-seal w-96 h-96 opacity-20">
@@ -519,7 +522,7 @@ export default function Bibliotheca() {
       <div className="fixed inset-0 overflow-hidden z-0">
         {[...Array(12)].map((_, i) => (
           <div
-            key={`particle-${i}`}
+            key={i}
             className={`absolute w-2 h-2 bg-amber-400/30 rounded-full animate-float`}
             style={{
               left: `${Math.random() * 100}%`,
@@ -531,20 +534,7 @@ export default function Bibliotheca() {
         ))}
       </div>
 
-      {/* Gradient Background */}
-      <div className="fixed inset-0 bg-gradient-to-b from-gray-900 via-purple-900/20 to-black z-0"></div>
-
-      <div className="relative z-10 p-4 flex flex-col items-center">
-        {/* Back Navigation */}
-        <div className="w-full max-w-6xl mb-4">
-          <Link href="/">
-            <Button variant="ghost" className="text-amber-400 hover:text-amber-300 hover:bg-amber-500/10">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Retornar ao Sanctum
-            </Button>
-          </Link>
-        </div>
-
+      <div className="relative z-10 flex flex-col items-center">
         {/* Header */}
         <div className="floating-card max-w-4xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl mb-8">
           <div className="p-8 text-center">
@@ -619,6 +609,8 @@ export default function Bibliotheca() {
           </div>
         </div>
 
+
+
         {/* Documents Grid */}
         <div className="floating-card max-w-6xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
           <div className="p-6">
@@ -627,81 +619,81 @@ export default function Bibliotheca() {
                 Arquivos Ultra-Classificados
               </h3>
               <Badge variant="outline" className="border-amber-500/30 text-amber-300 bg-amber-500/10">
-                {documents.length} documentos disponíveis
+                {mockDocuments.length} documentos disponíveis
               </Badge>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {documents.map((doc) => (
-                <Card key={`doc-${doc.id}`} className="bg-black/20 border-amber-500/20 hover:border-amber-400/40 transition-all duration-300 transform hover:scale-105">
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <CardTitle className="text-amber-400 text-lg leading-tight">
-                        {doc.title}
-                      </CardTitle>
-                      <Badge variant="outline" className="border-amber-500/30 text-amber-300 flex items-center">
-                        {getTypeIcon(doc.type)}
-                        <span className="ml-1 capitalize">{doc.type}</span>
-                      </Badge>
-                    </div>
-                    <CardDescription className="text-gray-300">
-                      por {doc.author}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <p className="text-gray-300 text-sm leading-relaxed">
-                        {doc.description}
-                      </p>
-                      
-                      <div className="flex items-center justify-between text-xs text-gray-400">
-                        <div className="flex items-center">
-                          <BookOpen className="w-3 h-3 mr-1" />
-                          {doc.pages} páginas
-                        </div>
-                        <div className="flex items-center">
-                          <Download className="w-3 h-3 mr-1" />
-                          {doc.downloads} acessos
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <Star className="w-4 h-4 text-amber-400 mr-1" />
-                          <span className="text-amber-400 font-semibold">{doc.rating}</span>
-                        </div>
-                        <Badge className={getDangerLevel(doc.level)}>
-                          {doc.level}
+              {mockDocuments.map((doc) => (
+                  <Card key={doc.id} className="bg-black/20 border-amber-500/20 hover:border-amber-400/40 transition-all duration-300 transform hover:scale-105">
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <CardTitle className="text-amber-400 text-lg leading-tight">
+                          {doc.title}
+                        </CardTitle>
+                        <Badge variant="outline" className="border-amber-500/30 text-amber-300 flex items-center">
+                          {getTypeIcon(doc.type)}
+                          <span className="ml-1 capitalize">{doc.type}</span>
                         </Badge>
                       </div>
-                      
-                      <div className="bg-red-950/20 border border-red-500/20 rounded p-3">
-                        <div className="flex items-start">
-                          <AlertTriangle className="w-4 h-4 text-red-400 mr-2 mt-0.5 flex-shrink-0" />
-                          <p className="text-red-300 text-xs leading-relaxed">
-                            {doc.warning}
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <div className="text-xs text-gray-400">
-                          <span className="font-semibold">Preço:</span> {doc.price}
+                      <CardDescription className="text-gray-300">
+                        por {doc.author}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <p className="text-gray-300 text-sm leading-relaxed">
+                          {doc.description}
+                        </p>
+                        
+                        <div className="flex items-center justify-between text-xs text-gray-400">
+                          <div className="flex items-center">
+                            <BookOpen className="w-3 h-3 mr-1" />
+                            {doc.pages} páginas
+                          </div>
+                          <div className="flex items-center">
+                            <Download className="w-3 h-3 mr-1" />
+                            {doc.downloads} acessos
+                          </div>
                         </div>
                         
-                        <Button 
-                          size="sm" 
-                          className="w-full bg-red-600 hover:bg-red-700 text-white"
-                          disabled
-                        >
-                          <Lock className="w-3 h-3 mr-2" />
-                          ACESSO SELADO
-                        </Button>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            <Star className="w-4 h-4 text-amber-400 mr-1" />
+                            <span className="text-amber-400 font-semibold">{doc.rating}</span>
+                          </div>
+                          <Badge className={getDangerLevel(doc.level)}>
+                            {doc.level}
+                          </Badge>
+                        </div>
+                        
+                        <div className="bg-red-950/20 border border-red-500/20 rounded p-3">
+                          <div className="flex items-start">
+                            <AlertTriangle className="w-4 h-4 text-red-400 mr-2 mt-0.5 flex-shrink-0" />
+                            <p className="text-red-300 text-xs leading-relaxed">
+                              {doc.warning}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <div className="text-xs text-gray-400">
+                            <span className="font-semibold">Preço:</span> {doc.price}
+                          </div>
+                          
+                          <Button 
+                            size="sm" 
+                            className="w-full bg-red-600 hover:bg-red-700 text-white"
+                            disabled
+                          >
+                            <Lock className="w-3 h-3 mr-2" />
+                            ACESSO SELADO
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                ))}
             </div>
           </div>
         </div>
