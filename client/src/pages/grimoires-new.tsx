@@ -1,9 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, ShoppingCart } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { BookOpen, ShoppingCart, CreditCard } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
+import PaymentGateway from "@/components/PaymentGateway";
 
 interface Grimoire {
   id: number;

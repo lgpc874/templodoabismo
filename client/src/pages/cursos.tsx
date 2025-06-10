@@ -1,10 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Star, Crown, Flame, Eye, Clock, Users, Award } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { BookOpen, Star, Crown, Flame, Eye, Clock, Users, Award, CreditCard } from "lucide-react";
 import { Link } from "wouter";
 import Footer from "../components/footer";
+import PaymentGateway from "@/components/PaymentGateway";
 
 interface Course {
   id: number;
@@ -26,6 +29,9 @@ export default function Cursos() {
   const { data: courses = [], isLoading } = useQuery<Course[]>({
     queryKey: ["/api/courses"],
   });
+
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [showPayment, setShowPayment] = useState(false);
 
   const getLevelIcon = (level: string) => {
     switch (level?.toLowerCase()) {
@@ -207,14 +213,28 @@ export default function Cursos() {
                       {course.price > 0 ? `R$ ${course.price}` : 'Gratuito'}
                     </div>
                     
-                    <Link href={`/curso/${course.id}`}>
+                    {course.price > 0 ? (
                       <Button 
                         size="sm" 
-                        className="bg-amber-900/50 hover:bg-amber-800/70 text-amber-200 border-amber-700 hover:border-amber-600 transition-all duration-300"
+                        onClick={() => {
+                          setSelectedCourse(course);
+                          setShowPayment(true);
+                        }}
+                        className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white border-amber-500 hover:border-amber-400 transition-all duration-300"
                       >
-                        Explorar
+                        <CreditCard className="w-4 h-4 mr-2" />
+                        Adquirir
                       </Button>
-                    </Link>
+                    ) : (
+                      <Link href={`/curso/${course.id}`}>
+                        <Button 
+                          size="sm" 
+                          className="bg-amber-900/50 hover:bg-amber-800/70 text-amber-200 border-amber-700 hover:border-amber-600 transition-all duration-300"
+                        >
+                          Acessar
+                        </Button>
+                      </Link>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -266,6 +286,48 @@ export default function Cursos() {
             </div>
           </div>
         )}
+
+        {/* Payment Dialog */}
+        <Dialog open={showPayment} onOpenChange={setShowPayment}>
+          <DialogContent className="bg-black/95 border-amber-700/50 max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-cinzel-decorative text-amber-400">
+                Adquirir Curso: {selectedCourse?.title}
+              </DialogTitle>
+            </DialogHeader>
+            
+            {selectedCourse && (
+              <div className="space-y-6">
+                <div className="bg-amber-900/20 p-4 rounded-lg border border-amber-700/30">
+                  <h4 className="text-lg font-semibold text-amber-300 mb-2">Detalhes do Curso</h4>
+                  <p className="text-amber-200/70 text-sm mb-3">{selectedCourse.description}</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-amber-400 font-bold text-xl">
+                      R$ {selectedCourse.price}
+                    </span>
+                    <Badge variant="outline" className="border-amber-600 text-amber-300">
+                      {selectedCourse.level}
+                    </Badge>
+                  </div>
+                </div>
+
+                <PaymentGateway
+                  amount={selectedCourse.price}
+                  currency="BRL"
+                  description={`Curso: ${selectedCourse.title}`}
+                  onSuccess={(paymentData) => {
+                    console.log('Pagamento realizado:', paymentData);
+                    setShowPayment(false);
+                    // Aqui você pode redirecionar para o curso ou mostrar sucesso
+                  }}
+                  onError={(error) => {
+                    console.error('Erro no pagamento:', error);
+                  }}
+                />
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
 
       <Footer />
