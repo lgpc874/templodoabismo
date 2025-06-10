@@ -97,7 +97,7 @@ export async function createPayPalPayment(req: PaymentRequest): Promise<PaymentR
   try {
     const { body, ...httpResponse } = await ordersController.createOrder({
       body: {
-        intent: "CAPTURE",
+        intent: "CAPTURE" as any,
         purchaseUnits: [
           {
             amount: {

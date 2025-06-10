@@ -25,6 +25,7 @@ import Gnosis from "@/pages/blog-new";
 
 import Register from "@/pages/register";
 import Cursos from "@/pages/cursos";
+import PaymentTest from "@/pages/payment-test";
 import OracleTest from "@/pages/oracle-test";
 import OracleTarot from "./pages/oracle-tarot";
 import OracleMirror from "./pages/oracle-mirror";
@@ -50,6 +51,7 @@ function Router() {
 
           <Route path="/cursos" component={Cursos} />
           <Route path="/curso/:slug" component={CourseDetail} />
+          <Route path="/payment-test" component={PaymentTest} />
           <Route path="/profile" component={Profile} />
           <Route path="/perfil" component={StudentProfile} />
           <Route path="/estudante" component={StudentProfile} />

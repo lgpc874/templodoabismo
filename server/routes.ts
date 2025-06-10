@@ -597,6 +597,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Payment Gateway Routes
+  app.post('/api/payments/create', async (req: Request, res: Response) => {
+    try {
+      const { amount, currency, description, customerEmail, customerName, gateway, metadata } = req.body;
+      
+      if (!amount || !currency || !gateway) {
+        return res.status(400).json({ error: 'Missing required fields: amount, currency, gateway' });
+      }
+
+      const paymentRequest = {
+        amount,
+        currency,
+        description,
+        customerEmail,
+        customerName,
+        gateway,
+        metadata
+      };
+
+      const result = await processPayment(paymentRequest);
+      res.json(result);
+    } catch (error) {
+      console.error('Payment creation error:', error);
+      res.status(500).json({ error: 'Failed to create payment' });
+    }
+  });
+
+  app.get('/api/payments/paypal/token', async (req: Request, res: Response) => {
+    try {
+      const clientToken = await getPayPalClientToken();
+      if (!clientToken) {
+        return res.status(500).json({ error: 'PayPal not configured' });
+      }
+      res.json({ clientToken });
+    } catch (error) {
+      console.error('PayPal token error:', error);
+      res.status(500).json({ error: 'Failed to get PayPal token' });
+    }
+  });
+
+  app.post('/api/payments/paypal/capture/:orderId', async (req: Request, res: Response) => {
+    try {
+      const { orderId } = req.params;
+      const result = await capturePayPalOrder(orderId);
+      res.json(result);
+    } catch (error) {
+      console.error('PayPal capture error:', error);
+      res.status(500).json({ error: 'Failed to capture PayPal order' });
+    }
+  });
+
+  app.post('/api/payments/webhook/stripe', async (req: Request, res: Response) => {
+    try {
+      // Stripe webhook handler
+      res.json({ received: true });
+    } catch (error) {
+      console.error('Stripe webhook error:', error);
+      res.status(500).json({ error: 'Webhook processing failed' });
+    }
+  });
+
+  app.post('/api/payments/webhook/mercadopago', async (req: Request, res: Response) => {
+    try {
+      // MercadoPago webhook handler
+      res.json({ received: true });
+    } catch (error) {
+      console.error('MercadoPago webhook error:', error);
+      res.status(500).json({ error: 'Webhook processing failed' });
+    }
+  });
+
+  app.post('/api/payments/webhook/pagseguro', async (req: Request, res: Response) => {
+    try {
+      // PagSeguro webhook handler
+      res.json({ received: true });
+    } catch (error) {
+      console.error('PagSeguro webhook error:', error);
+      res.status(500).json({ error: 'Webhook processing failed' });
+    }
+  });
+
+  app.post('/api/payments/webhook/infinitepay', async (req: Request, res: Response) => {
+    try {
+      // InfinitePay webhook handler
+      res.json({ received: true });
+    } catch (error) {
+      console.error('InfinitePay webhook error:', error);
+      res.status(500).json({ error: 'Webhook processing failed' });
+    }
+  });
+
   // Register CMS routes for page management
   registerCMSRoutes(app);
 
