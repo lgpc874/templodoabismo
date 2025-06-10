@@ -91,8 +91,10 @@ export default function AdminControl() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [editingPage, setEditingPage] = useState<Page | null>(null);
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+  const [editingGrimoire, setEditingGrimoire] = useState<Grimoire | null>(null);
   const [showPageDialog, setShowPageDialog] = useState(false);
   const [showCourseDialog, setShowCourseDialog] = useState(false);
+  const [showGrimoireDialog, setShowGrimoireDialog] = useState(false);
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -237,6 +239,25 @@ export default function AdminControl() {
       updateCourseMutation.mutate({ ...courseData, id: editingCourse.id });
     } else {
       createCourseMutation.mutate(courseData);
+    }
+  };
+
+  const handleSaveGrimoire = (formData: FormData) => {
+    const grimoireData = {
+      title: formData.get('title') as string,
+      content: formData.get('content') as string,
+      slug: formData.get('slug') as string,
+      category: formData.get('category') as string,
+      access_level: parseInt(formData.get('access_level') as string),
+      is_forbidden: formData.get('is_forbidden') === 'true',
+      author: formData.get('author') as string,
+      status: formData.get('status') as 'draft' | 'published'
+    };
+
+    if (editingGrimoire) {
+      updateGrimoireMutation.mutate({ ...grimoireData, id: editingGrimoire.id });
+    } else {
+      createGrimoireMutation.mutate(grimoireData);
     }
   };
 
@@ -766,6 +787,151 @@ export default function AdminControl() {
                 type="submit" 
                 className="bg-amber-600 hover:bg-amber-700 text-black"
                 disabled={createCourseMutation.isPending || updateCourseMutation.isPending}
+              >
+                <Save className="w-4 h-4 mr-2" />
+                Salvar
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Grimoire Edit Dialog */}
+      <Dialog open={showGrimoireDialog} onOpenChange={setShowGrimoireDialog}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-black/90 border-red-500/30">
+          <DialogHeader>
+            <DialogTitle className="text-red-400">
+              {editingGrimoire ? 'Editar Grimório' : 'Novo Grimório'}
+            </DialogTitle>
+            <DialogDescription className="text-gray-300">
+              {editingGrimoire ? 'Modifique o conteúdo do grimório' : 'Crie um novo texto sagrado'}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSaveGrimoire(new FormData(e.target as HTMLFormElement));
+            }}
+            className="space-y-4"
+          >
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="grimoire-title" className="text-gray-300">Título</Label>
+                <Input
+                  id="grimoire-title"
+                  name="title"
+                  defaultValue={editingGrimoire?.title || ''}
+                  className="bg-black/50 border-red-500/30 text-white"
+                  placeholder="Título do grimório"
+                />
+              </div>
+              <div>
+                <Label htmlFor="grimoire-slug" className="text-gray-300">URL (slug)</Label>
+                <Input
+                  id="grimoire-slug"
+                  name="slug"
+                  defaultValue={editingGrimoire?.slug || ''}
+                  className="bg-black/50 border-red-500/30 text-white"
+                  placeholder="url-do-grimorio"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="grimoire-category" className="text-gray-300">Categoria</Label>
+                <Select name="category" defaultValue={editingGrimoire?.category || 'ritual'}>
+                  <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                    <SelectValue placeholder="Categoria do grimório" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ritual">Ritual</SelectItem>
+                    <SelectItem value="invocacao">Invocação</SelectItem>
+                    <SelectItem value="sigilo">Sigilo</SelectItem>
+                    <SelectItem value="filosofia">Filosofia</SelectItem>
+                    <SelectItem value="proibido">Proibido</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="grimoire-author" className="text-gray-300">Autor</Label>
+                <Input
+                  id="grimoire-author"
+                  name="author"
+                  defaultValue={editingGrimoire?.author || ''}
+                  className="bg-black/50 border-red-500/30 text-white"
+                  placeholder="Autor do texto"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="grimoire-access-level" className="text-gray-300">Nível de Acesso</Label>
+                <Select name="access_level" defaultValue={editingGrimoire?.access_level?.toString() || '1'}>
+                  <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                    <SelectValue placeholder="Nível" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">Nível 1 - Iniciante</SelectItem>
+                    <SelectItem value="2">Nível 2 - Intermediário</SelectItem>
+                    <SelectItem value="3">Nível 3 - Avançado</SelectItem>
+                    <SelectItem value="4">Nível 4 - Mestre</SelectItem>
+                    <SelectItem value="5">Nível 5 - Grão-Mestre</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="grimoire-forbidden" className="text-gray-300">Texto Proibido</Label>
+                <Select name="is_forbidden" defaultValue={editingGrimoire?.is_forbidden ? 'true' : 'false'}>
+                  <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                    <SelectValue placeholder="Proibido?" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="false">Permitido</SelectItem>
+                    <SelectItem value="true">⚠️ PROIBIDO</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="grimoire-status" className="text-gray-300">Status</Label>
+                <Select name="status" defaultValue={editingGrimoire?.status || 'draft'}>
+                  <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="draft">Rascunho</SelectItem>
+                    <SelectItem value="published">Publicado</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="grimoire-content" className="text-gray-300">Conteúdo</Label>
+              <Textarea
+                id="grimoire-content"
+                name="content"
+                defaultValue={editingGrimoire?.content || ''}
+                className="bg-black/50 border-red-500/30 text-white min-h-[300px]"
+                placeholder="Conteúdo do grimório em HTML ou Markdown"
+              />
+            </div>
+
+            <div className="flex justify-end space-x-2">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setShowGrimoireDialog(false)}
+                className="border-red-500/30 text-red-300"
+              >
+                Cancelar
+              </Button>
+              <Button 
+                type="submit" 
+                className="bg-red-600 hover:bg-red-700 text-white"
+                disabled={createGrimoireMutation.isPending || updateGrimoireMutation.isPending}
               >
                 <Save className="w-4 h-4 mr-2" />
                 Salvar
