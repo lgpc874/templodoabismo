@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -27,125 +27,136 @@ export default function VozDaPluma() {
     queryKey: ['/api/voz-pluma/manifestations'],
   });
 
-  // Ordenar manifestações por horário
-  const sortedManifestations = manifestations.sort((a, b) => a.manifestation_time.localeCompare(b.manifestation_time));
+  // Ordenar manifestações por horário - memoizado para evitar re-sorting
+  const sortedManifestations = useMemo(() => 
+    manifestations.sort((a, b) => a.manifestation_time.localeCompare(b.manifestation_time)),
+    [manifestations]
+  );
 
-  const downloadContentImage = async (content: VozPlumaManifestation) => {
+  const downloadContentImage = useCallback(async (content: VozPlumaManifestation) => {
     try {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      
-      if (!ctx) {
-        throw new Error('Canvas não suportado');
-      }
+      // Mostrar indicador de carregamento
+      toast({
+        title: "Gerando Imagem",
+        description: "Aguarde enquanto criamos sua imagem...",
+        className: "bg-purple-900 border-purple-500 text-white",
+      });
 
-      canvas.width = 1080;
-      canvas.height = 1080;
-
-      // Fundo gradiente místico baseado no horário
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      if (content.manifestation_time === '07:00') {
-        gradient.addColorStop(0, '#0a0a0a');
-        gradient.addColorStop(0.5, '#4c1d95'); // Roxo escuro
-        gradient.addColorStop(1, '#0a0a0a');
-      } else if (content.manifestation_time === '09:00') {
-        gradient.addColorStop(0, '#0a0a0a');
-        gradient.addColorStop(0.5, '#7c2d12'); // Âmbar escuro
-        gradient.addColorStop(1, '#0a0a0a');
-      } else {
-        gradient.addColorStop(0, '#0a0a0a');
-        gradient.addColorStop(0.5, '#991b1b'); // Vermelho escuro
-        gradient.addColorStop(1, '#0a0a0a');
-      }
-      
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Textura de estrelas
-      for (let i = 0; i < 100; i++) {
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
-        const radius = Math.random() * 2;
+      // Usar setTimeout para não bloquear a UI
+      setTimeout(() => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
         
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, 2 * Math.PI);
-        ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.8})`;
-        ctx.fill();
-      }
-
-      // Título
-      ctx.fillStyle = '#D4AF37';
-      ctx.font = 'bold 36px serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(content.title, canvas.width / 2, 120);
-
-      // Horário e tipo
-      ctx.fillStyle = '#9333ea';
-      ctx.font = '24px serif';
-      ctx.fillText(`${content.manifestation_time} • ${content.type.toUpperCase()}`, canvas.width / 2, 180);
-
-      // Conteúdo principal
-      const words = content.content.split(' ');
-      const lines = [];
-      let currentLine = '';
-      const maxWidth = canvas.width - 120;
-
-      ctx.font = '28px serif';
-      ctx.fillStyle = '#e5e7eb';
-
-      for (const word of words) {
-        const testLine = currentLine + word + ' ';
-        const metrics = ctx.measureText(testLine);
-        
-        if (metrics.width > maxWidth && currentLine !== '') {
-          lines.push(currentLine);
-          currentLine = word + ' ';
-        } else {
-          currentLine = testLine;
+        if (!ctx) {
+          throw new Error('Canvas não suportado');
         }
-      }
-      lines.push(currentLine);
 
-      let lineY = 280;
-      for (const line of lines) {
-        ctx.fillText(line.trim(), canvas.width / 2, lineY);
-        lineY += 40;
-      }
+        // Usar resolução menor para dispositivos móveis
+        const isMobile = window.innerWidth < 768;
+        const size = isMobile ? 720 : 1080;
+        canvas.width = size;
+        canvas.height = size;
 
-      // Autor
-      ctx.fillStyle = '#D4AF37';
-      ctx.font = 'italic 24px serif';
-      ctx.fillText(`— ${content.author}`, canvas.width / 2, lineY + 60);
+        // Fundo gradiente simples
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        const colors = {
+          '07:00': ['#0a0a0a', '#4c1d95', '#0a0a0a'],
+          '09:00': ['#0a0a0a', '#7c2d12', '#0a0a0a'],
+          default: ['#0a0a0a', '#991b1b', '#0a0a0a']
+        };
+        
+        const colorSet = colors[content.manifestation_time as keyof typeof colors] || colors.default;
+        gradient.addColorStop(0, colorSet[0]);
+        gradient.addColorStop(0.5, colorSet[1]);
+        gradient.addColorStop(1, colorSet[2]);
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Data
-      ctx.fillStyle = '#9333ea';
-      ctx.font = '20px serif';
-      const formattedDate = new Date(content.posted_date).toLocaleDateString('pt-BR');
-      ctx.fillText(formattedDate, canvas.width / 2, lineY + 100);
-
-      // Marca d'água
-      ctx.fillStyle = 'rgba(212, 175, 55, 0.3)';
-      ctx.font = '18px serif';
-      ctx.fillText('Templo do Abismo', canvas.width / 2, canvas.height - 40);
-
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `voz-da-pluma-${content.type}-${content.manifestation_time.replace(':', '')}-${Date.now()}.png`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
+        // Estrelas otimizadas (menos quantidade)
+        const starCount = isMobile ? 30 : 50;
+        for (let i = 0; i < starCount; i++) {
+          const x = Math.random() * canvas.width;
+          const y = Math.random() * canvas.height;
           
-          toast({
-            title: "Download Concluído",
-            description: "Imagem salva com sucesso!",
-            className: "bg-purple-900 border-purple-500 text-white",
-          });
+          ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + Math.random() * 0.4})`;
+          ctx.fillRect(x, y, 1, 1); // Usar fillRect ao invés de arc para performance
         }
-      }, 'image/png');
+
+        // Textos com fontes otimizadas
+        const fontSize = isMobile ? 24 : 36;
+        ctx.fillStyle = '#D4AF37';
+        ctx.font = `bold ${fontSize}px Arial, sans-serif`; // Arial é mais rápido que serif
+        ctx.textAlign = 'center';
+        ctx.fillText(content.title, canvas.width / 2, 120);
+
+        // Horário e tipo
+        ctx.fillStyle = '#9333ea';
+        ctx.font = `${fontSize * 0.6}px Arial, sans-serif`;
+        ctx.fillText(`${content.manifestation_time} • ${content.type.toUpperCase()}`, canvas.width / 2, 180);
+
+        // Conteúdo otimizado
+        const maxCharsPerLine = isMobile ? 30 : 40;
+        const words = content.content.split(' ');
+        const lines = [];
+        let currentLine = '';
+
+        for (const word of words) {
+          if ((currentLine + word).length > maxCharsPerLine && currentLine !== '') {
+            lines.push(currentLine.trim());
+            currentLine = word + ' ';
+          } else {
+            currentLine += word + ' ';
+          }
+        }
+        if (currentLine.trim()) lines.push(currentLine.trim());
+
+        ctx.font = `${fontSize * 0.7}px Arial, sans-serif`;
+        ctx.fillStyle = '#e5e7eb';
+
+        let lineY = 250;
+        lines.slice(0, 8).forEach(line => { // Limitar linhas para performance
+          ctx.fillText(line, canvas.width / 2, lineY);
+          lineY += fontSize * 0.9;
+        });
+
+        // Autor
+        ctx.fillStyle = '#D4AF37';
+        ctx.font = `italic ${fontSize * 0.6}px Arial, sans-serif`;
+        ctx.fillText(`— ${content.author}`, canvas.width / 2, lineY + 40);
+
+        // Data
+        ctx.fillStyle = '#9333ea';
+        ctx.font = `${fontSize * 0.5}px Arial, sans-serif`;
+        const formattedDate = new Date(content.posted_date).toLocaleDateString('pt-BR');
+        ctx.fillText(formattedDate, canvas.width / 2, lineY + 80);
+
+        // Marca d'água
+        ctx.fillStyle = 'rgba(212, 175, 55, 0.3)';
+        ctx.font = `${fontSize * 0.4}px Arial, sans-serif`;
+        ctx.fillText('Templo do Abismo', canvas.width / 2, canvas.height - 40);
+
+        // Usar qualidade menor para dispositivos móveis
+        const quality = isMobile ? 0.7 : 0.9;
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `voz-da-pluma-${content.type}-${content.manifestation_time.replace(':', '')}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            toast({
+              title: "Download Concluído",
+              description: "Imagem salva com sucesso!",
+              className: "bg-purple-900 border-purple-500 text-white",
+            });
+          }
+        }, 'image/png', quality);
+      }, 100);
 
     } catch (error) {
       console.error('Erro ao gerar imagem:', error);
@@ -155,9 +166,9 @@ export default function VozDaPluma() {
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
-  const shareToSocial = (platform: string, content: VozPlumaManifestation) => {
+  const shareToSocial = useCallback((platform: string, content: VozPlumaManifestation) => {
     const formattedDate = new Date(content.posted_date).toLocaleDateString('pt-BR');
     const text = `${content.title}\n\n"${content.content}"\n\n— ${content.author}\n\nManifestação das ${content.manifestation_time} • ${formattedDate}\n\n#TemploDoAbismo #VozDaPluma`;
     const url = window.location.href;
@@ -185,9 +196,9 @@ export default function VozDaPluma() {
     if (shareUrl) {
       window.open(shareUrl, '_blank', 'width=600,height=400');
     }
-  };
+  }, [toast]);
 
-  const getManifestationConfig = (time: string, manifestation?: VozPlumaManifestation) => {
+  const getManifestationConfig = useCallback((time: string, manifestation?: VozPlumaManifestation) => {
     const today = new Date();
     const isSunday = today.getDay() === 0;
     
@@ -243,7 +254,7 @@ export default function VozDaPluma() {
           bgGlow: 'bg-gray-500/5'
         };
     }
-  };
+  }, []);
 
   if (isLoading) {
     return (
@@ -253,12 +264,12 @@ export default function VozDaPluma() {
     );
   }
 
-  // Organizar manifestações por horário
-  const manifestationsByTime = {
+  // Organizar manifestações por horário - memoizado
+  const manifestationsByTime = useMemo(() => ({
     '07:00': manifestations?.find((m: VozPlumaManifestation) => m.manifestation_time === '07:00'),
     '09:00': manifestations?.find((m: VozPlumaManifestation) => m.manifestation_time === '09:00'),
     '11:00': manifestations?.find((m: VozPlumaManifestation) => m.manifestation_time === '11:00')
-  };
+  }), [manifestations]);
 
   return (
     <>
