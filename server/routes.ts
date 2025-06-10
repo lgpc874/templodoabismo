@@ -495,6 +495,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Catch-all for unmatched API routes - must be after all API route definitions
+  app.use('/api/*', (req: Request, res: Response) => {
+    console.log(`Unmatched API route: ${req.method} ${req.path}`);
+    res.status(404).json({ error: 'API endpoint not found' });
+  });
+
   // Error handling middleware
   app.use((err: any, req: Request, res: Response, next: any) => {
     console.error('Error:', err);
