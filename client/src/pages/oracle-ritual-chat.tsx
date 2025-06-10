@@ -113,17 +113,29 @@ export default function OracleRitualChat() {
     setIsLoading(true);
 
     try {
-      const response = await apiRequest('POST', '/api/oracle/ritual-consult', {
-        question: inputMessage,
-        oracleType: oracleType,
-        entityName: currentEntity.name,
-        conversationHistory: messages.slice(-3)
+      const response = await fetch('/api/oracle/ritual-consult', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: inputMessage,
+          oracleType: oracleType,
+          entityName: currentEntity.name,
+          conversationHistory: messages.slice(-3)
+        })
       });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
 
       const entityResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'entity',
-        content: response.response,
+        content: data.response,
         timestamp: new Date(),
         entityName: currentEntity.name
       };
