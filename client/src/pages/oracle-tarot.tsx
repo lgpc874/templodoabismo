@@ -69,8 +69,8 @@ export default function OracleTarot() {
             <span>☿</span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-cinzel-decorative text-amber-300 mb-4 floating-title">
-            Tarot Infernal
+          <h1 className="text-4xl md:text-6xl font-cinzel-decorative text-amber-300 mb-4 floating-title mystical-glow">
+            TAROT INFERNAL
           </h1>
           
           <p className="text-xl text-gray-300 max-w-3xl mx-auto font-crimson">

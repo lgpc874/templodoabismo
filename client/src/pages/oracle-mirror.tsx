@@ -68,8 +68,8 @@ export default function OracleMirror() {
             <span>☿</span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-cinzel-decorative text-amber-300 mb-4 floating-title">
-            Espelho do Abismo
+          <h1 className="text-4xl md:text-6xl font-cinzel-decorative text-amber-300 mb-4 floating-title mystical-glow">
+            ESPELHO DO ABISMO
           </h1>
           
           <p className="text-xl text-gray-300 max-w-3xl mx-auto font-crimson">

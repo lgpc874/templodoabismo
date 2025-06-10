@@ -68,8 +68,8 @@ export default function OracleRunes() {
             <span>☿</span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-cinzel-decorative text-amber-300 mb-4 floating-title">
-            Runas Ancestrais
+          <h1 className="text-4xl md:text-6xl font-cinzel-decorative text-amber-300 mb-4 floating-title mystical-glow">
+            RUNAS ANCESTRAIS
           </h1>
           
           <p className="text-xl text-gray-300 max-w-3xl mx-auto font-crimson">
