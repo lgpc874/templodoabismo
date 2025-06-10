@@ -68,7 +68,6 @@ function BibliothecaContent() {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      <SiteNavigation />
       
       {/* Mystical background */}
       <div className="fixed inset-0 overflow-hidden">
@@ -259,7 +258,6 @@ function BibliothecaContent() {
 export default function Bibliotheca() {
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      <SiteNavigation />
       <MysticalGate
         title="BIBLIOTHECA SECRETA"
         description="Câmara amaldiçoada onde jazem os conhecimentos que podem despedaçar a mente mortal. Manuscritos que sussurram loucura, tratados que corrompem a alma e escrituras que testam os limites da sanidade humana."
