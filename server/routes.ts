@@ -3,8 +3,8 @@ import { createServer, type Server } from "http";
 import multer from 'multer';
 import { temploAI } from './ai-service';
 import { vozPlumaService } from './voz-pluma-service';
-import { supabase } from './supabase-client';
-import { supabaseAdmin } from './supabase-admin';
+import { supabase, supabaseAdmin } from './supabase-client';
+import { supabaseMigration } from './supabase-migration';
 import { registerAdminRoutes } from './admin-routes';
 
 const upload = multer({ 
@@ -244,7 +244,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get current day manifestations
   app.get('/api/voz-pluma/manifestations', async (req: Request, res: Response) => {
     try {
-      const manifestations = await vozPlumaService.getCurrentManifestations();
+      const manifestations = await supabaseMigration.getVozPlumaManifestations();
       res.json(manifestations);
     } catch (error) {
       console.error('Error fetching manifestations:', error);
