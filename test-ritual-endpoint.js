@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
 async function testRitualEndpoint() {
   const ports = [3000, 5000, 5173, 8080];
