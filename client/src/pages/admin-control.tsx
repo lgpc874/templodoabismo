@@ -2108,6 +2108,7 @@ export default function AdminControl() {
           </CardContent>
         </Card>
       </TabsContent>
+      </Tabs>
     </div>
   );
 }
