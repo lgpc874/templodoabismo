@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { 
   Settings, 
@@ -175,6 +175,19 @@ export default function AdminControl() {
     queryFn: () => apiRequest('GET', '/api/admin/grimoires')
   });
 
+  // Fetch oracle settings
+  const { data: oracleData } = useQuery({
+    queryKey: ['/api/admin/oracle-settings'],
+    queryFn: () => apiRequest('GET', '/api/admin/oracle-settings')
+  });
+
+  // Update oracle settings state when data changes
+  useEffect(() => {
+    if (oracleData && !oracleSettings) {
+      setOracleSettings(oracleData);
+    }
+  }, [oracleData, oracleSettings]);
+
   // Page mutations
   const createPageMutation = useMutation({
     mutationFn: (data: Partial<Page>) => apiRequest('POST', '/api/admin/pages', data),
@@ -331,6 +344,51 @@ export default function AdminControl() {
     } else {
       createGrimoireMutation.mutate(grimoireData);
     }
+  };
+
+  // Oracle settings mutations
+  const saveOracleSettingsMutation = useMutation({
+    mutationFn: (settings: any) => apiRequest('PUT', '/api/admin/oracle-settings', settings),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/oracle-settings'] });
+      toast({ title: "Configurações dos oráculos salvas com sucesso!" });
+    },
+    onError: () => {
+      toast({ 
+        title: "Erro", 
+        description: "Falha ao salvar configurações dos oráculos",
+        variant: "destructive" 
+      });
+    }
+  });
+
+  const testOracleMutation = useMutation({
+    mutationFn: ({ type, prompt }: { type: string; prompt: string }) => 
+      apiRequest('POST', '/api/admin/test-oracle', { type, prompt }),
+    onSuccess: (result, variables) => {
+      toast({ 
+        title: "Teste Concluído", 
+        description: `Oráculo ${variables.type} testado com sucesso` 
+      });
+    },
+    onError: () => {
+      toast({ 
+        title: "Erro no Teste", 
+        description: "Falha ao testar oráculo",
+        variant: "destructive" 
+      });
+    }
+  });
+
+  // Oracle helper functions
+  const saveOracleSettings = (settings: any) => {
+    saveOracleSettingsMutation.mutate(settings);
+  };
+
+  const testOracle = (type: string, prompt: string) => {
+    setTestingOracle(type);
+    testOracleMutation.mutate({ type, prompt });
+    setTimeout(() => setTestingOracle(null), 3000);
   };
 
   return (
