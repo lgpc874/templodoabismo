@@ -33,53 +33,53 @@ const moodOptions: MoodOption[] = [
     icon: Eye,
     description: 'Santuário principal do templo',
     bgGradient: 'from-black to-black',
-    particleColor: 'none',
-    sealOpacity: 0.12
+    particleColor: 'gray',
+    sealOpacity: 0.08
   },
   {
-    id: 'abyssal',
+    id: 'umbral',
     name: 'Umbral Profundo',
     icon: Skull,
     description: 'Nas profundezas das trevas abissais',
-    bgGradient: 'from-black via-purple-950/30 to-black',
+    bgGradient: 'from-black via-purple-950/20 to-black',
     particleColor: 'purple',
-    sealOpacity: 0.15
+    sealOpacity: 0.12
   },
   {
-    id: 'infernal',
+    id: 'chamas',
     name: 'Chamas Ctônicas',
     icon: Flame,
     description: 'Nas fornalhas do plano inferior',
-    bgGradient: 'from-black via-red-950/40 to-orange-950/20',
+    bgGradient: 'from-black via-red-950/25 to-black',
     particleColor: 'red',
-    sealOpacity: 0.18
+    sealOpacity: 0.15
   },
   {
-    id: 'lunar',
+    id: 'lua-negra',
     name: 'Lua Negra',
     icon: Moon,
     description: 'Sob os véus da lua sombria',
-    bgGradient: 'from-black via-blue-950/30 to-indigo-950/20',
-    particleColor: 'blue',
-    sealOpacity: 0.14
+    bgGradient: 'from-black via-slate-950/20 to-black',
+    particleColor: 'slate',
+    sealOpacity: 0.10
   },
   {
-    id: 'stellar',
+    id: 'void-cosmico',
     name: 'Void Cósmico',
     icon: Zap,
     description: 'Entre as estrelas mortas do cosmos',
-    bgGradient: 'from-black via-violet-950/30 to-purple-950/20',
+    bgGradient: 'from-black via-violet-950/20 to-black',
     particleColor: 'violet',
-    sealOpacity: 0.16
+    sealOpacity: 0.12
   },
   {
-    id: 'divine',
+    id: 'trono-luciferiano',
     name: 'Trono Luciferiano',
     icon: Crown,
     description: 'No poder supremo do portador da luz',
-    bgGradient: 'from-black via-amber-950/30 to-yellow-950/20',
-    particleColor: 'amber',
-    sealOpacity: 0.20
+    bgGradient: 'from-black via-yellow-950/15 to-black',
+    particleColor: 'yellow',
+    sealOpacity: 0.18
   }
 ];
 
