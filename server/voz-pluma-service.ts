@@ -87,8 +87,7 @@ export class VozPlumaService {
         title: fallbackContent.title,
         content: fallbackContent.content,
         author: fallbackContent.author,
-        posted_date: today,
-        is_current: true
+        posted_date: today
       };
     }
   }
