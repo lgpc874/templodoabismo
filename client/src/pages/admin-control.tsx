@@ -44,25 +44,7 @@ export default function AdminControl() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Mock data for demonstration
-  const mockStats = {
-    totalUsers: 156,
-    totalCourses: 24,
-    totalGrimoires: 18,
-    totalConsultations: 342
-  };
-
-  const mockPages = [
-    { id: 1, title: "Página Inicial", slug: "home", status: "published", type: "page" },
-    { id: 2, title: "Sobre Nós", slug: "about", status: "draft", type: "page" },
-    { id: 3, title: "Contato", slug: "contact", status: "published", type: "page" }
-  ];
-
-  const mockCourses = [
-    { id: 1, title: "Fundamentos da Gnose", description: "Curso básico de introdução", level: 1, price_brl: "9999", type: "regular", is_active: true },
-    { id: 2, title: "Rituais Avançados", description: "Técnicas rituais avançadas", level: 3, price_brl: "19999", type: "premium", is_active: true },
-    { id: 3, title: "Mestrado Luciferiano", description: "Curso para mestres", level: 5, price_brl: "49999", type: "master", is_active: false }
-  ];
+  // Data will be loaded from API when features are implemented
 
   return (
     <div className="min-h-screen relative overflow-hidden">
