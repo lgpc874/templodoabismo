@@ -41,7 +41,13 @@ app.use((req, res, next) => {
   // Register all API routes first, before Vite middleware
   const server = await registerRoutes(app);
   
-  // API routes are handled in registerRoutes function
+  // Add explicit API route handling to ensure they're processed before Vite
+  app.use('/api/*', (req, res, next) => {
+    // If we reach here, the API route wasn't found in registerRoutes
+    if (!res.headersSent) {
+      res.status(404).json({ error: 'API endpoint not found' });
+    }
+  });
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
