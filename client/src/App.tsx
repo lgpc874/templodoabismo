@@ -48,6 +48,7 @@ function Router() {
           <Route path="/sobre" component={Sobre} />
           <Route path="/oraculo" component={Oracle} />
 
+          <Route path="/cursos" component={Cursos} />
           <Route path="/curso/:slug" component={CourseDetail} />
           <Route path="/profile" component={Profile} />
           <Route path="/perfil" component={StudentProfile} />

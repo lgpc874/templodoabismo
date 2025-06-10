@@ -35,6 +35,7 @@ const FloatingMenu: React.FC = () => {
 
   const navItems = [
     { href: '/', label: 'Sanctuarium', icon: Home },
+    { href: '/cursos', label: 'Doctrina', icon: Book },
     { href: '/grimoires', label: 'Grimorium', icon: Scroll },
     { href: '/oraculo', label: 'Oraculum', icon: Eye },
     { href: '/gnosis', label: 'Gnosis', icon: Book },

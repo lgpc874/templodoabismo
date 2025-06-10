@@ -6,6 +6,7 @@ import { vozPlumaService } from './voz-pluma-service';
 import { supabase, supabaseAdmin } from './supabase-client';
 import { supabaseMigration } from './supabase-migration';
 import { registerCMSRoutes } from './cms-routes';
+import { processPayment, getPayPalClientToken, capturePayPalOrder } from './payment-gateways';
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
