@@ -10,6 +10,7 @@ import Home from "@/pages/home";
 import Login from "@/pages/login";
 import Sobre from "@/pages/sobre";
 import Oraculo from "@/pages/oraculo-supabase";
+import Oracle from "@/pages/oracle";
 import CoursesOld from "@/pages/courses-mystical";
 import Courses from "@/pages/courses-supabase";
 import CoursesNew from "@/pages/courses-new";
@@ -40,7 +41,7 @@ function Router() {
           <Route path="/register" component={Register} />
           <Route path="/acesso" component={Login} />
           <Route path="/sobre" component={Sobre} />
-          <Route path="/oraculo" component={Oraculo} />
+          <Route path="/oraculo" component={Oracle} />
           <Route path="/courses" component={Courses} />
           <Route path="/cursos" component={CoursesNew} />
           <Route path="/curso/:slug" component={CourseDetail} />

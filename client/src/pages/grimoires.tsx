@@ -1,36 +1,9 @@
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { 
-  BookOpen, 
-  Download, 
-  Clock, 
-  Eye, 
-  Star, 
-  ShoppingCart, 
-  Calendar,
-  FileText,
-  Crown,
-  Zap,
-  Search,
-  Filter,
-  Book,
-  Bookmark,
-  PlayCircle
-} from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { useGrimoires } from "@/hooks/useSupabaseData";
-import { useToast } from "@/hooks/use-toast";
+import { BookOpen, ShoppingCart } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
-import Footer from "@/components/footer";
 
 interface Grimoire {
   id: number;
