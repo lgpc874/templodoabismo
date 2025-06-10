@@ -16,81 +16,14 @@ interface BlogPost {
   created_at: string;
 }
 
-const mockPosts: BlogPost[] = [
-  {
-    id: 1,
-    title: "Os Fundamentos da Gnose Luciferiana",
-    excerpt: "Uma introdução aos princípios fundamentais da tradição luciferiana e seus ensinamentos ancestrais sobre a busca pelo conhecimento verdadeiro.",
-    author: "Mestre Astaroth",
-    slug: "fundamentos-gnose-luciferiana",
-    category: "Filosofia",
-    tags: ["gnose", "fundamentos", "tradição"],
-    featured_image: "/blog1.jpg",
-    created_at: "2024-01-15"
-  },
-  {
-    id: 2,
-    title: "Rituais de Invocação: Teoria e Prática",
-    excerpt: "Explorando as técnicas tradicionais de invocação e como aplicá-las de forma segura e eficaz nos rituais contemporâneos.",
-    author: "Sacerdotisa Lilith",
-    slug: "rituais-invocacao-teoria-pratica",
-    category: "Rituais",
-    tags: ["rituais", "invocação", "prática"],
-    featured_image: "/blog2.jpg",
-    created_at: "2024-01-20"
-  },
-  {
-    id: 3,
-    title: "A Simbologia dos Selos Salomônicos",
-    excerpt: "Decifrando os mistérios por trás dos antigos selos e sua aplicação na magia contemporânea.",
-    author: "Mago Baphomet",
-    slug: "simbologia-selos-salomonicos",
-    category: "Simbolismo",
-    tags: ["selos", "símbolos", "magia"],
-    featured_image: "/blog3.jpg",
-    created_at: "2024-01-25"
-  },
-  {
-    id: 4,
-    title: "Meditação Abissal: Técnicas Avançadas",
-    excerpt: "Métodos profundos de meditação para acessar os níveis mais profundos da consciência e conectar-se com as forças primordiais.",
-    author: "Hierofante Asmodeus",
-    slug: "meditacao-abissal-tecnicas",
-    category: "Meditação",
-    tags: ["meditação", "consciência", "técnicas"],
-    featured_image: "/blog4.jpg",
-    created_at: "2024-02-01"
-  },
-  {
-    id: 5,
-    title: "História dos Templos Luciferianos",
-    excerpt: "Uma jornada através da história dos templos e organizações luciferianas ao longo dos séculos.",
-    author: "Suma Sacerdotisa Hecate",
-    slug: "historia-templos-luciferianos",
-    category: "História",
-    tags: ["história", "templos", "tradição"],
-    featured_image: "/blog5.jpg",
-    created_at: "2024-02-05"
-  },
-  {
-    id: 6,
-    title: "Alquimia Espiritual: Transformação Interior",
-    excerpt: "Os princípios da alquimia aplicados ao desenvolvimento espiritual e à transformação da consciência.",
-    author: "Adepto Belial",
-    slug: "alquimia-espiritual-transformacao",
-    category: "Alquimia",
-    tags: ["alquimia", "transformação", "espiritual"],
-    featured_image: "/blog6.jpg",
-    created_at: "2024-02-10"
-  }
-];
+// Artigos serão carregados da API/banco de dados quando criados pelo painel administrativo
 
 export default function Blog() {
-  const { data: posts = mockPosts, isLoading } = useQuery({
+  const { data: posts = [], isLoading } = useQuery({
     queryKey: ["/api/blog/posts"]
   });
 
-  const blogPosts: BlogPost[] = Array.isArray(posts) ? posts : mockPosts;
+  const blogPosts: BlogPost[] = Array.isArray(posts) ? posts : [];
 
   if (isLoading) {
     return (
