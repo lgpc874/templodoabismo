@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Eye, Flame, Zap, Sparkles, MessageCircle } from 'lucide-react';
+import { Loader2, Eye, Flame, Zap, Sparkles, MessageCircle, Download, Share2, Facebook, Twitter, MessageSquare, Send } from 'lucide-react';
+import { OracleImageGenerator, SocialSharer } from '@/lib/oracleImageShare';
+import { useToast } from '@/hooks/use-toast';
 
 interface OracleResult {
   cards?: string[];
@@ -22,6 +24,8 @@ export default function OracleTest() {
   const [result, setResult] = useState<OracleResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const { toast } = useToast();
 
   const oracleTypes = [
     { value: 'tarot', label: 'Leitura de Tarô', icon: Sparkles },
@@ -69,6 +73,87 @@ export default function OracleTest() {
       setError(err.message || 'Erro ao consultar o Oracle');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDownloadImage = async () => {
+    if (!result || !question || !oracleType) return;
+    
+    setIsGeneratingImage(true);
+    try {
+      const generator = new OracleImageGenerator();
+      const imageData = {
+        type: oracleType,
+        question: question,
+        result: result,
+        timestamp: new Date().toISOString()
+      };
+      
+      const imageUrl = await generator.generateOracleImage(imageData);
+      const filename = `oracle-${oracleType}-${Date.now()}.png`;
+      generator.downloadImage(imageUrl, filename);
+      
+      toast({
+        title: "Imagem gerada com sucesso",
+        description: "Download da consulta iniciado com marca d'água do Templo do Abismo",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro ao gerar imagem",
+        description: "Não foi possível criar a imagem da consulta",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingImage(false);
+    }
+  };
+
+  const handleShare = async (platform: string) => {
+    if (!result || !question || !oracleType) return;
+    
+    const shareText = `Consulta realizada no Oracle ${oracleTypes.find(t => t.value === oracleType)?.label}:\n\n"${question}"\n\nTemplo do Abismo - Portal Luciferiano de Sabedoria Ancestral`;
+    
+    try {
+      const generator = new OracleImageGenerator();
+      const imageData = {
+        type: oracleType,
+        question: question,
+        result: result,
+        timestamp: new Date().toISOString()
+      };
+      
+      const imageUrl = await generator.generateOracleImage(imageData);
+      
+      switch (platform) {
+        case 'facebook':
+          SocialSharer.shareToFacebook(imageUrl, shareText);
+          break;
+        case 'twitter':
+          SocialSharer.shareToTwitter(imageUrl, shareText);
+          break;
+        case 'whatsapp':
+          SocialSharer.shareToWhatsApp(imageUrl, shareText);
+          break;
+        case 'telegram':
+          SocialSharer.shareToTelegram(imageUrl, shareText);
+          break;
+        case 'native':
+          await SocialSharer.shareNative(imageUrl, shareText);
+          break;
+        default:
+          break;
+      }
+      
+      toast({
+        title: "Compartilhamento iniciado",
+        description: `Abrindo ${platform} para compartilhar sua consulta`,
+      });
+    } catch (error) {
+      toast({
+        title: "Erro no compartilhamento",
+        description: "Não foi possível compartilhar a consulta",
+        variant: "destructive",
+      });
     }
   };
 
