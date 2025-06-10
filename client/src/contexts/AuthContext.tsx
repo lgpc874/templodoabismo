@@ -1,8 +1,10 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useSupabaseAuth } from '@/hooks/useSupabaseAuth';
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface User {
-  id: number;
+  id: string;
   username: string;
   email: string;
   initiation_level: number;
@@ -11,12 +13,13 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  token: string | null;
+  supabaseUser: SupabaseUser | null;
   login: (email: string, password: string) => Promise<boolean>;
   register: (username: string, email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   updateUser: (userData: Partial<User>) => void;
   isAuthenticated: boolean;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,52 +34,39 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const { 
+    user: supabaseUser, 
+    loading, 
+    isAuthenticated: supabaseAuthenticated,
+    signIn,
+    signUp,
+    signOut
+  } = useSupabaseAuth();
 
   useEffect(() => {
-    if (token) {
-      fetchProfile();
+    if (supabaseUser && supabaseAuthenticated) {
+      // Create or update user profile based on Supabase user
+      const userData: User = {
+        id: supabaseUser.id,
+        username: supabaseUser.user_metadata?.username || supabaseUser.email?.split('@')[0] || 'Iniciado',
+        email: supabaseUser.email || '',
+        initiation_level: 1,
+        personal_seal_generated: false
+      };
+      setUser(userData);
+    } else {
+      setUser(null);
     }
-  }, [token]);
-
-  const fetchProfile = async () => {
-    try {
-      const response = await fetch('/api/profile', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-      } else {
-        logout();
-      }
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      logout();
-    }
-  };
+  }, [supabaseUser, supabaseAuthenticated]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setToken(data.token);
-        setUser(data.user);
-        localStorage.setItem('token', data.token);
-        return true;
+      const { data, error } = await signIn(email, password);
+      if (error) {
+        console.error('Login error:', error);
+        return false;
       }
-      return false;
+      return !!data.user;
     } catch (error) {
       console.error('Login error:', error);
       return false;
@@ -85,32 +75,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = async (username: string, email: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, email, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setToken(data.token);
-        setUser(data.user);
-        localStorage.setItem('token', data.token);
-        return true;
+      const { data, error } = await signUp(email, password, { username });
+      if (error) {
+        console.error('Register error:', error);
+        return false;
       }
-      return false;
+      return !!data.user;
     } catch (error) {
       console.error('Register error:', error);
       return false;
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem('token');
+  const logout = async (): Promise<void> => {
+    try {
+      await signOut();
+      setUser(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   const updateUser = (userData: Partial<User>) => {
