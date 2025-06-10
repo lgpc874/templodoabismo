@@ -17,134 +17,171 @@ export default function Bibliotheca() {
   const mockDocuments = [
     {
       id: 1,
-      title: "Necronomicon Vetitus",
-      author: "Al-Hazred ibn Yusuf",
-      description: "O livro proibido dos nomes mortos. Contém conhecimentos que precedem a criação e invocações que desafiam a própria realidade.",
+      title: "Liber Abyssos Primordialis",
+      author: "Magister Abyssi Antiquus",
+      description: "O livro perdido dos Senhores do Abismo. Hierarquias infernais anteriores à criação. Invocações que abrem as portas do vazio primordial.",
       type: "grimório",
-      category: "forbidden",
-      pages: 666,
-      downloads: 13,
+      category: "abyssal_lords",
+      pages: 888,
+      downloads: 3,
       rating: 5.0,
-      price: "Acesso Restrito",
-      level: "⚠️ EXTREMO",
-      warning: "Leitura pode causar alterações permanentes na percepção da realidade"
+      price: "Selo do Abismo",
+      level: "🔥 ABISSAL",
+      warning: "Contato com entidades anteriores à realidade - risco de desintegração espiritual"
     },
     {
       id: 2,
-      title: "Liber Umbra Mortis",
-      author: "Magister Mortuum",
-      description: "Rituais necromânticos ancestrais. Comunicação com os mortos e manipulação das energias post-mortem das almas perdidas.",
-      type: "manual",
-      category: "necromancy",
-      pages: 444,
-      downloads: 7,
-      rating: 4.9,
-      price: "Selo Sangüíneo",
-      level: "⚠️ PERIGOSO",
-      warning: "Práticas podem atrair entidades hostis do plano astral"
+      title: "Codex Luciferianus Priscus",
+      author: "Ordo Draconis Nigri",
+      description: "Ensinamentos luciferianos da Era Pré-Adamita. A verdadeira natureza de Lúcifer como Portador da Chama Negra anterior à luz divina.",
+      type: "escritura",
+      category: "luciferian_doctrine",
+      pages: 1313,
+      downloads: 1,
+      rating: 5.0,
+      price: "Chama da Iniciação",
+      level: "🔥 ABISSAL",
+      warning: "Revelações sobre a natureza primordial de Lúcifer podem causar transformação irreversível"
     },
     {
       id: 3,
-      title: "Codex Daemonium Primordialis",
-      author: "Ordo Serpentis Nigrae",
-      description: "Catálogo completo dos demônios primordiais e seus selos de comando. Hierarquias infernais reveladas pela primeira vez.",
-      type: "escritura",
-      category: "demonology",
-      pages: 999,
-      downloads: 21,
+      title: "Ritualia Infernarum Regum",
+      author: "Pontifex Maximus Inferni",
+      description: "Rituais dos Reis Infernais do Abismo Profundo. Cerimônias para comunicação direta com as Majestades das Trevas Eternas.",
+      type: "manual",
+      category: "infernal_royalty",
+      pages: 666,
+      downloads: 2,
       rating: 5.0,
-      price: "Pacto Ritual",
-      level: "⚠️ EXTREMO",
-      warning: "Conhecimento destinado apenas aos Grão-Mestres Iniciados"
+      price: "Pacto Real Infernal",
+      level: "👑 REAL INFERNAL",
+      warning: "Comunicação com Reis Infernais requer preparação de décadas - risco de vassalagem eterna"
     },
     {
       id: 4,
-      title: "Ars Goetia Completa",
-      author: "Rex Salomonis",
-      description: "A verdadeira Arte Goética. 72 demônios e seus poderes secretos. Selos originais nunca antes revelados ao mundo profano.",
+      title: "Qliphoth Thaumiel Suprema",
+      author: "Adeptus Tenebrarum Supremus",
+      description: "Exploração das esferas qliphóticas mais profundas. Os mistérios de Thaumiel e as Serpentes Gêmeas do Caos Primordial.",
       type: "tratado",
-      category: "goetia",
-      pages: 333,
-      downloads: 18,
-      rating: 4.8,
-      price: "Sangue & Ouro",
-      level: "⚠️ PERIGOSO",
-      warning: "Uso incorreto pode resultar em possessão ou morte espiritual"
+      category: "qliphothic_mysteries",
+      pages: 777,
+      downloads: 4,
+      rating: 5.0,
+      price: "Descida ao Qliphoth",
+      level: "🐍 QLIPHÓTICO",
+      warning: "Exploração qliphótica pode resultar em aprisionamento nas esferas das cascas"
     },
     {
       id: 5,
-      title: "Apocalypsis Luciferiana",
-      author: "Pontifex Maximus Tenebrarum",
-      description: "Profecias do fim dos tempos segundo a tradição luciferiana. O despertar da Besta e a Nova Era das Trevas Eternas.",
-      type: "profecia",
-      category: "apocalyptic",
-      pages: 777,
-      downloads: 3,
+      title: "Draconian Formulae Antique",
+      author: "Magus Draconis Antiquissimus",
+      description: "Fórmulas draconianas ancestrais dos cultos pré-sumerianos. A Corrente Draconiana em sua forma mais pura e perigosa.",
+      type: "fórmulas",
+      category: "draconian_current",
+      pages: 999,
+      downloads: 1,
       rating: 5.0,
-      price: "Alma Iniciática",
-      level: "⚠️ EXTREMO",
-      warning: "Revelações podem causar terror existencial permanente"
+      price: "Sangue Draconiano",
+      level: "🐉 DRACONIANO",
+      warning: "Ativação da Corrente Draconiana pode despertar o DNA reptiliano latente"
     },
     {
       id: 6,
-      title: "Ritualia Sanguinaria",
-      author: "Magus Cruor",
-      description: "Rituais de sangue dos antigos cultos. Oferendas de vida para obter poder absoluto sobre a matéria e espírito.",
-      type: "manual",
-      category: "blood_magic",
-      pages: 234,
-      downloads: 9,
-      rating: 4.7,
-      price: "Juramento Eterno",
-      level: "⚠️ PERIGOSO",
-      warning: "Práticas envolvem riscos físicos e espirituais extremos"
+      title: "Liber Bael Zebub Magnus",
+      author: "Hierophantes Moscae",
+      description: "O Grande Livro de Belzebu, Senhor das Moscas. Rituais de dissolução e putrefação espiritual para renascimento abissal.",
+      type: "grimório",
+      category: "dissolution_rites",
+      pages: 444,
+      downloads: 2,
+      rating: 5.0,
+      price: "Decomposição Espiritual",
+      level: "🪰 PUTREFAÇÃO",
+      warning: "Rituais de dissolução podem resultar em morte espiritual permanente"
     },
     {
       id: 7,
-      title: "Clavis Inferni",
-      author: "Guardião das Chaves",
-      description: "As chaves verdadeiras do inferno. Portais dimensionais e passagens para os planos sombrios da existência cósmica.",
-      type: "grimório",
-      category: "portals",
+      title: "Astaroth Rex Tremendus",
+      author: "Sacerdos Astaroth",
+      description: "Invocações supremas de Astaroth, o Grande Duque do Inferno. Conhecimentos sobre os 40 Legiões sob seu comando absoluto.",
+      type: "invocações",
+      category: "grand_dukes",
       pages: 555,
       downloads: 1,
       rating: 5.0,
-      price: "Preço Inominável",
-      level: "⚠️ EXTREMO",
-      warning: "Abertura de portais pode ser irreversível"
+      price: "Lealdade às Legiões",
+      level: "👹 DUCAL INFERNAL",
+      warning: "Invocação de Astaroth sem preparação adequada resulta em possessão militar infernal"
     },
     {
       id: 8,
-      title: "Corpus Hermeticum Tenebrarum",
-      author: "Hermes Trismegistus Niger",
-      description: "A versão sombria dos ensinamentos herméticos. Alquimia negra e transmutação através das trevas primordiais.",
-      type: "tratado",
-      category: "dark_alchemy",
-      pages: 411,
-      downloads: 11,
-      rating: 4.9,
-      price: "Conhecimento Selado",
-      level: "⚠️ PERIGOSO",
-      warning: "Transformações alquímicas podem ser irreversíveis"
+      title: "Lilith Nigra Primordialis",
+      author: "Sacerdotisa Tenebrarum",
+      description: "Os mistérios de Lilith, a Rainha Negra Primordial. Rituais de empoderamento feminino através da Corrente Noturna Ancestral.",
+      type: "mistérios",
+      category: "feminine_darkness",
+      pages: 1080,
+      downloads: 3,
+      rating: 5.0,
+      price: "Abraço da Noite Eterna",
+      level: "🌙 NOTURNO SUPREMO",
+      warning: "Conexão com Lilith pode despertar aspectos sombrios da sexualidade primordial"
+    },
+    {
+      id: 9,
+      title: "Baphomet Sabbaticus Completus",
+      author: "Magister Sabbati",
+      description: "O Sabbat Completo de Baphomet. Rituais de união dos opostos e dissolução da dualidade através do Andrógino Sagrado.",
+      type: "rituais",
+      category: "sabbatic_mysteries",
+      pages: 717,
+      downloads: 2,
+      rating: 5.0,
+      price: "União dos Opostos",
+      level: "🐐 SABBÁTICO",
+      warning: "Rituais sabbáticos podem causar transformação irreversível da identidade sexual"
+    },
+    {
+      id: 10,
+      title: "Leviathan Abyssos Profundus",
+      author: "Pontifex Aquarum Nigrum",
+      description: "Mistérios de Leviatã, a Serpente do Abismo Aquático. Rituais para navegação nas águas primordiais do caos original.",
+      type: "mistérios",
+      category: "leviathan_current",
+      pages: 888,
+      downloads: 1,
+      rating: 5.0,
+      price: "Submersão Abissal",
+      level: "🌊 LEVIATÂNICO",
+      warning: "Imersão nas águas de Leviatã pode resultar em afogamento espiritual permanente"
     }
   ];
 
   const categories = [
     { value: "all", label: "Todas as Categorias" },
-    { value: "forbidden", label: "📖 Livros Proibidos" },
-    { value: "necromancy", label: "💀 Necromancia" },
-    { value: "demonology", label: "👹 Demonologia" },
-    { value: "goetia", label: "🔥 Arte Goética" },
-    { value: "apocalyptic", label: "⚡ Profecias" },
-    { value: "blood_magic", label: "🩸 Magia Sanguínea" },
-    { value: "portals", label: "🌀 Portais" },
-    { value: "dark_alchemy", label: "⚗️ Alquimia Negra" }
+    { value: "abyssal_lords", label: "🔥 Senhores do Abismo" },
+    { value: "luciferian_doctrine", label: "⭐ Doutrina Luciferiana" },
+    { value: "infernal_royalty", label: "👑 Realeza Infernal" },
+    { value: "qliphothic_mysteries", label: "🐍 Mistérios Qliphóticos" },
+    { value: "draconian_current", label: "🐉 Corrente Draconiana" },
+    { value: "dissolution_rites", label: "🪰 Ritos de Dissolução" },
+    { value: "grand_dukes", label: "👹 Grandes Duques" },
+    { value: "feminine_darkness", label: "🌙 Trevas Femininas" },
+    { value: "sabbatic_mysteries", label: "🐐 Mistérios Sabbáticos" },
+    { value: "leviathan_current", label: "🌊 Corrente Leviatânica" }
   ];
 
   const levels = [
     { value: "all", label: "Todos os Níveis" },
-    { value: "⚠️ PERIGOSO", label: "⚠️ PERIGOSO" },
-    { value: "⚠️ EXTREMO", label: "⚠️ EXTREMO" }
+    { value: "🔥 ABISSAL", label: "🔥 ABISSAL" },
+    { value: "👑 REAL INFERNAL", label: "👑 REAL INFERNAL" },
+    { value: "🐍 QLIPHÓTICO", label: "🐍 QLIPHÓTICO" },
+    { value: "🐉 DRACONIANO", label: "🐉 DRACONIANO" },
+    { value: "🪰 PUTREFAÇÃO", label: "🪰 PUTREFAÇÃO" },
+    { value: "👹 DUCAL INFERNAL", label: "👹 DUCAL INFERNAL" },
+    { value: "🌙 NOTURNO SUPREMO", label: "🌙 NOTURNO SUPREMO" },
+    { value: "🐐 SABBÁTICO", label: "🐐 SABBÁTICO" },
+    { value: "🌊 LEVIATÂNICO", label: "🌊 LEVIATÂNICO" }
   ];
 
   const filteredDocuments = mockDocuments.filter(doc => {
@@ -170,10 +207,24 @@ export default function Bibliotheca() {
 
   const getDangerLevel = (level: string) => {
     switch (level) {
-      case "⚠️ EXTREMO": 
+      case "🔥 ABISSAL": 
         return "bg-red-900/30 text-red-300 border-red-500/50 animate-pulse";
-      case "⚠️ PERIGOSO": 
-        return "bg-orange-900/30 text-orange-300 border-orange-500/50";
+      case "👑 REAL INFERNAL": 
+        return "bg-purple-900/30 text-purple-300 border-purple-500/50 animate-pulse";
+      case "🐍 QLIPHÓTICO": 
+        return "bg-green-900/30 text-green-300 border-green-500/50";
+      case "🐉 DRACONIANO": 
+        return "bg-orange-900/30 text-orange-300 border-orange-500/50 animate-pulse";
+      case "🪰 PUTREFAÇÃO": 
+        return "bg-yellow-900/30 text-yellow-300 border-yellow-500/50";
+      case "👹 DUCAL INFERNAL": 
+        return "bg-red-900/30 text-red-300 border-red-500/50";
+      case "🌙 NOTURNO SUPREMO": 
+        return "bg-indigo-900/30 text-indigo-300 border-indigo-500/50";
+      case "🐐 SABBÁTICO": 
+        return "bg-pink-900/30 text-pink-300 border-pink-500/50";
+      case "🌊 LEVIATÂNICO": 
+        return "bg-blue-900/30 text-blue-300 border-blue-500/50 animate-pulse";
       default: 
         return "bg-gray-900/30 text-gray-300 border-gray-500/50";
     }

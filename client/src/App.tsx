@@ -19,7 +19,7 @@ import Profile from "@/pages/profile";
 import StudentProfile from "@/pages/student-profile";
 import GrimoiresOld from "@/pages/grimoires-mystical";
 import Grimoires from "@/pages/grimoires-new";
-import Bibliotheca from "@/pages/bibliotheca-mystical";
+import Bibliotheca from "@/pages/bibliotheca";
 import VozDaPluma from "@/pages/voz-da-pluma";
 import LiberProhibitus from "@/pages/liber-prohibitus-mystical";
 import Blog from "@/pages/blog-new";
