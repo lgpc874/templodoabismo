@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
+import AmbientMoodSelector from "@/components/AmbientMoodSelector";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Login from "@/pages/login";
@@ -31,6 +32,7 @@ function Router() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Header />
+      <AmbientMoodSelector />
       <main>
         <Switch>
           <Route path="/" component={Home} />
