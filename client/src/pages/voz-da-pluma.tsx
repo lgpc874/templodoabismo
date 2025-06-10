@@ -261,7 +261,8 @@ export default function VozDaPluma() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <>
+      <div className="min-h-screen relative overflow-hidden">
       {/* Fixed Central Rotating Seal - Your Custom Image */}
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
         <div className="rotating-seal w-96 h-96 opacity-20">
@@ -414,15 +415,15 @@ export default function VozDaPluma() {
                 <div className="grid md:grid-cols-3 gap-4 text-sm">
                   <div className="flex items-center gap-2 text-purple-300">
                     <Sunrise className="w-4 h-4" />
-                    <span><strong>07:00:</strong> Dica Mística</span>
+                    <span><strong>07:00:</strong> Dica Mística / Ritual Ancestral (Domingos)</span>
                   </div>
                   <div className="flex items-center gap-2 text-amber-300">
                     <Sun className="w-4 h-4" />
                     <span><strong>09:00:</strong> Verso da Pluma</span>
                   </div>
-                  <div className="flex items-center gap-2 text-red-300">
-                    <Zap className="w-4 h-4" />
-                    <span><strong>11:00:</strong> Ritual Ancestral (Domingos)</span>
+                  <div className="flex items-center gap-2 text-purple-300">
+                    <Feather className="w-4 h-4" />
+                    <span><strong>11:00:</strong> Reflexão Matinal</span>
                   </div>
                 </div>
                 <p className="text-amber-400 text-xs mt-3 italic">
