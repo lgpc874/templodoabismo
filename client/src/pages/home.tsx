@@ -12,24 +12,39 @@ export default function Home() {
   });
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-
+    <div className="min-h-screen relative overflow-hidden bg-black/8 backdrop-blur-sm">
+      {/* Ambiente Esotérico */}
+      <div className="mystical-particles fixed inset-0 z-0" />
       
-      {/* Fixed Central Rotating Seal - Your Custom Image */}
-      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
-        <div className="rotating-seal w-96 h-96 opacity-20">
-          <img 
-            src="/seal.png" 
-            alt="Selo do Templo do Abismo" 
-            className="w-full h-full object-contain filter drop-shadow-lg"
-          />
+      {/* Selo Central Fixo */}
+      <div className="fixed top-1/2 left-1/2 z-0 transform -translate-x-1/2 -translate-y-1/2" style={{marginTop: '2rem'}}>
+        {/* Outer rotating ring */}
+        <div className="absolute w-80 h-80 opacity-8 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="animate-spin-slow-reverse text-amber-500/15 text-[20rem] leading-none flex items-center justify-center h-full">
+            ◯
+          </div>
         </div>
-      </div>
-
-      {/* Mystical floating particles */}
-      <div className="fixed inset-0 overflow-hidden z-0">
-        <div className="mystical-particles"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+        
+        {/* Middle layer with mystical symbols */}
+        <div className="absolute w-72 h-72 opacity-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="animate-spin-slow text-red-400/20 text-[18rem] leading-none flex items-center justify-center h-full">
+            ☿
+          </div>
+        </div>
+        
+        {/* Main central seal */}
+        <div className="rotating-seal absolute w-64 h-64 opacity-15 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="animate-spin-slow text-red-500/30 text-[16rem] leading-none flex items-center justify-center h-full">
+            ⸸
+          </div>
+        </div>
+        
+        {/* Inner pulsing core */}
+        <div className="absolute w-16 h-16 opacity-25 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="text-red-300/40 text-4xl leading-none flex items-center justify-center h-full">
+            ●
+          </div>
+        </div>
       </div>
 
       {/* Main content */}
