@@ -162,30 +162,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     
     try {
-      console.log('Starting registration for:', email);
+      console.log('Starting direct registration for:', email);
       
-      // First register with backend
-      const backendResponse = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, email, password }),
-      });
-      
-      if (!backendResponse.ok) {
-        const errorData = await backendResponse.json();
-        console.error('Backend registration failed:', errorData);
-        return false;
-      }
-      
-      // Then authenticate with Supabase
+      // Register directly with Supabase Auth (bypassing backend middleware issues)
       const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
         options: {
           data: {
-            username: username
+            username: username,
+            initiation_level: 1,
+            personal_seal_generated: false,
+            is_admin: false
           }
         }
       });
@@ -197,6 +185,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (data?.user) {
         console.log('User registered successfully:', data.user.id);
+        
+        // Set user data immediately
+        const userData: User = {
+          id: data.user.id,
+          username: username,
+          email: email,
+          initiation_level: 1,
+          personal_seal_generated: false,
+          is_admin: false
+        };
+        
+        setUser(userData);
+        setSupabaseUser(data.user);
         
         // Get the user data from backend
         const userData = await backendResponse.json();

@@ -148,10 +148,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Main auth register endpoint (kept for compatibility)
+  // Main auth register endpoint (kept for compatibility) 
   app.post('/api/auth/register', async (req: Request, res: Response) => {
-    // Redirect to working endpoint
-    return app._router.handle(Object.assign(req, { url: '/api/register', originalUrl: '/api/register' }), res);
+    console.log('Auth register endpoint hit, redirecting to /api/register');
+    
+    // Forward the request to the working endpoint
+    const { username, email, password } = req.body;
+    
+    if (!username || !email || !password) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    try {
+      // Create user in Supabase Auth using admin privileges
+      const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+        user_metadata: { 
+          username,
+          is_admin: false 
+        }
+      });
+
+      if (authError) {
+        console.error('Auth registration failed:', authError);
+        return res.status(400).json({ error: authError.message });
+      }
+
+      if (!authData?.user?.id) {
+        return res.status(500).json({ error: 'User creation failed - no ID returned' });
+      }
+
+      console.log('Auth user created successfully:', authData.user.id);
+
+      // Try to create user profile in database
+      try {
+        const { data: profileData, error: profileError } = await supabaseAdmin
+          .from('users')
+          .insert({
+            id: authData.user.id,
+            username: username,
+            email: email,
+            password_hash: '',
+            is_admin: false
+          })
+          .select()
+          .single();
+
+        if (profileError) {
+          console.log('Profile creation failed, but auth user exists:', profileError);
+        } else {
+          console.log('Profile created successfully');
+        }
+      } catch (profileException) {
+        console.log('Profile creation exception, but auth user exists:', profileException);
+      }
+      
+      return res.status(201).json({ 
+        success: true,
+        message: 'User registered successfully',
+        user: { 
+          id: authData.user.id, 
+          username: username, 
+          email: email,
+          is_admin: false
+        }
+      });
+
+    } catch (error: any) {
+      console.error('Registration exception:', error);
+      res.status(500).json({ error: 'Registration failed: ' + error.message });
+    }
   });
 
   app.post('/api/auth/login', async (req: Request, res: Response) => {

@@ -38,6 +38,9 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Register all API routes first, before Vite middleware
+  const server = await registerRoutes(app);
+  
   // Core API endpoints using Supabase storage
   app.get('/api/courses', async (req, res) => {
     try {
@@ -58,8 +61,6 @@ app.use((req, res, next) => {
       res.status(500).json({ message: 'Failed to get grimoires', error: error.message });
     }
   });
-
-  const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
