@@ -4,28 +4,9 @@ import { getSupabase } from '@/lib/supabase';
 import type { Database } from '@shared/supabase';
 
 type Tables = Database['public']['Tables'];
-type Courses = Tables['courses']['Row'];
 type Grimoires = Tables['grimoires']['Row'];
 type BlogPosts = Tables['blog_posts']['Row'];
 type DailyPoems = Tables['daily_poems']['Row'];
-
-// Hook para buscar cursos
-export function useCourses() {
-  return useQuery({
-    queryKey: ['courses'],
-    queryFn: async () => {
-      const supabase = await getSupabase();
-      const { data, error } = await supabase
-        .from('courses')
-        .select('*')
-        .eq('published', true)
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      return data;
-    },
-  });
-}
 
 // Hook para buscar grimórios
 export function useGrimoires() {

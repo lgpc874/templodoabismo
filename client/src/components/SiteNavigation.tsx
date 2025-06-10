@@ -10,7 +10,6 @@ export default function SiteNavigation() {
   const navigationItems = [
     { href: '/blog', label: 'Gnosis Abyssos', icon: BookOpen },
     { href: '/oraculo', label: 'Oraculum Tenebrae', icon: Eye },
-    { href: '/cursos', label: 'Academia Luciferiana', icon: GraduationCap },
     { href: '/grimorios', label: 'Bibliotheca Abyssos', icon: Scroll },
     { href: '/bibliotheca', label: 'Bibliotheca Secreta', icon: Star },
     { href: '/voz-da-pluma', label: 'Vox Plumae', icon: Feather },
