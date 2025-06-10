@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -59,14 +59,18 @@ export function SiteSettings() {
   const queryClient = useQueryClient();
 
   const { data: currentSettings } = useQuery({
-    queryKey: ["/api/admin/site-settings"],
-    onSuccess: (data) => {
-      if (data.general) setGeneralSettings({ ...generalSettings, ...data.general });
-      if (data.appearance) setAppearanceSettings({ ...appearanceSettings, ...data.appearance });
-      if (data.security) setSecuritySettings({ ...securitySettings, ...data.security });
-      if (data.content) setContentSettings({ ...contentSettings, ...data.content });
-    }
+    queryKey: ["/api/admin/site-settings"]
   });
+
+  // Update settings when data changes
+  useEffect(() => {
+    if (currentSettings) {
+      if (currentSettings.general) setGeneralSettings({ ...generalSettings, ...currentSettings.general });
+      if (currentSettings.appearance) setAppearanceSettings({ ...appearanceSettings, ...currentSettings.appearance });
+      if (currentSettings.security) setSecuritySettings({ ...securitySettings, ...currentSettings.security });
+      if (currentSettings.content) setContentSettings({ ...contentSettings, ...currentSettings.content });
+    }
+  }, [currentSettings]);
 
   const { data: systemInfo } = useQuery({
     queryKey: ["/api/admin/system-info"],

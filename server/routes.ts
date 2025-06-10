@@ -560,8 +560,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/voz-pluma/recent', async (req: Request, res: Response) => {
     try {
-      const limit = parseInt(req.query.limit as string) || 10;
-      const content = await vozPlumaService.getRecentContent(limit);
+      const content = await vozPlumaService.getRecentContent();
       res.json(content);
     } catch (error) {
       console.error('Error fetching recent content:', error);

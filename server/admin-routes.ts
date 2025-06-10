@@ -1,4 +1,12 @@
 import type { Express, Request, Response } from "express";
+
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+    email?: string;
+    [key: string]: any;
+  };
+}
 import { supabaseAdmin } from "./supabase-client";
 import { temploAI } from "./ai-service";
 import { voxPlumaAI } from "./ai-vox-service";
@@ -146,7 +154,7 @@ export function registerAdminRoutes(app: Express) {
     }
   });
 
-  app.post('/api/admin/pages', requireAuth, requireAdmin, async (req: Request, res: Response) => {
+  app.post('/api/admin/pages', requireAuth, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { title, slug, content, meta_description, meta_keywords, seo_title, is_published, page_type } = req.body;
       
