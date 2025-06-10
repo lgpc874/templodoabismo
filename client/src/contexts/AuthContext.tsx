@@ -47,47 +47,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [supabaseClient, setSupabaseClient] = useState<any>(null);
 
-  // Initialize Supabase client
+  // Initialize Supabase client and auth state
   useEffect(() => {
-    let subscription: any = null;
+    let subscription: any;
 
     async function initializeSupabase() {
       try {
         const client = await createDirectSupabaseClient();
         setSupabaseClient(client);
+
+        // Get current user
+        const { data: { user: authUser } } = await client.auth.getUser();
         
-        // Get initial session
-        const { data: { session } } = await client.auth.getSession();
-        const currentUser = session?.user ?? null;
-        setSupabaseUser(currentUser);
-        
-        if (currentUser) {
+        if (authUser) {
           const userData: User = {
-            id: currentUser.id,
-            username: currentUser.user_metadata?.username || currentUser.email?.split('@')[0] || 'Iniciado',
-            email: currentUser.email || '',
-            initiation_level: 1,
-            personal_seal_generated: false
+            id: authUser.id,
+            username: authUser.user_metadata?.username || authUser.email?.split('@')[0] || 'Iniciado',
+            email: authUser.email || '',
+            initiation_level: authUser.user_metadata?.initiation_level || 1,
+            personal_seal_generated: authUser.user_metadata?.personal_seal_generated || false,
+            is_admin: authUser.user_metadata?.is_admin || false
           };
           setUser(userData);
-        }
-        
-        // Listen for auth changes
-        const { data } = client.auth.onAuthStateChange((_event: any, session: any) => {
-          const authUser = session?.user ?? null;
           setSupabaseUser(authUser);
+        }
+
+        // Listen for auth changes
+        const { data } = client.auth.onAuthStateChange((event: any, session: any) => {
+          console.log('Auth state changed:', event, session?.user?.id);
           
-          if (authUser) {
+          if (session?.user) {
             const userData: User = {
-              id: authUser.id,
-              username: authUser.user_metadata?.username || authUser.email?.split('@')[0] || 'Iniciado',
-              email: authUser.email || '',
-              initiation_level: 1,
-              personal_seal_generated: false
+              id: session.user.id,
+              username: session.user.user_metadata?.username || session.user.email?.split('@')[0] || 'Iniciado',
+              email: session.user.email || '',
+              initiation_level: session.user.user_metadata?.initiation_level || 1,
+              personal_seal_generated: session.user.user_metadata?.personal_seal_generated || false,
+              is_admin: session.user.user_metadata?.is_admin || false
             };
             setUser(userData);
+            setSupabaseUser(session.user);
           } else {
             setUser(null);
+            setSupabaseUser(null);
           }
         });
         
@@ -112,7 +114,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!supabaseClient) return false;
     
     try {
-      // First authenticate with Supabase
       const { data, error } = await supabaseClient.auth.signInWithPassword({
         email,
         password,
@@ -123,32 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return false;
       }
       
-      if (data.user) {
-        // Fetch user data from our backend
-        try {
-          const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-          });
-          
-          if (response.ok) {
-            const userData = await response.json();
-            setUser(userData);
-            return true;
-          } else {
-            console.error('Backend login failed');
-            return false;
-          }
-        } catch (backendError) {
-          console.error('Backend login error:', backendError);
-          return false;
-        }
-      }
-      
-      return false;
+      return !!data?.user;
     } catch (error) {
       console.error('Login error:', error);
       return false;
@@ -156,15 +132,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const register = async (username: string, email: string, password: string): Promise<boolean> => {
-    if (!supabaseClient) {
-      console.error('Supabase client not initialized');
-      return false;
-    }
+    if (!supabaseClient) return false;
     
     try {
-      console.log('Starting direct registration for:', email);
-      
-      // Register directly with Supabase Auth (bypassing backend middleware issues)
       const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
@@ -179,32 +149,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       
       if (error) {
-        console.error('Supabase signup error:', error);
+        console.error('Registration error:', error);
         return false;
       }
       
-      if (data?.user) {
-        console.log('User registered successfully:', data.user.id);
-        
-        // Set user data immediately
-        const userData: User = {
-          id: data.user.id,
-          username: username,
-          email: email,
-          initiation_level: 1,
-          personal_seal_generated: false,
-          is_admin: false
-        };
-        
-        setUser(userData);
-        setSupabaseUser(data.user);
-        return true;
-      }
-      
-      console.warn('No user returned from signup');
-      return false;
-    } catch (error: any) {
-      console.error('Registration exception:', error);
+      return !!data?.user;
+    } catch (error) {
+      console.error('Registration error:', error);
       return false;
     }
   };
@@ -238,9 +189,5 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
