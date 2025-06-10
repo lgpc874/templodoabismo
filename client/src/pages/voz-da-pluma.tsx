@@ -280,8 +280,8 @@ export default function VozDaPluma() {
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
         </div>
 
-      {/* Main content */}
-      <div className="relative z-10 min-h-screen px-4 pt-16">
+        {/* Main content */}
+        <div className="relative z-10 min-h-screen px-4 pt-16">
         {/* Navigation back to home */}
         <div className="absolute top-6 left-6">
           <Link to="/">
@@ -437,6 +437,6 @@ export default function VozDaPluma() {
 
         <Footer />
       </div>
-    </div>
+    </>
   );
 }
