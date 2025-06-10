@@ -436,7 +436,8 @@ export default function VozDaPluma() {
         </div>
       </div>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </>
   );
 }
