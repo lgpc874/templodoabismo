@@ -113,7 +113,7 @@ export default function OracleRitualChat() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/oracle/ritual-consult', {
+      const response = await fetch('http://localhost:5002/api/oracle/ritual-consult', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
