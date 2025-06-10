@@ -251,8 +251,6 @@ export default function CoursesSupabase() {
           </Card>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

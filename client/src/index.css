@@ -299,6 +299,33 @@
   animation: rotate 60s linear infinite;
 }
 
+/* Floating title animations */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.floating-title {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+
+.floating-title-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
 @keyframes glowPulse {
   0%, 100% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.3); }
   50% { box-shadow: 0 0 40px rgba(220, 38, 38, 0.6); }

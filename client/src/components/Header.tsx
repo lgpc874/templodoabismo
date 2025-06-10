@@ -65,7 +65,7 @@ const Header: React.FC = () => {
                   />
                 </div>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-amber-400 to-red-500 bg-clip-text text-transparent font-['Cinzel_Decorative']">
+              <span className="text-xl font-bold bg-gradient-to-r from-amber-400 to-red-500 bg-clip-text text-transparent font-['Cinzel_Decorative'] floating-title-slow">
                 Templo do Abismo
               </span>
             </div>
