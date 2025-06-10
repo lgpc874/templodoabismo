@@ -36,7 +36,7 @@ export default function Grimoires() {
   if (isLoading) {
     return (
       <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
-        <div className="text-amber-500 animate-pulse text-xl">Carregando grimórios...</div>
+        <div className="text-amber-500 animate-pulse text-xl">Carregando Grimorium...</div>
       </div>
     );
   }
@@ -67,7 +67,7 @@ export default function Grimoires() {
           <div className="mb-8">
             <div className="text-amber-400 text-6xl mb-4">⛧</div>
             <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
-              BIBLIOTHECA ARCANA
+              GRIMORIUM ARCANUM
             </h1>
             <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
               <span>☿</span>
@@ -80,11 +80,11 @@ export default function Grimoires() {
           
           <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
             <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
-              Manuscritos das Trevas Sagradas
+              Manuscritos Arcanos das Trevas
             </h2>
             
             <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
-              Adentre a <strong className="text-amber-400">bibliotheca forbidden</strong> onde repousam os textos mais antigos e poderosos da tradição luciferiana. 
+              Adentre o <strong className="text-amber-400">grimorium forbidden</strong> onde repousam os textos mais antigos e poderosos da tradição luciferiana. 
               Cada grimório pulsa com o <strong className="text-red-400">poder primordial</strong> das correntes abissais, preservando conhecimentos que transcendem os véus da realidade.
             </p>
             
