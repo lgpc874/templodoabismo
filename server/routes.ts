@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import multer from 'multer';
 import { temploAI } from './ai-service';
-import { supabase } from '../shared/supabase';
+import { supabase, supabaseAdmin } from '../shared/supabase';
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -74,8 +74,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: 'All fields are required' });
       }
 
-      // Create user in Supabase Auth
-      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+      // Create user in Supabase Auth using admin client
+      const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
         email,
         password,
         user_metadata: { username }
@@ -86,15 +86,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: authError.message });
       }
 
-      // Create user profile in users table
-      const { data: userData, error: userError } = await supabase
+      // Create user profile in users table using admin client
+      const { data: userData, error: userError } = await supabaseAdmin
         .from('users')
         .insert({
           id: authData.user.id,
           username,
           email,
-          initiation_level: 1,
-          personal_seal_generated: false,
+          password_hash: '',
           is_admin: false
         })
         .select()
