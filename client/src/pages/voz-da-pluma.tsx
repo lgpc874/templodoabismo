@@ -237,67 +237,47 @@ export default function VozDaPluma() {
         </div>
       </div>
 
-      {/* Dialog Ritual para Dica */}
+      {/* Dialog Mobile-First para Dica */}
       <Dialog open={showDicaDialog} onOpenChange={setShowDicaDialog}>
-        <DialogContent className="bg-black/95 border border-purple-500/50 text-white max-w-2xl">
-          <DialogHeader className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-500/20 flex items-center justify-center">
-              <Sparkles className="w-8 h-8 text-purple-400" />
+        <DialogContent className="bg-black/95 border border-purple-500/50 text-white w-[95vw] max-w-md mx-auto rounded-xl overflow-hidden">
+          <DialogHeader className="text-center pb-2">
+            <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-purple-500/20 flex items-center justify-center">
+              <Sparkles className="w-6 h-6 text-purple-400" />
             </div>
-            <DialogTitle className="text-2xl text-purple-300">
+            <DialogTitle className="text-lg md:text-xl text-purple-300 leading-tight">
               {selectedManifestation?.title || 'Manifestação Ancestral'}
             </DialogTitle>
           </DialogHeader>
           
           {selectedManifestation && (
-            <div className="space-y-6 p-6">
-              <div className="bg-purple-950/30 p-6 rounded-lg border border-purple-500/30">
-                <p className="text-gray-200 leading-relaxed text-center text-lg">
+            <div className="space-y-4 px-2">
+              <div className="bg-purple-950/30 p-4 rounded-lg border border-purple-500/30">
+                <p className="text-gray-200 leading-relaxed text-center text-sm md:text-base">
                   "{selectedManifestation.content}"
                 </p>
               </div>
               
               <div className="text-center space-y-2">
-                <p className="text-amber-400 font-semibold text-lg">— {selectedManifestation.author}</p>
-                <p className="text-gray-400">
-                  Manifestado às {selectedManifestation.manifestation_time} • {new Date(selectedManifestation.posted_date).toLocaleDateString('pt-BR')}
+                <p className="text-amber-400 font-semibold text-sm md:text-base">— {selectedManifestation.author}</p>
+                <p className="text-gray-400 text-xs md:text-sm">
+                  {selectedManifestation.manifestation_time} • {new Date(selectedManifestation.posted_date).toLocaleDateString('pt-BR')}
                 </p>
-                <div className="inline-block px-4 py-2 bg-purple-900/50 rounded-full border border-purple-500/30 mt-4">
-                  <span className="text-purple-300 text-sm font-medium capitalize">
+                <div className="inline-block px-3 py-1 bg-purple-900/50 rounded-full border border-purple-500/30">
+                  <span className="text-purple-300 text-xs font-medium capitalize">
                     {selectedManifestation.type}
                   </span>
                 </div>
               </div>
 
-              {/* Compartilhamento da Dica */}
-              <div className="flex flex-wrap gap-2 justify-center pt-4">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => shareToSocial('twitter', selectedManifestation)}
-                  className="bg-blue-900/20 border-blue-500/50 text-blue-300 hover:bg-blue-800/30"
-                >
-                  <FaTwitter className="w-4 h-4 mr-2" />
-                  Twitter
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => shareToSocial('facebook', selectedManifestation)}
-                  className="bg-blue-900/20 border-blue-500/50 text-blue-300 hover:bg-blue-800/30"
-                >
-                  <FaFacebook className="w-4 h-4 mr-2" />
-                  Facebook
-                </Button>
-
+              {/* Compartilhamento Mobile */}
+              <div className="grid grid-cols-2 gap-2 pt-2">
                 <Button 
                   variant="outline" 
                   size="sm"
                   onClick={() => shareToSocial('whatsapp', selectedManifestation)}
-                  className="bg-green-900/20 border-green-500/50 text-green-300 hover:bg-green-800/30"
+                  className="bg-green-900/20 border-green-500/50 text-green-300 hover:bg-green-800/30 text-xs py-2"
                 >
-                  <FaWhatsapp className="w-4 h-4 mr-2" />
+                  <FaWhatsapp className="w-3 h-3 mr-1" />
                   WhatsApp
                 </Button>
 
@@ -305,10 +285,30 @@ export default function VozDaPluma() {
                   variant="outline" 
                   size="sm"
                   onClick={() => shareToSocial('instagram', selectedManifestation)}
-                  className="bg-pink-900/20 border-pink-500/50 text-pink-300 hover:bg-pink-800/30"
+                  className="bg-pink-900/20 border-pink-500/50 text-pink-300 hover:bg-pink-800/30 text-xs py-2"
                 >
-                  <FaInstagram className="w-4 h-4 mr-2" />
+                  <FaInstagram className="w-3 h-3 mr-1" />
                   Instagram
+                </Button>
+
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => shareToSocial('twitter', selectedManifestation)}
+                  className="bg-blue-900/20 border-blue-500/50 text-blue-300 hover:bg-blue-800/30 text-xs py-2"
+                >
+                  <FaTwitter className="w-3 h-3 mr-1" />
+                  Twitter
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => shareToSocial('facebook', selectedManifestation)}
+                  className="bg-blue-900/20 border-blue-500/50 text-blue-300 hover:bg-blue-800/30 text-xs py-2"
+                >
+                  <FaFacebook className="w-3 h-3 mr-1" />
+                  Facebook
                 </Button>
               </div>
             </div>
