@@ -302,6 +302,30 @@ export const daily_poems = pgTable("daily_poems", {
   created_at: timestamp("created_at").defaultNow(),
 });
 
+// Voz da Pluma - Sistema de publicação automática
+export const voz_pluma_content = pgTable("voz_pluma_content", {
+  id: serial("id").primaryKey(),
+  type: text("type").notNull(), // 'dica', 'poema', 'ritual', 'conjuracao'
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  author: text("author").notNull(),
+  date: text("date").notNull(),
+  image_url: text("image_url"),
+  generated_at: timestamp("generated_at").defaultNow(),
+  published: boolean("published").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+});
+
+export const voz_pluma_settings = pgTable("voz_pluma_settings", {
+  id: serial("id").primaryKey(),
+  auto_publish_enabled: boolean("auto_publish_enabled").default(true),
+  daily_dica_time: text("daily_dica_time").default("07:00"),
+  daily_poema_time: text("daily_poema_time").default("09:00"),
+  daily_ritual_time: text("daily_ritual_time").default("11:00"),
+  last_auto_publish: timestamp("last_auto_publish"),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
 export const user_progress = pgTable("user_progress", {
   id: serial("id").primaryKey(),
   user_id: integer("user_id").references(() => users.id).notNull(),
@@ -648,6 +672,17 @@ export const insertScriptureSchema = createInsertSchema(scriptures).omit({
   updatedAt: true,
 });
 
+export const insertVozPlumaContentSchema = createInsertSchema(voz_pluma_content).omit({
+  id: true,
+  generated_at: true,
+  created_at: true,
+});
+
+export const insertVozPlumaSettingsSchema = createInsertSchema(voz_pluma_settings).omit({
+  id: true,
+  updated_at: true,
+});
+
 // Auth schemas
 export const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -679,6 +714,10 @@ export type OracleSession = typeof oracle_sessions.$inferSelect;
 export type InsertOracleSession = z.infer<typeof insertOracleSessionSchema>;
 export type DailyPoem = typeof daily_poems.$inferSelect;
 export type InsertDailyPoem = z.infer<typeof insertDailyPoemSchema>;
+export type VozPlumaContent = typeof voz_pluma_content.$inferSelect;
+export type InsertVozPlumaContent = z.infer<typeof insertVozPlumaContentSchema>;
+export type VozPlumaSettings = typeof voz_pluma_settings.$inferSelect;
+export type InsertVozPlumaSettings = z.infer<typeof insertVozPlumaSettingsSchema>;
 export type UserProgress = typeof user_progress.$inferSelect;
 export type LiberAccess = typeof liber_access.$inferSelect;
 

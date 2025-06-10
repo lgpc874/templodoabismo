@@ -2,6 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import multer from 'multer';
 import { temploAI } from './ai-service';
+import { vozPlumaService } from './voz-pluma-service';
 import { supabase } from './supabase-client';
 import { supabaseAdmin } from './supabase-admin';
 import { registerAdminRoutes } from './admin-routes';
