@@ -57,7 +57,7 @@ export default function AdminPanel() {
 
   const { data: voxSettingsData } = useQuery({
     queryKey: ['/api/admin/voz-pluma/settings'],
-    queryFn: () => apiRequest('GET', '/api/admin/voz-pluma/settings')
+    queryFn: () => apiRequest('/api/admin/voz-pluma/settings')
   });
 
   // Mutations

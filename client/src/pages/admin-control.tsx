@@ -241,7 +241,7 @@ export default function AdminControl() {
       if (page.id) {
         return await apiRequest(`/api/admin/pages/${page.id}`, page);
       } else {
-        return await apiRequest('POST', '/api/admin/pages', page);
+        return await apiRequest('/api/admin/pages', page);
       }
     },
     onSuccess: () => {
@@ -254,9 +254,9 @@ export default function AdminControl() {
   const saveCourseMutation = useMutation({
     mutationFn: async (course: Partial<Course>) => {
       if (course.id) {
-        return await apiRequest('PUT', `/api/admin/courses/${course.id}`, course);
+        return await apiRequest(`/api/admin/courses/${course.id}`, course);
       } else {
-        return await apiRequest('POST', '/api/admin/courses', course);
+        return await apiRequest('/api/admin/courses', course);
       }
     },
     onSuccess: () => {
@@ -269,9 +269,9 @@ export default function AdminControl() {
   const saveGrimoireMutation = useMutation({
     mutationFn: async (grimoire: Partial<Grimoire>) => {
       if (grimoire.id) {
-        return await apiRequest('PUT', `/api/admin/grimoires/${grimoire.id}`, grimoire);
+        return await apiRequest(`/api/admin/grimoires/${grimoire.id}`, grimoire);
       } else {
-        return await apiRequest('POST', '/api/admin/grimoires', grimoire);
+        return await apiRequest('/api/admin/grimoires', grimoire);
       }
     },
     onSuccess: () => {
@@ -283,7 +283,7 @@ export default function AdminControl() {
 
   const saveOracleSettingsMutation = useMutation({
     mutationFn: async (settings: Partial<OracleSettings>) => {
-      return await apiRequest('PUT', `/api/admin/oracle-settings/${settings.oracle_type}`, settings);
+      return await apiRequest(`/api/admin/oracle-settings/${settings.oracle_type}`, settings);
     },
     onSuccess: () => {
       toast({ title: 'Configurações do oráculo salvas com sucesso!' });
@@ -293,7 +293,7 @@ export default function AdminControl() {
 
   const testOracleMutation = useMutation({
     mutationFn: async ({ type, prompt }: { type: string; prompt: string }) => {
-      return await apiRequest('POST', '/api/admin/test-oracle', { type, prompt });
+      return await apiRequest('/api/admin/test-oracle', { type, prompt });
     },
     onSuccess: (response) => {
       toast({ 
