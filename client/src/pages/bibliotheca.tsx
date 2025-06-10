@@ -1,18 +1,12 @@
-import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
-  BookOpen, Search, Download, Star, Eye, Skull, 
-  AlertTriangle, Lock, Crown, Flame, Shield
+  BookOpen, Download, Star, Eye, Skull, 
+  AlertTriangle, Lock, Shield
 } from "lucide-react";
 
 export default function Bibliotheca() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedLevel, setSelectedLevel] = useState("all");
 
   const mockDocuments = [
     {
@@ -437,47 +431,7 @@ export default function Bibliotheca() {
     }
   ];
 
-  const categories = [
-    { value: "all", label: "Todas as Categorias" },
-    { value: "abyssal_chronicles", label: "📜 Crônicas Abissais" },
-    { value: "satanic_royalty", label: "👑 Realeza Satânica" },
-    { value: "luciferian_origins", label: "⭐ Origens Luciferianas" },
-    { value: "ultimate_apocalypse", label: "🌌 Apocalipse Último" },
-    { value: "androgyne_mysteries", label: "🐐 Mistérios Andróginos" },
-    { value: "deep_qliphoth", label: "🐍 Qliphoth Profundas" },
-    { value: "primordial_dragons", label: "🐉 Dragões Primordiais" },
-    { value: "oceanic_chaos", label: "🌊 Caos Oceânico" },
-    { value: "queen_darkness", label: "🌙 Rainha das Trevas" },
-    { value: "infernal_warfare", label: "⚔️ Guerra Infernal" },
-    { value: "terrestrial_corruption", label: "🌍 Corrupção Terrestre" },
-    { value: "infernal_sexuality", label: "💋 Sexualidade Infernal" },
-    { value: "cosmic_greed", label: "💰 Ganância Cósmica" },
-    { value: "sacrificial_rites", label: "🔥 Ritos Sacrificiais" }
-  ];
 
-  const levels = [
-    { value: "all", label: "Todos os Níveis" },
-    { value: "💀 VAZIO PRIMORDIAL", label: "💀 VAZIO PRIMORDIAL" },
-    { value: "👑 REI SUPREMO", label: "👑 REI SUPREMO" },
-    { value: "⭐ LUX TENEBRARUM", label: "⭐ LUX TENEBRARUM" },
-    { value: "🌌 OMEGA ABSOLUTO", label: "🌌 OMEGA ABSOLUTO" },
-    { value: "🐐 ANDRÓGINO SUPREMO", label: "🐐 ANDRÓGINO SUPREMO" },
-    { value: "🐍 QLIPHOTH PROFUNDUS", label: "🐍 QLIPHOTH PROFUNDUS" },
-    { value: "🐉 TIAMAT PRIMORDIAL", label: "🐉 TIAMAT PRIMORDIAL" },
-    { value: "🌊 OCEANO PRIMORDIAL", label: "🌊 OCEANO PRIMORDIAL" },
-    { value: "🌙 REGINA NOCTIS", label: "🌙 REGINA NOCTIS" },
-    { value: "⚔️ GENERAL SUPREMO", label: "⚔️ GENERAL SUPREMO" }
-  ];
-
-  const filteredDocuments = mockDocuments.filter(doc => {
-    const matchesSearch = doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doc.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doc.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || doc.category === selectedCategory;
-    const matchesLevel = selectedLevel === "all" || doc.level === selectedLevel;
-    
-    return matchesSearch && matchesCategory && matchesLevel;
-  });
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -547,7 +501,7 @@ export default function Bibliotheca() {
         {/* Hero Section */}
         <div className="text-center mb-12 max-w-4xl">
           <div className="mb-8">
-            <div className="text-amber-400 text-6xl mb-4">📚</div>
+            <div className="text-red-500 text-6xl mb-4">🔥</div>
             <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
               BIBLIOTHECA ARCANA
             </h1>
@@ -630,48 +584,7 @@ export default function Bibliotheca() {
           </div>
         </div>
 
-        {/* Search and Filters */}
-        <div className="floating-card max-w-6xl w-full mb-8 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-400 w-5 h-5" />
-                <Input
-                  placeholder="Buscar nos arquivos supremos..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-black/40 border-amber-500/30 text-gray-300 placeholder:text-gray-500 focus:border-amber-500"
-                />
-              </div>
 
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="bg-black/40 border-amber-500/30 text-gray-300">
-                  <SelectValue placeholder="Categoria" />
-                </SelectTrigger>
-                <SelectContent className="bg-black/90 border-amber-500/30">
-                  {categories.map((category) => (
-                    <SelectItem key={category.value} value={category.value} className="text-gray-300 focus:bg-amber-500/20">
-                      {category.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-                <SelectTrigger className="bg-black/40 border-amber-500/30 text-gray-300">
-                  <SelectValue placeholder="Nível de Perigo" />
-                </SelectTrigger>
-                <SelectContent className="bg-black/90 border-amber-500/30">
-                  {levels.map((level) => (
-                    <SelectItem key={level.value} value={level.value} className="text-gray-300 focus:bg-amber-500/20">
-                      {level.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
 
         {/* Documents Grid */}
         <div className="floating-card max-w-6xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
@@ -681,13 +594,12 @@ export default function Bibliotheca() {
                 Arquivos Ultra-Classificados
               </h3>
               <Badge variant="outline" className="border-amber-500/30 text-amber-300 bg-amber-500/10">
-                {filteredDocuments.length} documentos disponíveis
+                {mockDocuments.length} documentos disponíveis
               </Badge>
             </div>
 
-            {filteredDocuments.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredDocuments.map((doc) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {mockDocuments.map((doc) => (
                   <Card key={doc.id} className="bg-black/20 border-amber-500/20 hover:border-amber-400/40 transition-all duration-300 transform hover:scale-105">
                     <CardHeader>
                       <div className="flex items-start justify-between">
@@ -756,13 +668,7 @@ export default function Bibliotheca() {
                     </CardContent>
                   </Card>
                 ))}
-              </div>
-            ) : (
-              <div className="text-center text-gray-400 py-12">
-                <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                <p>Nenhum documento encontrado com os filtros selecionados</p>
-              </div>
-            )}
+            </div>
           </div>
         </div>
 
