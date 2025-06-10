@@ -35,7 +35,7 @@ function Router() {
           <Route path="/" component={Home} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <Route path="/acesso" component={Login} />
+
           <Route path="/sobre" component={Sobre} />
           <Route path="/oraculo" component={Oracle} />
 
