@@ -2,7 +2,8 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import multer from 'multer';
 import { temploAI } from './ai-service';
-import { supabase, supabaseAdmin } from '../shared/supabase';
+import { supabaseAdmin } from './supabase-client';
+import { registerAdminRoutes } from './admin-routes';
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -18,14 +19,14 @@ async function requireAuth(req: any, res: Response, next: any) {
     }
 
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error } = await supabase.auth.getUser(token);
+    const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
     
     if (error || !user) {
       return res.status(401).json({ error: 'Invalid token' });
     }
 
     // Get user profile
-    const { data: profile } = await supabase
+    const { data: profile } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('id', user.id)
@@ -46,6 +47,9 @@ async function requireAdmin(req: any, res: Response, next: any) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Register all admin routes
+  registerAdminRoutes(app);
+
   // Emergency admin access endpoint - must be first
   app.post('/api/emergency-admin', async (req: Request, res: Response) => {
     try {
