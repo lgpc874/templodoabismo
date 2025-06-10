@@ -181,6 +181,54 @@ export default function Oracle() {
             </p>
           </div>
         </div>
+
+        {/* Payment Dialog */}
+        <Dialog open={showPayment} onOpenChange={setShowPayment}>
+          <DialogContent className="bg-black/95 border-amber-700/50 max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-cinzel-decorative text-amber-400">
+                Consulta Premium: {selectedOracle?.name}
+              </DialogTitle>
+            </DialogHeader>
+            
+            {selectedOracle && (
+              <div className="space-y-6">
+                <div className="bg-amber-900/20 p-4 rounded-lg border border-amber-700/30">
+                  <h4 className="text-lg font-semibold text-amber-300 mb-2">Acesso Premium Inclui:</h4>
+                  <ul className="text-amber-200/70 text-sm space-y-2">
+                    <li>• Consultas ilimitadas por 30 dias</li>
+                    <li>• Respostas mais detalhadas e personalizadas</li>
+                    <li>• Acesso prioritário aos oráculos</li>
+                    <li>• Histórico completo de consultas</li>
+                    <li>• Interpretações avançadas</li>
+                  </ul>
+                  <div className="flex justify-between items-center mt-4">
+                    <span className="text-amber-400 font-bold text-xl">
+                      R$ {selectedOracle.premiumPrice}
+                    </span>
+                    <Badge variant="outline" className="border-purple-600 text-purple-300">
+                      Acesso Premium
+                    </Badge>
+                  </div>
+                </div>
+
+                <PaymentGateway
+                  amount={selectedOracle.premiumPrice}
+                  currency="BRL"
+                  description={`Consulta Premium: ${selectedOracle.name}`}
+                  onSuccess={(paymentData) => {
+                    console.log('Pagamento realizado:', paymentData);
+                    setShowPayment(false);
+                    // Redirect to premium oracle access
+                  }}
+                  onError={(error) => {
+                    console.error('Erro no pagamento:', error);
+                  }}
+                />
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
