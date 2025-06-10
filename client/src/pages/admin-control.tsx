@@ -77,6 +77,26 @@ interface Grimoire {
   status: 'draft' | 'published';
   created_at: string;
   updated_at: string;
+  excerpt?: string;
+  ritual_type?: string;
+  tradition?: string;
+  difficulty_rating?: number;
+  prerequisites?: string[];
+  warnings?: string[];
+  sacred_elements?: string[];
+  moon_phase?: string;
+  planetary_influence?: string;
+  seasonal_timing?: string;
+  materials_needed?: string[];
+  preparation_time?: string;
+  ritual_duration?: string;
+  safety_notes?: string;
+  historical_context?: string;
+  source_attribution?: string;
+  translation_notes?: string;
+  commentary?: string;
+  related_texts?: string[];
+  tags?: string[];
 }
 
 interface SiteStats {
@@ -85,6 +105,31 @@ interface SiteStats {
   totalGrimoires: number;
   totalPages: number;
   totalRevenue: string;
+  totalVisits: number;
+  totalArticles: number;
+  totalPublications: number;
+  monthlyGrowth: number;
+  activeUsers: number;
+  popularPages: Array<{name: string, views: number}>;
+  recentActivity: Array<{action: string, timestamp: string, user: string}>;
+}
+
+interface SiteSettings {
+  siteName: string;
+  siteDescription: string;
+  siteKeywords: string;
+  adminEmail: string;
+  maintenanceMode: boolean;
+  allowRegistration: boolean;
+  defaultUserRole: string;
+  maxFileSize: number;
+  enableComments: boolean;
+  enableAnalytics: boolean;
+  customCSS: string;
+  customJS: string;
+  headerContent: string;
+  footerContent: string;
+  socialLinks: Record<string, string>;
 }
 
 export default function AdminControl() {
@@ -95,6 +140,8 @@ export default function AdminControl() {
   const [showPageDialog, setShowPageDialog] = useState(false);
   const [showCourseDialog, setShowCourseDialog] = useState(false);
   const [showGrimoireDialog, setShowGrimoireDialog] = useState(false);
+  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+  const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -319,25 +366,37 @@ export default function AdminControl() {
 
           {/* Navigation Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 bg-black/40 border border-amber-500/20">
+            <TabsList className="grid w-full grid-cols-8 bg-black/40 border border-amber-500/20">
               <TabsTrigger value="dashboard" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-300">
-                <BarChart3 className="w-4 h-4 mr-2" />
+                <BarChart3 className="w-4 h-4 mr-1" />
                 Dashboard
               </TabsTrigger>
               <TabsTrigger value="pages" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-300">
-                <FileText className="w-4 h-4 mr-2" />
+                <FileText className="w-4 h-4 mr-1" />
                 Páginas
               </TabsTrigger>
               <TabsTrigger value="courses" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-300">
-                <BookOpen className="w-4 h-4 mr-2" />
+                <BookOpen className="w-4 h-4 mr-1" />
                 Cursos
               </TabsTrigger>
               <TabsTrigger value="grimoires" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-300">
-                <Scroll className="w-4 h-4 mr-2" />
+                <Scroll className="w-4 h-4 mr-1" />
                 Grimórios
               </TabsTrigger>
+              <TabsTrigger value="articles" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-300">
+                <PenTool className="w-4 h-4 mr-1" />
+                Artigos
+              </TabsTrigger>
+              <TabsTrigger value="users" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-300">
+                <Users className="w-4 h-4 mr-1" />
+                Usuários
+              </TabsTrigger>
+              <TabsTrigger value="analytics" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-300">
+                <TrendingUp className="w-4 h-4 mr-1" />
+                Analytics
+              </TabsTrigger>
               <TabsTrigger value="settings" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-300">
-                <Settings className="w-4 h-4 mr-2" />
+                <Settings className="w-4 h-4 mr-1" />
                 Configurações
               </TabsTrigger>
             </TabsList>
@@ -402,6 +461,92 @@ export default function AdminControl() {
                     <p className="text-xs text-gray-500">
                       Páginas publicadas
                     </p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="floating-card bg-black/40 border-amber-500/30">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-gray-300">Artigos</CardTitle>
+                    <PenTool className="h-4 w-4 text-amber-400" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-amber-400">
+                      {stats?.totalArticles || 0}
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Artigos publicados
+                    </p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="floating-card bg-black/40 border-amber-500/30">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-gray-300">Visitantes</CardTitle>
+                    <TrendingUp className="h-4 w-4 text-amber-400" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-amber-400">
+                      {stats?.totalVisits || 0}
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Visitas totais
+                    </p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="floating-card bg-black/40 border-amber-500/30">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-gray-300">Crescimento</CardTitle>
+                    <Activity className="h-4 w-4 text-amber-400" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-amber-400">
+                      +{stats?.monthlyGrowth || 0}%
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Crescimento mensal
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Additional Dashboard Content */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="floating-card bg-black/40 border-amber-500/30">
+                  <CardHeader>
+                    <CardTitle className="text-amber-400">Páginas Populares</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {stats?.popularPages?.map((page, index) => (
+                        <div key={index} className="flex justify-between items-center">
+                          <span className="text-gray-300">{page.name}</span>
+                          <span className="text-amber-400">{page.views} visualizações</span>
+                        </div>
+                      )) || (
+                        <div className="text-gray-500">Nenhum dado disponível</div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="floating-card bg-black/40 border-amber-500/30">
+                  <CardHeader>
+                    <CardTitle className="text-amber-400">Atividade Recente</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {stats?.recentActivity?.map((activity, index) => (
+                        <div key={index} className="border-l-2 border-amber-500/30 pl-3">
+                          <div className="text-gray-300">{activity.action}</div>
+                          <div className="text-xs text-gray-500">
+                            {activity.user} - {activity.timestamp}
+                          </div>
+                        </div>
+                      )) || (
+                        <div className="text-gray-500">Nenhuma atividade recente</div>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -994,14 +1139,228 @@ export default function AdminControl() {
               </div>
             </div>
 
+            {/* Campos Mágicos e Rituais */}
+            <div className="border-t border-red-500/30 pt-4">
+              <h4 className="text-amber-400 font-semibold mb-3">Aspectos Mágicos e Rituais</h4>
+              
+              <div className="grid grid-cols-3 gap-4 mb-4">
+                <div>
+                  <Label htmlFor="grimoire-moon-phase" className="text-gray-300">Fase Lunar</Label>
+                  <Select name="moon_phase" defaultValue={editingGrimoire?.moon_phase || ''}>
+                    <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                      <SelectValue placeholder="Fase lunar" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Qualquer</SelectItem>
+                      <SelectItem value="new_moon">Lua Nova</SelectItem>
+                      <SelectItem value="waxing_crescent">Lua Crescente</SelectItem>
+                      <SelectItem value="first_quarter">Primeiro Quarto</SelectItem>
+                      <SelectItem value="waxing_gibbous">Lua Gibosa Crescente</SelectItem>
+                      <SelectItem value="full_moon">Lua Cheia</SelectItem>
+                      <SelectItem value="waning_gibbous">Lua Gibosa Minguante</SelectItem>
+                      <SelectItem value="last_quarter">Último Quarto</SelectItem>
+                      <SelectItem value="waning_crescent">Lua Minguante</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="grimoire-planetary-influence" className="text-gray-300">Influência Planetária</Label>
+                  <Select name="planetary_influence" defaultValue={editingGrimoire?.planetary_influence || ''}>
+                    <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                      <SelectValue placeholder="Planeta" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Qualquer</SelectItem>
+                      <SelectItem value="sun">Sol</SelectItem>
+                      <SelectItem value="moon">Lua</SelectItem>
+                      <SelectItem value="mars">Marte</SelectItem>
+                      <SelectItem value="mercury">Mercúrio</SelectItem>
+                      <SelectItem value="jupiter">Júpiter</SelectItem>
+                      <SelectItem value="venus">Vênus</SelectItem>
+                      <SelectItem value="saturn">Saturno</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="grimoire-seasonal-timing" className="text-gray-300">Timing Sazonal</Label>
+                  <Select name="seasonal_timing" defaultValue={editingGrimoire?.seasonal_timing || ''}>
+                    <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                      <SelectValue placeholder="Estação" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Qualquer</SelectItem>
+                      <SelectItem value="spring">Primavera</SelectItem>
+                      <SelectItem value="summer">Verão</SelectItem>
+                      <SelectItem value="autumn">Outono</SelectItem>
+                      <SelectItem value="winter">Inverno</SelectItem>
+                      <SelectItem value="samhain">Samhain</SelectItem>
+                      <SelectItem value="beltane">Beltane</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <Label htmlFor="grimoire-preparation-time" className="text-gray-300">Tempo de Preparação</Label>
+                  <Input
+                    id="grimoire-preparation-time"
+                    name="preparation_time"
+                    defaultValue={editingGrimoire?.preparation_time || ''}
+                    className="bg-black/50 border-red-500/30 text-white"
+                    placeholder="Ex: 30 minutos, 1 hora"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="grimoire-ritual-duration" className="text-gray-300">Duração do Ritual</Label>
+                  <Input
+                    id="grimoire-ritual-duration"
+                    name="ritual_duration"
+                    defaultValue={editingGrimoire?.ritual_duration || ''}
+                    className="bg-black/50 border-red-500/30 text-white"
+                    placeholder="Ex: 45 minutos, 2 horas"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 mb-4">
+                <div>
+                  <Label htmlFor="grimoire-prerequisites" className="text-gray-300">Pré-requisitos (separados por vírgula)</Label>
+                  <Input
+                    id="grimoire-prerequisites"
+                    name="prerequisites"
+                    defaultValue={editingGrimoire?.prerequisites?.join(', ') || ''}
+                    className="bg-black/50 border-red-500/30 text-white"
+                    placeholder="Ex: Conhecimento básico de sigilos, Experiência em meditação"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="grimoire-materials-needed" className="text-gray-300">Materiais Necessários (separados por vírgula)</Label>
+                  <Input
+                    id="grimoire-materials-needed"
+                    name="materials_needed"
+                    defaultValue={editingGrimoire?.materials_needed?.join(', ') || ''}
+                    className="bg-black/50 border-red-500/30 text-white"
+                    placeholder="Ex: Velas pretas, Incenso de copal, Athame"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="grimoire-sacred-elements" className="text-gray-300">Elementos Sagrados (separados por vírgula)</Label>
+                  <Input
+                    id="grimoire-sacred-elements"
+                    name="sacred_elements"
+                    defaultValue={editingGrimoire?.sacred_elements?.join(', ') || ''}
+                    className="bg-black/50 border-red-500/30 text-white"
+                    placeholder="Ex: Fogo, Água, Terra, Ar"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="grimoire-warnings" className="text-gray-300">Avisos e Precauções (separados por vírgula)</Label>
+                  <Input
+                    id="grimoire-warnings"
+                    name="warnings"
+                    defaultValue={editingGrimoire?.warnings?.join(', ') || ''}
+                    className="bg-black/50 border-red-500/30 text-white"
+                    placeholder="Ex: Não realizar sozinho, Requer proteção espiritual"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Seção Acadêmica e Histórica */}
+            <div className="border-t border-red-500/30 pt-4">
+              <h4 className="text-amber-400 font-semibold mb-3">Informações Acadêmicas e Históricas</h4>
+              
+              <div className="grid grid-cols-1 gap-4 mb-4">
+                <div>
+                  <Label htmlFor="grimoire-historical-context" className="text-gray-300">Contexto Histórico</Label>
+                  <Textarea
+                    id="grimoire-historical-context"
+                    name="historical_context"
+                    defaultValue={editingGrimoire?.historical_context || ''}
+                    className="bg-black/50 border-red-500/30 text-white min-h-[80px]"
+                    placeholder="Contexto histórico e origens do texto..."
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="grimoire-source-attribution" className="text-gray-300">Atribuição de Fonte</Label>
+                  <Input
+                    id="grimoire-source-attribution"
+                    name="source_attribution"
+                    defaultValue={editingGrimoire?.source_attribution || ''}
+                    className="bg-black/50 border-red-500/30 text-white"
+                    placeholder="Fonte original, manuscrito, grimório de origem..."
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="grimoire-translation-notes" className="text-gray-300">Notas de Tradução</Label>
+                  <Textarea
+                    id="grimoire-translation-notes"
+                    name="translation_notes"
+                    defaultValue={editingGrimoire?.translation_notes || ''}
+                    className="bg-black/50 border-red-500/30 text-white min-h-[60px]"
+                    placeholder="Notas sobre tradução, variações linguísticas..."
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="grimoire-commentary" className="text-gray-300">Comentários e Interpretações</Label>
+                  <Textarea
+                    id="grimoire-commentary"
+                    name="commentary"
+                    defaultValue={editingGrimoire?.commentary || ''}
+                    className="bg-black/50 border-red-500/30 text-white min-h-[80px]"
+                    placeholder="Comentários pessoais, interpretações modernas..."
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Segurança e Metadados */}
+            <div className="border-t border-red-500/30 pt-4">
+              <h4 className="text-amber-400 font-semibold mb-3">Segurança e Organização</h4>
+              
+              <div className="grid grid-cols-1 gap-4 mb-4">
+                <div>
+                  <Label htmlFor="grimoire-safety-notes" className="text-gray-300">Notas de Segurança</Label>
+                  <Textarea
+                    id="grimoire-safety-notes"
+                    name="safety_notes"
+                    defaultValue={editingGrimoire?.safety_notes || ''}
+                    className="bg-black/50 border-red-500/30 text-white min-h-[60px]"
+                    placeholder="Instruções de segurança, proteções necessárias..."
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="grimoire-related-texts" className="text-gray-300">Textos Relacionados (separados por vírgula)</Label>
+                  <Input
+                    id="grimoire-related-texts"
+                    name="related_texts"
+                    defaultValue={editingGrimoire?.related_texts?.join(', ') || ''}
+                    className="bg-black/50 border-red-500/30 text-white"
+                    placeholder="Ex: Goetia, Liber Falxifer, Azoetia"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="grimoire-tags" className="text-gray-300">Tags (separadas por vírgula)</Label>
+                  <Input
+                    id="grimoire-tags"
+                    name="tags"
+                    defaultValue={editingGrimoire?.tags?.join(', ') || ''}
+                    className="bg-black/50 border-red-500/30 text-white"
+                    placeholder="Ex: demônio, invocação, sigilo, transformação"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div>
-              <Label htmlFor="grimoire-content" className="text-gray-300">Conteúdo</Label>
+              <Label htmlFor="grimoire-content" className="text-gray-300">Conteúdo do Texto Sagrado</Label>
               <Textarea
                 id="grimoire-content"
                 name="content"
                 defaultValue={editingGrimoire?.content || ''}
                 className="bg-black/50 border-red-500/30 text-white min-h-[300px]"
-                placeholder="Conteúdo do grimório em HTML ou Markdown"
+                placeholder="Conteúdo completo do texto sagrado em HTML ou Markdown..."
               />
             </div>
 
