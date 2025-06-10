@@ -330,11 +330,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Test endpoint to verify registration
-  app.get('/api/test-endpoint', (req: Request, res: Response) => {
-    res.json({ message: 'Test endpoint working' });
-  });
-
   // Oracle ritual consultation with entities
   app.post('/api/oracle/ritual-consult', async (req: any, res: Response) => {
     try {

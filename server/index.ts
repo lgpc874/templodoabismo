@@ -45,6 +45,7 @@ app.use((req, res, next) => {
   app.use('/api/*', (req, res, next) => {
     // If we reach here, the API route wasn't found in registerRoutes
     if (!res.headersSent) {
+      console.log(`Unmatched API route: ${req.method} ${req.path}`);
       res.status(404).json({ error: 'API endpoint not found' });
     }
   });
