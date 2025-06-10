@@ -38,6 +38,37 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Add critical ritual consultation endpoint BEFORE route registration
+  app.post('/api/oracle/ritual-consult', async (req: any, res: Response) => {
+    try {
+      console.log('DIRECT ritual consultation request received:', req.body);
+      
+      const { question, oracleType, entityName } = req.body;
+      
+      if (!question?.trim() || !oracleType || !entityName) {
+        return res.status(400).json({ 
+          error: 'Question, oracle type, and entity name are required' 
+        });
+      }
+
+      // Import AI service dynamically
+      const { temploAI } = await import('./ai-service');
+      const result = await temploAI.generateRitualResponse(question.trim(), oracleType, entityName);
+      
+      res.json({
+        success: true,
+        response: result.response,
+        farewell: result.farewell,
+        entityName,
+        oracleType,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Error in DIRECT ritual consultation:', error);
+      res.status(500).json({ error: 'Failed to perform ritual consultation', details: error.message });
+    }
+  });
+
   // Register all API routes first, before Vite middleware
   const server = await registerRoutes(app);
   
