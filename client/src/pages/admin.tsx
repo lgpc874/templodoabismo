@@ -69,10 +69,36 @@ const AdminPanel: React.FC = () => {
   // Check if user is admin
   if (!user?.is_admin) {
     return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <Shield className="w-16 h-16 mx-auto text-red-500 mb-4" />
-        <h1 className="text-2xl font-bold text-red-500 mb-2">Acesso Negado</h1>
-        <p className="text-gray-400">Você não tem permissão para acessar o painel administrativo.</p>
+      <div className="min-h-screen relative overflow-hidden">
+        {/* Fixed Central Rotating Seal */}
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+          <div className="rotating-seal w-96 h-96 opacity-20">
+            <img 
+              src="/seal.png" 
+              alt="Selo do Templo do Abismo" 
+              className="w-full h-full object-contain filter drop-shadow-lg"
+            />
+          </div>
+        </div>
+
+        {/* Mystical floating particles */}
+        <div className="fixed inset-0 overflow-hidden z-0">
+          <div className="mystical-particles"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+        </div>
+
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
+          <div className="floating-card p-8 bg-black/30 backdrop-blur-lg border border-red-500/20 rounded-xl text-center">
+            <Shield className="w-16 h-16 mx-auto text-red-400 mb-4" />
+            <h1 className="text-3xl font-cinzel-decorative text-red-400 mystical-glow mb-4">
+              ACCESSUS DENEGATUS
+            </h1>
+            <p className="text-gray-300 mb-4">
+              Você não possui as permissões necessárias para acessar o sanctum administrativo.
+            </p>
+            <div className="text-red-400 text-2xl">⛧ ⸸ ⛧</div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -97,21 +123,23 @@ const AdminPanel: React.FC = () => {
 
   // Create course mutation
   const createCourseMutation = useMutation({
-    mutationFn: (courseData: typeof newCourse) => 
-      apiRequest('/api/admin/courses', 'POST', courseData),
+    mutationFn: (courseData: typeof newCourse) => apiRequest('/api/admin/courses', {
+      method: 'POST',
+      body: JSON.stringify(courseData),
+      headers: { 'Content-Type': 'application/json' }
+    }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/courses'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/stats'] });
-      setNewCourse({ title: '', description: '', level: 1, content: '' });
       toast({
-        title: "Curso criado com sucesso!",
-        description: "O novo curso foi adicionado ao sistema.",
+        title: "Curso criado",
+        description: "O curso foi criado com sucesso.",
       });
+      setNewCourse({ title: '', description: '', level: 1, content: '' });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/courses'] });
     },
     onError: (error: any) => {
       toast({
-        title: "Erro ao criar curso",
-        description: error.message || "Ocorreu um erro inesperado",
+        title: "Erro",
+        description: error.message || "Falha ao criar curso.",
         variant: "destructive",
       });
     }
@@ -119,386 +147,434 @@ const AdminPanel: React.FC = () => {
 
   // Create grimoire mutation
   const createGrimoireMutation = useMutation({
-    mutationFn: (grimoireData: typeof newGrimoire) => 
-      apiRequest('/api/admin/grimoires', 'POST', grimoireData),
+    mutationFn: (grimoireData: typeof newGrimoire) => apiRequest('/api/admin/grimoires', {
+      method: 'POST',
+      body: JSON.stringify(grimoireData),
+      headers: { 'Content-Type': 'application/json' }
+    }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/grimoires'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/stats'] });
-      setNewGrimoire({ title: '', description: '', content: '', price: 0 });
       toast({
-        title: "Grimório criado com sucesso!",
-        description: "O novo grimório foi adicionado ao sistema.",
+        title: "Grimório criado",
+        description: "O grimório foi criado com sucesso.",
       });
+      setNewGrimoire({ title: '', description: '', content: '', price: 0 });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/grimoires'] });
     },
     onError: (error: any) => {
       toast({
-        title: "Erro ao criar grimório",
-        description: error.message || "Ocorreu um erro inesperado",
-        variant: "destructive",
-      });
-    }
-  });
-
-  // Generate content with AI
-  const generateCourseMutation = useMutation({
-    mutationFn: ({ level, topic }: { level: number; topic: string }) =>
-      apiRequest('/api/generate/course', 'POST', { level, topic }),
-    onSuccess: (data) => {
-      setNewCourse(prev => ({
-        ...prev,
-        title: data.content.title,
-        description: data.content.description,
-        content: JSON.stringify(data.content.modules)
-      }));
-      toast({
-        title: "Conteúdo gerado!",
-        description: "O curso foi gerado pela IA. Revise e ajuste conforme necessário.",
-      });
-    }
-  });
-
-  const generateGrimoireMutation = useMutation({
-    mutationFn: (title: string) =>
-      apiRequest('/api/generate/grimoire', 'POST', { title }),
-    onSuccess: (data) => {
-      setNewGrimoire(prev => ({
-        ...prev,
-        title: data.content.title,
-        description: data.content.description,
-        content: JSON.stringify(data.content.chapters)
-      }));
-      toast({
-        title: "Grimório gerado!",
-        description: "O grimório foi gerado pela IA. Revise e ajuste conforme necessário.",
-      });
-    }
-  });
-
-  const handleCreateCourse = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newCourse.title || !newCourse.description) {
-      toast({
         title: "Erro",
-        description: "Título e descrição são obrigatórios",
+        description: error.message || "Falha ao criar grimório.",
         variant: "destructive",
       });
-      return;
     }
-    createCourseMutation.mutate(newCourse);
-  };
-
-  const handleCreateGrimoire = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newGrimoire.title || !newGrimoire.description) {
-      toast({
-        title: "Erro",
-        description: "Título e descrição são obrigatórios",
-        variant: "destructive",
-      });
-      return;
-    }
-    createGrimoireMutation.mutate(newGrimoire);
-  };
+  });
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-amber-400 to-red-500 bg-clip-text text-transparent mb-2">
-          Painel Administrativo
-        </h1>
-        <p className="text-gray-400">Gerencie o conteúdo e usuários do Templo do Abismo</p>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Fixed Central Rotating Seal */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <div className="rotating-seal w-96 h-96 opacity-20">
+          <img 
+            src="/seal.png" 
+            alt="Selo do Templo do Abismo" 
+            className="w-full h-full object-contain filter drop-shadow-lg"
+          />
+        </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <Card className="bg-gray-900/50 border-amber-800/30">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-300">Usuários</CardTitle>
-            <Users className="h-4 w-4 text-amber-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">{stats?.users || 0}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gray-900/50 border-amber-800/30">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-300">Cursos</CardTitle>
-            <BookOpen className="h-4 w-4 text-amber-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">{stats?.courses || 0}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gray-900/50 border-amber-800/30">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-300">Grimórios</CardTitle>
-            <Scroll className="h-4 w-4 text-amber-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">{stats?.grimoires || 0}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gray-900/50 border-amber-800/30">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-300">Consultas</CardTitle>
-            <BarChart3 className="h-4 w-4 text-amber-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">{stats?.consultations || 0}</div>
-          </CardContent>
-        </Card>
+      {/* Mystical floating particles */}
+      <div className="fixed inset-0 overflow-hidden z-0">
+        <div className="mystical-particles"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
       </div>
 
-      {/* Management Tabs */}
-      <Tabs defaultValue="courses" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 bg-gray-900">
-          <TabsTrigger value="courses" className="data-[state=active]:bg-amber-900/30">
-            Cursos
-          </TabsTrigger>
-          <TabsTrigger value="grimoires" className="data-[state=active]:bg-amber-900/30">
-            Grimórios
-          </TabsTrigger>
-        </TabsList>
+      {/* Main content */}
+      <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-4 pt-20">
+        {/* Hero Section */}
+        <div className="text-center mb-12 max-w-4xl">
+          <div className="mb-8">
+            <div className="text-amber-400 text-6xl mb-4">⚡</div>
+            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
+              SANCTUM ADMINISTRARE
+            </h1>
+            <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
+              <span>☿</span>
+              <span>⚹</span>
+              <span>𖤍</span>
+              <span>⚹</span>
+              <span>☿</span>
+            </div>
+          </div>
+          
+          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
+              Portal de Controle do Templo
+            </h2>
+            
+            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
+              Gerencie o <strong className="text-amber-400">conhecimento sagrado</strong>, administre os 
+              <strong className="text-red-400"> rituais digitais</strong> e supervisione a evolução dos iniciados.
+            </p>
+            
+            <div className="text-center">
+              <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+              <p className="text-lg font-cinzel-decorative text-amber-300">
+                "Potentia in Administratione"
+              </p>
+              <p className="text-sm text-gray-400 font-crimson italic mt-2">
+                Poder na administração
+              </p>
+            </div>
+          </div>
+        </div>
 
-        {/* Courses Tab */}
-        <TabsContent value="courses" className="space-y-6">
-          <Card className="bg-gray-900/50 border-amber-800/30">
-            <CardHeader>
-              <CardTitle className="text-amber-400">Criar Novo Curso</CardTitle>
-              <CardDescription>
-                Adicione um novo curso ao sistema ou gere conteúdo com IA
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleCreateCourse} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="courseTitle">Título</Label>
-                    <Input
-                      id="courseTitle"
-                      value={newCourse.title}
-                      onChange={(e) => setNewCourse(prev => ({ ...prev, title: e.target.value }))}
-                      className="bg-gray-800 border-amber-800/30"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="courseLevel">Nível</Label>
-                    <Input
-                      id="courseLevel"
-                      type="number"
-                      min="1"
-                      max="10"
-                      value={newCourse.level}
-                      onChange={(e) => setNewCourse(prev => ({ ...prev, level: parseInt(e.target.value) }))}
-                      className="bg-gray-800 border-amber-800/30"
-                    />
-                  </div>
+        {/* Admin Stats */}
+        {stats && (
+          <div className="floating-card max-w-6xl w-full mb-8 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+            <div className="p-6">
+              <h3 className="text-2xl font-cinzel-decorative text-amber-300 mb-6 text-center">
+                Métricas do Templo
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="text-center">
+                  <Users className="w-12 h-12 text-amber-400 mx-auto mb-2" />
+                  <h4 className="text-lg font-cinzel-decorative text-amber-300">Iniciados</h4>
+                  <p className="text-2xl font-bold text-amber-400">{stats.users}</p>
+                  <p className="text-sm text-gray-400">Usuários registrados</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="courseDescription">Descrição</Label>
-                  <Textarea
-                    id="courseDescription"
-                    value={newCourse.description}
-                    onChange={(e) => setNewCourse(prev => ({ ...prev, description: e.target.value }))}
-                    className="bg-gray-800 border-amber-800/30"
-                    rows={3}
-                  />
+                
+                <div className="text-center">
+                  <BookOpen className="w-12 h-12 text-amber-400 mx-auto mb-2" />
+                  <h4 className="text-lg font-cinzel-decorative text-amber-300">Cursos</h4>
+                  <p className="text-2xl font-bold text-amber-400">{stats.courses}</p>
+                  <p className="text-sm text-gray-400">Ensinamentos disponíveis</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="courseContent">Conteúdo (JSON)</Label>
-                  <Textarea
-                    id="courseContent"
-                    value={newCourse.content}
-                    onChange={(e) => setNewCourse(prev => ({ ...prev, content: e.target.value }))}
-                    className="bg-gray-800 border-amber-800/30"
-                    rows={5}
-                  />
+                
+                <div className="text-center">
+                  <Scroll className="w-12 h-12 text-amber-400 mx-auto mb-2" />
+                  <h4 className="text-lg font-cinzel-decorative text-amber-300">Grimórios</h4>
+                  <p className="text-2xl font-bold text-amber-400">{stats.grimoires}</p>
+                  <p className="text-sm text-gray-400">Tomos arcanos</p>
                 </div>
-                <div className="flex space-x-2">
-                  <Button
-                    type="submit"
-                    disabled={createCourseMutation.isPending}
-                    className="bg-amber-600 hover:bg-amber-700"
-                  >
+                
+                <div className="text-center">
+                  <Sparkles className="w-12 h-12 text-amber-400 mx-auto mb-2" />
+                  <h4 className="text-lg font-cinzel-decorative text-amber-300">Consultas</h4>
+                  <p className="text-2xl font-bold text-amber-400">{stats.consultations}</p>
+                  <p className="text-sm text-gray-400">Oráculos realizados</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Admin Tools */}
+        <div className="floating-card max-w-6xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <Tabs defaultValue="courses" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 bg-black/40 border border-amber-600/30">
+              <TabsTrigger 
+                value="courses"
+                className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-200 text-gray-400"
+              >
+                Cursos
+              </TabsTrigger>
+              <TabsTrigger 
+                value="grimoires"
+                className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-200 text-gray-400"
+              >
+                Grimórios
+              </TabsTrigger>
+              <TabsTrigger 
+                value="analytics"
+                className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-200 text-gray-400"
+              >
+                Análises
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="courses" className="p-6">
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-cinzel-decorative text-amber-300">Gerenciar Cursos</h3>
+                  <Button className="bg-amber-600 hover:bg-amber-700 text-black">
                     <Plus className="w-4 h-4 mr-2" />
-                    Criar Curso
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      const topic = prompt("Digite o tópico do curso:");
-                      if (topic) {
-                        generateCourseMutation.mutate({ level: newCourse.level, topic });
-                      }
-                    }}
-                    disabled={generateCourseMutation.isPending}
-                    className="border-amber-600 text-amber-400 hover:bg-amber-900/20"
-                  >
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Gerar com IA
+                    Novo Curso
                   </Button>
                 </div>
-              </form>
-            </CardContent>
-          </Card>
 
-          {/* Courses List */}
-          <Card className="bg-gray-900/50 border-amber-800/30">
-            <CardHeader>
-              <CardTitle className="text-amber-400">Cursos Existentes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {coursesLoading ? (
-                <div className="text-center py-4">Carregando cursos...</div>
-              ) : (
-                <div className="space-y-2">
-                  {courses?.map((course) => (
-                    <div
-                      key={course.id}
-                      className="flex items-center justify-between p-3 bg-gray-800/50 rounded border border-amber-800/20"
-                    >
+                {/* Create Course Form */}
+                <Card className="bg-black/20 border-amber-500/20">
+                  <CardHeader>
+                    <CardTitle className="text-amber-400">Criar Novo Curso</CardTitle>
+                    <CardDescription className="text-gray-300">
+                      Adicione um novo ensinamento ao templo
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <h3 className="font-medium text-white">{course.title}</h3>
-                        <p className="text-sm text-gray-400">Nível {course.level}</p>
+                        <Label htmlFor="courseTitle" className="text-amber-300">Título</Label>
+                        <Input
+                          id="courseTitle"
+                          value={newCourse.title}
+                          onChange={(e) => setNewCourse({...newCourse, title: e.target.value})}
+                          className="bg-black/40 border-amber-500/30 text-gray-300"
+                          placeholder="Nome do curso"
+                        />
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <span className={`px-2 py-1 text-xs rounded ${course.is_published ? 'bg-green-900 text-green-300' : 'bg-gray-700 text-gray-300'}`}>
-                          {course.is_published ? 'Publicado' : 'Rascunho'}
-                        </span>
-                        <Button size="sm" variant="ghost">
-                          <Edit className="w-4 h-4" />
-                        </Button>
+                      <div>
+                        <Label htmlFor="courseLevel" className="text-amber-300">Nível</Label>
+                        <Input
+                          id="courseLevel"
+                          type="number"
+                          value={newCourse.level}
+                          onChange={(e) => setNewCourse({...newCourse, level: parseInt(e.target.value)})}
+                          className="bg-black/40 border-amber-500/30 text-gray-300"
+                          min="1"
+                          max="10"
+                        />
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Grimoires Tab */}
-        <TabsContent value="grimoires" className="space-y-6">
-          <Card className="bg-gray-900/50 border-amber-800/30">
-            <CardHeader>
-              <CardTitle className="text-amber-400">Criar Novo Grimório</CardTitle>
-              <CardDescription>
-                Adicione um novo grimório ao sistema ou gere conteúdo com IA
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleCreateGrimoire} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="grimoireTitle">Título</Label>
-                    <Input
-                      id="grimoireTitle"
-                      value={newGrimoire.title}
-                      onChange={(e) => setNewGrimoire(prev => ({ ...prev, title: e.target.value }))}
-                      className="bg-gray-800 border-amber-800/30"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="grimoirePrice">Preço</Label>
-                    <Input
-                      id="grimoirePrice"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={newGrimoire.price}
-                      onChange={(e) => setNewGrimoire(prev => ({ ...prev, price: parseFloat(e.target.value) }))}
-                      className="bg-gray-800 border-amber-800/30"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="grimoireDescription">Descrição</Label>
-                  <Textarea
-                    id="grimoireDescription"
-                    value={newGrimoire.description}
-                    onChange={(e) => setNewGrimoire(prev => ({ ...prev, description: e.target.value }))}
-                    className="bg-gray-800 border-amber-800/30"
-                    rows={3}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="grimoireContent">Conteúdo (JSON)</Label>
-                  <Textarea
-                    id="grimoireContent"
-                    value={newGrimoire.content}
-                    onChange={(e) => setNewGrimoire(prev => ({ ...prev, content: e.target.value }))}
-                    className="bg-gray-800 border-amber-800/30"
-                    rows={5}
-                  />
-                </div>
-                <div className="flex space-x-2">
-                  <Button
-                    type="submit"
-                    disabled={createGrimoireMutation.isPending}
-                    className="bg-amber-600 hover:bg-amber-700"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Criar Grimório
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      const title = prompt("Digite o título do grimório:");
-                      if (title) {
-                        generateGrimoireMutation.mutate(title);
-                      }
-                    }}
-                    disabled={generateGrimoireMutation.isPending}
-                    className="border-amber-600 text-amber-400 hover:bg-amber-900/20"
-                  >
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Gerar com IA
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-
-          {/* Grimoires List */}
-          <Card className="bg-gray-900/50 border-amber-800/30">
-            <CardHeader>
-              <CardTitle className="text-amber-400">Grimórios Existentes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {grimoiresLoading ? (
-                <div className="text-center py-4">Carregando grimórios...</div>
-              ) : (
-                <div className="space-y-2">
-                  {grimoires?.map((grimoire) => (
-                    <div
-                      key={grimoire.id}
-                      className="flex items-center justify-between p-3 bg-gray-800/50 rounded border border-amber-800/20"
+                    <div>
+                      <Label htmlFor="courseDescription" className="text-amber-300">Descrição</Label>
+                      <Textarea
+                        id="courseDescription"
+                        value={newCourse.description}
+                        onChange={(e) => setNewCourse({...newCourse, description: e.target.value})}
+                        className="bg-black/40 border-amber-500/30 text-gray-300"
+                        placeholder="Descrição do curso"
+                        rows={3}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="courseContent" className="text-amber-300">Conteúdo</Label>
+                      <Textarea
+                        id="courseContent"
+                        value={newCourse.content}
+                        onChange={(e) => setNewCourse({...newCourse, content: e.target.value})}
+                        className="bg-black/40 border-amber-500/30 text-gray-300"
+                        placeholder="Conteúdo detalhado do curso"
+                        rows={6}
+                      />
+                    </div>
+                    <Button 
+                      onClick={() => createCourseMutation.mutate(newCourse)}
+                      disabled={createCourseMutation.isPending}
+                      className="w-full bg-amber-600 hover:bg-amber-700 text-black"
                     >
+                      {createCourseMutation.isPending ? "Criando..." : "Criar Curso"}
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Courses List */}
+                <div className="space-y-4">
+                  <h4 className="text-xl font-cinzel-decorative text-amber-300">Cursos Existentes</h4>
+                  {coursesLoading ? (
+                    <div className="text-center text-gray-400">Carregando cursos...</div>
+                  ) : courses && courses.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-4">
+                      {courses.map((course) => (
+                        <Card key={course.id} className="bg-black/20 border-amber-500/20">
+                          <CardContent className="p-4">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <h5 className="text-lg font-semibold text-amber-400">{course.title}</h5>
+                                <p className="text-gray-300 text-sm">{course.description}</p>
+                                <div className="flex items-center gap-4 mt-2">
+                                  <span className="text-xs text-gray-400">Nível {course.level}</span>
+                                  <span className="text-xs text-gray-400">
+                                    {course.is_published ? "✓ Publicado" : "○ Rascunho"}
+                                  </span>
+                                  <span className="text-xs text-gray-400">
+                                    Criado em {new Date(course.created_at).toLocaleDateString('pt-BR')}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Button size="sm" variant="outline" className="border-amber-500/30 text-amber-300">
+                                  <Edit className="w-4 h-4" />
+                                </Button>
+                                <Button size="sm" variant="outline" className="border-amber-500/30 text-amber-300">
+                                  <Eye className="w-4 h-4" />
+                                </Button>
+                                <Button size="sm" variant="outline" className="border-red-500/30 text-red-300">
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center text-gray-400">
+                      <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                      <p>Nenhum curso criado ainda</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="grimoires" className="p-6">
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-cinzel-decorative text-amber-300">Gerenciar Grimórios</h3>
+                  <Button className="bg-amber-600 hover:bg-amber-700 text-black">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Novo Grimório
+                  </Button>
+                </div>
+
+                {/* Create Grimoire Form */}
+                <Card className="bg-black/20 border-amber-500/20">
+                  <CardHeader>
+                    <CardTitle className="text-amber-400">Criar Novo Grimório</CardTitle>
+                    <CardDescription className="text-gray-300">
+                      Adicione um novo tomo arcano à biblioteca
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <h3 className="font-medium text-white">{grimoire.title}</h3>
-                        <p className="text-sm text-gray-400">R$ {grimoire.price.toFixed(2)}</p>
+                        <Label htmlFor="grimoireTitle" className="text-amber-300">Título</Label>
+                        <Input
+                          id="grimoireTitle"
+                          value={newGrimoire.title}
+                          onChange={(e) => setNewGrimoire({...newGrimoire, title: e.target.value})}
+                          className="bg-black/40 border-amber-500/30 text-gray-300"
+                          placeholder="Nome do grimório"
+                        />
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <span className={`px-2 py-1 text-xs rounded ${grimoire.is_published ? 'bg-green-900 text-green-300' : 'bg-gray-700 text-gray-300'}`}>
-                          {grimoire.is_published ? 'Publicado' : 'Rascunho'}
-                        </span>
-                        <Button size="sm" variant="ghost">
-                          <Edit className="w-4 h-4" />
-                        </Button>
+                      <div>
+                        <Label htmlFor="grimoirePrice" className="text-amber-300">Preço (R$)</Label>
+                        <Input
+                          id="grimoirePrice"
+                          type="number"
+                          value={newGrimoire.price}
+                          onChange={(e) => setNewGrimoire({...newGrimoire, price: parseFloat(e.target.value)})}
+                          className="bg-black/40 border-amber-500/30 text-gray-300"
+                          min="0"
+                          step="0.01"
+                        />
                       </div>
                     </div>
-                  ))}
+                    <div>
+                      <Label htmlFor="grimoireDescription" className="text-amber-300">Descrição</Label>
+                      <Textarea
+                        id="grimoireDescription"
+                        value={newGrimoire.description}
+                        onChange={(e) => setNewGrimoire({...newGrimoire, description: e.target.value})}
+                        className="bg-black/40 border-amber-500/30 text-gray-300"
+                        placeholder="Descrição do grimório"
+                        rows={3}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="grimoireContent" className="text-amber-300">Conteúdo</Label>
+                      <Textarea
+                        id="grimoireContent"
+                        value={newGrimoire.content}
+                        onChange={(e) => setNewGrimoire({...newGrimoire, content: e.target.value})}
+                        className="bg-black/40 border-amber-500/30 text-gray-300"
+                        placeholder="Conteúdo completo do grimório"
+                        rows={8}
+                      />
+                    </div>
+                    <Button 
+                      onClick={() => createGrimoireMutation.mutate(newGrimoire)}
+                      disabled={createGrimoireMutation.isPending}
+                      className="w-full bg-amber-600 hover:bg-amber-700 text-black"
+                    >
+                      {createGrimoireMutation.isPending ? "Criando..." : "Criar Grimório"}
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Grimoires List */}
+                <div className="space-y-4">
+                  <h4 className="text-xl font-cinzel-decorative text-amber-300">Grimórios Existentes</h4>
+                  {grimoiresLoading ? (
+                    <div className="text-center text-gray-400">Carregando grimórios...</div>
+                  ) : grimoires && grimoires.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-4">
+                      {grimoires.map((grimoire) => (
+                        <Card key={grimoire.id} className="bg-black/20 border-amber-500/20">
+                          <CardContent className="p-4">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <h5 className="text-lg font-semibold text-amber-400">{grimoire.title}</h5>
+                                <p className="text-gray-300 text-sm">{grimoire.description}</p>
+                                <div className="flex items-center gap-4 mt-2">
+                                  <span className="text-xs text-gray-400">R$ {grimoire.price.toFixed(2)}</span>
+                                  <span className="text-xs text-gray-400">
+                                    {grimoire.is_published ? "✓ Publicado" : "○ Rascunho"}
+                                  </span>
+                                  <span className="text-xs text-gray-400">
+                                    Criado em {new Date(grimoire.created_at).toLocaleDateString('pt-BR')}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Button size="sm" variant="outline" className="border-amber-500/30 text-amber-300">
+                                  <Edit className="w-4 h-4" />
+                                </Button>
+                                <Button size="sm" variant="outline" className="border-amber-500/30 text-amber-300">
+                                  <Eye className="w-4 h-4" />
+                                </Button>
+                                <Button size="sm" variant="outline" className="border-red-500/30 text-red-300">
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center text-gray-400">
+                      <Scroll className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                      <p>Nenhum grimório criado ainda</p>
+                    </div>
+                  )}
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="analytics" className="p-6">
+              <div className="space-y-6">
+                <h3 className="text-2xl font-cinzel-decorative text-amber-300 text-center">
+                  Análises do Templo
+                </h3>
+                
+                <div className="text-center">
+                  <BarChart3 className="w-24 h-24 mx-auto text-amber-400 opacity-50 mb-4" />
+                  <p className="text-gray-400">
+                    Análises detalhadas em desenvolvimento...
+                  </p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Em breve: gráficos de engajamento, relatórios de vendas e métricas avançadas
+                  </p>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* Mystical Quote */}
+        <div className="floating-card max-w-2xl mx-auto mt-12 p-8 bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <div className="text-center">
+            <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+            <p className="text-lg text-gray-300 italic leading-relaxed mb-4">
+              "Com grande poder vem a responsabilidade de moldar o destino espiritual dos outros"
+            </p>
+            <p className="text-amber-400 font-semibold">
+              — Código do Administrador
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

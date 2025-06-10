@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   BookOpen, 
   Search, 
@@ -11,7 +12,10 @@ import {
   Eye,
   Clock,
   Star,
-  Library
+  Library,
+  Scroll,
+  FileText,
+  Award
 } from "lucide-react";
 
 export default function Bibliotheca() {
@@ -98,12 +102,26 @@ export default function Bibliotheca() {
   ];
 
   const filteredDocuments = documents.filter(doc => {
-    const matchesSearch = doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doc.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doc.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = searchTerm === "" || 
+      doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doc.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doc.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
     const matchesCategory = selectedCategory === "all" || doc.category === selectedCategory;
+    
     return matchesSearch && matchesCategory;
   });
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case "artigo": return <FileText className="w-4 h-4" />;
+      case "ensaio": return <Scroll className="w-4 h-4" />;
+      case "guia": return <BookOpen className="w-4 h-4" />;
+      case "estudo": return <Award className="w-4 h-4" />;
+      case "pesquisa": return <Star className="w-4 h-4" />;
+      default: return <FileText className="w-4 h-4" />;
+    }
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -123,226 +141,220 @@ export default function Bibliotheca() {
         <div className="mystical-particles"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
       </div>
-      
-      <div className="relative z-10 container mx-auto px-4 py-8 pt-20">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 animate-pulse font-['Cinzel_Decorative']">
-            BIBLIOTHECA ABYSSOS
-          </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            Manuscritos sombrios onde repousam invocações primordiais e rituais ctônicos. Cada página pulsa com poder ancestral das correntes abissais.
-          </p>
-        </div>
 
-        {/* Search and Filter */}
-        <div className="floating-card max-w-4xl mx-auto mb-12 p-6">
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-400 w-5 h-5" />
-              <Input
-                placeholder="Buscar por título, autor ou conteúdo..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-black/50 border-amber-500/50 text-white placeholder:text-gray-400"
-              />
+      {/* Main content */}
+      <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-4 pt-20">
+        {/* Hero Section */}
+        <div className="text-center mb-12 max-w-4xl">
+          <div className="mb-8">
+            <div className="text-amber-400 text-6xl mb-4">📚</div>
+            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
+              BIBLIOTHECA ARCANA
+            </h1>
+            <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
+              <span>☿</span>
+              <span>⚹</span>
+              <span>𖤍</span>
+              <span>⚹</span>
+              <span>☿</span>
             </div>
-            <Button
-              variant="outline"
-              className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
-            >
-              <Filter className="w-4 h-4 mr-2" />
-              Filtros Avançados
-            </Button>
           </div>
           
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <Button
-                key={category.value}
-                variant={selectedCategory === category.value ? "default" : "outline"}
-                size="sm"
-                className={`${
-                  selectedCategory === category.value
-                    ? 'bg-amber-600 hover:bg-amber-700 text-black'
-                    : 'border-amber-500/50 text-amber-400 hover:bg-amber-500/10'
-                }`}
-                onClick={() => setSelectedCategory(category.value)}
-              >
-                {category.label}
-              </Button>
-            ))}
+          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
+              Arquivo Digital do Conhecimento Sagrado
+            </h2>
+            
+            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
+              Uma coleção curada de <strong className="text-amber-400">documentos esotéricos</strong>, 
+              <strong className="text-red-400"> estudos acadêmicos</strong> e textos fundamentais 
+              da tradição luciferiana.
+            </p>
+            
+            <div className="text-center">
+              <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+              <p className="text-lg font-cinzel-decorative text-amber-300">
+                "Scientia Est Lux"
+              </p>
+              <p className="text-sm text-gray-400 font-crimson italic mt-2">
+                O conhecimento é luz
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Results Info */}
-        <div className="text-center mb-8">
-          <p className="text-gray-300">
-            Encontrados {filteredDocuments.length} documentos
-            {searchTerm && (
-              <span> para "{searchTerm}"</span>
-            )}
-          </p>
+        {/* Search and Filters */}
+        <div className="floating-card max-w-4xl w-full mb-8 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="md:col-span-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-2.5 h-5 w-5 text-amber-400" />
+                  <Input
+                    placeholder="Buscar documentos, autores ou temas..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 bg-black/40 border-amber-500/30 text-gray-300 placeholder:text-gray-500"
+                  />
+                </div>
+              </div>
+              <div>
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="bg-black/40 border-amber-500/30 text-gray-300">
+                    <Filter className="w-4 h-4 mr-2 text-amber-400" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-black/90 border-amber-500/30">
+                    {categories.map((category) => (
+                      <SelectItem key={category.value} value={category.value}>
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Documents Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredDocuments.map((doc) => (
-            <div key={doc.id} className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300 p-6">
-              <div className="flex items-start justify-between mb-4">
-                <Badge variant="outline" className="border-amber-500/50 text-amber-400">
-                  {doc.type.charAt(0).toUpperCase() + doc.type.slice(1)}
-                </Badge>
-                <div className="flex items-center">
-                  <Star className="w-4 h-4 text-amber-500 mr-1" />
-                  <span className="text-amber-500 text-sm">{doc.rating}</span>
-                </div>
-              </div>
-              
-              <h3 className="text-xl font-bold text-amber-400 mb-3 group-hover:text-orange-400 transition-colors font-['Cinzel_Decorative']">
-                {doc.title}
+        <div className="floating-card max-w-6xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-cinzel-decorative text-amber-300">
+                Documentos Disponíveis
               </h3>
-              
-              <p className="text-gray-300 text-sm mb-4">
-                Por {doc.author}
-              </p>
-              
-              <div className="space-y-4">
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  {doc.description}
+              <Badge variant="outline" className="border-amber-500/30 text-amber-300">
+                {filteredDocuments.length} documentos encontrados
+              </Badge>
+            </div>
+
+            {filteredDocuments.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredDocuments.map((doc) => (
+                  <Card key={doc.id} className="bg-black/20 border-amber-500/20 hover:border-amber-400/40 transition-colors">
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <CardTitle className="text-amber-400 text-lg leading-tight">
+                          {doc.title}
+                        </CardTitle>
+                        <Badge variant="outline" className="border-amber-500/30 text-amber-300 flex items-center">
+                          {getTypeIcon(doc.type)}
+                          <span className="ml-1 capitalize">{doc.type}</span>
+                        </Badge>
+                      </div>
+                      <CardDescription className="text-gray-300">
+                        por {doc.author}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <p className="text-gray-300 text-sm leading-relaxed">
+                          {doc.description}
+                        </p>
+                        
+                        <div className="flex items-center justify-between text-xs text-gray-400">
+                          <div className="flex items-center">
+                            <BookOpen className="w-3 h-3 mr-1" />
+                            {doc.pages} páginas
+                          </div>
+                          <div className="flex items-center">
+                            <Download className="w-3 h-3 mr-1" />
+                            {doc.downloads}
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            <Star className="w-4 h-4 text-amber-400 mr-1" />
+                            <span className="text-amber-400 font-semibold">{doc.rating}</span>
+                          </div>
+                          <Badge 
+                            variant="secondary" 
+                            className="bg-amber-600/20 text-amber-200 capitalize"
+                          >
+                            {categories.find(c => c.value === doc.category)?.label}
+                          </Badge>
+                        </div>
+
+                        <div className="flex gap-2 pt-2">
+                          <Button size="sm" className="flex-1 bg-amber-600 hover:bg-amber-700 text-black">
+                            <Eye className="w-4 h-4 mr-2" />
+                            Visualizar
+                          </Button>
+                          <Button size="sm" variant="outline" className="border-amber-500/30 text-amber-300">
+                            <Download className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Library className="w-16 h-16 mx-auto text-amber-400 opacity-50 mb-4" />
+                <h4 className="text-xl font-semibold text-amber-300 mb-2">
+                  Nenhum documento encontrado
+                </h4>
+                <p className="text-gray-400">
+                  Tente ajustar os filtros ou termos de busca
                 </p>
-                
-                <div className="flex items-center justify-between text-xs text-gray-400">
-                  <div className="flex items-center">
-                    <BookOpen className="w-3 h-3 mr-1" />
-                    {doc.pages} páginas
-                  </div>
-                  <div className="flex items-center">
-                    <Download className="w-3 h-3 mr-1" />
-                    {doc.downloads} downloads
-                  </div>
-                </div>
-                
-                <div className="flex gap-2 pt-4">
-                  <Button 
-                    size="sm"
-                    variant="outline"
-                    className="flex-1 border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
-                  >
-                    <Eye className="w-4 h-4 mr-2" />
-                    Visualizar
-                  </Button>
-                  <Button 
-                    size="sm"
-                    className="flex-1 bg-amber-600 hover:bg-amber-700 text-black"
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    Download
-                  </Button>
-                </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {filteredDocuments.length === 0 && (
-          <div className="floating-card text-center py-12 max-w-md mx-auto">
-            <Library className="w-16 h-16 text-amber-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-amber-400 mb-2 font-['Cinzel_Decorative']">
-              Nenhum documento encontrado
-            </h3>
-            <p className="text-gray-300 mb-4">
-              Tente ajustar os filtros ou termos de busca.
-            </p>
-            <Button 
-              variant="outline"
-              className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
-              onClick={() => {
-                setSearchTerm("");
-                setSelectedCategory("all");
-              }}
-            >
-              Limpar Filtros
-            </Button>
-          </div>
-        )}
-
-        {/* Featured Collections */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
-          <div className="floating-card p-6">
-            <h3 className="text-xl font-bold text-amber-400 mb-2 font-['Cinzel_Decorative']">
-              Coleção Essencial
-            </h3>
-            <p className="text-gray-300 mb-4">
-              Textos fundamentais para iniciantes
-            </p>
-            <div className="space-y-2 mb-4">
-              <div className="flex items-center text-sm text-gray-300">
-                <BookOpen className="w-4 h-4 mr-2 text-amber-400" />
-                15 documentos essenciais
-              </div>
-              <div className="flex items-center text-sm text-gray-300">
-                <Clock className="w-4 h-4 mr-2 text-amber-400" />
-                Leitura estimada: 8 horas
-              </div>
-            </div>
-            <Button className="w-full bg-amber-600 hover:bg-amber-700 text-black">
-              Acessar Coleção
-            </Button>
-          </div>
-
-          <div className="floating-card p-6">
-            <h3 className="text-xl font-bold text-amber-400 mb-2 font-['Cinzel_Decorative']">
-              Novos Lançamentos
-            </h3>
-            <p className="text-gray-300 mb-4">
-              Últimas adições à biblioteca
-            </p>
-            <div className="space-y-2 mb-4">
-              <div className="flex items-center text-sm text-gray-300">
-                <BookOpen className="w-4 h-4 mr-2 text-amber-400" />
-                6 novos documentos
-              </div>
-              <div className="flex items-center text-sm text-gray-300">
-                <Clock className="w-4 h-4 mr-2 text-amber-400" />
-                Adicionados esta semana
-              </div>
-            </div>
-            <Button 
-              variant="outline"
-              className="w-full border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
-            >
-              Ver Novidades
-            </Button>
+            )}
           </div>
         </div>
 
-        {/* Access Notice */}
-        <div className="floating-card text-center py-8 max-w-2xl mx-auto mt-12">
-          <Library className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-amber-400 mb-4 font-['Cinzel_Decorative']">
-            Acesso Livre ao Conhecimento
-          </h3>
-          <p className="text-gray-300 leading-relaxed">
-            A Bibliotheca Secreta oferece acesso gratuito a uma vasta coleção de textos esotéricos, 
-            artigos acadêmicos e documentos históricos. Todo o conteúdo está disponível para download 
-            e estudo, contribuindo para a preservação e disseminação do conhecimento ancestral.
-          </p>
+        {/* Categories Overview */}
+        <div className="floating-card max-w-6xl w-full mt-8 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <div className="p-6">
+            <h3 className="text-2xl font-cinzel-decorative text-amber-300 mb-6 text-center">
+              Categorias de Conhecimento
+            </h3>
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {categories.slice(1).map((category) => {
+                const count = documents.filter(doc => doc.category === category.value).length;
+                return (
+                  <div 
+                    key={category.value}
+                    className="text-center p-4 bg-black/20 rounded-lg border border-amber-500/20 hover:border-amber-400/40 transition-colors cursor-pointer"
+                    onClick={() => setSelectedCategory(category.value)}
+                  >
+                    <div className="text-2xl text-amber-400 mb-2">
+                      {category.value === "filosofia" && "🔮"}
+                      {category.value === "historia" && "📜"}
+                      {category.value === "pratica" && "🕯️"}
+                      {category.value === "simbolismo" && "🔯"}
+                      {category.value === "mitologia" && "🐲"}
+                      {category.value === "psicologia" && "🧠"}
+                    </div>
+                    <h4 className="text-amber-300 font-semibold text-sm mb-1">
+                      {category.label}
+                    </h4>
+                    <p className="text-xs text-gray-400">
+                      {count} documento{count !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Mystical Quote */}
+        <div className="floating-card max-w-2xl mx-auto mt-12 p-8 bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <div className="text-center">
+            <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+            <p className="text-lg text-gray-300 italic leading-relaxed mb-4">
+              "Uma biblioteca não é apenas um depósito de livros, mas um templo da sabedoria onde as almas buscam a iluminação"
+            </p>
+            <p className="text-amber-400 font-semibold">
+              — Guardião da Bibliotheca
+            </p>
+          </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="relative z-10 bg-black/50 border-t border-amber-500/30 mt-20">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center">
-            <p className="text-gray-400 text-sm">
-              © 2024 Templo do Abismo. Todos os direitos reservados.
-            </p>
-            <p className="text-gray-500 text-xs mt-2">
-              Portal dedicado aos ensinamentos luciferianos ancestrais
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
