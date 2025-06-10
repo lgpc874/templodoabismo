@@ -129,7 +129,6 @@ function CoursesContent() {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      <SiteNavigation />
       
       {/* Mystical background */}
       <div className="fixed inset-0 overflow-hidden">

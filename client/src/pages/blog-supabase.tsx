@@ -107,12 +107,11 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-950">
-      <SiteNavigation />
       
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-cinzel-decorative text-gold mb-4">
+          <h1 className="text-4xl md:text-6xl font-cinzel-decorative text-gold mb-4 floating-title">
             Chronicas do Abismo
           </h1>
           <p className="text-xl text-gray-300 font-crimson max-w-2xl mx-auto">
