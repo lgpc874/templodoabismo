@@ -147,7 +147,7 @@ export default function OracleRitualChat() {
         const farewellMessage: ChatMessage = {
           id: (Date.now() + 2).toString(),
           type: 'entity',
-          content: response.farewell || `${currentEntity.name} se retira às sombras... A consulta se encerra. Os véus se fecham até que uma nova alma busque minha sabedoria.`,
+          content: data.farewell || `${currentEntity.name} se retira às sombras... A consulta se encerra. Os véus se fecham até que uma nova alma busque minha sabedoria.`,
           timestamp: new Date(),
           entityName: currentEntity.name
         };

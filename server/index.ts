@@ -7,10 +7,16 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Direct ritual consultation endpoint - highest priority registration
-app.post('/api/oracle/ritual-consult', async (req: any, res: Response) => {
+// Priority ritual consultation endpoint - before Vite middleware
+app.all('/api/oracle/ritual-consult', async (req: any, res: Response) => {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   try {
     const { question, oracleType, entityName } = req.body;
+    
+    console.log('Ritual consultation request received:', { question, oracleType, entityName });
     
     if (!question?.trim() || !oracleType || !entityName) {
       return res.status(400).json({ 
@@ -20,31 +26,33 @@ app.post('/api/oracle/ritual-consult', async (req: any, res: Response) => {
 
     const entityResponses = {
       'Arcanum': {
-        response: `The ancient cards whisper of your question: "${question}". Through the Tarot's sacred geometry, I perceive the threads of fate that bind your path. The Major Arcana speaks - transformation comes through embracing the shadow aspects of your being. The cards reveal that what you seek lies beyond the veil of ordinary perception.`,
-        farewell: 'The cards grow cold as Arcanum withdraws into the mystical veil, leaving only echoes of ancient wisdom...'
+        response: `As cartas antigas sussurram sobre sua pergunta: "${question}". Através da geometria sagrada do Tarô, percebo os fios do destino que entrelaçam seu caminho. O Arcano Maior fala - a transformação vem através do abraço aos aspectos sombrios de seu ser. As cartas revelam que o que você busca está além do véu da percepção comum.`,
+        farewell: 'As cartas esfriam enquanto Arcanum se retira ao véu místico, deixando apenas ecos de sabedoria ancestral...'
       },
       'Speculum': {
-        response: `Your reflection in the obsidian mirror reveals truths about "${question}". I see through the veils of illusion to perceive your soul's true nature. The mirror shows not what is, but what could be - potential paths written in silver light upon dark glass. Your inner vision must awaken to see what others cannot.`,
-        farewell: 'The mirror surface grows dark as Speculum retreats into the realm of infinite reflections...'
+        response: `Seu reflexo no espelho de obsidiana revela verdades sobre "${question}". Vejo através dos véus da ilusão para perceber a verdadeira natureza de sua alma. O espelho mostra não o que é, mas o que pode ser - caminhos potenciais escritos em luz prateada sobre vidro escuro. Sua visão interior deve despertar para ver o que outros não podem.`,
+        farewell: 'A superfície do espelho escurece enquanto Speculum se retira ao reino das infinitas reflexões...'
       },
       'Runicus': {
-        response: `The ancient stones have been cast for your inquiry: "${question}". The Elder Futhark speaks of destiny carved in stone and fate written in the language of the gods. I see Algiz for protection, Dagaz for transformation, and Othala for spiritual inheritance. Your path requires both courage and wisdom.`,
-        farewell: 'The runes fall silent as Runicus returns to the sacred grove of ancient knowledge...'
+        response: `As pedras antigas foram lançadas para sua consulta: "${question}". O Futhark Antigo fala de destino gravado em pedra e fado escrito na linguagem dos deuses. Vejo Algiz para proteção, Dagaz para transformação, e Othala para herança espiritual. Seu caminho requer tanto coragem quanto sabedoria.`,
+        farewell: 'As runas silenciam enquanto Runicus retorna ao bosque sagrado do conhecimento ancestral...'
       },
       'Ignis': {
-        response: `The sacred flames dance with insight for your question: "${question}". Fire speaks of purification through trial, of passion that burns away illusion. In the dancing flames, I see the phoenix rising from ashes of old patterns. What must die for you to be reborn? The fire knows.`,
-        farewell: 'The flames diminish to embers as Ignis retreats to the eternal hearth of transformation...'
+        response: `As chamas sagradas dançam com percepção para sua pergunta: "${question}". O fogo fala de purificação através do teste, de paixão que queima as ilusões. Nas chamas dançantes, vejo a fênix surgindo das cinzas de velhos padrões. O que deve morrer para que você renasça? O fogo sabe.`,
+        farewell: 'As chamas diminuem para brasas enquanto Ignis se retira à lareira eterna da transformação...'
       },
       'Abyssos': {
-        response: `From the primordial void comes wisdom for your inquiry: "${question}". The abyss speaks in whispers older than creation itself. What you seek dwells not in light but in the fertile darkness where all potentials exist. Embrace the unknown, for it is the womb of all becoming.`,
-        farewell: 'Abyssos dissolves back into the infinite void, leaving only the profound silence of endless possibility...'
+        response: `Do vazio primordial vem sabedoria para sua consulta: "${question}". O abismo fala em sussurros mais antigos que a própria criação. O que você busca não habita na luz, mas na escuridão fértil onde todas as potencialidades existem. Abrace o desconhecido, pois é o ventre de todo vir-a-ser.`,
+        farewell: 'Abyssos se dissolve de volta ao vazio infinito, deixando apenas o silêncio profundo da possibilidade sem fim...'
       }
     };
 
     const entityData = entityResponses[entityName];
     if (!entityData) {
-      return res.status(400).json({ error: 'Unknown entity' });
+      return res.status(400).json({ error: 'Entidade desconhecida' });
     }
+    
+    console.log('Sending ritual response for entity:', entityName);
     
     res.json({
       success: true,
@@ -56,8 +64,8 @@ app.post('/api/oracle/ritual-consult', async (req: any, res: Response) => {
     });
     
   } catch (error) {
-    console.error('Ritual consultation error:', error);
-    res.status(500).json({ error: 'Failed to perform ritual consultation' });
+    console.error('Erro na consulta ritual:', error);
+    res.status(500).json({ error: 'Falha ao realizar consulta ritual' });
   }
 });
 
