@@ -45,8 +45,9 @@ export default function Navigation() {
                   alt="Templo do Abismo" 
                   className="h-8 w-8 animate-spin-slow"
                 />
-                <span className="text-xl font-bold text-red-400">
-                  Templo do Abismo
+                <span className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-red-400 whitespace-nowrap">
+                  <span className="hidden sm:inline">Templo do Abismo</span>
+                  <span className="sm:hidden">Templo</span>
                 </span>
               </div>
             </Link>
