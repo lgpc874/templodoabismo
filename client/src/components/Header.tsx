@@ -53,8 +53,8 @@ const Header: React.FC = () => {
     <header className="sticky top-0 z-50 w-full border-b border-amber-800/20 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/80">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/">
+          {/* Desktop Logo */}
+          <Link href="/" className="hidden md:block">
             <div className="flex items-center space-x-3 cursor-pointer">
               <div className="w-10 h-10 relative flex items-center justify-center">
                 {/* Rotating seal logo */}
@@ -69,6 +69,33 @@ const Header: React.FC = () => {
               <span className="text-xl font-bold bg-gradient-to-r from-amber-400 to-red-500 bg-clip-text text-transparent font-['Cinzel_Decorative'] floating-title-slow">
                 Templo do Abismo
               </span>
+            </div>
+          </Link>
+
+          {/* Mobile Centered Logo */}
+          <Link href="/" className="md:hidden flex items-center justify-center flex-1">
+            <div className="flex items-center space-x-2 cursor-pointer">
+              <div className="w-8 h-8 relative flex items-center justify-center">
+                <div className="absolute inset-0 animate-spin-slow">
+                  <img 
+                    src="/seal.png" 
+                    alt="Selo do Templo do Abismo" 
+                    className="w-full h-full object-contain opacity-90"
+                  />
+                </div>
+              </div>
+              <span className="text-lg font-bold bg-gradient-to-r from-amber-400 to-red-500 bg-clip-text text-transparent font-['Cinzel_Decorative'] floating-title-slow">
+                Templo do Abismo
+              </span>
+              <div className="w-8 h-8 relative flex items-center justify-center">
+                <div className="absolute inset-0 animate-spin-slow">
+                  <img 
+                    src="/seal.png" 
+                    alt="Selo do Templo do Abismo" 
+                    className="w-full h-full object-contain opacity-90"
+                  />
+                </div>
+              </div>
             </div>
           </Link>
 
