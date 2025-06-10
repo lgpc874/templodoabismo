@@ -19,22 +19,29 @@ export class VozPlumaService {
     switch (time) {
       case '07:00':
         // Rituais ancestrais apenas aos domingos às 7h da manhã
-        if (dayOfWeek === 0) {
-          type = 'ritual';
-          prompt = `Descreva um ritual ancestral simples para iniciar a semana dominical com poder e clareza espiritual. Focado em proteção, purificação ou conexão com as forças ancestrais. Inclua passos práticos mas mantenha a linguagem poética e mística. Este ritual deve ser adequado para começar um domingo. Máximo 3-4 frases.`;
-        } else {
-          type = 'dica';
-          prompt = `Crie uma dica mística luciferiana para começar o dia. Deve ser uma orientação prática e inspiradora sobre autoconhecimento, poder pessoal ou desenvolvimento espiritual. Formato: Um título conciso e um texto de 2-3 frases. Não mencione "Lúcifer" diretamente, use linguagem sutil e poética.`;
-        }
+        type = 'ritual';
+        prompt = `Crie um ritual dominical ancestral poderoso para despertar a força interior. Deve incluir:
+        - Preparação do espaço sagrado
+        - Instrumentos místicos (velas, incensos, símbolos)
+        - Invocações ou declarações de poder
+        - Visualizações específicas
+        - Fechamento ritualístico
+        Use linguagem arcana e poética. O ritual deve ser executável em casa em 15-20 minutos.`;
         break;
       case '09:00':
         type = 'verso';
         prompt = `Escreva um verso poético da "Pluma Dourada" - uma poesia curta sobre sabedoria ancestral, despertar da consciência ou conexão com o divino interior. Deve ser elegante, místico e profundo. 4-6 linhas no máximo.`;
         break;
       case '11:00':
-        // Às 11h sempre será uma reflexão complementar
+        // Às 11h sempre será uma reflexão complementar (exceto domingos)
         type = 'reflexao';
-        prompt = `Crie uma reflexão espiritual profunda para o meio da manhã. Deve inspirar contemplação sobre a jornada interior, os mistérios da existência ou a conexão com o divino. Use linguagem poética e filosófica. 2-3 frases máximo.`;
+        prompt = `Crie uma reflexão profunda sobre poder pessoal e transformação interior. Deve abordar:
+        - Quebra de paradigmas limitantes
+        - Desenvolvimento da força interior
+        - Autoconhecimento e autodomínio
+        - Conquista de objetivos pessoais
+        - Expansão da consciência
+        Use linguagem inspiradora e transformadora. A reflexão deve motivar ação e crescimento pessoal.`;
         break;
       default:
         throw new Error('Horário de manifestação inválido');

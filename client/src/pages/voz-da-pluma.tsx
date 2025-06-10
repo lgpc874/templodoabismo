@@ -30,17 +30,32 @@ export default function VozDaPluma() {
   });
 
   const poemaDoDia = manifestations.find(m => m.manifestation_time === '09:00');
-  const dicaDoDia = manifestations.find(m => m.manifestation_time === '07:00' || m.manifestation_time === '11:00');
+  const ritualDominical = manifestations.find(m => m.manifestation_time === '07:00');
+  const reflexaoDiaria = manifestations.find(m => m.manifestation_time === '11:00');
+  const isDomingo = new Date().getDay() === 0;
 
-  const handleViewDica = () => {
-    if (dicaDoDia) {
-      setSelectedManifestation(dicaDoDia);
+  const handleViewRitual = () => {
+    if (ritualDominical) {
+      setSelectedManifestation(ritualDominical);
       setShowDicaDialog(true);
     } else {
       toast({
-        title: "Dica do Dia",
-        description: "A dica ancestral ainda está se manifestando...",
-        className: "bg-purple-900 border-purple-500 text-white",
+        title: "Ritual Dominical",
+        description: "O ritual ancestral ainda está se manifestando...",
+        className: "bg-red-900 border-red-500 text-white",
+      });
+    }
+  };
+
+  const handleViewReflexao = () => {
+    if (reflexaoDiaria) {
+      setSelectedManifestation(reflexaoDiaria);
+      setShowDicaDialog(true);
+    } else {
+      toast({
+        title: "Reflexão Diária",
+        description: "A reflexão ainda está se manifestando...",
+        className: "bg-amber-900 border-amber-500 text-white",
       });
     }
   };
@@ -144,122 +159,167 @@ export default function VozDaPluma() {
             </div>
           </div>
 
-          <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-8">
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-6">
             
-            {/* Poema do Dia */}
+            {/* Verso da Pluma - 09:00 */}
             <div className="floating-card bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl hover:border-amber-500/40 transition-all duration-300">
               <div className="text-center p-6 pb-4">
                 <div className="flex items-center justify-center gap-2 mb-3 text-amber-400">
                   <Feather className="w-6 h-6" />
                   <span className="text-lg font-semibold font-cinzel-decorative">09:00</span>
                 </div>
-                <h2 className="text-2xl mb-2 text-amber-300 font-cinzel-decorative">Verso da Pluma</h2>
-                <p className="text-sm text-gray-400 italic font-crimson">Poema diário renovado a cada 24 horas</p>
+                <h2 className="text-xl mb-2 text-amber-300 font-cinzel-decorative">Verso da Pluma</h2>
+                <p className="text-sm text-gray-400 italic font-crimson">Renovado a cada 24 horas</p>
               </div>
               
-              <div className="space-y-6 p-6 pt-0">
+              <div className="space-y-4 p-6 pt-0">
                 {poemaDoDia ? (
                   <div className="space-y-4">
-                    <h3 className="text-xl font-semibold text-amber-300 font-cinzel-decorative text-center">{poemaDoDia.title}</h3>
-                    <div className="bg-black/40 p-6 rounded-lg border border-amber-500/20">
-                      <p className="text-gray-200 leading-relaxed italic text-center font-crimson">
+                    <h3 className="text-lg font-semibold text-amber-300 font-cinzel-decorative text-center">{poemaDoDia.title}</h3>
+                    <div className="bg-black/40 p-4 rounded-lg border border-amber-500/20">
+                      <p className="text-gray-200 leading-relaxed italic text-center font-crimson text-sm">
                         "{poemaDoDia.content}"
                       </p>
                     </div>
-                    <div className="text-center space-y-2">
-                      <p className="text-amber-400 font-semibold font-cinzel-decorative">— {poemaDoDia.author}</p>
-                      <p className="text-gray-400 text-sm font-crimson">
-                        {new Date(poemaDoDia.posted_date).toLocaleDateString('pt-BR')}
-                      </p>
-                      <div className="text-amber-400 text-lg">𖤍</div>
+                    <div className="text-center space-y-1">
+                      <p className="text-amber-400 font-semibold font-cinzel-decorative text-sm">— {poemaDoDia.author}</p>
+                      <div className="text-amber-400">𖤍</div>
                     </div>
 
-                    {/* Botões de Compartilhamento */}
-                    <div className="flex flex-wrap gap-2 justify-center mt-6">
+                    {/* Botões de Compartilhamento Compactos */}
+                    <div className="flex flex-wrap gap-1 justify-center mt-4">
                       <Button 
                         variant="outline" 
                         size="sm"
-                        onClick={() => shareToSocial('twitter', poemaDoDia)}
-                        className="bg-blue-900/20 border-blue-500/50 text-blue-300 hover:bg-blue-800/30 font-crimson"
+                        onClick={() => shareToSocial('whatsapp', poemaDoDia)}
+                        className="bg-green-900/20 border-green-500/50 text-green-300 hover:bg-green-800/30 font-crimson text-xs px-2 py-1"
                       >
-                        <FaTwitter className="w-4 h-4 mr-2" />
-                        Twitter
+                        <FaWhatsapp className="w-3 h-3" />
                       </Button>
                       
                       <Button 
                         variant="outline" 
                         size="sm"
-                        onClick={() => shareToSocial('facebook', poemaDoDia)}
-                        className="bg-blue-900/20 border-blue-500/50 text-blue-300 hover:bg-blue-800/30 font-crimson"
-                      >
-                        <FaFacebook className="w-4 h-4 mr-2" />
-                        Facebook
-                      </Button>
-
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => shareToSocial('whatsapp', poemaDoDia)}
-                        className="bg-green-900/20 border-green-500/50 text-green-300 hover:bg-green-800/30 font-crimson"
-                      >
-                        <FaWhatsapp className="w-4 h-4 mr-2" />
-                        WhatsApp
-                      </Button>
-
-                      <Button 
-                        variant="outline" 
-                        size="sm"
                         onClick={() => shareToSocial('instagram', poemaDoDia)}
-                        className="bg-pink-900/20 border-pink-500/50 text-pink-300 hover:bg-pink-800/30 font-crimson"
+                        className="bg-pink-900/20 border-pink-500/50 text-pink-300 hover:bg-pink-800/30 font-crimson text-xs px-2 py-1"
                       >
-                        <FaInstagram className="w-4 h-4 mr-2" />
-                        Instagram
+                        <FaInstagram className="w-3 h-3" />
+                      </Button>
+
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => shareToSocial('twitter', poemaDoDia)}
+                        className="bg-blue-900/20 border-blue-500/50 text-blue-300 hover:bg-blue-800/30 font-crimson text-xs px-2 py-1"
+                      >
+                        <FaTwitter className="w-3 h-3" />
+                      </Button>
+
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => shareToSocial('facebook', poemaDoDia)}
+                        className="bg-blue-900/20 border-blue-500/50 text-blue-300 hover:bg-blue-800/30 font-crimson text-xs px-2 py-1"
+                      >
+                        <FaFacebook className="w-3 h-3" />
                       </Button>
                     </div>
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400 border border-amber-500/30">
-                      <Feather className="w-8 h-8" />
+                  <div className="text-center py-6">
+                    <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400 border border-amber-500/30">
+                      <Feather className="w-6 h-6" />
                     </div>
-                    <p className="text-gray-400 font-crimson">O verso ainda não manifestou...</p>
-                    <p className="text-gray-500 text-sm mt-2 font-crimson italic">A pluma ancestral escreve em seu tempo</p>
+                    <p className="text-gray-400 font-crimson text-sm">O verso ainda não manifestou...</p>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Dica do Dia */}
+            {/* Ritual Dominical - 07:00 (Somente Domingo) */}
             <div className="floating-card bg-black/30 backdrop-blur-lg border border-red-500/20 rounded-xl hover:border-red-500/40 transition-all duration-300">
               <div className="text-center p-6 pb-4">
                 <div className="flex items-center justify-center gap-2 mb-3 text-red-400">
-                  <Sparkles className="w-6 h-6" />
-                  <Star className="w-5 h-5" />
+                  <Flame className="w-6 h-6" />
+                  <span className="text-lg font-semibold font-cinzel-decorative">07:00</span>
                 </div>
-                <h2 className="text-2xl mb-2 text-red-300 font-cinzel-decorative">Dica Ancestral</h2>
+                <h2 className="text-xl mb-2 text-red-300 font-cinzel-decorative">Ritual Dominical</h2>
                 <p className="text-sm text-gray-400 italic font-crimson">
-                  {new Date().getDay() === 0 ? 'Ritual dominical disponível' : 'Reflexão diária disponível'}
+                  {isDomingo ? 'Disponível hoje' : 'Somente aos domingos'}
                 </p>
               </div>
               
-              <div className="space-y-6 p-6 pt-0">
-                <div className="text-center py-8">
-                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-red-500/10 flex items-center justify-center text-red-400 border border-red-500/30">
-                    <Eye className="w-10 h-10" />
+              <div className="space-y-4 p-6 pt-0">
+                <div className="text-center py-6">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/10 flex items-center justify-center text-red-400 border border-red-500/30">
+                    <Star className="w-8 h-8" />
                   </div>
-                  <p className="text-gray-300 mb-6 font-crimson">
-                    {new Date().getDay() === 0 
-                      ? <>Um <strong className="text-red-400">ritual ancestral</strong> aguarda sua contemplação</>
-                      : <>Uma <strong className="text-amber-400">reflexão sobre poder pessoal</strong> te espera</>
-                    }
-                  </p>
-                  <div className="text-red-400 text-xl mb-4">⚹</div>
-                  <Button 
-                    onClick={handleViewDica}
-                    className="bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white px-8 py-3 rounded-lg font-semibold font-cinzel-decorative transition-all duration-300 shadow-lg hover:shadow-red-500/25"
-                  >
-                    Revelar Dica Ancestral
-                  </Button>
+                  
+                  {isDomingo ? (
+                    <>
+                      <p className="text-gray-300 mb-4 font-crimson text-sm">
+                        Um <strong className="text-red-400">ritual ancestral</strong> aguarda sua contemplação
+                      </p>
+                      <div className="text-red-400 text-lg mb-3">⛧</div>
+                      <Button 
+                        onClick={handleViewRitual}
+                        className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white px-6 py-2 rounded-lg font-semibold font-cinzel-decorative transition-all duration-300 shadow-lg hover:shadow-red-500/25 text-sm"
+                      >
+                        Revelar Ritual
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-gray-500 mb-4 font-crimson text-sm">
+                        O ritual ancestral manifesta-se apenas aos domingos às 7h
+                      </p>
+                      <div className="text-gray-600 text-lg">⚹</div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Reflexão Diária - 11:00 (Todos os dias exceto domingo) */}
+            <div className="floating-card bg-black/30 backdrop-blur-lg border border-purple-500/20 rounded-xl hover:border-purple-500/40 transition-all duration-300">
+              <div className="text-center p-6 pb-4">
+                <div className="flex items-center justify-center gap-2 mb-3 text-purple-400">
+                  <Eye className="w-6 h-6" />
+                  <span className="text-lg font-semibold font-cinzel-decorative">11:00</span>
+                </div>
+                <h2 className="text-xl mb-2 text-purple-300 font-cinzel-decorative">Reflexão Diária</h2>
+                <p className="text-sm text-gray-400 italic font-crimson">
+                  {!isDomingo ? 'Disponível hoje' : 'Pausada aos domingos'}
+                </p>
+              </div>
+              
+              <div className="space-y-4 p-6 pt-0">
+                <div className="text-center py-6">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400 border border-purple-500/30">
+                    <Sparkles className="w-8 h-8" />
+                  </div>
+                  
+                  {!isDomingo ? (
+                    <>
+                      <p className="text-gray-300 mb-4 font-crimson text-sm">
+                        Uma <strong className="text-purple-400">reflexão sobre poder pessoal</strong> te espera
+                      </p>
+                      <div className="text-purple-400 text-lg mb-3">𖤍</div>
+                      <Button 
+                        onClick={handleViewReflexao}
+                        className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-6 py-2 rounded-lg font-semibold font-cinzel-decorative transition-all duration-300 shadow-lg hover:shadow-purple-500/25 text-sm"
+                      >
+                        Revelar Reflexão
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-gray-500 mb-4 font-crimson text-sm">
+                        As reflexões cedem espaço ao ritual dominical
+                      </p>
+                      <div className="text-gray-600 text-lg">⸸</div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
