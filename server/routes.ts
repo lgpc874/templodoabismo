@@ -6,6 +6,7 @@ import { vozPlumaService } from './voz-pluma-service';
 import { supabase, supabaseAdmin } from './supabase-client';
 import { supabaseMigration } from './supabase-migration';
 import { registerAdminRoutes } from './admin-routes';
+import { registerCMSRoutes } from './cms-routes';
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -597,6 +598,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: 'Failed to update settings' });
     }
   });
+
+  // Register CMS routes for page management
+  registerCMSRoutes(app);
+
+  // Register admin routes
+  registerAdminRoutes(app);
 
   // Catch-all for unmatched API routes - must be after all API route definitions
   app.use('/api/*', (req: Request, res: Response) => {

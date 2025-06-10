@@ -44,6 +44,57 @@ export const siteConfig = pgTable("site_config", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Sistema de páginas dinâmicas
+export const sitePages = pgTable("site_pages", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  content: text("content").notNull(),
+  meta_description: text("meta_description"),
+  type: text("type").notNull().default("page"), // page, course, grimoire, special
+  status: text("status").notNull().default("draft"), // draft, published, archived
+  featured_image: text("featured_image"),
+  author_id: integer("author_id").references(() => users.id),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+  published_at: timestamp("published_at"),
+});
+
+// Sistema de cursos educacionais
+export const educationalCourses = pgTable("educational_courses", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  slug: text("slug").notNull().unique(),
+  content: text("content"),
+  difficulty_level: integer("difficulty_level").notNull().default(1), // 1-3
+  price_brl: numeric("price_brl", { precision: 10, scale: 2 }).notNull().default("0.00"),
+  duration_hours: integer("duration_hours").default(0),
+  requirements: text("requirements").array().default([]),
+  what_you_learn: text("what_you_learn").array().default([]),
+  status: text("status").notNull().default("draft"),
+  featured_image: text("featured_image"),
+  author_id: integer("author_id").references(() => users.id),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+  published_at: timestamp("published_at"),
+});
+
+// Sistema de grimórios/textos proibidos
+export const sacredGrimoires = pgTable("sacred_grimoires", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  slug: text("slug").notNull().unique(),
+  category: text("category").notNull(), // ritual, invocation, knowledge, etc
+  access_level: integer("access_level").notNull().default(1), // 1-5 (níveis de iniciação)
+  is_forbidden: boolean("is_forbidden").default(false),
+  author: text("author"),
+  status: text("status").notNull().default("draft"),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
 export const contentSections = pgTable("content_sections", {
   id: serial("id").primaryKey(),
   pageId: text("page_id").notNull(),
@@ -642,6 +693,27 @@ export const insertVozPlumaManifestationSchema = createInsertSchema(voz_pluma_ma
 
 export const insertVozPlumaSettingsSchema = createInsertSchema(voz_pluma_settings).omit({
   id: true,
+  updated_at: true,
+});
+
+// Novos schemas para gerenciamento de páginas
+export const insertSitePagesSchema = createInsertSchema(sitePages).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+  published_at: true,
+});
+
+export const insertEducationalCoursesSchema = createInsertSchema(educationalCourses).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+  published_at: true,
+});
+
+export const insertSacredGrimoiresSchema = createInsertSchema(sacredGrimoires).omit({
+  id: true,
+  created_at: true,
   updated_at: true,
 });
 
