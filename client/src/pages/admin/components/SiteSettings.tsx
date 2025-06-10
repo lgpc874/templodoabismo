@@ -125,7 +125,7 @@ export function SiteSettings() {
     onSuccess: () => {
       toast({
         title: "Cache Limpo",
-        description: "Cache do sistema foi limpo"
+        description: "Cache do templo foi limpo pelo Magus"
       });
     },
     onError: () => {
@@ -177,7 +177,7 @@ export function SiteSettings() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="bg-black/40 border-purple-500/30">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-purple-300">Status do Sistema</CardTitle>
+            <CardTitle className="text-sm text-purple-300">Status do Templo</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-lg font-bold text-green-400">

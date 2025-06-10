@@ -163,7 +163,7 @@ export default function SetupAdmin() {
                 className="w-full bg-amber-600 hover:bg-amber-700 text-black"
                 disabled={loading}
               >
-                {loading ? 'Processando...' : 'Criar Administrador'}
+                {loading ? 'Processando...' : 'Criar Magus do Templo'}
               </Button>
             </form>
             
@@ -173,8 +173,8 @@ export default function SetupAdmin() {
                 <div>
                   <p className="text-sm text-amber-300 font-medium">Importante:</p>
                   <p className="text-xs text-gray-300 mt-1">
-                    Esta funcionalidade só funciona quando não há administradores no sistema. 
-                    Após criar o primeiro admin, esta página será desabilitada por segurança.
+                    Esta funcionalidade só funciona quando não há Magus do Templo no sistema. 
+                    Após criar o primeiro Magus, esta página será desabilitada por segurança.
                   </p>
                 </div>
               </div>

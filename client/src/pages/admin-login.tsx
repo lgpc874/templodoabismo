@@ -90,10 +90,10 @@ export default function AdminLogin() {
             <Shield className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-red-500 to-purple-600 bg-clip-text text-transparent">
-            Sanctum Administratoris
+            Sanctum Magus
           </h1>
           <p className="text-gray-400 mt-2">
-            Portal de acesso ao sistema de controle do Templo
+            Portal de acesso reservado ao Magus do Templo
           </p>
         </div>
 

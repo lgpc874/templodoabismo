@@ -217,7 +217,7 @@ export default function AdminControl() {
                   <CardHeader>
                     <CardTitle className="text-amber-400">Gerenciar Usuários</CardTitle>
                     <CardDescription className="text-gray-400">
-                      Administração de membros do templo
+                      Controle de membros pelo Magus do Templo
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -287,9 +287,9 @@ export default function AdminControl() {
               <TabsContent value="system" className="space-y-6">
                 <Card className="bg-black/40 border-amber-500/30">
                   <CardHeader>
-                    <CardTitle className="text-amber-400">Configurações do Sistema</CardTitle>
+                    <CardTitle className="text-amber-400">Configurações do Templo</CardTitle>
                     <CardDescription className="text-gray-400">
-                      Configurações avançadas do templo
+                      Configurações místicas reservadas ao Magus do Templo
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -312,7 +312,7 @@ export default function AdminControl() {
                       </div>
                       
                       <div className="border-t border-amber-500/20 pt-6">
-                        <h4 className="text-lg font-semibold text-amber-300 mb-4">Ações do Sistema</h4>
+                        <h4 className="text-lg font-semibold text-amber-300 mb-4">Controles do Magus</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <Button variant="outline" className="border-amber-500/30 text-amber-300">
                             <Database className="w-4 h-4 mr-2" />
