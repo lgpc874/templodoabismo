@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import SiteNavigation from '@/components/SiteNavigation';
+
 import Footer from '@/components/footer';
 
 interface BlogPost {
@@ -130,7 +130,7 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <SiteNavigation />
+
       
       {/* Fixed Central Rotating Seal */}
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">

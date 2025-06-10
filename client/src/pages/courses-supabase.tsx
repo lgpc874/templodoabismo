@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, Clock, Users, Star, Play, Lock, Crown } from "lucide-react";
-import SiteNavigation from "../components/SiteNavigation";
+// import SiteNavigation from "../components/SiteNavigation";
 import Footer from "../components/footer";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourses } from "@/hooks/useSupabaseData";

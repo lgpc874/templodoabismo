@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { GraduationCap, Lock, CheckCircle, Star, Flame, Crown, Shield, Eye } from "lucide-react";
 import MysticalGate from "@/components/MysticalGate";
-import SiteNavigation from "@/components/SiteNavigation";
+// import SiteNavigation from "@/components/SiteNavigation";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/contexts/AuthContext";
 

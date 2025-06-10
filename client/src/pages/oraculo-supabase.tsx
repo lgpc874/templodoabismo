@@ -17,7 +17,7 @@ import {
   BookOpen,
   MessageCircle
 } from "lucide-react";
-import SiteNavigation from "../components/SiteNavigation";
+// import SiteNavigation from "../components/SiteNavigation";
 import Footer from "../components/footer";
 import { useAuth } from "@/contexts/AuthContext";
 import { useOracleConsultations, useCreateOracleConsultation } from "@/hooks/useSupabaseData";
@@ -279,7 +279,7 @@ export default function OraculoSupabase() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-950">
-      <SiteNavigation />
+
       
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
