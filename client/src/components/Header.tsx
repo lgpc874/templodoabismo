@@ -88,7 +88,7 @@ const Header: React.FC = () => {
                 Templo do Abismo
               </span>
               <div className="w-8 h-8 relative flex items-center justify-center">
-                <div className="absolute inset-0 animate-spin-slow">
+                <div className="absolute inset-0 animate-spin-slow-reverse">
                   <img 
                     src="/seal.png" 
                     alt="Selo do Templo do Abismo" 
