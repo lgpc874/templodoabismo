@@ -225,6 +225,91 @@ export default function OracleTest() {
               </div>
             )}
           </div>
+
+          {/* Download and Share Actions */}
+          <div className="border-t border-amber-500/20 pt-6 mt-6">
+            <h4 className="text-lg font-cinzel-decorative text-amber-300 mb-4">
+              Compartilhar Consulta
+            </h4>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Download Button */}
+              <Button
+                onClick={handleDownloadImage}
+                disabled={isGeneratingImage}
+                className="bg-amber-600 hover:bg-amber-700 text-black font-semibold"
+              >
+                {isGeneratingImage ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Gerando Imagem...
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-4 h-4 mr-2" />
+                    Baixar Imagem
+                  </>
+                )}
+              </Button>
+
+              {/* Native Share */}
+              <Button
+                onClick={() => handleShare('native')}
+                variant="outline"
+                className="border-amber-500/30 text-amber-300 hover:bg-amber-500/10"
+              >
+                <Share2 className="w-4 h-4 mr-2" />
+                Compartilhar
+              </Button>
+            </div>
+
+            {/* Social Media Buttons */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+              <Button
+                onClick={() => handleShare('facebook')}
+                variant="outline"
+                size="sm"
+                className="border-blue-500/30 text-blue-300 hover:bg-blue-500/10"
+              >
+                <Facebook className="w-4 h-4 mr-1" />
+                Facebook
+              </Button>
+
+              <Button
+                onClick={() => handleShare('twitter')}
+                variant="outline"
+                size="sm"
+                className="border-sky-500/30 text-sky-300 hover:bg-sky-500/10"
+              >
+                <Twitter className="w-4 h-4 mr-1" />
+                Twitter
+              </Button>
+
+              <Button
+                onClick={() => handleShare('whatsapp')}
+                variant="outline"
+                size="sm"
+                className="border-green-500/30 text-green-300 hover:bg-green-500/10"
+              >
+                <MessageSquare className="w-4 h-4 mr-1" />
+                WhatsApp
+              </Button>
+
+              <Button
+                onClick={() => handleShare('telegram')}
+                variant="outline"
+                size="sm"
+                className="border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10"
+              >
+                <Send className="w-4 h-4 mr-1" />
+                Telegram
+              </Button>
+            </div>
+
+            <p className="text-xs text-gray-500 mt-3 text-center">
+              A imagem gerada inclui a marca d'água oficial do Templo do Abismo
+            </p>
+          </div>
         </div>
       </div>
     );
