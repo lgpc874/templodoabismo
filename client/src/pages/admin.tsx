@@ -89,7 +89,7 @@ export default function AdminPanel() {
     queryKey: ['/api/admin/courses']
   });
 
-  const { data: voxSettingsData } = useQuery({
+  const { data: voxSettingsData } = useQuery<VoxSettings>({
     queryKey: ['/api/admin/voz-pluma/settings']
   });
 
