@@ -251,7 +251,27 @@ export default function AdminControl() {
       access_level: parseInt(formData.get('access_level') as string),
       is_forbidden: formData.get('is_forbidden') === 'true',
       author: formData.get('author') as string,
-      status: formData.get('status') as 'draft' | 'published'
+      status: formData.get('status') as 'draft' | 'published',
+      excerpt: formData.get('excerpt') as string,
+      ritual_type: formData.get('ritual_type') as string,
+      tradition: formData.get('tradition') as string,
+      difficulty_rating: parseInt(formData.get('difficulty_rating') as string) || 1,
+      prerequisites: formData.get('prerequisites') ? (formData.get('prerequisites') as string).split(',').map(p => p.trim()) : [],
+      warnings: formData.get('warnings') ? (formData.get('warnings') as string).split(',').map(w => w.trim()) : [],
+      sacred_elements: formData.get('sacred_elements') ? (formData.get('sacred_elements') as string).split(',').map(e => e.trim()) : [],
+      moon_phase: formData.get('moon_phase') as string,
+      planetary_influence: formData.get('planetary_influence') as string,
+      seasonal_timing: formData.get('seasonal_timing') as string,
+      materials_needed: formData.get('materials_needed') ? (formData.get('materials_needed') as string).split(',').map(m => m.trim()) : [],
+      preparation_time: formData.get('preparation_time') as string,
+      ritual_duration: formData.get('ritual_duration') as string,
+      safety_notes: formData.get('safety_notes') as string,
+      historical_context: formData.get('historical_context') as string,
+      source_attribution: formData.get('source_attribution') as string,
+      translation_notes: formData.get('translation_notes') as string,
+      commentary: formData.get('commentary') as string,
+      related_texts: formData.get('related_texts') ? (formData.get('related_texts') as string).split(',').map(t => t.trim()) : [],
+      tags: formData.get('tags') ? (formData.get('tags') as string).split(',').map(t => t.trim()) : []
     };
 
     if (editingGrimoire) {
@@ -817,13 +837,14 @@ export default function AdminControl() {
           >
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="grimoire-title" className="text-gray-300">Título</Label>
+                <Label htmlFor="grimoire-title" className="text-gray-300">Título do Texto Sagrado</Label>
                 <Input
                   id="grimoire-title"
                   name="title"
                   defaultValue={editingGrimoire?.title || ''}
                   className="bg-black/50 border-red-500/30 text-white"
-                  placeholder="Título do grimório"
+                  placeholder="Nome do texto sagrado"
+                  required
                 />
               </div>
               <div>
@@ -833,36 +854,101 @@ export default function AdminControl() {
                   name="slug"
                   defaultValue={editingGrimoire?.slug || ''}
                   className="bg-black/50 border-red-500/30 text-white"
-                  placeholder="url-do-grimorio"
+                  placeholder="url-do-texto"
+                  required
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="grimoire-excerpt" className="text-gray-300">Resumo/Descrição Breve</Label>
+              <Textarea
+                id="grimoire-excerpt"
+                name="excerpt"
+                defaultValue={editingGrimoire?.excerpt || ''}
+                className="bg-black/50 border-red-500/30 text-white min-h-[80px]"
+                placeholder="Breve descrição do conteúdo do texto..."
+              />
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
               <div>
                 <Label htmlFor="grimoire-category" className="text-gray-300">Categoria</Label>
                 <Select name="category" defaultValue={editingGrimoire?.category || 'ritual'}>
                   <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
-                    <SelectValue placeholder="Categoria do grimório" />
+                    <SelectValue placeholder="Categoria do texto" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="ritual">Ritual</SelectItem>
                     <SelectItem value="invocacao">Invocação</SelectItem>
                     <SelectItem value="sigilo">Sigilo</SelectItem>
                     <SelectItem value="filosofia">Filosofia</SelectItem>
-                    <SelectItem value="proibido">Proibido</SelectItem>
+                    <SelectItem value="meditacao">Meditação</SelectItem>
+                    <SelectItem value="ensinamento">Ensinamento</SelectItem>
+                    <SelectItem value="proibido">Texto Proibido</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label htmlFor="grimoire-author" className="text-gray-300">Autor</Label>
+                <Label htmlFor="grimoire-ritual-type" className="text-gray-300">Tipo de Ritual</Label>
+                <Select name="ritual_type" defaultValue={editingGrimoire?.ritual_type || 'general'}>
+                  <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                    <SelectValue placeholder="Tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="general">Geral</SelectItem>
+                    <SelectItem value="invocation">Invocação</SelectItem>
+                    <SelectItem value="evocation">Evocação</SelectItem>
+                    <SelectItem value="banishing">Banimento</SelectItem>
+                    <SelectItem value="protection">Proteção</SelectItem>
+                    <SelectItem value="consecration">Consagração</SelectItem>
+                    <SelectItem value="transformation">Transformação</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="grimoire-tradition" className="text-gray-300">Tradição</Label>
+                <Select name="tradition" defaultValue={editingGrimoire?.tradition || 'luciferian'}>
+                  <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                    <SelectValue placeholder="Tradição" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="luciferian">Luciferiana</SelectItem>
+                    <SelectItem value="draconian">Draconiana</SelectItem>
+                    <SelectItem value="setian">Setiana</SelectItem>
+                    <SelectItem value="qliphothic">Qliphótica</SelectItem>
+                    <SelectItem value="chaos">Caos</SelectItem>
+                    <SelectItem value="classical">Clássica</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="grimoire-author" className="text-gray-300">Autor/Fonte</Label>
                 <Input
                   id="grimoire-author"
                   name="author"
                   defaultValue={editingGrimoire?.author || ''}
                   className="bg-black/50 border-red-500/30 text-white"
-                  placeholder="Autor do texto"
+                  placeholder="Nome do autor ou fonte original"
                 />
+              </div>
+              <div>
+                <Label htmlFor="grimoire-difficulty-rating" className="text-gray-300">Classificação de Dificuldade</Label>
+                <Select name="difficulty_rating" defaultValue={editingGrimoire?.difficulty_rating?.toString() || '1'}>
+                  <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                    <SelectValue placeholder="Dificuldade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">⭐ Iniciante</SelectItem>
+                    <SelectItem value="2">⭐⭐ Básico</SelectItem>
+                    <SelectItem value="3">⭐⭐⭐ Intermediário</SelectItem>
+                    <SelectItem value="4">⭐⭐⭐⭐ Avançado</SelectItem>
+                    <SelectItem value="5">⭐⭐⭐⭐⭐ Mestre</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 

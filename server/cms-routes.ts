@@ -329,8 +329,30 @@ export function registerCMSRoutes(app: Express) {
         access_level, 
         is_forbidden, 
         author, 
-        status 
+        status,
+        excerpt,
+        ritual_type,
+        tradition,
+        difficulty_rating,
+        prerequisites,
+        warnings,
+        sacred_elements,
+        moon_phase,
+        planetary_influence,
+        seasonal_timing,
+        materials_needed,
+        preparation_time,
+        ritual_duration,
+        safety_notes,
+        historical_context,
+        source_attribution,
+        translation_notes,
+        commentary,
+        related_texts,
+        tags
       } = req.body;
+
+      const userId = (req as any).user.id;
 
       const { data: grimoire, error } = await supabaseAdmin
         .from('sacred_grimoires')
@@ -342,7 +364,29 @@ export function registerCMSRoutes(app: Express) {
           access_level: parseInt(access_level) || 1,
           is_forbidden: Boolean(is_forbidden),
           author,
-          status: status || 'draft'
+          status: status || 'draft',
+          excerpt: excerpt || '',
+          ritual_type: ritual_type || 'general',
+          tradition: tradition || 'luciferian',
+          difficulty_rating: parseInt(difficulty_rating) || 1,
+          prerequisites: prerequisites || [],
+          warnings: warnings || [],
+          sacred_elements: sacred_elements || [],
+          moon_phase: moon_phase || null,
+          planetary_influence: planetary_influence || null,
+          seasonal_timing: seasonal_timing || null,
+          materials_needed: materials_needed || [],
+          preparation_time: preparation_time || null,
+          ritual_duration: ritual_duration || null,
+          safety_notes: safety_notes || '',
+          historical_context: historical_context || '',
+          source_attribution: source_attribution || '',
+          translation_notes: translation_notes || '',
+          commentary: commentary || '',
+          related_texts: related_texts || [],
+          tags: tags || [],
+          author_id: userId,
+          published_at: status === 'published' ? new Date().toISOString() : null
         })
         .select()
         .single();
@@ -367,22 +411,71 @@ export function registerCMSRoutes(app: Express) {
         access_level, 
         is_forbidden, 
         author, 
-        status 
+        status,
+        excerpt,
+        ritual_type,
+        tradition,
+        difficulty_rating,
+        prerequisites,
+        warnings,
+        sacred_elements,
+        moon_phase,
+        planetary_influence,
+        seasonal_timing,
+        materials_needed,
+        preparation_time,
+        ritual_duration,
+        safety_notes,
+        historical_context,
+        source_attribution,
+        translation_notes,
+        commentary,
+        related_texts,
+        tags
       } = req.body;
+
+      const updateData: any = {
+        title,
+        content,
+        slug,
+        category,
+        access_level: parseInt(access_level) || 1,
+        is_forbidden: Boolean(is_forbidden),
+        author,
+        status,
+        updated_at: new Date().toISOString()
+      };
+
+      // Add enhanced fields if provided
+      if (excerpt !== undefined) updateData.excerpt = excerpt;
+      if (ritual_type !== undefined) updateData.ritual_type = ritual_type;
+      if (tradition !== undefined) updateData.tradition = tradition;
+      if (difficulty_rating !== undefined) updateData.difficulty_rating = parseInt(difficulty_rating) || 1;
+      if (prerequisites !== undefined) updateData.prerequisites = prerequisites || [];
+      if (warnings !== undefined) updateData.warnings = warnings || [];
+      if (sacred_elements !== undefined) updateData.sacred_elements = sacred_elements || [];
+      if (moon_phase !== undefined) updateData.moon_phase = moon_phase;
+      if (planetary_influence !== undefined) updateData.planetary_influence = planetary_influence;
+      if (seasonal_timing !== undefined) updateData.seasonal_timing = seasonal_timing;
+      if (materials_needed !== undefined) updateData.materials_needed = materials_needed || [];
+      if (preparation_time !== undefined) updateData.preparation_time = preparation_time;
+      if (ritual_duration !== undefined) updateData.ritual_duration = ritual_duration;
+      if (safety_notes !== undefined) updateData.safety_notes = safety_notes;
+      if (historical_context !== undefined) updateData.historical_context = historical_context;
+      if (source_attribution !== undefined) updateData.source_attribution = source_attribution;
+      if (translation_notes !== undefined) updateData.translation_notes = translation_notes;
+      if (commentary !== undefined) updateData.commentary = commentary;
+      if (related_texts !== undefined) updateData.related_texts = related_texts || [];
+      if (tags !== undefined) updateData.tags = tags || [];
+
+      // Update publication timestamp if publishing
+      if (status === 'published') {
+        updateData.published_at = new Date().toISOString();
+      }
 
       const { data: grimoire, error } = await supabaseAdmin
         .from('sacred_grimoires')
-        .update({
-          title,
-          content,
-          slug,
-          category,
-          access_level: parseInt(access_level) || 1,
-          is_forbidden: Boolean(is_forbidden),
-          author,
-          status,
-          updated_at: new Date().toISOString()
-        })
+        .update(updateData)
         .eq('id', id)
         .select()
         .single();
