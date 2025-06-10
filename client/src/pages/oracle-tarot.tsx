@@ -1,265 +1,157 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Loader2, Sparkles, ArrowLeft } from "lucide-react";
+import { Gem, ArrowLeft, Download } from "lucide-react";
+import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Link } from "wouter";
-
-interface TarotResult {
-  cards: string[];
-  interpretation: string;
-}
-
-interface OracleResponse {
-  type: string;
-  question: string;
-  result: TarotResult;
-  timestamp: string;
-}
 
 export default function OracleTarot() {
   const [question, setQuestion] = useState("");
-  const [result, setResult] = useState<OracleResponse | null>(null);
+  const [result, setResult] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const consultMutation = useMutation({
-    mutationFn: async (data: { type: string; question: string }): Promise<OracleResponse> => {
-      const response = await fetch("/api/oracle/consult", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) {
-        throw new Error('Falha na consulta');
-      }
-      return response.json();
-    },
-    onSuccess: (data: OracleResponse) => {
-      setResult(data);
-      toast({
-        title: "Consulta Realizada",
-        description: "O Tarot revelou suas respostas",
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Erro na Consulta",
-        description: "Não foi possível conectar com o Oracle",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleConsult = () => {
+  const handleConsult = async () => {
     if (!question.trim()) {
       toast({
-        title: "Pergunta Necessária",
-        description: "Formule sua pergunta antes de consultar o Tarot",
+        title: "Pergunta necessária",
+        description: "Por favor, faça uma pergunta antes de consultar o Tarot.",
         variant: "destructive",
       });
       return;
     }
 
-    consultMutation.mutate({
-      type: "tarot",
-      question: question.trim(),
-    });
+    setIsLoading(true);
+    try {
+      const response = await apiRequest("/api/oracle/consult", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "tarot",
+          question: question.trim(),
+        }),
+      });
+
+      setResult(response.result);
+      toast({
+        title: "Consulta realizada",
+        description: "As cartas foram lançadas e revelaram seus segredos.",
+      });
+    } catch (error: any) {
+      console.error("Erro na consulta:", error);
+      toast({
+        title: "Erro na consulta",
+        description: error.message || "Não foi possível consultar o Tarot.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Fixed Central Rotating Seal */}
-      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
-        <div className="rotating-seal w-96 h-96 opacity-20">
-          <img 
-            src="/seal.png" 
-            alt="Selo do Templo do Abismo" 
-            className="w-full h-full object-contain filter drop-shadow-lg"
-          />
-        </div>
-      </div>
-
-      {/* Mystical floating particles */}
-      <div className="fixed inset-0 overflow-hidden z-0">
-        <div className="mystical-particles"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
-      </div>
-
-      {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-4 pt-20">
-        {/* Back Button */}
-        <div className="w-full max-w-4xl mb-6">
-          <Link href="/oracle">
-            <Button variant="ghost" className="text-amber-400 hover:text-amber-300">
+    <div className="min-h-screen bg-gradient-to-b from-black via-purple-950/20 to-black text-white">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <Link href="/oraculo">
+            <Button variant="ghost" className="mb-4 text-amber-300 hover:text-amber-400">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar ao Oracle
+              Voltar aos Oráculos
             </Button>
           </Link>
-        </div>
-
-        {/* Hero Section */}
-        <div className="text-center mb-12 max-w-4xl">
-          <div className="mb-8">
-            <div className="text-amber-400 text-6xl mb-4">🔮</div>
-            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
-              TAROT LUCIFERIANO
-            </h1>
-            <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
-              <span>☿</span>
-              <span>⚹</span>
-              <span>𖤍</span>
-              <span>⚹</span>
-              <span>☿</span>
-            </div>
-          </div>
           
-          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
-              Consulta às Cartas Ancestrais
-            </h2>
-            
-            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
-              O <strong className="text-amber-400">Tarot Luciferiano</strong> revela as verdades ocultas através das 
-              <strong className="text-red-400"> cartas ancestrais</strong>. Cada leitura conecta-te com a sabedoria primordial.
-            </p>
-            
-            <div className="text-center">
-              <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
-              <p className="text-lg font-cinzel-decorative text-amber-300">
-                "Veritas in Cartis"
-              </p>
-              <p className="text-sm text-gray-400 font-crimson italic mt-2">
-                A verdade está nas cartas
-              </p>
-            </div>
+          <div className="floating-symbols mb-6">
+            <span>⚹</span>
+            <span>𖤍</span>
+            <span>⚹</span>
+            <span>☿</span>
           </div>
+
+          <h1 className="text-4xl md:text-6xl font-cinzel-decorative text-amber-300 mb-4 floating-title">
+            Tarot Infernal
+          </h1>
+          
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto font-crimson">
+            Consulte as cartas ancestrais que revelam os caminhos do destino através dos véus da realidade
+          </p>
         </div>
 
         {/* Consultation Interface */}
-        <div className="floating-card max-w-4xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-          <div className="p-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Question Form */}
-              <div className="space-y-6">
-                <Card className="bg-black/40 border-amber-500/30">
-                  <CardHeader>
-                    <CardTitle className="text-amber-400 flex items-center">
-                      <Sparkles className="w-5 h-5 mr-2" />
-                      Formule Sua Pergunta
-                    </CardTitle>
-                    <CardDescription className="text-gray-400">
-                      Concentre-se na sua questão e permita que as cartas revelem as respostas
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="question" className="text-gray-300">
-                        Pergunta para o Tarot
-                      </Label>
-                      <Textarea
-                        id="question"
-                        placeholder="O que o futuro reserva para minha jornada espiritual?"
-                        value={question}
-                        onChange={(e) => setQuestion(e.target.value)}
-                        className="mt-2 bg-black/20 border-amber-500/30 text-gray-200 placeholder-gray-500"
-                        rows={4}
-                      />
-                    </div>
-                    
-                    <Button
-                      onClick={handleConsult}
-                      disabled={consultMutation.isPending || !question.trim()}
-                      className="w-full bg-amber-600 hover:bg-amber-700 text-black font-semibold"
-                    >
-                      {consultMutation.isPending ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Consultando as Cartas...
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          Consultar Tarot
-                        </>
-                      )}
-                    </Button>
-                  </CardContent>
-                </Card>
+        <div className="max-w-4xl mx-auto">
+          <Card className="floating-card bg-black/30 backdrop-blur-lg border-amber-500/20">
+            <CardHeader className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center">
+                <Gem className="w-8 h-8 text-white" />
+              </div>
+              <CardTitle className="text-2xl font-cinzel-decorative text-amber-300">
+                Consulta das Cartas
+              </CardTitle>
+              <CardDescription className="text-gray-400">
+                Concentre-se em sua pergunta e permita que as cartas revelem os mistérios
+              </CardDescription>
+            </CardHeader>
+            
+            <CardContent className="space-y-6">
+              <div>
+                <label className="block text-amber-300 font-medium mb-3">
+                  Sua Pergunta ao Tarot
+                </label>
+                <Textarea
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  placeholder="Faça sua pergunta às cartas ancestrais..."
+                  className="bg-black/40 border-amber-500/30 text-gray-300 min-h-[120px]"
+                  disabled={isLoading}
+                />
               </div>
 
+              <Button
+                onClick={handleConsult}
+                disabled={isLoading || !question.trim()}
+                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium py-3"
+              >
+                {isLoading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Consultando as Cartas...
+                  </div>
+                ) : (
+                  "Consultar Tarot Infernal"
+                )}
+              </Button>
+
               {/* Results */}
-              <div className="space-y-6">
-                {result ? (
-                  <Card className="bg-black/40 border-amber-500/30">
-                    <CardHeader>
-                      <CardTitle className="text-amber-400">Revelação do Tarot</CardTitle>
-                      <CardDescription className="text-gray-400">
-                        As cartas escolhidas para sua consulta
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      {/* Cards Display */}
-                      <div className="grid grid-cols-3 gap-4">
-                        {result.result.cards.map((card, index) => (
-                          <div key={index} className="text-center">
-                            <div className="bg-gradient-to-b from-amber-500/20 to-red-500/20 border border-amber-500/30 rounded-lg p-4 mb-2">
-                              <div className="text-2xl mb-2">🃏</div>
-                              <div className="text-sm text-amber-300 font-cinzel-decorative">
-                                {card}
-                              </div>
-                            </div>
-                            <div className="text-xs text-gray-400">
-                              {index === 0 ? "Passado" : index === 1 ? "Presente" : "Futuro"}
-                            </div>
+              {result && (
+                <div className="mt-8 p-6 bg-purple-900/20 border border-purple-500/30 rounded-lg">
+                  <h3 className="text-xl font-cinzel-decorative text-amber-300 mb-4 text-center">
+                    Revelação das Cartas
+                  </h3>
+                  
+                  {result.cards && (
+                    <div className="mb-6">
+                      <h4 className="text-lg text-purple-300 mb-3">Cartas Reveladas:</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {result.cards.map((card: string, index: number) => (
+                          <div key={index} className="bg-black/40 p-4 rounded-lg border border-purple-500/20 text-center">
+                            <div className="text-amber-400 font-cinzel-decorative text-lg">{card}</div>
                           </div>
                         ))}
                       </div>
-
-                      {/* Interpretation */}
-                      <div className="bg-black/20 border border-amber-500/20 rounded-lg p-6">
-                        <h4 className="text-lg font-cinzel-decorative text-amber-300 mb-4">
-                          Interpretação Ancestral
-                        </h4>
-                        <div className="text-gray-300 leading-relaxed whitespace-pre-line">
-                          {result.result.interpretation}
-                        </div>
-                      </div>
-
-                      <div className="text-center text-xs text-gray-500">
-                        Consulta realizada em {new Date(result.timestamp).toLocaleString('pt-BR')}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  <Card className="bg-black/40 border-amber-500/30">
-                    <CardContent className="flex flex-col items-center justify-center py-16">
-                      <div className="text-6xl mb-4 opacity-50">🔮</div>
-                      <p className="text-gray-400 text-center">
-                        As cartas aguardam sua pergunta para revelar os mistérios do futuro
-                      </p>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Mystical Quote */}
-        <div className="floating-card max-w-2xl mx-auto mt-12 p-8 bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-          <div className="text-center">
-            <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
-            <p className="text-lg text-gray-300 italic leading-relaxed mb-4">
-              "O Tarot não prediz o futuro, ele revela as forças que moldam o destino"
-            </p>
-            <p className="text-amber-400 font-semibold">
-              — Axioma do Templo
-            </p>
-          </div>
+                    </div>
+                  )}
+                  
+                  <div className="bg-black/30 p-4 rounded-lg border border-amber-500/20">
+                    <h4 className="text-lg text-amber-300 mb-3 font-cinzel-decorative">Interpretação:</h4>
+                    <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">
+                      {result.interpretation}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
