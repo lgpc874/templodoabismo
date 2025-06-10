@@ -404,11 +404,11 @@
   border-color: rgb(255 191 0 / 0.4) !important;
 }
 
-.mood-templo .bg-gradient-to-r.from-amber-400.to-red-500 {
+.mood-templo .bg-gradient-to-r.from-amber-400.to-red-500:not(header *) {
   background: linear-gradient(to right, rgb(255 191 0), rgb(255 140 0)) !important;
 }
 
-.mood-templo .from-red-400.to-purple-500 {
+.mood-templo .from-red-400.to-purple-500:not(header *) {
   background: linear-gradient(to right, rgb(255 191 0), rgb(255 140 0)) !important;
 }
 
@@ -426,24 +426,24 @@
     0 0 35px rgba(255, 215, 0, 0.2);
 }
 
-/* Extensões adicionais para cobrir mais elementos com âmbar */
-.mood-umbral .bg-gradient-to-r.from-red-400.to-purple-500,
-.mood-umbral .bg-clip-text.text-transparent {
+/* Extensões adicionais para cobrir mais elementos com âmbar - excluindo header */
+.mood-umbral .bg-gradient-to-r.from-red-400.to-purple-500:not(header *),
+.mood-umbral .bg-clip-text.text-transparent:not(header *) {
   background: linear-gradient(to right, rgb(147 51 234), rgb(147 51 234)) !important;
 }
 
-.mood-chamas .bg-gradient-to-r.from-red-400.to-purple-500,
-.mood-chamas .bg-clip-text.text-transparent {
+.mood-chamas .bg-gradient-to-r.from-red-400.to-purple-500:not(header *),
+.mood-chamas .bg-clip-text.text-transparent:not(header *) {
   background: linear-gradient(to right, rgb(220 38 38), rgb(220 38 38)) !important;
 }
 
-.mood-lua-negra .bg-gradient-to-r.from-red-400.to-purple-500,
-.mood-lua-negra .bg-clip-text.text-transparent {
+.mood-lua-negra .bg-gradient-to-r.from-red-400.to-purple-500:not(header *),
+.mood-lua-negra .bg-clip-text.text-transparent:not(header *) {
   background: linear-gradient(to right, rgb(148 163 184), rgb(148 163 184)) !important;
 }
 
-.mood-void-cosmico .bg-gradient-to-r.from-red-400.to-purple-500,
-.mood-void-cosmico .bg-clip-text.text-transparent {
+.mood-void-cosmico .bg-gradient-to-r.from-red-400.to-purple-500:not(header *),
+.mood-void-cosmico .bg-clip-text.text-transparent:not(header *) {
   background: linear-gradient(to right, rgb(139 92 246), rgb(139 92 246)) !important;
 }
 
