@@ -196,7 +196,7 @@ export default function GrimoiresPage() {
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-              <p className="text-gray-400">Carregando Grimoriorum...</p>
+              <p className="text-gray-400">Carregando Grimorium...</p>
             </div>
           </div>
         </div>
@@ -211,7 +211,7 @@ export default function GrimoiresPage() {
         <div className="rotating-seal w-96 h-96 opacity-10">
           <img 
             src="/seal.png" 
-            alt="Selo dos Grimórios" 
+            alt="Selo do Grimorium" 
             className="w-full h-full object-contain filter drop-shadow-lg"
           />
         </div>
@@ -228,7 +228,7 @@ export default function GrimoiresPage() {
         <div className="container mx-auto px-6">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 mb-4">
-              Grimoriorum Arcanum
+              Grimorium Arcanum
             </h1>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
               Textos ancestrais e grimórios arcanos para sua jornada de conhecimento
@@ -244,7 +244,7 @@ export default function GrimoiresPage() {
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder="Buscar grimórios..."
+                placeholder="Buscar grimorium..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 bg-gray-900 border-gray-700 text-white"

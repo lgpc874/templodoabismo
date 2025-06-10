@@ -37,7 +37,7 @@ const Header: React.FC = () => {
 
   const navItems = [
     { href: '/', label: 'Sanctuarium', icon: Home },
-    { href: '/grimoires', label: 'Grimoriorum Arcanum', icon: Scroll },
+    { href: '/grimoires', label: 'Grimorium', icon: Scroll },
     { href: '/oraculo', label: 'Oraculum', icon: Eye },
     { href: '/voz-da-pluma', label: 'Vox Pluma', icon: Feather },
     { href: '/bibliotheca', label: 'Bibliotheca', icon: Library },
