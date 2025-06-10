@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Feather, ArrowLeft, Sparkles, Clock, Eye } from 'lucide-react';
-import { FaTwitter, FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'wouter';
@@ -30,7 +29,10 @@ export default function VozDaPluma() {
     queryKey: ['/api/voz-pluma/manifestations'],
   });
 
+  // Buscar poema do dia (9h)
   const poemaDoDia = manifestations.find(m => m.manifestation_time === '09:00');
+  
+  // Buscar dica do dia (ritual ou reflexão)
   const dicaDoDia = manifestations.find(m => m.manifestation_time === '07:00' || m.manifestation_time === '11:00');
 
   const handleViewDica = () => {
@@ -46,39 +48,6 @@ export default function VozDaPluma() {
     }
   };
 
-  const shareToSocial = (platform: string, content: VozPlumaManifestation) => {
-    const formattedDate = new Date(content.posted_date).toLocaleDateString('pt-BR');
-    const text = `${content.title}\n\n"${content.content}"\n\n— ${content.author}\n\nManifestação das ${content.manifestation_time} • ${formattedDate}\n\n#TemploDoAbismo #VozDaPluma`;
-    const url = window.location.href;
-    
-    let shareUrl = '';
-    
-    switch (platform) {
-      case 'twitter':
-        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
-        break;
-      case 'facebook':
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
-        break;
-      case 'whatsapp':
-        shareUrl = `https://wa.me/?text=${encodeURIComponent(text + '\n\n' + url)}`;
-        break;
-      case 'instagram':
-        navigator.clipboard.writeText(text).then(() => {
-          toast({
-            title: "Texto Copiado",
-            description: "Cole no Instagram para compartilhar!",
-            className: "bg-purple-900 border-purple-500 text-white",
-          });
-        });
-        return;
-    }
-    
-    if (shareUrl) {
-      window.open(shareUrl, '_blank', 'width=600,height=400');
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-black via-purple-950 to-black flex items-center justify-center">
@@ -90,6 +59,7 @@ export default function VozDaPluma() {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-b from-black via-purple-950 to-black">
+        {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
             backgroundImage: `radial-gradient(circle at 25% 25%, purple 2px, transparent 2px),
@@ -99,6 +69,7 @@ export default function VozDaPluma() {
         </div>
 
         <div className="relative z-10 container mx-auto px-4 py-12">
+          {/* Header */}
           <div className="mb-12">
             <Link href="/" className="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 mb-8 transition-colors">
               <ArrowLeft className="w-4 h-4" />
@@ -116,6 +87,7 @@ export default function VozDaPluma() {
             </div>
           </div>
 
+          {/* Main Content Grid */}
           <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-8">
             
             {/* Poema do Dia */}
@@ -143,49 +115,6 @@ export default function VozDaPluma() {
                       <p className="text-gray-400 text-sm mt-1">
                         {new Date(poemaDoDia.posted_date).toLocaleDateString('pt-BR')}
                       </p>
-                    </div>
-
-                    {/* Botões de Compartilhamento Simplificados */}
-                    <div className="flex flex-wrap gap-2 justify-center mt-6">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => shareToSocial('twitter', poemaDoDia)}
-                        className="bg-blue-900/20 border-blue-500/50 text-blue-300 hover:bg-blue-800/30"
-                      >
-                        <FaTwitter className="w-4 h-4 mr-2" />
-                        Twitter
-                      </Button>
-                      
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => shareToSocial('facebook', poemaDoDia)}
-                        className="bg-blue-900/20 border-blue-500/50 text-blue-300 hover:bg-blue-800/30"
-                      >
-                        <FaFacebook className="w-4 h-4 mr-2" />
-                        Facebook
-                      </Button>
-
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => shareToSocial('whatsapp', poemaDoDia)}
-                        className="bg-green-900/20 border-green-500/50 text-green-300 hover:bg-green-800/30"
-                      >
-                        <FaWhatsapp className="w-4 h-4 mr-2" />
-                        WhatsApp
-                      </Button>
-
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => shareToSocial('instagram', poemaDoDia)}
-                        className="bg-pink-900/20 border-pink-500/50 text-pink-300 hover:bg-pink-800/30"
-                      >
-                        <FaInstagram className="w-4 h-4 mr-2" />
-                        Instagram
-                      </Button>
                     </div>
                   </div>
                 ) : (
@@ -267,49 +196,6 @@ export default function VozDaPluma() {
                     {selectedManifestation.type}
                   </span>
                 </div>
-              </div>
-
-              {/* Compartilhamento da Dica */}
-              <div className="flex flex-wrap gap-2 justify-center pt-4">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => shareToSocial('twitter', selectedManifestation)}
-                  className="bg-blue-900/20 border-blue-500/50 text-blue-300 hover:bg-blue-800/30"
-                >
-                  <FaTwitter className="w-4 h-4 mr-2" />
-                  Twitter
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => shareToSocial('facebook', selectedManifestation)}
-                  className="bg-blue-900/20 border-blue-500/50 text-blue-300 hover:bg-blue-800/30"
-                >
-                  <FaFacebook className="w-4 h-4 mr-2" />
-                  Facebook
-                </Button>
-
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => shareToSocial('whatsapp', selectedManifestation)}
-                  className="bg-green-900/20 border-green-500/50 text-green-300 hover:bg-green-800/30"
-                >
-                  <FaWhatsapp className="w-4 h-4 mr-2" />
-                  WhatsApp
-                </Button>
-
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => shareToSocial('instagram', selectedManifestation)}
-                  className="bg-pink-900/20 border-pink-500/50 text-pink-300 hover:bg-pink-800/30"
-                >
-                  <FaInstagram className="w-4 h-4 mr-2" />
-                  Instagram
-                </Button>
               </div>
             </div>
           )}
