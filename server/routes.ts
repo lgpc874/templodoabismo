@@ -79,7 +79,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // First check if users table exists and get all users
       const { data: allUsers, error: allUsersError } = await supabase
         .from('users')
-        .select('id, email, is_admin');
+        .select('id, email, role');
 
       console.log('All users query result:', { allUsers, allUsersError });
 
@@ -89,7 +89,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check if there are any admins in the system
-      const existingAdmins = allUsers?.filter(user => user.is_admin) || [];
+      const existingAdmins = allUsers?.filter(user => user.role === 'admin') || [];
       
       if (existingAdmins.length > 0) {
         return res.status(403).json({ error: 'Admin already exists in the system' });
@@ -107,7 +107,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Update user to admin using service role client
       const { data: updatedUser, error: updateError } = await supabaseAdmin
         .from('users')
-        .update({ is_admin: true })
+        .update({ role: 'admin' })
         .eq('id', userData.id)
         .select()
         .single();
