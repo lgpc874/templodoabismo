@@ -615,6 +615,128 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // === USER PROFILE ROUTES ===
+  app.get('/api/user/profile', requireAuth, async (req: any, res: Response) => {
+    try {
+      const { data: userProfile, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', req.user.id)
+        .single();
+
+      if (error) throw error;
+      res.json(userProfile);
+    } catch (error: any) {
+      console.error('User profile error:', error);
+      res.status(500).json({ error: 'Failed to fetch user profile' });
+    }
+  });
+
+  app.get('/api/user/progress', requireAuth, async (req: any, res: Response) => {
+    try {
+      const { data: enrollments, error } = await supabase
+        .from('course_enrollments')
+        .select(`
+          *,
+          courses (
+            id, title, description, level, duration_weeks, modules
+          )
+        `)
+        .eq('user_id', req.user.id);
+
+      if (error) throw error;
+      res.json(enrollments || []);
+    } catch (error: any) {
+      console.error('User progress error:', error);
+      res.status(500).json({ error: 'Failed to fetch user progress' });
+    }
+  });
+
+  app.get('/api/user/purchases', requireAuth, async (req: any, res: Response) => {
+    try {
+      const { data: purchases, error } = await supabase
+        .from('grimoire_purchases')
+        .select(`
+          *,
+          grimoires (
+            id, title, author, category, price, rental_price
+          )
+        `)
+        .eq('user_id', req.user.id);
+
+      if (error) throw error;
+      res.json(purchases || []);
+    } catch (error: any) {
+      console.error('User purchases error:', error);
+      res.status(500).json({ error: 'Failed to fetch user purchases' });
+    }
+  });
+
+  app.get('/api/user/rentals', requireAuth, async (req: any, res: Response) => {
+    try {
+      const { data: rentals, error } = await supabase
+        .from('grimoire_rentals')
+        .select(`
+          *,
+          grimoires (
+            id, title, author, category, price, rental_price
+          )
+        `)
+        .eq('user_id', req.user.id)
+        .gte('expires_at', new Date().toISOString());
+
+      if (error) throw error;
+      res.json(rentals || []);
+    } catch (error: any) {
+      console.error('User rentals error:', error);
+      res.status(500).json({ error: 'Failed to fetch user rentals' });
+    }
+  });
+
+  app.get('/api/grimoires/:id/download', requireAuth, async (req: any, res: Response) => {
+    try {
+      const grimoireId = req.params.id;
+      
+      // Check if user has access (purchased or rented)
+      const { data: purchase } = await supabase
+        .from('grimoire_purchases')
+        .select('*')
+        .eq('user_id', req.user.id)
+        .eq('grimoire_id', grimoireId)
+        .single();
+
+      const { data: rental } = await supabase
+        .from('grimoire_rentals')
+        .select('*')
+        .eq('user_id', req.user.id)
+        .eq('grimoire_id', grimoireId)
+        .gte('expires_at', new Date().toISOString())
+        .single();
+
+      if (!purchase && !rental) {
+        return res.status(403).json({ error: 'Access denied - grimoire not purchased or rented' });
+      }
+
+      const { data: grimoire } = await supabase
+        .from('grimoires')
+        .select('title, pdf_url')
+        .eq('id', grimoireId)
+        .single();
+
+      if (!grimoire || !grimoire.pdf_url) {
+        return res.status(404).json({ error: 'Grimoire file not found' });
+      }
+
+      res.json({
+        downloadUrl: grimoire.pdf_url,
+        filename: `${grimoire.title}.pdf`
+      });
+    } catch (error: any) {
+      console.error('Download error:', error);
+      res.status(500).json({ error: 'Failed to generate download link' });
+    }
+  });
+
   // File upload
   app.post('/api/upload', requireAuth, upload.single('file'), async (req: any, res: Response) => {
     try {

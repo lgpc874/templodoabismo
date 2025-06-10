@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,9 @@ import {
   Eye,
   Feather,
   Library,
-  Shield
+  Shield,
+  Menu,
+  X
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -25,6 +27,7 @@ import {
 const Header: React.FC = () => {
   const { user, logout, isAuthenticated } = useAuth();
   const [location] = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -157,13 +160,94 @@ const Header: React.FC = () => {
             <Button
               variant="ghost"
               className="text-gray-300 hover:text-amber-400 hover:bg-amber-900/20"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </Button>
           </div>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border-t border-amber-800/20 bg-black/95 backdrop-blur">
+            <div className="px-4 py-3 space-y-3">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link 
+                    key={item.href} 
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <button
+                      className={`flex items-center space-x-3 w-full px-3 py-3 rounded-md transition-all duration-200 ${
+                        isActivePath(item.href)
+                          ? 'bg-amber-900/30 text-amber-400 shadow-md'
+                          : 'text-gray-300 hover:text-amber-400 hover:bg-amber-900/20'
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span className="text-base font-medium">{item.label}</span>
+                    </button>
+                  </Link>
+                );
+              })}
+              
+              {/* Mobile User Menu */}
+              {isAuthenticated && user ? (
+                <div className="pt-3 border-t border-amber-800/20 space-y-2">
+                  <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="flex items-center space-x-3 w-full px-3 py-3 rounded-md text-gray-300 hover:text-amber-400 hover:bg-amber-900/20 transition-all duration-200">
+                      <User className="w-5 h-5" />
+                      <span className="text-base font-medium">Perfil</span>
+                    </button>
+                  </Link>
+                  <Link href="/settings" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="flex items-center space-x-3 w-full px-3 py-3 rounded-md text-gray-300 hover:text-amber-400 hover:bg-amber-900/20 transition-all duration-200">
+                      <Settings className="w-5 h-5" />
+                      <span className="text-base font-medium">Configurações</span>
+                    </button>
+                  </Link>
+                  {user.is_admin && (
+                    <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>
+                      <button className="flex items-center space-x-3 w-full px-3 py-3 rounded-md text-gray-300 hover:text-amber-400 hover:bg-amber-900/20 transition-all duration-200">
+                        <Shield className="w-5 h-5" />
+                        <span className="text-base font-medium">Painel Admin</span>
+                      </button>
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="flex items-center space-x-3 w-full px-3 py-3 rounded-md text-gray-300 hover:text-red-400 hover:bg-red-900/20 transition-all duration-200"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    <span className="text-base font-medium">Sair</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="pt-3 border-t border-amber-800/20 space-y-2">
+                  <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="flex items-center justify-center w-full px-3 py-3 rounded-md text-gray-300 hover:text-amber-400 hover:bg-amber-900/20 transition-all duration-200">
+                      <span className="text-base font-medium">Entrar</span>
+                    </button>
+                  </Link>
+                  <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="flex items-center justify-center w-full px-3 py-3 rounded-md bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 text-white transition-all duration-200">
+                      <span className="text-base font-medium">Registrar</span>
+                    </button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );
