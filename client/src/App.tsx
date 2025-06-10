@@ -25,33 +25,41 @@ import BlogSupabase from "@/pages/blog-supabase";
 import SupabaseDemo from "@/components/SupabaseDemo";
 
 import AdminControl from "@/pages/admin-control";
+import Register from "@/pages/register";
+import AdminPanel from "@/pages/admin";
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/login" component={Login} />
-      <Route path="/acesso" component={Login} />
-      <Route path="/sobre" component={Sobre} />
-      <Route path="/oraculo" component={Oraculo} />
-      <Route path="/courses" component={Courses} />
-      <Route path="/cursos" component={CoursesNew} />
-      <Route path="/curso/:slug" component={CourseDetail} />
-      <Route path="/profile" component={Profile} />
-      <Route path="/perfil" component={StudentProfile} />
-      <Route path="/estudante" component={StudentProfile} />
-      <Route path="/grimoires" component={Grimoires} />
-      <Route path="/grimorios" component={Grimoires} />
-      <Route path="/bibliotheca" component={Bibliotheca} />
-      <Route path="/voz-da-pluma" component={VozDaPluma} />
-      <Route path="/blog" component={BlogSupabase} />
-      <Route path="/gnosis" component={BlogSupabase} />
-      <Route path="/liber-prohibitus" component={LiberProhibitus} />
-      <Route path="/supabase-demo" component={SupabaseDemo} />
-
-      <Route path="/sanctum-administratoris" component={AdminControl} />
-      <Route component={NotFound} />
-    </Switch>
+    <div className="min-h-screen bg-black text-white">
+      <Header />
+      <main>
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
+          <Route path="/acesso" component={Login} />
+          <Route path="/sobre" component={Sobre} />
+          <Route path="/oraculo" component={Oraculo} />
+          <Route path="/courses" component={Courses} />
+          <Route path="/cursos" component={CoursesNew} />
+          <Route path="/curso/:slug" component={CourseDetail} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/perfil" component={StudentProfile} />
+          <Route path="/estudante" component={StudentProfile} />
+          <Route path="/grimoires" component={Grimoires} />
+          <Route path="/grimorios" component={Grimoires} />
+          <Route path="/bibliotheca" component={Bibliotheca} />
+          <Route path="/voz-da-pluma" component={VozDaPluma} />
+          <Route path="/blog" component={BlogSupabase} />
+          <Route path="/gnosis" component={BlogSupabase} />
+          <Route path="/liber-prohibitus" component={LiberProhibitus} />
+          <Route path="/supabase-demo" component={SupabaseDemo} />
+          <Route path="/admin" component={AdminPanel} />
+          <Route path="/sanctum-administratoris" component={AdminControl} />
+          <Route component={NotFound} />
+        </Switch>
+      </main>
+    </div>
   );
 }
 

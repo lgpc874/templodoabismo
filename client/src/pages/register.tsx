@@ -84,7 +84,7 @@ const Register: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-900/20 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23dc2626" fill-opacity="0.05"%3E%3Ccircle cx="7" cy="7" r="1"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] pointer-events-none"></div>
+      <div className="absolute inset-0 opacity-5 pointer-events-none"></div>
       
       <Card className="w-full max-w-md bg-gray-900/90 border-amber-800/30 backdrop-blur-sm">
         <CardHeader className="text-center">
