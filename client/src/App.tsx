@@ -29,6 +29,11 @@ import AdminPanel from "@/pages/admin";
 import OracleTest from "@/pages/oracle-test";
 import SetupAdmin from "@/pages/setup-admin";
 import EmergencyAdmin from "@/pages/emergency-admin";
+import OracleTarot from "./pages/oracle-tarot";
+import OracleMirror from "./pages/oracle-mirror";
+import OracleRunes from "./pages/oracle-runes";
+import OracleFire from "./pages/oracle-fire";
+import OracleVoice from "./pages/oracle-voice";
 
 function Router() {
   return (
@@ -56,6 +61,11 @@ function Router() {
           <Route path="/gnosis" component={Gnosis} />
           <Route path="/liber-prohibitus" component={LiberProhibitus} />
           <Route path="/oracle-test" component={OracleTest} />
+          <Route path="/oraculo/tarot" component={OracleTarot} />
+          <Route path="/oraculo/espelho" component={OracleMirror} />
+          <Route path="/oraculo/runas" component={OracleRunes} />
+          <Route path="/oraculo/fogo" component={OracleFire} />
+          <Route path="/oraculo/voz" component={OracleVoice} />
           <Route path="/setup-admin" component={SetupAdmin} />
           <Route path="/emergency-admin" component={EmergencyAdmin} />
           <Route path="/admin" component={AdminPanel} />

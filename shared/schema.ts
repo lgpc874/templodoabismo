@@ -12,8 +12,15 @@ export const users = pgTable("users", {
   personal_seal_generated: boolean("personal_seal_generated").default(false),
   personal_seal_url: text("personal_seal_url"),
   magical_name: text("magical_name"),
-  member_type: text("member_type").default("initiate"), // initiate, member
+  member_type: text("member_type").default("visitante"), // visitante, iniciado, vip
   role: text("role").notNull().default("user"),
+
+  // Sistema T'KAZH (créditos)
+  tkazh_credits: integer("tkazh_credits").default(100), // Créditos atuais
+  tkazh_purchased: integer("tkazh_purchased").default(0), // Créditos comprados (não resetam)
+  last_weekly_reset: timestamp("last_weekly_reset").defaultNow(),
+  vip_daily_bonus: boolean("vip_daily_bonus").default(false),
+  last_daily_bonus: timestamp("last_daily_bonus"),
 
   courses_completed: text("courses_completed").array().default([]),
   achievements: text("achievements").array().default([]),
