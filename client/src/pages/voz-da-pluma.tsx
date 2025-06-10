@@ -1,8 +1,7 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Download, Clock, Twitter, Facebook, Instagram, Share2, Feather, Sun, Sunrise, Zap, ArrowLeft } from 'lucide-react';
+import { Download, Clock, Twitter, Facebook, Instagram, Feather, Sun, Sunrise, Zap, ArrowLeft } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'wouter';
@@ -22,16 +21,15 @@ interface VozPlumaManifestation {
 
 export default function VozDaPluma() {
   const { toast } = useToast();
-
   const { data: manifestations = [], isLoading } = useQuery<VozPlumaManifestation[]>({
     queryKey: ['/api/voz-pluma/manifestations'],
   });
 
-  // Ordenar manifestações por horário - memoizado para evitar re-sorting
-  const sortedManifestations = useMemo(() => 
-    manifestations.sort((a, b) => a.manifestation_time.localeCompare(b.manifestation_time)),
-    [manifestations]
-  );
+  const manifestationsByTime = useMemo(() => ({
+    '07:00': manifestations?.find((m: VozPlumaManifestation) => m.manifestation_time === '07:00'),
+    '09:00': manifestations?.find((m: VozPlumaManifestation) => m.manifestation_time === '09:00'),
+    '11:00': manifestations?.find((m: VozPlumaManifestation) => m.manifestation_time === '11:00')
+  }), [manifestations]);
 
   const downloadContentImage = useCallback(async (content: VozPlumaManifestation) => {
     try {
@@ -263,13 +261,6 @@ export default function VozDaPluma() {
       </div>
     );
   }
-
-  // Organizar manifestações por horário - memoizado
-  const manifestationsByTime = useMemo(() => ({
-    '07:00': manifestations?.find((m: VozPlumaManifestation) => m.manifestation_time === '07:00'),
-    '09:00': manifestations?.find((m: VozPlumaManifestation) => m.manifestation_time === '09:00'),
-    '11:00': manifestations?.find((m: VozPlumaManifestation) => m.manifestation_time === '11:00')
-  }), [manifestations]);
 
   return (
     <>
