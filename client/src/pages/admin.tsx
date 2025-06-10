@@ -62,7 +62,7 @@ export default function AdminPanel() {
 
   // Mutations
   const createPageMutation = useMutation({
-    mutationFn: (data: any) => apiRequest('POST', '/api/admin/pages', data),
+    mutationFn: (data: any) => apiRequest('/api/admin/pages', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/pages'] });
       toast({ title: 'Página criada com sucesso!' });
@@ -71,7 +71,7 @@ export default function AdminPanel() {
   });
 
   const updatePageMutation = useMutation({
-    mutationFn: ({ id, data }: any) => apiRequest('PUT', `/api/admin/pages/${id}`, data),
+    mutationFn: ({ id, data }: any) => apiRequest(`/api/admin/pages/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/pages'] });
       toast({ title: 'Página atualizada com sucesso!' });
@@ -88,7 +88,7 @@ export default function AdminPanel() {
   });
 
   const createCourseMutation = useMutation({
-    mutationFn: (data: any) => apiRequest('POST', '/api/admin/courses', data),
+    mutationFn: (data: any) => apiRequest('/api/admin/courses', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/courses'] });
       toast({ title: 'Curso criado com sucesso!' });
@@ -97,7 +97,7 @@ export default function AdminPanel() {
   });
 
   const updateCourseMutation = useMutation({
-    mutationFn: ({ id, data }: any) => apiRequest('PUT', `/api/admin/courses/${id}`, data),
+    mutationFn: ({ id, data }: any) => apiRequest(`/api/admin/courses/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/courses'] });
       toast({ title: 'Curso atualizado com sucesso!' });
@@ -114,14 +114,14 @@ export default function AdminPanel() {
   });
 
   const publishVoxMutation = useMutation({
-    mutationFn: (prompt?: string) => apiRequest('POST', '/api/admin/voz-pluma/publish-now', { custom_prompt: prompt }),
+    mutationFn: (prompt?: string) => apiRequest('/api/admin/voz-pluma/publish-now', { custom_prompt: prompt }),
     onSuccess: () => {
       toast({ title: 'Conteúdo da Voz da Pluma publicado!' });
     }
   });
 
   const updateVoxSettingsMutation = useMutation({
-    mutationFn: (settings: any) => apiRequest('PUT', '/api/admin/voz-pluma/settings', settings),
+    mutationFn: (settings: any) => apiRequest('/api/admin/voz-pluma/settings', settings),
     onSuccess: () => {
       toast({ title: 'Configurações da Voz da Pluma atualizadas!' });
     }

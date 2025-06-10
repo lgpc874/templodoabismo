@@ -20,7 +20,7 @@ export default function AdminLogin() {
     setIsLoading(true);
 
     try {
-      const response = await apiRequest('POST', '/api/auth/login', credentials);
+      const response = await apiRequest('/api/auth/login', credentials);
       
       if (response.success) {
         toast({
