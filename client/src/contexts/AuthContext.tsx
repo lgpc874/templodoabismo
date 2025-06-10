@@ -112,6 +112,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!supabaseClient) return false;
     
     try {
+      // First authenticate with Supabase
       const { data, error } = await supabaseClient.auth.signInWithPassword({
         email,
         password,
@@ -122,7 +123,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return false;
       }
       
-      return !!data.user;
+      if (data.user) {
+        // Fetch user data from our backend
+        try {
+          const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+          });
+          
+          if (response.ok) {
+            const userData = await response.json();
+            setUser(userData);
+            return true;
+          } else {
+            console.error('Backend login failed');
+            return false;
+          }
+        } catch (backendError) {
+          console.error('Backend login error:', backendError);
+          return false;
+        }
+      }
+      
+      return false;
     } catch (error) {
       console.error('Login error:', error);
       return false;
@@ -137,6 +163,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     try {
       console.log('Starting registration for:', email);
+      
+      // First register with backend
+      const backendResponse = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
+      
+      if (!backendResponse.ok) {
+        const errorData = await backendResponse.json();
+        console.error('Backend registration failed:', errorData);
+        return false;
+      }
+      
+      // Then authenticate with Supabase
       const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
@@ -154,6 +197,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (data?.user) {
         console.log('User registered successfully:', data.user.id);
+        
+        // Get the user data from backend
+        const userData = await backendResponse.json();
+        setUser(userData);
         return true;
       }
       
