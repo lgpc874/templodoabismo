@@ -11,9 +11,6 @@ import Login from "@/pages/login";
 import Sobre from "@/pages/sobre";
 import Oraculo from "@/pages/oraculo-supabase";
 import Oracle from "@/pages/oracle";
-import CoursesOld from "@/pages/courses-mystical";
-import Courses from "@/pages/courses-supabase";
-import CoursesNew from "@/pages/courses-new";
 import CourseDetail from "@/pages/course-detail";
 import Profile from "@/pages/profile";
 import StudentProfile from "@/pages/student-profile";
@@ -42,8 +39,7 @@ function Router() {
           <Route path="/acesso" component={Login} />
           <Route path="/sobre" component={Sobre} />
           <Route path="/oraculo" component={Oracle} />
-          <Route path="/courses" component={Courses} />
-          <Route path="/cursos" component={CoursesNew} />
+
           <Route path="/curso/:slug" component={CourseDetail} />
           <Route path="/profile" component={Profile} />
           <Route path="/perfil" component={StudentProfile} />
