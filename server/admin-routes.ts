@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { supabaseAdmin } from "./supabase-client";
 import { temploAI } from "./ai-service";
 import { voxPlumaAI } from "./ai-vox-service";
-import { contentScheduler } from "./scheduler";
+import { vozPlumaScheduler } from "./scheduler";
 import bcrypt from "bcrypt";
 import multer from "multer";
 
@@ -431,7 +431,7 @@ export function registerAdminRoutes(app: Express) {
       }
 
       // Restart schedulers with new settings
-      await contentScheduler.restartSchedulers();
+      await vozPlumaScheduler.restart();
 
       res.json({ success: true });
     } catch (error) {
@@ -480,7 +480,7 @@ export function registerAdminRoutes(app: Express) {
   app.post('/api/admin/voz-pluma/publish-poem', requireAuth, requireAdmin, async (req: Request, res: Response) => {
     try {
       const { customPrompt } = req.body;
-      await contentScheduler.publishPoemNow(customPrompt);
+      await vozPlumaScheduler.publishNow(customPrompt);
       res.json({ success: true });
     } catch (error) {
       console.error('Error publishing poem:', error);
@@ -491,7 +491,7 @@ export function registerAdminRoutes(app: Express) {
   app.post('/api/admin/voz-pluma/publish-article', requireAuth, requireAdmin, async (req: Request, res: Response) => {
     try {
       const { customPrompt } = req.body;
-      await contentScheduler.publishArticleNow(customPrompt);
+      await vozPlumaScheduler.publishNow(customPrompt);
       res.json({ success: true });
     } catch (error) {
       console.error('Error publishing article:', error);
