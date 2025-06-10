@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Gem, Eye, Flame, Search, FileText } from "lucide-react";
+import { Gem, Eye, Flame, Search, FileText, MessageCircle } from "lucide-react";
 import { Link } from "wouter";
 
 const oracleTypes = [
@@ -43,6 +43,14 @@ const oracleTypes = [
     icon: Eye,
     color: 'from-gray-600 to-slate-700',
     route: '/oraculo/voz'
+  },
+  {
+    id: 'chat',
+    name: 'Oráculo Conversacional',
+    description: 'Dialogue diretamente com as entidades ancestrais através do chat místico',
+    icon: MessageCircle,
+    color: 'from-emerald-600 to-teal-600',
+    route: '/oraculo/chat'
   }
 ];
 

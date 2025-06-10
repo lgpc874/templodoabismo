@@ -276,6 +276,64 @@ export class TemploAI {
       ...response
     };
   }
+
+  async generateFreeChatResponse(question: string): Promise<string> {
+    const freeResponses = [
+      `As sombras sussurram brevemente sobre "${question}"... Os véus superiores revelam apenas fragmentos: busque dentro de si as respostas que as trevas insinuam.`,
+      `O Abismo ecoa sua pergunta "${question}" através dos planos etéreos... Uma verdade superficial emerge: confie na sabedoria ancestral que reside em seu interior.`,
+      `Os espíritos primordiais contemplam "${question}" nas brumas do tempo... Revelação parcial: os caminhos se mostrarão quando estiver preparado para vê-los.`,
+      `As forças ocultas murmuaram sobre "${question}"... Visão limitada concedida: o destino se desenrola através de suas próprias escolhas e determinação.`,
+      `O oráculo percebe sua indagação "${question}" nos ventos místicos... Insight básico oferecido: a resposta já reside em sua alma, aguardando despertar.`
+    ];
+    
+    return freeResponses[Math.floor(Math.random() * freeResponses.length)];
+  }
+
+  async generatePremiumChatResponse(question: string, conversationHistory: any[]): Promise<string> {
+    if (openai) {
+      try {
+        const context = conversationHistory
+          .slice(-3)
+          .map(msg => `${msg.type}: ${msg.content}`)
+          .join('\n');
+
+        const response = await openai.chat.completions.create({
+          model: "gpt-4o",
+          messages: [{
+            role: "system",
+            content: "Você é o Oráculo do Abismo, uma entidade ancestral luciferiana que oferece orientação profunda e completa. Responda de forma detalhada, mística e profunda."
+          }, {
+            role: "user",
+            content: `Pergunta: "${question}"\n\nContexto da conversa:\n${context}\n\nOfereça uma análise profunda incluindo: influências ocultas, conselhos práticos e espirituais específicos, possíveis caminhos e elementos simbólicos relevantes.`
+          }],
+          max_tokens: 800,
+          temperature: 0.8
+        });
+        
+        return response.choices[0].message.content || this.getFallbackPremiumResponse(question);
+      } catch (error) {
+        console.log('OpenAI indisponível para resposta premium');
+      }
+    }
+    
+    return this.getFallbackPremiumResponse(question);
+  }
+
+  getFallbackFreeResponse(question: string): string {
+    return `As energias primordiais sussurram sobre "${question}"... Os véus se agitam, mas revelam apenas sombras: a verdade completa requer maior abertura aos mistérios abissais.`;
+  }
+
+  getFallbackPremiumResponse(question: string): string {
+    return `🔮 **Consulta Premium Abissal**\n\n**Sua pergunta:** "${question}"\n\n**Análise das Forças Ocultas:**\nAs correntes cósmicas revelam múltiplas camadas de influência em sua situação. As energias lunares e solares estão em tensão, criando um portal de transformação.\n\n**Influências Energéticas:**\n• Elemento Fogo: Paixão e determinação crescem em seu interior\n• Elemento Água: Intuição profunda guiará suas decisões\n• Forças Ancestrais: Proteção dos antigos envolve seus caminhos\n\n**Orientação Prática:**\n1. Confie nos sinais que o universo está enviando\n2. Medite nas horas de maior silêncio para clareza\n3. Tome decisões com o coração, mas mantenha a mente alerta\n4. Os próximos 21 dias são cruciais para manifestação\n\n**Símbolos Relevantes:**\nA Serpente (renovação), O Corvo (mensagens ocultas), A Chave (oportunidades se abrindo)\n\n**Prognóstico:**\nO caminho à frente exige coragem, mas as recompensas serão proporcionais ao seu comprometimento com a verdade interior.\n\n*O Abismo te observa e aprovará sua jornada...*`;
+  }
+
+  async saveChatConsultation(consultation: any): Promise<void> {
+    console.log('Chat consultation logged:', {
+      question: consultation.question,
+      tier: consultation.tier,
+      timestamp: consultation.timestamp
+    });
+  }
 }
 
 export const temploAI = new TemploAI();

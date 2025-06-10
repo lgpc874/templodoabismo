@@ -273,6 +273,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Oracle chat consultation with tiers
+  app.post('/api/oracle/chat-consult', requireAuth, async (req: any, res: Response) => {
+    try {
+      const { question, tier, conversationHistory } = req.body;
+      const userId = req.user?.id;
+      
+      if (!question?.trim() || !tier) {
+        return res.status(400).json({ 
+          error: 'Question and tier are required' 
+        });
+      }
+
+      const isPremium = tier === 'premium';
+      let response;
+
+      try {
+        if (isPremium) {
+          response = await temploAI.generatePremiumChatResponse(question.trim(), conversationHistory || []);
+        } else {
+          response = await temploAI.generateFreeChatResponse(question.trim());
+        }
+      } catch (aiError) {
+        console.error('AI service error:', aiError);
+        if (isPremium) {
+          response = temploAI.getFallbackPremiumResponse(question.trim());
+        } else {
+          response = temploAI.getFallbackFreeResponse(question.trim());
+        }
+      }
+
+      // Save chat consultation to database
+      try {
+        await supabaseAdmin
+          .from('oracle_chat_consultations')
+          .insert({
+            user_id: userId,
+            question: question.trim(),
+            response: response,
+            tier: tier,
+            created_at: new Date().toISOString()
+          });
+      } catch (dbError) {
+        console.error('Database save error:', dbError);
+      }
+
+      res.json({ 
+        success: true, 
+        response,
+        tier,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Error in oracle chat consultation:', error);
+      res.status(500).json({ error: 'Failed to perform chat consultation' });
+    }
+  });
+
   // Get oracle history for user
   app.get('/api/oracle/history', requireAuth, async (req: any, res: Response) => {
     try {
