@@ -157,89 +157,98 @@ export default function Blog() {
           </div>
         </div>
 
-      {/* Blog Posts Grid */}
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post: BlogPost) => (
-            <Card 
-              key={post.id}
-              className="bg-gradient-to-b from-gray-900/50 to-black/50 border-2 border-gray-600 hover:border-amber-600 transition-all duration-300 hover:scale-105 backdrop-blur-sm"
-            >
-              <CardHeader>
-                {/* Featured Image */}
-                <div className="w-full h-48 bg-gradient-to-b from-amber-900/20 to-orange-900/20 rounded-lg mb-4 flex items-center justify-center border border-amber-600/30">
-                  {post.featured_image ? (
-                    <img 
-                      src={post.featured_image} 
-                      alt={post.title}
-                      className="w-full h-full object-cover rounded-lg"
-                    />
-                  ) : (
-                    <BookOpen className="w-16 h-16 text-amber-500 animate-mystical-float" />
-                  )}
-                </div>
-                
-                <div className="flex items-center justify-between mb-2">
-                  <Badge variant="outline" className="border-amber-600 text-amber-400">
-                    {post.category}
-                  </Badge>
-                  <div className="flex items-center text-gray-500 text-sm">
-                    <Calendar className="w-4 h-4 mr-1" />
-                    {new Date(post.created_at).toLocaleDateString('pt-BR')}
-                  </div>
-                </div>
-                
-                <CardTitle className="text-amber-200 text-lg font-cinzel animate-mystical-float line-clamp-2">
-                  {post.title}
-                </CardTitle>
-                
-                <div className="flex items-center text-gray-400 text-sm">
-                  <Feather className="w-4 h-4 mr-1" />
-                  por {post.author}
-                </div>
-              </CardHeader>
-              
-              <CardContent>
-                <CardDescription className="text-gray-400 mb-4 line-clamp-3">
-                  {post.excerpt}
-                </CardDescription>
-                
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {post.tags.slice(0, 3).map((tag, index) => (
-                    <Badge 
-                      key={index} 
-                      variant="secondary" 
-                      className="text-xs bg-gray-700 text-gray-300 border-gray-600"
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-                
-                <Link href={`/blog/${post.slug}`}>
-                  <div className="text-amber-400 hover:text-amber-300 font-medium cursor-pointer transition-colors">
-                    Ler artigo completo →
-                  </div>
-                </Link>
-              </CardContent>
-            </Card>
-          ))}
+        {/* Blog Posts Grid */}
+        <div className="floating-card max-w-6xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {posts.map((post: BlogPost) => (
+                <Card 
+                  key={post.id}
+                  className="bg-black/20 border-amber-500/20 hover:border-amber-400/40 transition-colors"
+                >
+                  <CardHeader>
+                    {/* Featured Image */}
+                    <div className="w-full h-48 bg-gradient-to-b from-amber-900/20 to-orange-900/20 rounded-lg mb-4 flex items-center justify-center border border-amber-600/30">
+                      {post.featured_image ? (
+                        <img 
+                          src={post.featured_image} 
+                          alt={post.title}
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                      ) : (
+                        <BookOpen className="w-16 h-16 text-amber-500" />
+                      )}
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge variant="outline" className="border-amber-600 text-amber-400">
+                        {post.category}
+                      </Badge>
+                      <div className="flex items-center text-gray-500 text-sm">
+                        <Calendar className="w-4 h-4 mr-1" />
+                        {new Date(post.created_at).toLocaleDateString('pt-BR')}
+                      </div>
+                    </div>
+                    
+                    <CardTitle className="text-amber-200 text-lg font-cinzel line-clamp-2">
+                      {post.title}
+                    </CardTitle>
+                    
+                    <div className="flex items-center text-gray-400 text-sm">
+                      <Feather className="w-4 h-4 mr-1" />
+                      por {post.author}
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent>
+                    <CardDescription className="text-gray-400 mb-4 line-clamp-3">
+                      {post.excerpt}
+                    </CardDescription>
+                    
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {post.tags.slice(0, 3).map((tag, index) => (
+                        <Badge 
+                          key={index} 
+                          variant="secondary" 
+                          className="text-xs bg-gray-700 text-gray-300 border-gray-600"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                    
+                    <Link href={`/blog/${post.slug}`}>
+                      <div className="text-amber-400 hover:text-amber-300 font-medium cursor-pointer transition-colors">
+                        Ler artigo completo →
+                      </div>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {posts.length === 0 && (
+              <div className="text-center py-16">
+                <BookOpen className="w-16 h-16 text-amber-500 mx-auto mb-4" />
+                <h3 className="text-xl text-amber-200 mb-2 font-cinzel-decorative">Nenhum artigo disponível</h3>
+                <p className="text-gray-400">Novos ensinamentos serão publicados em breve</p>
+              </div>
+            )}
+          </div>
         </div>
 
-        {posts.length === 0 && (
-          <div className="text-center py-16">
-            <BookOpen className="w-16 h-16 text-amber-500 mx-auto mb-4 animate-mystical-float" />
-            <h3 className="text-xl text-amber-200 mb-2 font-cinzel">Nenhum artigo disponível</h3>
-            <p className="text-gray-400">Novos ensinamentos serão publicados em breve</p>
+        {/* Mystical Quote */}
+        <div className="floating-card max-w-2xl mx-auto mt-12 p-8 bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <div className="text-center">
+            <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+            <p className="text-lg text-gray-300 italic leading-relaxed mb-4">
+              "A verdadeira sabedoria nasce da união entre conhecimento e experiência"
+            </p>
+            <p className="text-amber-400 font-semibold">
+              — Axioma da Gnose
+            </p>
           </div>
-        )}
-      </div>
-
-      {/* Mystical Quote */}
-      <div className="max-w-4xl mx-auto text-center py-16">
-        <p className="text-gray-500 text-lg italic animate-mystical-float">
-          "A verdadeira sabedoria nasce da união entre conhecimento e experiência"
-        </p>
+        </div>
       </div>
     </div>
   );
