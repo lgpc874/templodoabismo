@@ -90,6 +90,8 @@ export default function Blog() {
     queryKey: ["/api/blog/posts"]
   });
 
+  const blogPosts: BlogPost[] = Array.isArray(posts) ? posts : mockPosts;
+
   if (isLoading) {
     return (
       <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
@@ -161,7 +163,7 @@ export default function Blog() {
         <div className="floating-card max-w-6xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {posts.map((post: BlogPost) => (
+              {blogPosts.map((post: BlogPost) => (
                 <Card 
                   key={post.id}
                   className="bg-black/20 border-amber-500/20 hover:border-amber-400/40 transition-colors"
@@ -227,7 +229,7 @@ export default function Blog() {
               ))}
             </div>
 
-            {posts.length === 0 && (
+            {blogPosts.length === 0 && (
               <div className="text-center py-16">
                 <BookOpen className="w-16 h-16 text-amber-500 mx-auto mb-4" />
                 <h3 className="text-xl text-amber-200 mb-2 font-cinzel-decorative">Nenhum artigo disponível</h3>
