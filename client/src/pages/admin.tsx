@@ -116,7 +116,7 @@ const AdminPanel: React.FC = () => {
   }
 
   // Check if user is admin
-  if (!user?.is_admin) {
+  if (!user?.role || user.role !== 'admin') {
     return (
       <div className="min-h-screen relative overflow-hidden">
         {/* Fixed Central Rotating Seal */}

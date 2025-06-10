@@ -39,7 +39,7 @@ async function requireAuth(req: any, res: Response, next: any) {
 }
 
 async function requireAdmin(req: any, res: Response, next: any) {
-  if (!req.user?.is_admin) {
+  if (!req.user?.role || req.user.role !== 'admin') {
     return res.status(403).json({ error: 'Admin access required' });
   }
   next();
