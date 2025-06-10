@@ -5,9 +5,7 @@ import { temploAI } from './ai-service';
 import { vozPlumaService } from './voz-pluma-service';
 import { supabase, supabaseAdmin } from './supabase-client';
 import { supabaseMigration } from './supabase-migration';
-import { registerAdminRoutes } from './admin-routes';
 import { registerCMSRoutes } from './cms-routes';
-import { registerSimpleAdminRoutes } from './simple-admin';
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -103,8 +101,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Register admin routes
-  registerAdminRoutes(app);
+
 
   // Supabase configuration endpoint
   app.get('/api/config/supabase', (req: Request, res: Response) => {
@@ -602,11 +599,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register CMS routes for page management
   registerCMSRoutes(app);
 
-  // Register admin routes
-  registerAdminRoutes(app);
-  
-  // Register simple admin routes for testing
-  registerSimpleAdminRoutes(app);
+
 
   // Catch-all for unmatched API routes - must be after all API route definitions
   app.use('/api/*', (req: Request, res: Response) => {
