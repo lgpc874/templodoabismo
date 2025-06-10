@@ -99,7 +99,7 @@ export default function OracleRitualChat() {
   }, [messages]);
 
   const sendMessage = async () => {
-    if (!inputMessage.trim() || isLoading) return;
+    if (!inputMessage.trim() || isLoading || consultationComplete) return;
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -117,7 +117,7 @@ export default function OracleRitualChat() {
         question: inputMessage,
         oracleType: oracleType,
         entityName: currentEntity.name,
-        conversationHistory: messages.slice(-5)
+        conversationHistory: messages.slice(-3)
       });
 
       const entityResponse: ChatMessage = {
@@ -129,6 +129,21 @@ export default function OracleRitualChat() {
       };
 
       setMessages(prev => [...prev, entityResponse]);
+
+      // Após a resposta, a entidade se despede e encerra a consulta
+      setTimeout(() => {
+        const farewellMessage: ChatMessage = {
+          id: (Date.now() + 2).toString(),
+          type: 'entity',
+          content: response.farewell || `${currentEntity.name} se retira às sombras... A consulta se encerra. Os véus se fecham até que uma nova alma busque minha sabedoria.`,
+          timestamp: new Date(),
+          entityName: currentEntity.name
+        };
+        
+        setMessages(prev => [...prev, farewellMessage]);
+        setConsultationComplete(true);
+      }, 2000);
+
     } catch (error) {
       console.error('Erro na consulta:', error);
       toast({
@@ -238,23 +253,35 @@ export default function OracleRitualChat() {
         {/* Input Area */}
         <div className="p-4 border-t border-amber-500/20 bg-black/30 backdrop-blur-lg">
           <div className="max-w-4xl mx-auto">
-            <div className="flex space-x-4">
-              <Input
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Fale com a entidade abissal..."
-                className="flex-1 bg-gray-800/50 border-amber-500/30 text-white placeholder-gray-400"
-                disabled={isLoading}
-              />
-              <Button
-                onClick={sendMessage}
-                disabled={!inputMessage.trim() || isLoading}
-                className="bg-amber-600 hover:bg-amber-700 text-black font-semibold"
-              >
-                <Send className="w-4 h-4" />
-              </Button>
-            </div>
+            {consultationComplete ? (
+              <div className="text-center p-6">
+                <div className="text-purple-400 text-lg mb-2">🌑 A consulta se encerrou 🌑</div>
+                <p className="text-gray-400 mb-4">A entidade retornou às profundezas do abismo</p>
+                <Link href="/oraculo">
+                  <Button className="bg-amber-600 hover:bg-amber-700 text-black font-semibold">
+                    Retornar ao Sanctum
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="flex space-x-4">
+                <Input
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Fale com a entidade abissal..."
+                  className="flex-1 bg-gray-800/50 border-amber-500/30 text-white placeholder-gray-400"
+                  disabled={isLoading}
+                />
+                <Button
+                  onClick={sendMessage}
+                  disabled={!inputMessage.trim() || isLoading}
+                  className="bg-amber-600 hover:bg-amber-700 text-black font-semibold"
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

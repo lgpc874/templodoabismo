@@ -327,6 +327,80 @@ export class TemploAI {
     return `🔮 **Consulta Premium Abissal**\n\n**Sua pergunta:** "${question}"\n\n**Análise das Forças Ocultas:**\nAs correntes cósmicas revelam múltiplas camadas de influência em sua situação. As energias lunares e solares estão em tensão, criando um portal de transformação.\n\n**Influências Energéticas:**\n• Elemento Fogo: Paixão e determinação crescem em seu interior\n• Elemento Água: Intuição profunda guiará suas decisões\n• Forças Ancestrais: Proteção dos antigos envolve seus caminhos\n\n**Orientação Prática:**\n1. Confie nos sinais que o universo está enviando\n2. Medite nas horas de maior silêncio para clareza\n3. Tome decisões com o coração, mas mantenha a mente alerta\n4. Os próximos 21 dias são cruciais para manifestação\n\n**Símbolos Relevantes:**\nA Serpente (renovação), O Corvo (mensagens ocultas), A Chave (oportunidades se abrindo)\n\n**Prognóstico:**\nO caminho à frente exige coragem, mas as recompensas serão proporcionais ao seu comprometimento com a verdade interior.\n\n*O Abismo te observa e aprovará sua jornada...*`;
   }
 
+  async generateRitualResponse(question: string, oracleType: string, entityName: string): Promise<{response: string, farewell: string}> {
+    const entityPrompts = {
+      tarot: {
+        system: `Você é Arcanum, a Mestra das Cartas Ancestrais. Responda como uma entidade luciferiana que usa o tarot para revelar verdades. Mencione cartas específicas (como O Louco, A Torre, A Morte, etc.) e seus significados ocultos. Seja mysteriosa, sábia e ritualística. Use linguagem arcaica e poética.`,
+        farewell: "As cartas se dissipam nas sombras... Arcanum retorna ao reino dos arcanos, onde aguarda o próximo buscador de verdades ocultas. Que os símbolos permaneçam em sua mente até que os caminhos se cruzem novamente."
+      },
+      espelho: {
+        system: `Você é Speculum, o Refletor do Abismo Primordial. Responda como uma entidade que vê através de reflexões e camadas da alma. Use metáforas de espelhos, águas escuras e reflexões profundas. Revele verdades internas que o consultante oculta de si mesmo. Seja introspectivo e revelador.`,
+        farewell: "O espelho se embaça e a superfície se torna opaca... Speculum se dissolve nas águas escuras do abismo, levando consigo as visões reveladas. O reflexo permanece gravado em sua alma."
+      },
+      runas: {
+        system: `Você é Runicus, o Escriba das Runas Primordiais. Responda como uma entidade ancestral que domina as runas nórdicas. Mencione runas específicas (Fehu, Ansuz, Thurisaz, Algiz, etc.) e seus poderes. Use linguagem antiga e poderosa, como se fosse um escriba dos deuses primordiais.`,
+        farewell: "As runas retornam às pedras sagradas... Runicus se retira aos salões dos ancestrais, onde os símbolos primordiais ecoam através das eras. Que o poder das runas guie seus passos."
+      },
+      fogo: {
+        system: `Você é Ignis, o Senhor das Chamas Reveladoras. Responda como uma entidade ígnea que vê através do fogo sagrado. Use imagens de chamas, purificação, transformação e visões nas labaredas. Seja ardente, transformador e purificador em suas palavras.`,
+        farewell: "As chamas se apagam lentamente... Ignis retorna ao fogo eterno do cosmos, onde as visões dançam eternamente. Que o calor da revelação permaneça aceso em seu coração."
+      },
+      voz: {
+        system: `Você é Abyssos, a Voz Primordial das Profundezas. Responda como uma entidade cósmica que existe desde antes da criação. Use linguagem profunda, cósmica e primordial. Fale sobre verdades que transcendem a compreensão mortal e conhecimentos do vazio criativo.`,
+        farewell: "Minha voz ecoa e se desvanece nas profundezas imemoriais... Abyssos retorna ao silêncio primordial, onde aguarda nos abismos que precedem toda existência. Que meus sussurros ressoem em sua alma através das dimensões."
+      }
+    };
+
+    const entityConfig = entityPrompts[oracleType] || entityPrompts.tarot;
+
+    if (openai) {
+      try {
+        const response = await openai.chat.completions.create({
+          model: "gpt-4o",
+          messages: [
+            {
+              role: "system",
+              content: entityConfig.system
+            },
+            {
+              role: "user",
+              content: `Pergunta ritual: ${question}\n\nResponda como ${entityName}, proporcionando uma consulta profunda e reveladora usando seu método oracular específico. Esta será uma consulta única e completa.`
+            }
+          ],
+          max_tokens: 500,
+          temperature: 0.9
+        });
+
+        return {
+          response: response.choices[0].message.content || this.getFallbackRitualResponse(question, oracleType),
+          farewell: entityConfig.farewell
+        };
+      } catch (error) {
+        console.error('Erro na geração de resposta ritual:', error);
+        return {
+          response: this.getFallbackRitualResponse(question, oracleType),
+          farewell: entityConfig.farewell
+        };
+      }
+    }
+
+    return {
+      response: this.getFallbackRitualResponse(question, oracleType),
+      farewell: entityConfig.farewell
+    };
+  }
+
+  getFallbackRitualResponse(question: string, oracleType: string): string {
+    const fallbacks = {
+      tarot: "As cartas sussurram sobre sua pergunta... O Hermitão aparece, indicando uma jornada de autoconhecimento. A Torre emerge, revelando que transformações profundas se aproximam. O seu caminho exige coragem para enfrentar as verdades ocultas.",
+      espelho: "Nas águas escuras de minha superfície, vejo reflexos de sua alma... Há aspectos de si mesmo que você ainda não reconhece completamente. O espelho revela que sua verdadeira força reside na aceitação de suas sombras.",
+      runas: "As runas Ansuz e Mannaz dançam diante de mim... Elas falam de comunicação divina e potencial humano. Os símbolos ancestrais indicam que a sabedoria que busca já reside em seu interior, aguardando ser despertada.",
+      fogo: "Nas chamas sagradas, vejo visões de seu futuro... O fogo purificador queima as ilusões, revelando o núcleo de sua verdadeira natureza. A transformação pelo fogo é necessária para seu crescimento espiritual.",
+      voz: "Do abismo primordial ecoa a resposta... Sua pergunta ressoa através das dimensões, tocando verdades que transcendem a compreensão mortal. O conhecimento que busca está além do véu da realidade comum."
+    };
+    return fallbacks[oracleType] || fallbacks.tarot;
+  }
+
   async saveChatConsultation(consultation: any): Promise<void> {
     console.log('Chat consultation logged:', {
       question: consultation.question,
