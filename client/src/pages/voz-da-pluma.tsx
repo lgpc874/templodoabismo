@@ -21,7 +21,7 @@ interface VozPlumaManifestation {
 export default function VozDaPluma() {
   const { toast } = useToast();
 
-  const { data: manifestations = [], isLoading } = useQuery({
+  const { data: manifestations = [], isLoading } = useQuery<VozPlumaManifestation[]>({
     queryKey: ['/api/voz-pluma/manifestations'],
   });
 
@@ -233,9 +233,9 @@ export default function VozDaPluma() {
 
   // Organizar manifestações por horário
   const manifestationsByTime = {
-    '07:00': manifestations.find((m: VozPlumaManifestation) => m.manifestation_time === '07:00'),
-    '09:00': manifestations.find((m: VozPlumaManifestation) => m.manifestation_time === '09:00'),
-    '11:00': manifestations.find((m: VozPlumaManifestation) => m.manifestation_time === '11:00')
+    '07:00': manifestations?.find((m: VozPlumaManifestation) => m.manifestation_time === '07:00'),
+    '09:00': manifestations?.find((m: VozPlumaManifestation) => m.manifestation_time === '09:00'),
+    '11:00': manifestations?.find((m: VozPlumaManifestation) => m.manifestation_time === '11:00')
   };
 
   return (
