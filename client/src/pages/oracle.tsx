@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Gem, Eye, Flame, Search, FileText, MessageCircle, Crown, CreditCard } from "lucide-react";
 import { Link } from "wouter";
 import PaymentGateway from "@/components/PaymentGateway";
+import Footer from "@/components/Footer";
 
 const oracleTypes = [
   {
@@ -288,6 +289,9 @@ export default function Oracle() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
