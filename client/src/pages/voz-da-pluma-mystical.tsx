@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Feather, Heart, Share2, MessageCircle, Star, Flame, Scroll } from "lucide-react";
 import MysticalGate from "@/components/MysticalGate";
-import SiteNavigation from "@/components/SiteNavigation";
+
 import { useAuth } from "@/contexts/AuthContext";
 
 interface DailyPoem {
@@ -66,7 +66,7 @@ function VozDaPlumaContent() {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      <SiteNavigation />
+
       
       {/* Mystical background */}
       <div className="fixed inset-0 overflow-hidden">

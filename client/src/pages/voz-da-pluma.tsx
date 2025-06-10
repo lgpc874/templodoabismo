@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Feather, Share2, Instagram, Facebook, Twitter, Download } from "lucide-react";
-import SiteNavigation from "../components/SiteNavigation";
+
 import Footer from "../components/footer";
 import { useToast } from "../hooks/use-toast";
 import { useDailyPoem, useRecentPoems } from "@/hooks/useSupabaseData";
@@ -145,7 +145,7 @@ export default function VozDaPluma() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <SiteNavigation />
+
       
       {/* Fixed Central Rotating Seal */}
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">

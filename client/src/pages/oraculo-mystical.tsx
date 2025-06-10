@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Flame, Zap, Eye, BookOpen, History, Skull, Moon, Star } from "lucide-react";
 import MysticalGate from "@/components/MysticalGate";
-import SiteNavigation from "@/components/SiteNavigation";
+
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -99,7 +99,7 @@ function OracleContent() {
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
-      <SiteNavigation />
+
       
       {/* Mystical background */}
       <div className="fixed inset-0 overflow-hidden">
