@@ -104,12 +104,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const value = {
     user,
-    token,
+    supabaseUser,
     login,
     register,
     logout,
     updateUser,
     isAuthenticated: !!user,
+    loading,
   };
 
   return (

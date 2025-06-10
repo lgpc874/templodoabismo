@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Feather, Share2, Instagram, Facebook, Twitter, Download } from "lucide-react";
 import SiteNavigation from "../components/SiteNavigation";
 import Footer from "../components/footer";
 import { useToast } from "../hooks/use-toast";
+import { useDailyPoem, useRecentPoems } from "@/hooks/useSupabaseData";
 
 interface DailyPoem {
   id: number;
@@ -18,14 +18,8 @@ export default function VozDaPluma() {
   const { toast } = useToast();
   const [selectedPoem, setSelectedPoem] = useState<DailyPoem | null>(null);
 
-  const { data: todayPoem, isLoading } = useQuery({
-    queryKey: ["/api/daily-poem"],
-    refetchInterval: 24 * 60 * 60 * 1000, // Refetch every 24 hours
-  });
-
-  const { data: recentPoems = [] } = useQuery({
-    queryKey: ["/api/poems/recent"],
-  });
+  const { data: todayPoem, isLoading } = useDailyPoem();
+  const { data: recentPoems = [] } = useRecentPoems();
 
   const shareToSocial = (platform: string, poem: DailyPoem) => {
     const text = `"${poem.content}" - ${poem.author}`;
