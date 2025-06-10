@@ -5,8 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, Clock, Users, Star, Play, Lock, Crown } from "lucide-react";
-// import SiteNavigation from "../components/SiteNavigation";
-import Footer from "../components/footer";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourses } from "@/hooks/useSupabaseData";
 
@@ -104,32 +102,30 @@ export default function CoursesSupabase() {
                                (user?.initiation_level && user.initiation_level >= course.level);
 
               return (
-                <Card key={course.id} className="bg-black/40 border-gold/20 backdrop-blur-sm hover:border-gold/40 transition-all group">
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge 
-                        variant={course.level <= 2 ? "secondary" : "default"}
-                        className={`${
-                          course.level <= 2 
-                            ? "bg-green-900/50 text-green-400 border-green-600/30" 
-                            : "bg-red-900/50 text-red-400 border-red-600/30"
-                        }`}
-                      >
-                        Nível {course.level}
-                      </Badge>
-                      {course.level > 2 && <Crown className="w-4 h-4 text-gold" />}
-                    </div>
-                    
-                    <CardTitle className="text-gold font-cinzel-decorative group-hover:text-orange-400 transition-colors">
-                      {course.title}
-                    </CardTitle>
-                    
-                    <CardDescription className="text-gray-300 font-crimson">
-                      {course.description}
-                    </CardDescription>
-                  </CardHeader>
+                <div key={course.id} className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300 p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <Badge 
+                      variant={course.level <= 2 ? "secondary" : "default"}
+                      className={`${
+                        course.level <= 2 
+                          ? "bg-green-900/50 text-green-400 border-green-600/30" 
+                          : "bg-red-900/50 text-red-400 border-red-600/30"
+                      }`}
+                    >
+                      Nível {course.level}
+                    </Badge>
+                    {course.level > 2 && <Crown className="w-4 h-4 text-amber-400" />}
+                  </div>
+                  
+                  <h3 className="text-xl font-bold text-amber-400 mb-3 group-hover:text-orange-400 transition-colors font-['Cinzel_Decorative']">
+                    {course.title}
+                  </h3>
+                  
+                  <p className="text-gray-300 text-sm leading-relaxed mb-4">
+                    {course.description}
+                  </p>
 
-                  <CardContent>
+                  <div>
                     <div className="space-y-4">
                       {/* Course Stats */}
                       <div className="flex items-center gap-4 text-sm text-gray-400">
@@ -192,13 +188,13 @@ export default function CoursesSupabase() {
 
                       {/* Additional Info */}
                       {course.requires_initiation && (
-                        <p className="text-xs text-yellow-400 text-center font-crimson">
+                        <p className="text-xs text-yellow-400 text-center">
                           Requer iniciação de nível {course.level}
                         </p>
                       )}
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               );
             })}
           </div>

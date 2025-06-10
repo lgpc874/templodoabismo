@@ -1,6 +1,4 @@
 import { useState } from "react";
-import Navigation from "@/components/navigation";
-import Footer from "@/components/footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -109,19 +107,30 @@ export default function Bibliotheca() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <Navigation />
-      
+      {/* Fixed Central Rotating Seal */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <div className="rotating-seal w-96 h-96 opacity-20">
+          <img 
+            src="/seal.png" 
+            alt="Selo do Templo do Abismo" 
+            className="w-full h-full object-contain filter drop-shadow-lg"
+          />
+        </div>
+      </div>
+
+      {/* Mystical floating particles */}
       <div className="fixed inset-0 overflow-hidden z-0">
         <div className="mystical-particles"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
       </div>
       
-      <div className="relative z-10 container mx-auto px-4 py-24">
+      <div className="relative z-10 container mx-auto px-4 py-8 pt-20">
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-titles text-yellow-600 mb-4 flame-text-clean">
-            Bibliotheca Secreta
+          <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 animate-pulse font-['Cinzel_Decorative']">
+            BIBLIOTHECA ABYSSOS
           </h1>
-          <p className="text-xl text-gray-200 font-serif">
-            Vasta Coleção de Conhecimentos Ocultos e Textos Ancestrais
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            Manuscritos sombrios onde repousam invocações primordiais e rituais ctônicos. Cada página pulsa com poder ancestral das correntes abissais.
           </p>
         </div>
 
@@ -180,64 +189,60 @@ export default function Bibliotheca() {
         {/* Documents Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredDocuments.map((doc) => (
-            <Card key={doc.id} className="abyssal-card-transparent h-full">
-              <CardHeader>
-                <div className="flex items-start justify-between mb-3">
-                  <Badge variant="outline" className="border-yellow-600/50 text-yellow-600">
-                    {doc.type.charAt(0).toUpperCase() + doc.type.slice(1)}
-                  </Badge>
-                  <div className="flex items-center">
-                    <Star className="w-4 h-4 text-yellow-500 mr-1" />
-                    <span className="text-yellow-500 text-sm">{doc.rating}</span>
-                  </div>
+            <div key={doc.id} className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300 p-6">
+              <div className="flex items-start justify-between mb-4">
+                <Badge variant="outline" className="border-amber-500/50 text-amber-400">
+                  {doc.type.charAt(0).toUpperCase() + doc.type.slice(1)}
+                </Badge>
+                <div className="flex items-center">
+                  <Star className="w-4 h-4 text-amber-500 mr-1" />
+                  <span className="text-amber-500 text-sm">{doc.rating}</span>
                 </div>
-                
-                <CardTitle className="text-lg font-titles text-yellow-600 mb-2 line-clamp-2">
-                  {doc.title}
-                </CardTitle>
-                
-                <CardDescription className="text-gray-300 text-sm">
-                  Por {doc.author}
-                </CardDescription>
-              </CardHeader>
+              </div>
               
-              <CardContent>
-                <div className="space-y-4">
-                  <p className="text-gray-200 text-sm leading-relaxed line-clamp-3">
-                    {doc.description}
-                  </p>
-                  
-                  <div className="flex items-center justify-between text-xs text-gray-400">
-                    <div className="flex items-center">
-                      <BookOpen className="w-3 h-3 mr-1" />
-                      {doc.pages} páginas
-                    </div>
-                    <div className="flex items-center">
-                      <Download className="w-3 h-3 mr-1" />
-                      {doc.downloads} downloads
-                    </div>
+              <h3 className="text-xl font-bold text-amber-400 mb-3 group-hover:text-orange-400 transition-colors font-['Cinzel_Decorative']">
+                {doc.title}
+              </h3>
+              
+              <p className="text-gray-300 text-sm mb-4">
+                Por {doc.author}
+              </p>
+              
+              <div className="space-y-4">
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  {doc.description}
+                </p>
+                
+                <div className="flex items-center justify-between text-xs text-gray-400">
+                  <div className="flex items-center">
+                    <BookOpen className="w-3 h-3 mr-1" />
+                    {doc.pages} páginas
                   </div>
-                  
-                  <div className="flex gap-2 pt-4">
-                    <Button 
-                      size="sm"
-                      variant="outline"
-                      className="flex-1 border-yellow-600/50 text-yellow-600 hover:bg-yellow-600/10"
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      Visualizar
-                    </Button>
-                    <Button 
-                      size="sm"
-                      className="flex-1 bg-yellow-600 hover:bg-yellow-700 text-black"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </Button>
+                  <div className="flex items-center">
+                    <Download className="w-3 h-3 mr-1" />
+                    {doc.downloads} downloads
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+                
+                <div className="flex gap-2 pt-4">
+                  <Button 
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
+                  >
+                    <Eye className="w-4 h-4 mr-2" />
+                    Visualizar
+                  </Button>
+                  <Button 
+                    size="sm"
+                    className="flex-1 bg-amber-600 hover:bg-amber-700 text-black"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download
+                  </Button>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
 
