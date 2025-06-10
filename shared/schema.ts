@@ -56,6 +56,40 @@ export const contentSections = pgTable("content_sections", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Sistema T'KAZH (Créditos)
+export const tkazhTransactions = pgTable("tkazh_transactions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  type: text("type").notNull(), // gain, spend, purchase, bonus, reset
+  amount: integer("amount").notNull(),
+  reason: text("reason").notNull(),
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Uso de Oráculos
+export const oracleUsage = pgTable("oracle_usage", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  oracleType: text("oracle_type").notNull(),
+  question: text("question").notNull(),
+  result: jsonb("result").notNull(),
+  creditsCost: integer("credits_cost").notNull(),
+  usedAt: timestamp("used_at").defaultNow(),
+  weeklyReset: timestamp("weekly_reset").notNull(),
+});
+
+// Selos Pessoais
+export const personalSeals = pgTable("personal_seals", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull().unique(),
+  magicalName: text("magical_name").notNull(),
+  sealImageUrl: text("seal_image_url").notNull(),
+  sealDescription: text("seal_description"),
+  energyType: text("energy_type"),
+  generatedAt: timestamp("generated_at").defaultNow(),
+});
+
 export const mediaAssets = pgTable("media_assets", {
   id: serial("id").primaryKey(),
   filename: text("filename").notNull(),
