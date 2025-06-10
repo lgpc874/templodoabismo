@@ -51,8 +51,42 @@ export default function OracleRunes() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-black/8 backdrop-blur-sm">
-      <div className="mystical-particles fixed inset-0 z-0" />
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Enhanced Mystical Particles with Mood Effects */}
+      <div className="fixed inset-0 z-0 pointer-events-none mystical-particles"></div>
+
+      {/* Dynamic Atmosphere Particles */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        {[...Array(25)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-red-500/40 rounded-full particle-effect"
+            style={{
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 15}s`,
+              animationDuration: `${12 + Math.random() * 8}s`
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Enhanced Floating Smoke Effects */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        {[...Array(8)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-24 h-24 opacity-15 smoke-effect"
+            style={{
+              left: `${Math.random() * 100}%`,
+              bottom: '-96px',
+              animationDelay: `${Math.random() * 8}s`,
+              background: 'radial-gradient(circle, rgba(239,68,68,0.5) 0%, transparent 70%)'
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Selo Central Fixo */}
       <div className="fixed top-1/2 left-1/2 z-0 transform -translate-x-1/2 -translate-y-1/2" style={{marginTop: '2rem'}}>
         <div className="absolute w-80 h-80 opacity-8 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div className="animate-spin-slow-reverse text-amber-500/15 text-[20rem] leading-none flex items-center justify-center h-full">◯</div>
@@ -66,6 +100,20 @@ export default function OracleRunes() {
         <div className="absolute w-16 h-16 opacity-25 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div className="text-red-300/40 text-4xl leading-none flex items-center justify-center h-full">●</div>
         </div>
+      </div>
+
+      {/* Mystical Energy Lines */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-red-500/15 to-transparent animate-flicker" />
+        <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-amber-500/15 to-transparent animate-flicker" style={{animationDelay: '1.5s'}} />
+        <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-500/15 to-transparent animate-flicker" style={{animationDelay: '2.5s'}} />
+        <div className="absolute bottom-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/15 to-transparent animate-flicker" style={{animationDelay: '3.5s'}} />
+      </div>
+
+      {/* Atmospheric Gradient Overlay */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/60 via-transparent to-black/80"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-radial from-transparent via-red-900/5 to-black/40"></div>
       </div>
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="text-center mb-8">
