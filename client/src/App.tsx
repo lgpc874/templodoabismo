@@ -59,6 +59,8 @@ function Router() {
           <Route path="/emergency-admin" component={EmergencyAdmin} />
           <Route path="/admin" component={AdminPanel} />
           <Route path="/sanctum-administratoris" component={AdminControl} />
+          <Route path="/termos-de-uso" component={lazy(() => import("./pages/termos-de-uso"))} />
+          <Route path="/politica-de-privacidade" component={lazy(() => import("./pages/politica-de-privacidade"))} />
           <Route component={NotFound} />
         </Switch>
       </main>
