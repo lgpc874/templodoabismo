@@ -495,18 +495,7 @@ export const scriptures = pgTable("scriptures", {
 export const insertUserSchema = createInsertSchema(users);
 export const insertCourseSchema = createInsertSchema(courses);
 
-export const insertCourseLevelSchema = createInsertSchema(courseLevels).pick({
-  course_id: true,
-  level_number: true,
-  title: true,
-  description: true,
-  price_brl: true,
-  content_modules: true,
-  duration_hours: true,
-  materials_included: true,
-  unlock_requirements: true,
-  is_active: true,
-});
+export const insertCourseLevelSchema = createInsertSchema(courseLevels);
 
 export const insertCourseEnrollmentSchema = createInsertSchema(courseEnrollments).pick({
   user_id: true,
