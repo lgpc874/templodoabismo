@@ -239,7 +239,7 @@ export default function AdminControl() {
   const savePageMutation = useMutation({
     mutationFn: async (page: Partial<Page>) => {
       if (page.id) {
-        return await apiRequest('PUT', `/api/admin/pages/${page.id}`, page);
+        return await apiRequest(`/api/admin/pages/${page.id}`, page);
       } else {
         return await apiRequest('POST', '/api/admin/pages', page);
       }

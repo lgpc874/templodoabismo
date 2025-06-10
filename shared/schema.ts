@@ -550,159 +550,30 @@ export const insertCourseEnrollmentSchema = createInsertSchema(courseEnrollments
 
 export const insertGrimoireSchema = createInsertSchema(grimoires);
 
-export const insertGrimoireChapterSchema = createInsertSchema(grimoireChapters).omit({
-  id: true,
-  created_at: true,
-  updated_at: true,
-});
+export const insertGrimoireChapterSchema = createInsertSchema(grimoireChapters);
 
-export const insertGrimoireAccessSchema = createInsertSchema(grimoireAccess).omit({
-  id: true,
-  granted_at: true,
-});
-
-export const insertOracleSessionSchema = createInsertSchema(oracle_sessions).omit({
-  id: true,
-  session_date: true,
-});
-
-export const insertDailyPoemSchema = createInsertSchema(daily_poems).omit({
-  id: true,
-  created_at: true,
-});
-
-export const insertSiteConfigSchema = createInsertSchema(siteConfig).omit({
-  id: true,
-  created_at: true,
-  updated_at: true,
-});
-
-export const insertContentSectionSchema = createInsertSchema(contentSections).pick({
-  pageId: true,
-  sectionType: true,
-  title: true,
-  content: true,
-  order: true,
-  isEnabled: true,
-});
-
-export const insertMediaAssetSchema = createInsertSchema(mediaAssets).pick({
-  filename: true,
-  originalName: true,
-  mimeType: true,
-  size: true,
-  url: true,
-  alt: true,
-  tags: true,
-});
-
-export const insertActivityLogSchema = createInsertSchema(activityLogs).pick({
-  userId: true,
-  action: true,
-  target: true,
-  metadata: true,
-});
-
-export const insertBackupSchema = createInsertSchema(backups).pick({
-  name: true,
-  type: true,
-  size: true,
-  path: true,
-  createdBy: true,
-});
-
-export const insertBlogPostSchema = createInsertSchema(blog_posts).omit({
-  id: true,
-  publishedAt: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const insertBlogCategorySchema = createInsertSchema(blog_categories).omit({
-  id: true,
-  createdAt: true,
-});
-
-export const insertNewsletterSubscriberSchema = createInsertSchema(newsletter_subscribers).omit({
-  id: true,
-  subscribedAt: true,
-  active: true,
-  confirmationToken: true,
-  confirmedAt: true,
-});
-
-export const insertSusurriAbyssosSchema = createInsertSchema(susurri_abyssos).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const insertApiConfigurationSchema = createInsertSchema(api_configurations).omit({
-  id: true,
-  lastTested: true,
-  testStatus: true,
-  testMessage: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const insertPageSchema = createInsertSchema(pages).omit({
-  id: true,
-  viewCount: true,
-  publishedAt: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const insertPageRevisionSchema = createInsertSchema(page_revisions).omit({
-  id: true,
-  createdAt: true,
-});
-
-export const insertMediaLibrarySchema = createInsertSchema(media_library).omit({
-  id: true,
-  uploadedAt: true,
-});
-
-export const insertScriptureSchema = createInsertSchema(scriptures).omit({
-  id: true,
-  downloads: true,
-  ratings: true,
-  publishedAt: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const insertVozPlumaManifestationSchema = createInsertSchema(voz_pluma_manifestations).omit({
-  id: true,
-  posted_at: true,
-});
-
-export const insertVozPlumaSettingsSchema = createInsertSchema(voz_pluma_settings).omit({
-  id: true,
-  updated_at: true,
-});
-
-// Novos schemas para gerenciamento de páginas
-export const insertSitePagesSchema = createInsertSchema(sitePages).omit({
-  id: true,
-  created_at: true,
-  updated_at: true,
-  published_at: true,
-});
-
-export const insertEducationalCoursesSchema = createInsertSchema(educationalCourses).omit({
-  id: true,
-  created_at: true,
-  updated_at: true,
-  published_at: true,
-});
-
-export const insertSacredGrimoiresSchema = createInsertSchema(sacredGrimoires).omit({
-  id: true,
-  created_at: true,
-  updated_at: true,
-});
+export const insertGrimoireAccessSchema = createInsertSchema(grimoireAccess);
+export const insertOracleSessionSchema = createInsertSchema(oracle_sessions);
+export const insertDailyPoemSchema = createInsertSchema(daily_poems);
+export const insertSiteConfigSchema = createInsertSchema(siteConfig);
+export const insertContentSectionSchema = createInsertSchema(contentSections);
+export const insertMediaAssetSchema = createInsertSchema(mediaAssets);
+export const insertActivityLogSchema = createInsertSchema(activityLogs);
+export const insertBackupSchema = createInsertSchema(backups);
+export const insertBlogPostSchema = createInsertSchema(blog_posts);
+export const insertBlogCategorySchema = createInsertSchema(blog_categories);
+export const insertNewsletterSubscriberSchema = createInsertSchema(newsletter_subscribers);
+export const insertSusurriAbyssosSchema = createInsertSchema(susurri_abyssos);
+export const insertApiConfigurationSchema = createInsertSchema(api_configurations);
+export const insertPageSchema = createInsertSchema(pages);
+export const insertPageRevisionSchema = createInsertSchema(page_revisions);
+export const insertMediaLibrarySchema = createInsertSchema(media_library);
+export const insertScriptureSchema = createInsertSchema(scriptures);
+export const insertVozPlumaManifestationSchema = createInsertSchema(voz_pluma_manifestations);
+export const insertVozPlumaSettingsSchema = createInsertSchema(voz_pluma_settings);
+export const insertSitePagesSchema = createInsertSchema(sitePages);
+export const insertEducationalCoursesSchema = createInsertSchema(educationalCourses);
+export const insertSacredGrimoiresSchema = createInsertSchema(sacredGrimoires);
 
 // Auth schemas
 export const loginSchema = z.object({
