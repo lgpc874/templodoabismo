@@ -95,32 +95,56 @@ export default function Oracle() {
         ))}
       </div>
 
-      {/* Enhanced Central Rotating Seal with Multiple Layers */}
-      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+      {/* Selo Central Perfeitamente Centralizado */}
+      <div className="fixed top-1/2 left-1/2 z-0" style={{transform: 'translate(-50%, -50%)'}}>
         {/* Outer rotating ring */}
-        <div className="absolute inset-0 w-[32rem] h-[32rem] opacity-8">
-          <div className="animate-spin-slow-reverse text-amber-500/30 text-[32rem] leading-none text-center">
+        <div className="absolute opacity-8" style={{
+          width: '32rem', 
+          height: '32rem',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)'
+        }}>
+          <div className="animate-spin-slow-reverse text-amber-500/20 text-[32rem] leading-none flex items-center justify-center h-full">
             ◯
           </div>
         </div>
         
         {/* Middle layer with mystical symbols */}
-        <div className="absolute inset-0 w-[28rem] h-[28rem] opacity-12">
-          <div className="animate-spin-slow text-red-400/40 text-[28rem] leading-none text-center animate-glow-pulse">
+        <div className="absolute opacity-10" style={{
+          width: '28rem', 
+          height: '28rem',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)'
+        }}>
+          <div className="animate-spin-slow text-red-400/25 text-[28rem] leading-none flex items-center justify-center h-full">
             ☿
           </div>
         </div>
         
         {/* Main central seal */}
-        <div className="rotating-seal w-96 h-96 opacity-15">
-          <div className="animate-spin-slow text-red-500/60 text-[24rem] leading-none animate-flicker">
+        <div className="rotating-seal absolute opacity-12" style={{
+          width: '24rem', 
+          height: '24rem',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)'
+        }}>
+          <div className="animate-spin-slow text-red-500/40 text-[24rem] leading-none flex items-center justify-center h-full">
             ⸸
           </div>
         </div>
         
         {/* Inner pulsing core */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 opacity-25">
-          <div className="animate-glow-pulse text-red-300/70 text-4xl leading-none text-center animate-float">
+        <div className="absolute opacity-20" style={{
+          width: '4rem', 
+          height: '4rem',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)'
+        }}>
+          <div className="text-red-300/50 text-4xl leading-none flex items-center justify-center h-full">
             ●
           </div>
         </div>
@@ -146,10 +170,10 @@ export default function Oracle() {
         <div className="text-center mb-12 max-w-5xl">
           <div className="mb-8">
             <div className="text-amber-400 text-6xl mb-4">⛧</div>
-            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
+            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400/80 mb-6 floating-title">
               ORACULUM TENEBRAE
             </h1>
-            <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
+            <div className="flex justify-center items-center space-x-8 text-amber-500/70 text-3xl mb-6">
               <span>☿</span>
               <span>⚹</span>
               <span>𖤍</span>
@@ -159,7 +183,7 @@ export default function Oracle() {
           </div>
           
           <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
+            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300/75 mb-6 floating-title-slow">
               Desperte os Véus Entre Mundos
             </h2>
             
@@ -169,11 +193,11 @@ export default function Oracle() {
             </p>
             
             <div className="text-center">
-              <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
-              <p className="text-lg font-cinzel-decorative text-amber-300">
+              <div className="text-amber-400/70 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+              <p className="text-lg font-cinzel-decorative text-amber-300/70">
                 "Veritas Per Tenebras Revelatur"
               </p>
-              <p className="text-sm text-gray-400 font-crimson italic mt-2">
+              <p className="text-sm text-gray-400/80 font-crimson italic mt-2">
                 A verdade é revelada através das trevas
               </p>
             </div>
