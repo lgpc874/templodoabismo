@@ -24,7 +24,7 @@ export default function SiteNavigation() {
     <>
       {/* Desktop Navigation */}
       <nav className="hidden lg:block fixed top-4 left-4 right-4 z-50">
-        <div className="bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-lg px-6 py-3">
+        <div className="bg-black/8 backdrop-blur-sm border border-white/10 rounded-lg px-6 py-3">
           <div className="flex items-center justify-between">
             <Link href="/">
               <div className="flex items-center space-x-3 cursor-pointer">
@@ -35,7 +35,7 @@ export default function SiteNavigation() {
                     className="w-full h-full object-contain filter drop-shadow-lg"
                   />
                 </div>
-                <span className="text-amber-400 font-bold text-xl font-cinzel-decorative">
+                <span className="text-amber-400/70 font-bold text-xl font-cinzel-decorative">
                   Templo do Abismo
                 </span>
               </div>
@@ -54,8 +54,8 @@ export default function SiteNavigation() {
                       className={`
                         flex items-center space-x-2 px-3 py-2 rounded-md transition-all duration-200
                         ${active 
-                          ? 'bg-amber-600/20 text-amber-400 border border-amber-600/30' 
-                          : 'text-gray-300 hover:text-amber-400 hover:bg-purple-900/20'
+                          ? 'bg-amber-600/10 text-amber-400/70 border border-amber-600/20' 
+                          : 'text-gray-300/70 hover:text-amber-400/80 hover:bg-white/5'
                         }
                       `}
                     >
@@ -84,7 +84,7 @@ export default function SiteNavigation() {
       {/* Mobile Navigation */}
       <nav className="lg:hidden">
         {/* Mobile Header */}
-        <div className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-lg border-b border-amber-500/20">
+        <div className="fixed top-0 left-0 right-0 z-50 bg-black/8 backdrop-blur-sm border-b border-white/10">
           <div className="flex items-center justify-between px-4 py-3">
             <Link href="/">
               <div className="flex items-center space-x-2 cursor-pointer">
@@ -95,7 +95,7 @@ export default function SiteNavigation() {
                     className="w-full h-full object-contain filter drop-shadow-lg"
                   />
                 </div>
-                <span className="text-amber-400 font-bold font-cinzel-decorative">
+                <span className="text-amber-400/70 font-bold font-cinzel-decorative">
                   Templo do Abismo
                 </span>
               </div>
@@ -105,7 +105,7 @@ export default function SiteNavigation() {
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-300 hover:text-amber-400"
+              className="text-gray-300/70 hover:text-amber-400/80"
             >
               {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </Button>
@@ -117,7 +117,7 @@ export default function SiteNavigation() {
           <div className="fixed inset-0 z-40 lg:hidden">
             <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
             
-            <div className="fixed top-16 left-4 right-4 bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-lg p-4">
+            <div className="fixed top-16 left-4 right-4 bg-black/8 backdrop-blur-sm border border-white/10 rounded-lg p-4">
               <div className="space-y-2">
                 {navigationItems.map((item) => {
                   const Icon = item.icon;
@@ -130,8 +130,8 @@ export default function SiteNavigation() {
                         className={`
                           w-full justify-start space-x-3 p-3 rounded-md transition-all duration-200
                           ${active 
-                            ? 'bg-amber-600/20 text-amber-400 border border-amber-600/30' 
-                            : 'text-gray-300 hover:text-amber-400 hover:bg-purple-900/20'
+                            ? 'bg-amber-600/10 text-amber-400/70 border border-amber-600/20' 
+                            : 'text-gray-300/70 hover:text-amber-400/80 hover:bg-white/5'
                           }
                         `}
                         onClick={() => setIsOpen(false)}

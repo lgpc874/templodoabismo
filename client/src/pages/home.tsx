@@ -65,20 +65,20 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
+          <div className="floating-card p-8 space-y-6 bg-black/8 backdrop-blur-sm border border-white/10 rounded-xl">
+            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-400/70 mb-6 floating-title-slow">
               Ave, Buscador das Trevas Sagradas
             </h2>
             
-            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
-              Cruzaste o limiar do mundo profano e adentraste o <strong className="text-amber-400">sanctum sanctorum</strong> onde a Luz Negra do Conhecimento Primordial 
-              ilumina os caminhos ocultos. Este Templo é o repositório das <strong className="text-amber-400">verdades ancestrais</strong> 
+            <p className="text-xl text-gray-300/70 leading-relaxed font-crimson mb-6">
+              Cruzaste o limiar do mundo profano e adentraste o <strong className="text-amber-400/80">sanctum sanctorum</strong> onde a Luz Negra do Conhecimento Primordial 
+              ilumina os caminhos ocultos. Este Templo é o repositório das <strong className="text-amber-400/80">verdades ancestrais</strong> 
               que foram sussurradas pelos primeiros rebeldes, preservadas através dos éons nas chamas eternas do Abismo.
             </p>
             
-            <p className="text-lg text-gray-300 leading-relaxed font-crimson mb-6">
-              Aqui, as <strong className="text-red-400">forças ctônicas</strong> convergem através de portais dimensionais, 
-              canalizando os <strong className="text-amber-400">ensinamentos de Lúcifer</strong> - o Portador da Luz, 
+            <p className="text-lg text-gray-300/70 leading-relaxed font-crimson mb-6">
+              Aqui, as <strong className="text-red-400/80">forças ctônicas</strong> convergem através de portais dimensionais, 
+              canalizando os <strong className="text-amber-400/80">ensinamentos de Lúcifer</strong> - o Portador da Luz, 
               o Primeiro Iniciado, aquele que desafiou a tirania e trouxe o fogo do conhecimento à humanidade.
             </p>
             
@@ -106,19 +106,19 @@ export default function Home() {
 
         {/* Recent Real Content from Supabase */}
         {recentPosts && recentPosts.length > 0 && (
-          <div className="floating-card max-w-2xl mx-auto mb-12 p-8 bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <div className="floating-card max-w-2xl mx-auto mb-12 p-8 bg-black/8 backdrop-blur-sm border border-white/10 rounded-xl">
             <div className="text-center">
-              <h3 className="text-2xl font-bold text-red-400 mb-4 flex items-center justify-center gap-2">
+              <h3 className="text-2xl font-bold text-red-400/70 mb-4 flex items-center justify-center gap-2">
                 <Flame className="w-6 h-6" />
                 Voz da Pluma
               </h3>
-              <div className="text-lg text-gray-300 leading-relaxed mb-4">
-                <h4 className="text-amber-400 mb-2">{recentPosts[0].title}</h4>
-                <div className="text-sm text-gray-400 italic">
+              <div className="text-lg text-gray-300/70 leading-relaxed mb-4">
+                <h4 className="text-amber-400/70 mb-2">{recentPosts[0].title}</h4>
+                <div className="text-sm text-gray-400/70 italic">
                   {recentPosts[0].excerpt || recentPosts[0].content?.substring(0, 200) + '...'}
                 </div>
               </div>
-              <Link to="/voz-da-pluma" className="text-amber-400 hover:text-amber-300 underline">
+              <Link to="/voz-da-pluma" className="text-amber-400/70 hover:text-amber-300/80 underline">
                 Ver todas as publicações
               </Link>
             </div>
