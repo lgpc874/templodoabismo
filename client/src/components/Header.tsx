@@ -40,6 +40,7 @@ const Header: React.FC = () => {
     { href: '/grimoires', label: 'Grimorium', icon: Scroll },
     { href: '/oraculo', label: 'Oraculum', icon: Eye },
     { href: '/gnosis', label: 'Gnosis', icon: Book },
+    { href: '/liber-prohibitus', label: 'Liber Prohibitus', icon: Shield },
     { href: '/voz-da-pluma', label: 'Vox Pluma', icon: Feather },
     { href: '/bibliotheca', label: 'Bibliotheca', icon: Library },
   ];
