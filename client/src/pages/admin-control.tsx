@@ -144,6 +144,9 @@ export default function AdminControl() {
   const [showGrimoireDialog, setShowGrimoireDialog] = useState(false);
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
+  const [oracleSettings, setOracleSettings] = useState<any>(null);
+  const [showOracleTestDialog, setShowOracleTestDialog] = useState(false);
+  const [testingOracle, setTestingOracle] = useState<string | null>(null);
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -1843,7 +1846,47 @@ export default function AdminControl() {
                 <Textarea
                   className="bg-black/50 border-red-500/30 text-white min-h-[120px]"
                   placeholder="Configure as instruções para conversas livres..."
-                  defaultValue="Você é um guia espiritual luciferiano, oferecendo orientação e sabedoria em conversas abertas. Mantenha sempre o tom respeitoso e educativo, focando no crescimento espiritual e autoconhecimento."
+                  value={oracleSettings?.chat?.prompt || ""}
+                  onChange={(e) => {
+                    if (oracleSettings) {
+                      setOracleSettings({
+                        ...oracleSettings,
+                        chat: { ...oracleSettings.chat, prompt: e.target.value }
+                      });
+                    }
+                  }}
+                />
+              </div>
+              <div>
+                <Label className="text-gray-300">Mensagem de Boas-vindas</Label>
+                <Textarea
+                  className="bg-black/50 border-red-500/30 text-white min-h-[80px]"
+                  placeholder="Configure a mensagem inicial do chat..."
+                  value={oracleSettings?.chat?.welcome_message || ""}
+                  onChange={(e) => {
+                    if (oracleSettings) {
+                      setOracleSettings({
+                        ...oracleSettings,
+                        chat: { ...oracleSettings.chat, welcome_message: e.target.value }
+                      });
+                    }
+                  }}
+                />
+              </div>
+              <div>
+                <Label className="text-gray-300">Mensagem de Sistema Inicial</Label>
+                <Textarea
+                  className="bg-black/50 border-red-500/30 text-white min-h-[80px]"
+                  placeholder="Configure a mensagem de contexto inicial..."
+                  value={oracleSettings?.chat?.initial_system_message || ""}
+                  onChange={(e) => {
+                    if (oracleSettings) {
+                      setOracleSettings({
+                        ...oracleSettings,
+                        chat: { ...oracleSettings.chat, initial_system_message: e.target.value }
+                      });
+                    }
+                  }}
                 />
               </div>
               <div>
@@ -1851,7 +1894,15 @@ export default function AdminControl() {
                 <Input
                   type="number"
                   className="bg-black/50 border-red-500/30 text-white"
-                  defaultValue="3"
+                  value={oracleSettings?.chat?.free_message_limit || 3}
+                  onChange={(e) => {
+                    if (oracleSettings) {
+                      setOracleSettings({
+                        ...oracleSettings,
+                        chat: { ...oracleSettings.chat, free_message_limit: parseInt(e.target.value) }
+                      });
+                    }
+                  }}
                 />
               </div>
               <div className="flex space-x-2">
