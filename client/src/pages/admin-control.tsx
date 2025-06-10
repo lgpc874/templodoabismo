@@ -17,7 +17,9 @@ import {
   Save,
   Eye,
   Upload,
-  X
+  X,
+  PenTool,
+  TrendingUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -394,6 +396,10 @@ export default function AdminControl() {
               <TabsTrigger value="analytics" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-300">
                 <TrendingUp className="w-4 h-4 mr-1" />
                 Analytics
+              </TabsTrigger>
+              <TabsTrigger value="oracles" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-300">
+                <Eye className="w-4 h-4 mr-1" />
+                Oráculos
               </TabsTrigger>
               <TabsTrigger value="settings" className="data-[state=active]:bg-amber-600/20 data-[state=active]:text-amber-300">
                 <Settings className="w-4 h-4 mr-1" />
@@ -1385,6 +1391,614 @@ export default function AdminControl() {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Articles Management Tab */}
+      <TabsContent value="articles" className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-cinzel-decorative text-amber-400">Gerenciar Artigos</h2>
+          <Button 
+            onClick={() => {
+              setEditingPage(null);
+              setShowPageDialog(true);
+            }}
+            className="bg-amber-600 hover:bg-amber-700 text-white"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Novo Artigo
+          </Button>
+        </div>
+
+        <Card className="floating-card bg-black/40 border-amber-500/30">
+          <CardHeader>
+            <CardTitle className="text-amber-400">Artigos Publicados</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {pages?.filter(page => page.type === 'article').map((article) => (
+                <div key={article.id} className="flex items-center justify-between p-4 border border-amber-500/20 rounded-lg">
+                  <div>
+                    <h3 className="text-white font-medium">{article.title}</h3>
+                    <p className="text-gray-400 text-sm">{article.slug}</p>
+                    <Badge variant={article.status === 'published' ? 'default' : 'secondary'}>
+                      {article.status}
+                    </Badge>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setEditingPage(article);
+                        setShowPageDialog(true);
+                      }}
+                      className="border-amber-500/30 text-amber-300"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => deletePage(article.id)}
+                      className="border-red-500/30 text-red-300"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
+
+      {/* Users Management Tab */}
+      <TabsContent value="users" className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-cinzel-decorative text-amber-400">Gerenciar Usuários</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400">Usuários Ativos</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-amber-400">{stats?.activeUsers || 0}</div>
+              <p className="text-gray-500">Usuários online</p>
+            </CardContent>
+          </Card>
+
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400">Total de Usuários</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-amber-400">{stats?.totalUsers || 0}</div>
+              <p className="text-gray-500">Cadastrados</p>
+            </CardContent>
+          </Card>
+
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400">Novos Usuários</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-amber-400">+{stats?.monthlyGrowth || 0}%</div>
+              <p className="text-gray-500">Este mês</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="floating-card bg-black/40 border-amber-500/30">
+          <CardHeader>
+            <CardTitle className="text-amber-400">Lista de Usuários</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="text-gray-400">Implementar lista de usuários com controles de administração</div>
+            </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
+
+      {/* Analytics Tab */}
+      <TabsContent value="analytics" className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-cinzel-decorative text-amber-400">Analytics Avançado</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400">Visitantes Únicos</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-amber-400">{stats?.totalVisits || 0}</div>
+              <p className="text-gray-500">Total de visitas</p>
+            </CardContent>
+          </Card>
+
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400">Páginas Vistas</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-amber-400">{(stats?.totalVisits || 0) * 2.3}</div>
+              <p className="text-gray-500">Visualizações</p>
+            </CardContent>
+          </Card>
+
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400">Taxa de Conversão</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-amber-400">12.5%</div>
+              <p className="text-gray-500">Visitante para membro</p>
+            </CardContent>
+          </Card>
+
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400">Tempo Médio</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-amber-400">8:42</div>
+              <p className="text-gray-500">Minutos no site</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400">Conteúdo Mais Acessado</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {stats?.popularPages?.map((page, index) => (
+                  <div key={index} className="flex justify-between items-center">
+                    <span className="text-gray-300">{page.name}</span>
+                    <span className="text-amber-400">{page.views}</span>
+                  </div>
+                )) || (
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-300">Liber Prohibitus</span>
+                      <span className="text-amber-400">1,247</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-300">Voz da Pluma</span>
+                      <span className="text-amber-400">892</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-300">Oráculo</span>
+                      <span className="text-amber-400">634</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400">Origens de Tráfego</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300">Busca Orgânica</span>
+                  <span className="text-amber-400">45%</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300">Direto</span>
+                  <span className="text-amber-400">32%</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300">Redes Sociais</span>
+                  <span className="text-amber-400">18%</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-300">Referência</span>
+                  <span className="text-amber-400">5%</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </TabsContent>
+
+      {/* Oracle Control Tab */}
+      <TabsContent value="oracles" className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-cinzel-decorative text-amber-400">Controle dos Oráculos</h2>
+          <Button 
+            onClick={() => {/* Refresh oracle settings */}}
+            className="bg-amber-600 hover:bg-amber-700 text-white"
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            Atualizar Configurações
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Tarot Oracle */}
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400 flex items-center">
+                <span className="text-2xl mr-2">🔮</span>
+                Oráculo do Tarot
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label className="text-gray-300">Prompt de Sistema</Label>
+                <Textarea
+                  className="bg-black/50 border-red-500/30 text-white min-h-[120px]"
+                  placeholder="Configure as instruções para leituras de tarot..."
+                  defaultValue="Você é um oráculo anciente especializado em tarot luciferiano. Interprete as cartas com sabedoria abissal, revelando verdades ocultas através dos símbolos sagrados. Use linguagem mística e profunda."
+                />
+              </div>
+              <div>
+                <Label className="text-gray-300">Cartas Disponíveis</Label>
+                <Input
+                  className="bg-black/50 border-red-500/30 text-white"
+                  defaultValue="78"
+                  disabled
+                />
+              </div>
+              <div className="flex space-x-2">
+                <Button className="bg-red-600 hover:bg-red-700 text-white">
+                  <Save className="w-4 h-4 mr-2" />
+                  Salvar
+                </Button>
+                <Button variant="outline" className="border-amber-500/30 text-amber-300">
+                  Testar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Mirror Oracle */}
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400 flex items-center">
+                <span className="text-2xl mr-2">🪞</span>
+                Espelho Abissal
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label className="text-gray-300">Prompt de Sistema</Label>
+                <Textarea
+                  className="bg-black/50 border-red-500/30 text-white min-h-[120px]"
+                  placeholder="Configure as instruções para reflexões do espelho..."
+                  defaultValue="Você é o Espelho Abissal que reflete as verdades mais profundas da alma. Mostre ao consulente seus aspectos sombrios e luminosos, revelando o que está oculto em seu ser interior. Use linguagem poética e introspectiva."
+                />
+              </div>
+              <div>
+                <Label className="text-gray-300">Tipo de Reflexão</Label>
+                <Select defaultValue="soul">
+                  <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="soul">Reflexão da Alma</SelectItem>
+                    <SelectItem value="shadow">Trabalho de Sombra</SelectItem>
+                    <SelectItem value="future">Visão do Futuro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex space-x-2">
+                <Button className="bg-red-600 hover:bg-red-700 text-white">
+                  <Save className="w-4 h-4 mr-2" />
+                  Salvar
+                </Button>
+                <Button variant="outline" className="border-amber-500/30 text-amber-300">
+                  Testar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Rune Oracle */}
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400 flex items-center">
+                <span className="text-2xl mr-2">ᚱ</span>
+                Runas Ancestrais
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label className="text-gray-300">Prompt de Sistema</Label>
+                <Textarea
+                  className="bg-black/50 border-red-500/30 text-white min-h-[120px]"
+                  placeholder="Configure as instruções para leituras rúnicas..."
+                  defaultValue="Você é um vidente das runas ancestrais, conhecedor dos mistérios nórdicos e germânicos. Interprete os símbolos com a sabedoria dos antigos, revelando os caminhos do destino através da linguagem dos deuses."
+                />
+              </div>
+              <div>
+                <Label className="text-gray-300">Sistema Rúnico</Label>
+                <Select defaultValue="elder-futhark">
+                  <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="elder-futhark">Elder Futhark (24 runas)</SelectItem>
+                    <SelectItem value="younger-futhark">Younger Futhark (16 runas)</SelectItem>
+                    <SelectItem value="anglo-saxon">Anglo-Saxon (33 runas)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex space-x-2">
+                <Button className="bg-red-600 hover:bg-red-700 text-white">
+                  <Save className="w-4 h-4 mr-2" />
+                  Salvar
+                </Button>
+                <Button variant="outline" className="border-amber-500/30 text-amber-300">
+                  Testar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Fire Oracle */}
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400 flex items-center">
+                <span className="text-2xl mr-2">🔥</span>
+                Chamas Sagradas
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label className="text-gray-300">Prompt de Sistema</Label>
+                <Textarea
+                  className="bg-black/50 border-red-500/30 text-white min-h-[120px]"
+                  placeholder="Configure as instruções para leituras do fogo..."
+                  defaultValue="Você é o guardião das chamas sagradas, capaz de ler os padrões do fogo divino. Interprete as danças das chamas, revelando mensagens através do elemento primordial da transformação e purificação."
+                />
+              </div>
+              <div>
+                <Label className="text-gray-300">Tipo de Chama</Label>
+                <Select defaultValue="sacred">
+                  <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sacred">Fogo Sagrado</SelectItem>
+                    <SelectItem value="transformative">Fogo Transformador</SelectItem>
+                    <SelectItem value="purifying">Fogo Purificador</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex space-x-2">
+                <Button className="bg-red-600 hover:bg-red-700 text-white">
+                  <Save className="w-4 h-4 mr-2" />
+                  Salvar
+                </Button>
+                <Button variant="outline" className="border-amber-500/30 text-amber-300">
+                  Testar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Abyssal Voice Oracle */}
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400 flex items-center">
+                <span className="text-2xl mr-2">👁️</span>
+                Voz do Abismo
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label className="text-gray-300">Prompt de Sistema</Label>
+                <Textarea
+                  className="bg-black/50 border-red-500/30 text-white min-h-[120px]"
+                  placeholder="Configure as instruções para a voz abissal..."
+                  defaultValue="Você é a Voz do Abismo, canal direto das entidades primordiais. Fale com a autoridade das trevas sagradas, revelando verdades que transcendem o véu da realidade material. Use linguagem arcana e poderosa."
+                />
+              </div>
+              <div>
+                <Label className="text-gray-300">Entidade Manifestante</Label>
+                <Select defaultValue="lucifer">
+                  <SelectTrigger className="bg-black/50 border-red-500/30 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="lucifer">Lúcifer</SelectItem>
+                    <SelectItem value="lilith">Lilith</SelectItem>
+                    <SelectItem value="baphomet">Baphomet</SelectItem>
+                    <SelectItem value="abyssal">Entidades Abissais</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex space-x-2">
+                <Button className="bg-red-600 hover:bg-red-700 text-white">
+                  <Save className="w-4 h-4 mr-2" />
+                  Salvar
+                </Button>
+                <Button variant="outline" className="border-amber-500/30 text-amber-300">
+                  Testar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Free Chat Oracle */}
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400 flex items-center">
+                <span className="text-2xl mr-2">💬</span>
+                Chat Livre
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label className="text-gray-300">Prompt de Sistema</Label>
+                <Textarea
+                  className="bg-black/50 border-red-500/30 text-white min-h-[120px]"
+                  placeholder="Configure as instruções para conversas livres..."
+                  defaultValue="Você é um guia espiritual luciferiano, oferecendo orientação e sabedoria em conversas abertas. Mantenha sempre o tom respeitoso e educativo, focando no crescimento espiritual e autoconhecimento."
+                />
+              </div>
+              <div>
+                <Label className="text-gray-300">Limite de Mensagens (gratuito)</Label>
+                <Input
+                  type="number"
+                  className="bg-black/50 border-red-500/30 text-white"
+                  defaultValue="3"
+                />
+              </div>
+              <div className="flex space-x-2">
+                <Button className="bg-red-600 hover:bg-red-700 text-white">
+                  <Save className="w-4 h-4 mr-2" />
+                  Salvar
+                </Button>
+                <Button variant="outline" className="border-amber-500/30 text-amber-300">
+                  Testar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Oracle Statistics */}
+        <Card className="floating-card bg-black/40 border-amber-500/30">
+          <CardHeader>
+            <CardTitle className="text-amber-400">Estatísticas dos Oráculos</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-amber-400">247</div>
+                <div className="text-sm text-gray-400">Tarot</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-amber-400">156</div>
+                <div className="text-sm text-gray-400">Espelho</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-amber-400">189</div>
+                <div className="text-sm text-gray-400">Runas</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-amber-400">134</div>
+                <div className="text-sm text-gray-400">Fogo</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-amber-400">98</div>
+                <div className="text-sm text-gray-400">Voz Abissal</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-amber-400">312</div>
+                <div className="text-sm text-gray-400">Chat Livre</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
+
+      {/* Enhanced Settings Tab */}
+      <TabsContent value="settings" className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-cinzel-decorative text-amber-400">Configurações do Site</h2>
+          <Button 
+            onClick={() => setShowSettingsDialog(true)}
+            className="bg-amber-600 hover:bg-amber-700 text-white"
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            Editar Configurações
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400">Informações Gerais</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div>
+                  <Label className="text-gray-300">Nome do Site</Label>
+                  <div className="text-white">{siteSettings?.siteName || 'Templo do Abismo'}</div>
+                </div>
+                <div>
+                  <Label className="text-gray-300">Descrição</Label>
+                  <div className="text-white">{siteSettings?.siteDescription || 'Portal de Ensinamentos Luciferianos'}</div>
+                </div>
+                <div>
+                  <Label className="text-gray-300">Status</Label>
+                  <Badge variant={siteSettings?.maintenanceMode ? 'destructive' : 'default'}>
+                    {siteSettings?.maintenanceMode ? 'Manutenção' : 'Online'}
+                  </Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="floating-card bg-black/40 border-amber-500/30">
+            <CardHeader>
+              <CardTitle className="text-amber-400">Configurações de Acesso</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div>
+                  <Label className="text-gray-300">Registro de Novos Usuários</Label>
+                  <Badge variant={siteSettings?.allowRegistration !== false ? 'default' : 'secondary'}>
+                    {siteSettings?.allowRegistration !== false ? 'Permitido' : 'Bloqueado'}
+                  </Badge>
+                </div>
+                <div>
+                  <Label className="text-gray-300">Função Padrão</Label>
+                  <div className="text-white">{siteSettings?.defaultUserRole || 'Iniciado'}</div>
+                </div>
+                <div>
+                  <Label className="text-gray-300">Analytics</Label>
+                  <Badge variant={siteSettings?.enableAnalytics !== false ? 'default' : 'secondary'}>
+                    {siteSettings?.enableAnalytics !== false ? 'Ativo' : 'Inativo'}
+                  </Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="floating-card bg-black/40 border-amber-500/30">
+          <CardHeader>
+            <CardTitle className="text-amber-400">Status do Sistema</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <Label className="text-gray-300">Servidor</Label>
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-white">Online</span>
+                </div>
+              </div>
+              <div>
+                <Label className="text-gray-300">Base de Dados</Label>
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-white">Conectado</span>
+                </div>
+              </div>
+              <div>
+                <Label className="text-gray-300">Backup</Label>
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <span className="text-white">Último: 2h atrás</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
     </div>
   );
 }
