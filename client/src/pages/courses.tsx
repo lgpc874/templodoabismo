@@ -112,13 +112,13 @@ export default function Courses() {
       {/* Main content */}
       <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-4 pt-20">
         {/* Hero Section */}
-        <div className="text-center mb-12 max-w-4xl">
-          <div className="mb-8">
-            <div className="text-amber-400 text-6xl mb-4">🔥</div>
-            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
+        <div className="text-center mb-8 md:mb-12 max-w-4xl px-4">
+          <div className="mb-6 md:mb-8">
+            <div className="text-amber-400 text-4xl md:text-6xl mb-3 md:mb-4">🔥</div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-4 md:mb-6 floating-title leading-tight">
               ACADEMIA INFERNAL
             </h1>
-            <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
+            <div className="flex justify-center items-center space-x-4 md:space-x-8 text-amber-500 text-xl md:text-3xl mb-4 md:mb-6">
               <span>☿</span>
               <span>⚹</span>
               <span>𖤍</span>
@@ -127,29 +127,29 @@ export default function Courses() {
             </div>
           </div>
           
-          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
+          <div className="floating-card p-4 md:p-8 space-y-4 md:space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-cinzel-decorative text-amber-300 mb-4 md:mb-6 floating-title-slow leading-tight">
               Do Iniciante ao Mestre das Trevas
             </h2>
             
-            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
+            <p className="text-base md:text-xl text-gray-300 leading-relaxed font-crimson mb-4 md:mb-6">
               Adentre o <strong className="text-red-400">caminho da autodivindade</strong> através de nossos cursos infernais. 
               Cada ensinamento foi forjado nas <strong className="text-amber-400">chamas primordiais do conhecimento proibido</strong>, 
               conduzindo sua alma desde o despertar inicial até a <strong className="text-red-400">maestria absoluta das artes sombrias</strong>.
             </p>
 
-            <p className="text-lg text-gray-300 leading-relaxed font-crimson mb-6">
+            <p className="text-sm md:text-lg text-gray-300 leading-relaxed font-crimson mb-4 md:mb-6">
               Aqui você <strong className="text-amber-400">não apenas aprende teoria</strong> - você se transforma completamente. 
               Cada curso é uma <strong className="text-red-400">jornada de transmutação espiritual</strong> que desperta poderes 
               dormentes e quebra as correntes da ignorância humana.
             </p>
             
             <div className="text-center">
-              <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
-              <p className="text-lg font-cinzel-decorative text-amber-300">
+              <div className="text-amber-400 text-xl md:text-2xl mb-3 md:mb-4">𖤍 ⸸ 𖤍</div>
+              <p className="text-base md:text-lg font-cinzel-decorative text-amber-300">
                 "Ab Initio Ad Astra"
               </p>
-              <p className="text-sm text-gray-400 font-crimson italic mt-2">
+              <p className="text-xs md:text-sm text-gray-400 font-crimson italic mt-2">
                 Do início às estrelas - Transformação total da alma
               </p>
             </div>
