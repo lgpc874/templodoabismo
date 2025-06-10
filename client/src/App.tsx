@@ -20,7 +20,7 @@ import Grimoires from "@/pages/grimoires";
 import Bibliotheca from "@/pages/bibliotheca-mystical";
 import VozDaPluma from "@/pages/voz-da-pluma-mystical";
 import LiberProhibitus from "@/pages/liber-prohibitus-mystical";
-import Blog from "@/pages/blog";
+import BlogSupabase from "@/pages/blog-supabase";
 import SupabaseDemo from "@/components/SupabaseDemo";
 
 import AdminControl from "@/pages/admin-control";
@@ -43,8 +43,8 @@ function Router() {
       <Route path="/grimorios" component={Grimoires} />
       <Route path="/bibliotheca" component={Bibliotheca} />
       <Route path="/voz-da-pluma" component={VozDaPluma} />
-      <Route path="/blog" component={Blog} />
-      <Route path="/gnosis" component={Blog} />
+      <Route path="/blog" component={BlogSupabase} />
+      <Route path="/gnosis" component={BlogSupabase} />
       <Route path="/liber-prohibitus" component={LiberProhibitus} />
       <Route path="/supabase-demo" component={SupabaseDemo} />
 
