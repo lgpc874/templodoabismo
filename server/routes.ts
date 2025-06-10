@@ -46,26 +46,7 @@ async function requireAdmin(req: any, res: Response, next: any) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Configuration endpoint for client
-  app.get('/api/config/supabase', (req: Request, res: Response) => {
-    const url = process.env.SUPABASE_URL;
-    const key = process.env.SUPABASE_KEY;
-    
-    console.log('Supabase config request:', { 
-      hasUrl: !!url, 
-      hasKey: !!key,
-      urlPrefix: url?.substring(0, 20) + '...'
-    });
-    
-    if (!url || !key) {
-      console.error('Missing Supabase configuration');
-      return res.status(500).json({ error: 'Supabase configuration missing' });
-    }
-    
-    res.json({ url, key });
-  });
-
-  // Emergency admin access endpoint
+  // Emergency admin access endpoint - must be first
   app.post('/api/emergency-admin', async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body;
@@ -89,6 +70,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: 'Emergency admin failed' });
     }
   });
+
+  // Configuration endpoint for client
+  app.get('/api/config/supabase', (req: Request, res: Response) => {
+    const url = process.env.SUPABASE_URL;
+    const key = process.env.SUPABASE_KEY;
+    
+    console.log('Supabase config request:', { 
+      hasUrl: !!url, 
+      hasKey: !!key,
+      urlPrefix: url?.substring(0, 20) + '...'
+    });
+    
+    if (!url || !key) {
+      console.error('Missing Supabase configuration');
+      return res.status(500).json({ error: 'Supabase configuration missing' });
+    }
+    
+    res.json({ url, key });
+  });
+
+
 
   // Special endpoint to make first user admin
   app.post('/api/make-admin', async (req: Request, res: Response) => {
