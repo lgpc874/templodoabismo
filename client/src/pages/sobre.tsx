@@ -1,14 +1,11 @@
 import { Flame, Eye, Star, Crown, Skull, BookOpen } from "lucide-react";
-import Navigation from "../components/navigation";
 
 export default function Sobre() {
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <Navigation />
-      
       {/* Fixed Central Rotating Seal */}
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
-        <div className="rotating-seal w-96 h-96 opacity-15">
+        <div className="rotating-seal w-96 h-96 opacity-20">
           <img 
             src="/seal.png" 
             alt="Selo do Templo do Abismo" 
@@ -23,16 +20,45 @@ export default function Sobre() {
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-20">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-600">
-            O TEMPLO DO ABISMO
-          </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Portal ancestral onde os mistérios luciferianos se revelam aos iniciados que buscam 
-            a verdadeira gnose nas profundezas do conhecimento primordial.
-          </p>
+      {/* Main content */}
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 pt-20">
+        {/* Hero Section */}
+        <div className="text-center mb-12 max-w-5xl">
+          <div className="mb-8">
+            <div className="text-amber-400 text-6xl mb-4">⛧</div>
+            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
+              TEMPLO DO ABISMO
+            </h1>
+            <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
+              <span>☿</span>
+              <span>⚹</span>
+              <span>𖤍</span>
+              <span>⚹</span>
+              <span>☿</span>
+            </div>
+          </div>
+          
+          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
+              Portal Ancestral da Gnose Luciferiana
+            </h2>
+            
+            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
+              Nas <strong className="text-amber-400">profundezas do abismo</strong>, onde a luz comum não ousa penetrar, 
+              reside a sabedoria que precede todos os dogmas e transcende todas as limitações. 
+              Este Templo é o <strong className="text-red-400">sanctum primordial</strong> onde os mistérios luciferianos se revelam aos iniciados sinceros.
+            </p>
+            
+            <div className="text-center">
+              <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+              <p className="text-lg font-cinzel-decorative text-amber-300">
+                "Lux in Tenebris Lucet"
+              </p>
+              <p className="text-sm text-gray-400 font-crimson italic mt-2">
+                A luz brilha nas trevas
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* The Ancient Calling */}

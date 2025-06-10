@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Shield, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { Shield, UserPlus, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const Register: React.FC = () => {
   const [, setLocation] = useLocation();
@@ -22,6 +23,8 @@ const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -33,196 +36,238 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
     
     if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Erro",
-        description: "As senhas não coincidem",
-        variant: "destructive",
-      });
+      setError("As senhas não coincidem");
       return;
     }
 
     if (formData.password.length < 6) {
-      toast({
-        title: "Erro",
-        description: "A senha deve ter pelo menos 6 caracteres",
-        variant: "destructive",
-      });
+      setError("A senha deve ter pelo menos 6 caracteres");
+      return;
+    }
+
+    if (!formData.username.trim()) {
+      setError("Nome de usuário é obrigatório");
       return;
     }
 
     setLoading(true);
-    
+
     try {
-      const success = await register(formData.username, formData.email, formData.password);
+      await register(formData.username, formData.email, formData.password);
+      setSuccess("Conta criada com sucesso! Redirecionando...");
       
-      if (success) {
-        toast({
-          title: "Registro realizado com sucesso!",
-          description: "Bem-vindo ao Templo do Abismo",
-        });
-        setLocation('/');
-      } else {
-        toast({
-          title: "Erro no registro",
-          description: "Verifique seus dados e tente novamente",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error('Registration error:', error);
-      toast({
-        title: "Erro no registro",
-        description: "Ocorreu um erro inesperado. Tente novamente.",
-        variant: "destructive",
-      });
+      setTimeout(() => {
+        setLocation('/login');
+      }, 2000);
+    } catch (error: any) {
+      setError(error.message || "Erro ao criar conta");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-red-900/20 flex items-center justify-center p-4">
-      <div className="absolute inset-0 opacity-5 pointer-events-none"></div>
-      
-      <Card className="w-full max-w-md bg-gray-900/90 border-amber-800/30 backdrop-blur-sm">
-        <CardHeader className="text-center">
-          <div className="mx-auto w-16 h-16 relative mb-4">
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-400 via-red-500 to-purple-600 rounded-full animate-pulse"></div>
-            <div className="absolute inset-2 bg-gray-900 rounded-full flex items-center justify-center">
-              <Shield className="w-8 h-8 text-amber-400" />
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Fixed Central Rotating Seal */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <div className="rotating-seal w-96 h-96 opacity-20">
+          <img 
+            src="/seal.png" 
+            alt="Selo do Templo do Abismo" 
+            className="w-full h-full object-contain filter drop-shadow-lg"
+          />
+        </div>
+      </div>
+
+      {/* Mystical floating particles */}
+      <div className="fixed inset-0 overflow-hidden z-0">
+        <div className="mystical-particles"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+      </div>
+
+      {/* Main content */}
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 pt-20">
+        {/* Hero Section */}
+        <div className="text-center mb-12 max-w-2xl">
+          <div className="mb-8">
+            <div className="text-amber-400 text-6xl mb-4">⛧</div>
+            <h1 className="text-4xl md:text-6xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
+              INITIUM NOVUM
+            </h1>
+            <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
+              <span>☿</span>
+              <span>⚹</span>
+              <span>𖤍</span>
+              <span>⚹</span>
+              <span>☿</span>
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-amber-400 to-red-500 bg-clip-text text-transparent">
-            Junte-se ao Templo
-          </CardTitle>
-          <CardDescription className="text-gray-400">
-            Inicie sua jornada nos mistérios ancestrais
-          </CardDescription>
-        </CardHeader>
-        
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="username" className="text-gray-300">
-                Nome de Iniciado
-              </Label>
-              <Input
-                id="username"
-                name="username"
-                type="text"
-                required
-                value={formData.username}
-                onChange={handleInputChange}
-                className="bg-gray-800 border-amber-800/30 text-gray-100 focus:border-amber-500"
-                placeholder="Escolha seu nome místico"
-              />
-            </div>
+          
+          <div className="floating-card p-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+            <h2 className="text-2xl md:text-3xl font-cinzel-decorative text-amber-300 mb-4 floating-title-slow">
+              Nova Jornada Iniciática
+            </h2>
             
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-300">
-                Email
-              </Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={handleInputChange}
-                className="bg-gray-800 border-amber-800/30 text-gray-100 focus:border-amber-500"
-                placeholder="seu@email.com"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-gray-300">
-                Senha
-              </Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  required
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="bg-gray-800 border-amber-800/30 text-gray-100 focus:border-amber-500 pr-10"
-                  placeholder="Mínimo 6 caracteres"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-amber-400"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
+            <p className="text-lg text-gray-300 leading-relaxed font-crimson">
+              Inicie sua <strong className="text-amber-400">jornada ancestral</strong> no portal da sabedoria luciferiana
+            </p>
+          </div>
+        </div>
+
+        {/* Registration Card */}
+        <div className="floating-card w-full max-w-md bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <Card className="bg-transparent border-none shadow-none">
+            <CardHeader className="text-center">
+              <div className="flex items-center justify-center mb-4">
+                <UserPlus className="w-8 h-8 text-amber-400 mr-3" />
+                <CardTitle className="text-amber-400 font-cinzel-decorative text-xl">
+                  Criar Conta
+                </CardTitle>
               </div>
-            </div>
+              <CardDescription className="text-gray-300">
+                Complete os dados abaixo para começar sua jornada
+              </CardDescription>
+            </CardHeader>
             
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-gray-300">
-                Confirmar Senha
-              </Label>
-              <div className="relative">
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  required
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  className="bg-gray-800 border-amber-800/30 text-gray-100 focus:border-amber-500 pr-10"
-                  placeholder="Repita sua senha"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-amber-400"
-                >
-                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-            
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-700 hover:to-red-700 text-white font-medium"
-            >
-              {loading ? (
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Criando conta...</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <UserPlus className="w-4 h-4" />
-                  <span>Criar Conta</span>
-                </div>
+            <CardContent>
+              {error && (
+                <Alert className="mb-4 border-red-600/30 bg-red-950/20">
+                  <AlertCircle className="h-4 w-4 text-red-400" />
+                  <AlertDescription className="text-red-300">
+                    {error}
+                  </AlertDescription>
+                </Alert>
               )}
-            </Button>
-          </form>
-          
-          <div className="mt-6 text-center">
-            <p className="text-gray-400 text-sm">
-              Já possui uma conta?{' '}
-              <Link href="/login">
-                <span className="text-amber-400 hover:text-amber-300 cursor-pointer font-medium">
-                  Entrar no Templo
-                </span>
-              </Link>
+              
+              {success && (
+                <Alert className="mb-4 border-amber-600/30 bg-amber-950/20">
+                  <AlertDescription className="text-amber-300">
+                    {success}
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="username" className="text-amber-200">Nome de Usuário</Label>
+                  <Input
+                    id="username"
+                    name="username"
+                    type="text"
+                    value={formData.username}
+                    onChange={handleInputChange}
+                    className="bg-black/40 border-amber-600/30 text-amber-100 focus:border-amber-500 placeholder:text-gray-500"
+                    placeholder="Escolha um nome de usuário"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-amber-200">Email</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="bg-black/40 border-amber-600/30 text-amber-100 focus:border-amber-500 placeholder:text-gray-500"
+                    placeholder="seu@email.com"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-amber-200">Senha</Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      className="bg-black/40 border-amber-600/30 text-amber-100 pr-10 focus:border-amber-500 placeholder:text-gray-500"
+                      placeholder="Crie uma senha segura"
+                      required
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3 text-amber-400 hover:text-amber-300"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword" className="text-amber-200">Confirmar Senha</Label>
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      className="bg-black/40 border-amber-600/30 text-amber-100 pr-10 focus:border-amber-500 placeholder:text-gray-500"
+                      placeholder="Confirme sua senha"
+                      required
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3 text-amber-400 hover:text-amber-300"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full bg-amber-600 hover:bg-amber-700 text-black font-semibold"
+                  disabled={loading}
+                >
+                  {loading ? "Criando conta..." : "⛧ Iniciar Jornada ⛧"}
+                </Button>
+              </form>
+
+              <div className="mt-6 text-center">
+                <p className="text-gray-400 text-sm">
+                  Já possui uma conta?{' '}
+                  <Link href="/login">
+                    <span className="text-amber-400 hover:text-amber-300 font-medium cursor-pointer">
+                      Fazer login
+                    </span>
+                  </Link>
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Terms Notice */}
+        <div className="floating-card max-w-2xl mx-auto mt-8 p-6 bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+          <div className="text-center">
+            <div className="flex items-center justify-center mb-4">
+              <Shield className="w-6 h-6 text-amber-400 mr-2" />
+              <h3 className="text-lg font-cinzel-decorative text-amber-300">Código de Conduta</h3>
+            </div>
+            <p className="text-sm text-gray-300 leading-relaxed">
+              Ao criar uma conta, você concorda em seguir os <strong className="text-amber-400">preceitos éticos</strong> 
+              do Templo e usar os ensinamentos com <strong className="text-red-400">responsabilidade e sabedoria</strong>.
             </p>
+            <div className="text-amber-400 text-lg mt-4">𖤍 ⸸ 𖤍</div>
           </div>
-          
-          <div className="mt-4 pt-4 border-t border-amber-800/20">
-            <p className="text-xs text-gray-500 text-center">
-              Ao criar uma conta, você concorda em seguir os preceitos do Templo
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };
