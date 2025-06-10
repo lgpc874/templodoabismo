@@ -193,53 +193,47 @@
   50% { filter: brightness(0.5) saturate(0.6) blur(2px); }
 }
 
-/* Dramatically Enhanced Mood-specific seal and energy effects */
+/* Mood-specific seal effects with reduced brightness */
 .mood-abyssal .rotating-seal {
   filter: 
-    drop-shadow(0 0 50px rgba(147, 51, 234, 1.0)) 
-    drop-shadow(0 0 80px rgba(88, 28, 135, 0.8))
-    hue-rotate(270deg) brightness(1.4) saturate(1.5);
-  animation: rotating-seal 20s linear infinite, abyssal-seal-pulse 4s ease-in-out infinite;
+    drop-shadow(0 0 30px rgba(147, 51, 234, 0.6)) 
+    drop-shadow(0 0 50px rgba(88, 28, 135, 0.4))
+    hue-rotate(270deg) brightness(1.1) saturate(1.2);
 }
 
 .mood-infernal .rotating-seal {
   filter: 
-    drop-shadow(0 0 60px rgba(239, 68, 68, 1.0)) 
-    drop-shadow(0 0 90px rgba(255, 69, 0, 0.8))
-    brightness(1.5) contrast(1.3) saturate(1.4);
-  animation: rotating-seal 20s linear infinite, infernal-seal-flicker 2s ease-in-out infinite;
+    drop-shadow(0 0 35px rgba(239, 68, 68, 0.7)) 
+    drop-shadow(0 0 60px rgba(255, 69, 0, 0.5))
+    brightness(1.2) contrast(1.1) saturate(1.2);
 }
 
 .mood-lunar .rotating-seal {
   filter: 
-    drop-shadow(0 0 45px rgba(59, 130, 246, 0.9)) 
-    drop-shadow(0 0 75px rgba(99, 102, 241, 0.7))
-    hue-rotate(210deg) brightness(1.2) saturate(1.3);
-  animation: rotating-seal 20s linear infinite, lunar-seal-glow 6s ease-in-out infinite;
+    drop-shadow(0 0 25px rgba(59, 130, 246, 0.6)) 
+    drop-shadow(0 0 45px rgba(99, 102, 241, 0.4))
+    hue-rotate(210deg) brightness(1.0) saturate(1.1);
 }
 
 .mood-stellar .rotating-seal {
   filter: 
-    drop-shadow(0 0 55px rgba(139, 92, 246, 1.0)) 
-    drop-shadow(0 0 85px rgba(168, 85, 247, 0.8))
-    hue-rotate(290deg) brightness(1.4) saturate(1.6);
-  animation: rotating-seal 20s linear infinite, stellar-seal-twinkle 3s ease-in-out infinite;
+    drop-shadow(0 0 32px rgba(139, 92, 246, 0.7)) 
+    drop-shadow(0 0 55px rgba(168, 85, 247, 0.5))
+    hue-rotate(290deg) brightness(1.1) saturate(1.3);
 }
 
 .mood-divine .rotating-seal {
   filter: 
-    drop-shadow(0 0 70px rgba(245, 158, 11, 1.0)) 
-    drop-shadow(0 0 100px rgba(255, 215, 0, 0.9))
-    brightness(1.6) contrast(1.4) saturate(1.5);
-  animation: rotating-seal 20s linear infinite, divine-seal-radiance 5s ease-in-out infinite;
+    drop-shadow(0 0 40px rgba(245, 158, 11, 0.7)) 
+    drop-shadow(0 0 70px rgba(255, 215, 0, 0.6))
+    brightness(1.3) contrast(1.2) saturate(1.2);
 }
 
 .mood-void .rotating-seal {
   filter: 
-    drop-shadow(0 0 30px rgba(75, 85, 99, 0.7)) 
-    drop-shadow(0 0 50px rgba(107, 114, 128, 0.5))
-    brightness(0.4) saturate(0.3) contrast(0.8);
-  animation: rotating-seal 20s linear infinite, void-seal-drift 8s ease-in-out infinite;
+    drop-shadow(0 0 20px rgba(75, 85, 99, 0.5)) 
+    drop-shadow(0 0 35px rgba(107, 114, 128, 0.3))
+    brightness(0.5) saturate(0.4) contrast(0.8);
 }
 
 /* Dramatically Enhanced Mood-specific floating cards */
@@ -321,38 +315,7 @@
   filter: brightness(0.6) saturate(0.4) contrast(0.8);
 }
 
-/* Enhanced seal-specific animations for each mood */
-@keyframes abyssal-seal-pulse {
-  0%, 100% { transform: scale(1) rotate(0deg); filter: brightness(1.4) saturate(1.5); }
-  50% { transform: scale(1.05) rotate(2deg); filter: brightness(1.7) saturate(1.8) hue-rotate(5deg); }
-}
-
-@keyframes infernal-seal-flicker {
-  0%, 100% { transform: scale(1) rotate(0deg); filter: brightness(1.5) contrast(1.3); }
-  25% { transform: scale(1.03) rotate(-1deg); filter: brightness(1.8) contrast(1.5) hue-rotate(-3deg); }
-  75% { transform: scale(1.02) rotate(1deg); filter: brightness(1.6) contrast(1.4) hue-rotate(3deg); }
-}
-
-@keyframes lunar-seal-glow {
-  0%, 100% { transform: scale(1) rotate(0deg); filter: brightness(1.2) saturate(1.3); }
-  50% { transform: scale(1.04) rotate(-2deg); filter: brightness(1.5) saturate(1.6) blur(1px); }
-}
-
-@keyframes stellar-seal-twinkle {
-  0%, 100% { transform: scale(1) rotate(0deg); filter: brightness(1.4) saturate(1.6); }
-  33% { transform: scale(1.06) rotate(1deg); filter: brightness(1.8) saturate(1.9) hue-rotate(-5deg); }
-  66% { transform: scale(1.02) rotate(-1deg); filter: brightness(1.6) saturate(1.7) hue-rotate(5deg); }
-}
-
-@keyframes divine-seal-radiance {
-  0%, 100% { transform: scale(1) rotate(0deg); filter: brightness(1.6) contrast(1.4); }
-  50% { transform: scale(1.08) rotate(3deg); filter: brightness(2.0) contrast(1.6) saturate(1.8); }
-}
-
-@keyframes void-seal-drift {
-  0%, 100% { transform: scale(1) rotate(0deg); filter: brightness(0.4) saturate(0.3); }
-  50% { transform: scale(0.98) rotate(-1deg); filter: brightness(0.3) saturate(0.2) blur(2px); }
-}
+/* Selo mantém apenas rotação básica, sem animações extras */
 
 /* Radial gradient utility */
 .bg-gradient-radial {
@@ -583,70 +546,70 @@ body.mood-void {
   transition: all 1s ease-in-out;
 }
 
-/* Dramatically Enhanced Mystical Particles for Each Mood */
+/* Enhanced Mystical Particles with Reduced Brightness */
 .mood-abyssal .mystical-particles {
   background-image: 
-    radial-gradient(6px 6px at 20px 30px, rgba(147, 51, 234, 1.0), rgba(147, 51, 234, 0.8) 20%, transparent 50%),
-    radial-gradient(5px 5px at 40px 70px, rgba(88, 28, 135, 0.9), rgba(88, 28, 135, 0.6) 20%, transparent 50%),
-    radial-gradient(4px 4px at 90px 40px, rgba(147, 51, 234, 1.0), rgba(147, 51, 234, 0.7) 20%, transparent 50%),
-    radial-gradient(5px 5px at 130px 80px, rgba(88, 28, 135, 0.8), rgba(88, 28, 135, 0.5) 20%, transparent 50%),
-    radial-gradient(6px 6px at 160px 30px, rgba(147, 51, 234, 0.9), rgba(147, 51, 234, 0.6) 20%, transparent 50%),
-    radial-gradient(4px 4px at 200px 60px, rgba(167, 39, 249, 0.8), rgba(167, 39, 249, 0.5) 20%, transparent 50%);
+    radial-gradient(4px 4px at 20px 30px, rgba(147, 51, 234, 0.7), rgba(147, 51, 234, 0.5) 20%, transparent 50%),
+    radial-gradient(3px 3px at 40px 70px, rgba(88, 28, 135, 0.6), rgba(88, 28, 135, 0.4) 20%, transparent 50%),
+    radial-gradient(3px 3px at 90px 40px, rgba(147, 51, 234, 0.8), rgba(147, 51, 234, 0.5) 20%, transparent 50%),
+    radial-gradient(3px 3px at 130px 80px, rgba(88, 28, 135, 0.6), rgba(88, 28, 135, 0.3) 20%, transparent 50%),
+    radial-gradient(4px 4px at 160px 30px, rgba(147, 51, 234, 0.7), rgba(147, 51, 234, 0.4) 20%, transparent 50%),
+    radial-gradient(2px 2px at 200px 60px, rgba(167, 39, 249, 0.5), rgba(167, 39, 249, 0.3) 20%, transparent 50%);
   background-size: 200px 150px;
   animation: mystical-float 20s linear infinite, abyssal-pulse 4s ease-in-out infinite;
-  opacity: 0.9;
+  opacity: 0.7;
 }
 
 .mood-infernal .mystical-particles {
   background-image: 
-    radial-gradient(7px 7px at 20px 30px, rgba(239, 68, 68, 1.0), rgba(239, 68, 68, 0.8) 20%, transparent 50%),
-    radial-gradient(6px 6px at 40px 70px, rgba(255, 69, 0, 0.9), rgba(255, 69, 0, 0.6) 20%, transparent 50%),
-    radial-gradient(5px 5px at 90px 40px, rgba(239, 68, 68, 1.0), rgba(239, 68, 68, 0.7) 20%, transparent 50%),
-    radial-gradient(6px 6px at 130px 80px, rgba(255, 69, 0, 0.9), rgba(255, 69, 0, 0.6) 20%, transparent 50%),
-    radial-gradient(7px 7px at 160px 30px, rgba(239, 68, 68, 1.0), rgba(239, 68, 68, 0.8) 20%, transparent 50%),
-    radial-gradient(5px 5px at 200px 60px, rgba(220, 38, 38, 0.8), rgba(220, 38, 38, 0.5) 20%, transparent 50%);
+    radial-gradient(4px 4px at 20px 30px, rgba(239, 68, 68, 0.7), rgba(239, 68, 68, 0.5) 20%, transparent 50%),
+    radial-gradient(3px 3px at 40px 70px, rgba(255, 69, 0, 0.6), rgba(255, 69, 0, 0.4) 20%, transparent 50%),
+    radial-gradient(3px 3px at 90px 40px, rgba(239, 68, 68, 0.8), rgba(239, 68, 68, 0.5) 20%, transparent 50%),
+    radial-gradient(3px 3px at 130px 80px, rgba(255, 69, 0, 0.6), rgba(255, 69, 0, 0.4) 20%, transparent 50%),
+    radial-gradient(4px 4px at 160px 30px, rgba(239, 68, 68, 0.7), rgba(239, 68, 68, 0.5) 20%, transparent 50%),
+    radial-gradient(2px 2px at 200px 60px, rgba(220, 38, 38, 0.5), rgba(220, 38, 38, 0.3) 20%, transparent 50%);
   background-size: 180px 140px;
   animation: mystical-float 15s linear infinite, infernal-flicker 2s ease-in-out infinite;
-  opacity: 0.95;
+  opacity: 0.75;
 }
 
 .mood-lunar .mystical-particles {
   background-image: 
-    radial-gradient(5px 5px at 20px 30px, rgba(59, 130, 246, 0.9), rgba(59, 130, 246, 0.6) 20%, transparent 50%),
-    radial-gradient(6px 6px at 40px 70px, rgba(99, 102, 241, 0.8), rgba(99, 102, 241, 0.5) 20%, transparent 50%),
-    radial-gradient(4px 4px at 90px 40px, rgba(59, 130, 246, 1.0), rgba(59, 130, 246, 0.7) 20%, transparent 50%),
-    radial-gradient(5px 5px at 130px 80px, rgba(99, 102, 241, 0.8), rgba(99, 102, 241, 0.5) 20%, transparent 50%),
-    radial-gradient(6px 6px at 160px 30px, rgba(59, 130, 246, 0.7), rgba(59, 130, 246, 0.4) 20%, transparent 50%),
-    radial-gradient(4px 4px at 200px 60px, rgba(147, 197, 253, 0.6), rgba(147, 197, 253, 0.3) 20%, transparent 50%);
+    radial-gradient(3px 3px at 20px 30px, rgba(59, 130, 246, 0.6), rgba(59, 130, 246, 0.4) 20%, transparent 50%),
+    radial-gradient(3px 3px at 40px 70px, rgba(99, 102, 241, 0.5), rgba(99, 102, 241, 0.3) 20%, transparent 50%),
+    radial-gradient(2px 2px at 90px 40px, rgba(59, 130, 246, 0.7), rgba(59, 130, 246, 0.4) 20%, transparent 50%),
+    radial-gradient(3px 3px at 130px 80px, rgba(99, 102, 241, 0.5), rgba(99, 102, 241, 0.3) 20%, transparent 50%),
+    radial-gradient(3px 3px at 160px 30px, rgba(59, 130, 246, 0.4), rgba(59, 130, 246, 0.2) 20%, transparent 50%),
+    radial-gradient(2px 2px at 200px 60px, rgba(147, 197, 253, 0.4), rgba(147, 197, 253, 0.2) 20%, transparent 50%);
   background-size: 220px 160px;
   animation: mystical-float 30s linear infinite, lunar-glow 6s ease-in-out infinite;
-  opacity: 0.8;
+  opacity: 0.6;
 }
 
 .mood-stellar .mystical-particles {
   background-image: 
-    radial-gradient(5px 5px at 20px 30px, rgba(139, 92, 246, 1.0), rgba(139, 92, 246, 0.7) 20%, transparent 50%),
-    radial-gradient(6px 6px at 40px 70px, rgba(168, 85, 247, 0.9), rgba(168, 85, 247, 0.6) 20%, transparent 50%),
-    radial-gradient(4px 4px at 90px 40px, rgba(139, 92, 246, 1.0), rgba(139, 92, 246, 0.8) 20%, transparent 50%),
-    radial-gradient(5px 5px at 130px 80px, rgba(168, 85, 247, 0.9), rgba(168, 85, 247, 0.6) 20%, transparent 50%),
-    radial-gradient(6px 6px at 160px 30px, rgba(139, 92, 246, 0.8), rgba(139, 92, 246, 0.5) 20%, transparent 50%),
-    radial-gradient(4px 4px at 200px 60px, rgba(196, 181, 253, 0.7), rgba(196, 181, 253, 0.4) 20%, transparent 50%);
+    radial-gradient(3px 3px at 20px 30px, rgba(139, 92, 246, 0.7), rgba(139, 92, 246, 0.5) 20%, transparent 50%),
+    radial-gradient(3px 3px at 40px 70px, rgba(168, 85, 247, 0.6), rgba(168, 85, 247, 0.4) 20%, transparent 50%),
+    radial-gradient(2px 2px at 90px 40px, rgba(139, 92, 246, 0.8), rgba(139, 92, 246, 0.5) 20%, transparent 50%),
+    radial-gradient(3px 3px at 130px 80px, rgba(168, 85, 247, 0.6), rgba(168, 85, 247, 0.4) 20%, transparent 50%),
+    radial-gradient(3px 3px at 160px 30px, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.3) 20%, transparent 50%),
+    radial-gradient(2px 2px at 200px 60px, rgba(196, 181, 253, 0.4), rgba(196, 181, 253, 0.2) 20%, transparent 50%);
   background-size: 190px 145px;
   animation: mystical-float 18s linear infinite, stellar-twinkle 3s ease-in-out infinite;
-  opacity: 0.85;
+  opacity: 0.65;
 }
 
 .mood-divine .mystical-particles {
   background-image: 
-    radial-gradient(7px 7px at 20px 30px, rgba(245, 158, 11, 1.0), rgba(245, 158, 11, 0.8) 20%, transparent 50%),
-    radial-gradient(6px 6px at 40px 70px, rgba(255, 215, 0, 1.0), rgba(255, 215, 0, 0.7) 20%, transparent 50%),
-    radial-gradient(5px 5px at 90px 40px, rgba(245, 158, 11, 1.0), rgba(245, 158, 11, 0.8) 20%, transparent 50%),
-    radial-gradient(6px 6px at 130px 80px, rgba(255, 215, 0, 1.0), rgba(255, 215, 0, 0.7) 20%, transparent 50%),
-    radial-gradient(7px 7px at 160px 30px, rgba(245, 158, 11, 0.9), rgba(245, 158, 11, 0.6) 20%, transparent 50%),
-    radial-gradient(5px 5px at 200px 60px, rgba(251, 191, 36, 0.8), rgba(251, 191, 36, 0.5) 20%, transparent 50%);
+    radial-gradient(4px 4px at 20px 30px, rgba(245, 158, 11, 0.8), rgba(245, 158, 11, 0.6) 20%, transparent 50%),
+    radial-gradient(3px 3px at 40px 70px, rgba(255, 215, 0, 0.7), rgba(255, 215, 0, 0.5) 20%, transparent 50%),
+    radial-gradient(3px 3px at 90px 40px, rgba(245, 158, 11, 0.8), rgba(245, 158, 11, 0.6) 20%, transparent 50%),
+    radial-gradient(3px 3px at 130px 80px, rgba(255, 215, 0, 0.7), rgba(255, 215, 0, 0.5) 20%, transparent 50%),
+    radial-gradient(4px 4px at 160px 30px, rgba(245, 158, 11, 0.6), rgba(245, 158, 11, 0.4) 20%, transparent 50%),
+    radial-gradient(2px 2px at 200px 60px, rgba(251, 191, 36, 0.5), rgba(251, 191, 36, 0.3) 20%, transparent 50%);
   background-size: 170px 130px;
   animation: mystical-float 22s linear infinite, divine-radiance 5s ease-in-out infinite;
-  opacity: 1.0;
+  opacity: 0.8;
 }
 
 .mood-void .mystical-particles {
