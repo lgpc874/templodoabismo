@@ -230,6 +230,195 @@
     brightness(1.0) saturate(1.1);
 }
 
+/* Ambiente-specific color overrides para substituir dourado */
+.mood-umbral .text-amber-400,
+.mood-umbral .text-amber-300,
+.mood-umbral .text-amber-500 {
+  color: rgb(147 51 234) !important; /* purple-600 */
+}
+
+.mood-umbral .text-amber-400\/70,
+.mood-umbral .text-amber-300\/65,
+.mood-umbral .text-amber-500\/60 {
+  color: rgb(147 51 234 / 0.7) !important;
+}
+
+.mood-umbral .text-amber-400\/80 {
+  color: rgb(147 51 234 / 0.8) !important;
+}
+
+.mood-umbral .border-amber-500\/30,
+.mood-umbral .border-amber-700\/30 {
+  border-color: rgb(147 51 234 / 0.3) !important;
+}
+
+.mood-umbral .mystical-glow {
+  text-shadow: 
+    0 0 10px rgba(147, 51, 234, 0.3),
+    0 0 20px rgba(147, 51, 234, 0.2),
+    0 0 30px rgba(147, 51, 234, 0.1);
+}
+
+/* Chamas Ctônicas */
+.mood-chamas .text-amber-400,
+.mood-chamas .text-amber-300,
+.mood-chamas .text-amber-500 {
+  color: rgb(220 38 38) !important; /* red-600 */
+}
+
+.mood-chamas .text-amber-400\/70,
+.mood-chamas .text-amber-300\/65,
+.mood-chamas .text-amber-500\/60 {
+  color: rgb(220 38 38 / 0.7) !important;
+}
+
+.mood-chamas .text-amber-400\/80 {
+  color: rgb(220 38 38 / 0.8) !important;
+}
+
+.mood-chamas .border-amber-500\/30,
+.mood-chamas .border-amber-700\/30 {
+  border-color: rgb(220 38 38 / 0.3) !important;
+}
+
+.mood-chamas .mystical-glow {
+  text-shadow: 
+    0 0 10px rgba(220, 38, 38, 0.3),
+    0 0 20px rgba(220, 38, 38, 0.2),
+    0 0 30px rgba(220, 38, 38, 0.1);
+}
+
+/* Lua Negra */
+.mood-lua-negra .text-amber-400,
+.mood-lua-negra .text-amber-300,
+.mood-lua-negra .text-amber-500 {
+  color: rgb(148 163 184) !important; /* slate-400 */
+}
+
+.mood-lua-negra .text-amber-400\/70,
+.mood-lua-negra .text-amber-300\/65,
+.mood-lua-negra .text-amber-500\/60 {
+  color: rgb(148 163 184 / 0.7) !important;
+}
+
+.mood-lua-negra .text-amber-400\/80 {
+  color: rgb(148 163 184 / 0.8) !important;
+}
+
+.mood-lua-negra .border-amber-500\/30,
+.mood-lua-negra .border-amber-700\/30 {
+  border-color: rgb(148 163 184 / 0.3) !important;
+}
+
+.mood-lua-negra .mystical-glow {
+  text-shadow: 
+    0 0 10px rgba(148, 163, 184, 0.3),
+    0 0 20px rgba(148, 163, 184, 0.2),
+    0 0 30px rgba(148, 163, 184, 0.1);
+}
+
+/* Void Cósmico */
+.mood-void-cosmico .text-amber-400,
+.mood-void-cosmico .text-amber-300,
+.mood-void-cosmico .text-amber-500 {
+  color: rgb(139 92 246) !important; /* violet-500 */
+}
+
+.mood-void-cosmico .text-amber-400\/70,
+.mood-void-cosmico .text-amber-300\/65,
+.mood-void-cosmico .text-amber-500\/60 {
+  color: rgb(139 92 246 / 0.7) !important;
+}
+
+.mood-void-cosmico .text-amber-400\/80 {
+  color: rgb(139 92 246 / 0.8) !important;
+}
+
+.mood-void-cosmico .border-amber-500\/30,
+.mood-void-cosmico .border-amber-700\/30 {
+  border-color: rgb(139 92 246 / 0.3) !important;
+}
+
+.mood-void-cosmico .mystical-glow {
+  text-shadow: 
+    0 0 10px rgba(139, 92, 246, 0.3),
+    0 0 20px rgba(139, 92, 246, 0.2),
+    0 0 30px rgba(139, 92, 246, 0.1);
+}
+
+/* Trono Luciferiano - mantém dourado mais intenso */
+.mood-trono-luciferiano .text-amber-400,
+.mood-trono-luciferiano .text-amber-300,
+.mood-trono-luciferiano .text-amber-500 {
+  color: rgb(255 215 0) !important; /* gold mais intenso */
+}
+
+.mood-trono-luciferiano .mystical-glow {
+  text-shadow: 
+    0 0 15px rgba(255, 215, 0, 0.4),
+    0 0 25px rgba(255, 215, 0, 0.3),
+    0 0 35px rgba(255, 215, 0, 0.2);
+}
+
+/* Extensões adicionais para cobrir mais elementos com âmbar */
+.mood-umbral .bg-gradient-to-r.from-red-400.to-purple-500,
+.mood-umbral .bg-clip-text.text-transparent {
+  background: linear-gradient(to right, rgb(147 51 234), rgb(147 51 234)) !important;
+}
+
+.mood-chamas .bg-gradient-to-r.from-red-400.to-purple-500,
+.mood-chamas .bg-clip-text.text-transparent {
+  background: linear-gradient(to right, rgb(220 38 38), rgb(220 38 38)) !important;
+}
+
+.mood-lua-negra .bg-gradient-to-r.from-red-400.to-purple-500,
+.mood-lua-negra .bg-clip-text.text-transparent {
+  background: linear-gradient(to right, rgb(148 163 184), rgb(148 163 184)) !important;
+}
+
+.mood-void-cosmico .bg-gradient-to-r.from-red-400.to-purple-500,
+.mood-void-cosmico .bg-clip-text.text-transparent {
+  background: linear-gradient(to right, rgb(139 92 246), rgb(139 92 246)) !important;
+}
+
+/* Sobrescrever cores de botões e elementos interativos */
+.mood-umbral .text-amber-500\/15,
+.mood-umbral .animate-spin-slow-reverse {
+  color: rgb(147 51 234 / 0.15) !important;
+}
+
+.mood-chamas .text-amber-500\/15,
+.mood-chamas .animate-spin-slow-reverse {
+  color: rgb(220 38 38 / 0.15) !important;
+}
+
+.mood-lua-negra .text-amber-500\/15,
+.mood-lua-negra .animate-spin-slow-reverse {
+  color: rgb(148 163 184 / 0.15) !important;
+}
+
+.mood-void-cosmico .text-amber-500\/15,
+.mood-void-cosmico .animate-spin-slow-reverse {
+  color: rgb(139 92 246 / 0.15) !important;
+}
+
+/* Sobrescrever via-amber nos gradientes */
+.mood-umbral .via-amber-500\/15 {
+  --tw-gradient-via: rgb(147 51 234 / 0.15) !important;
+}
+
+.mood-chamas .via-amber-500\/15 {
+  --tw-gradient-via: rgb(220 38 38 / 0.15) !important;
+}
+
+.mood-lua-negra .via-amber-500\/15 {
+  --tw-gradient-via: rgb(148 163 184 / 0.15) !important;
+}
+
+.mood-void-cosmico .via-amber-500\/15 {
+  --tw-gradient-via: rgb(139 92 246 / 0.15) !important;
+}
+
 /* Fundo preto rubro com símbolos místicos */
 body {
   background: 
