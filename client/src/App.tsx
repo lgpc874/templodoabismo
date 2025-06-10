@@ -20,7 +20,7 @@ import Bibliotheca from "@/pages/bibliotheca";
 import VozDaPluma from "@/pages/voz-da-pluma";
 import LiberProhibitus from "@/pages/liber-prohibitus-mystical";
 import Blog from "@/pages/blog-new";
-import SupabaseDemo from "@/components/SupabaseDemo";
+
 
 import AdminControl from "@/pages/admin-control";
 import Register from "@/pages/register";
@@ -51,7 +51,6 @@ function Router() {
           <Route path="/blog" component={Blog} />
           <Route path="/gnosis" component={Blog} />
           <Route path="/liber-prohibitus" component={LiberProhibitus} />
-          <Route path="/supabase-demo" component={SupabaseDemo} />
           <Route path="/oracle-test" component={OracleTest} />
           <Route path="/admin" component={AdminPanel} />
           <Route path="/sanctum-administratoris" component={AdminControl} />
