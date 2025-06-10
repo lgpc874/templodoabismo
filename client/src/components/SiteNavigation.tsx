@@ -8,7 +8,6 @@ export default function SiteNavigation() {
   const [location] = useLocation();
 
   const navigationItems = [
-    { href: '/', label: 'Introitus', icon: Home },
     { href: '/blog', label: 'Gnosis Abyssos', icon: BookOpen },
     { href: '/oraculo', label: 'Oraculum Tenebrae', icon: Eye },
     { href: '/cursos', label: 'Academia Luciferiana', icon: GraduationCap },

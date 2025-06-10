@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, EyeOff, Flame, Crown } from "lucide-react";
-import SiteNavigation from "@/components/SiteNavigation";
+
 
 export default function Login() {
   const [, setLocation] = useLocation();
@@ -86,8 +86,6 @@ export default function Login() {
 
   return (
     <div className="min-h-screen text-red-100">
-      <SiteNavigation />
-      
       <div className="min-h-screen flex items-center justify-center px-6 pt-20">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
