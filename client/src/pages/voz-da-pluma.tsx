@@ -263,22 +263,22 @@ export default function VozDaPluma() {
   return (
     <>
       <div className="min-h-screen relative overflow-hidden">
-      {/* Fixed Central Rotating Seal - Your Custom Image */}
-      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
-        <div className="rotating-seal w-96 h-96 opacity-20">
-          <img 
-            src="/seal.png" 
-            alt="Selo do Templo do Abismo" 
-            className="w-full h-full object-contain filter drop-shadow-lg"
-          />
+        {/* Fixed Central Rotating Seal - Your Custom Image */}
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+          <div className="rotating-seal w-96 h-96 opacity-20">
+            <img 
+              src="/seal.png" 
+              alt="Selo do Templo do Abismo" 
+              className="w-full h-full object-contain filter drop-shadow-lg"
+            />
+          </div>
         </div>
-      </div>
 
-      {/* Mystical floating particles */}
-      <div className="fixed inset-0 overflow-hidden z-0">
-        <div className="mystical-particles"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
-      </div>
+        {/* Mystical floating particles */}
+        <div className="fixed inset-0 overflow-hidden z-0">
+          <div className="mystical-particles"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+        </div>
 
       {/* Main content */}
       <div className="relative z-10 min-h-screen px-4 pt-16">
@@ -434,10 +434,9 @@ export default function VozDaPluma() {
           </CardContent>
         </Card>
         </div>
-      </div>
 
         <Footer />
       </div>
-    </>
+    </div>
   );
 }
