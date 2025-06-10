@@ -92,31 +92,70 @@ export default function Blog() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black flex items-center justify-center">
+      <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
         <div className="text-amber-500 animate-pulse text-xl">Carregando artigos...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black p-4">
-      {/* Animated background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-amber-500 rounded-full animate-pulse opacity-30"></div>
-        <div className="absolute top-40 right-20 w-1 h-1 bg-orange-400 rounded-full animate-pulse opacity-40"></div>
-        <div className="absolute bottom-32 left-1/4 w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse opacity-25"></div>
-        <div className="absolute bottom-20 right-1/3 w-1 h-1 bg-amber-600 rounded-full animate-pulse opacity-35"></div>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Fixed Central Rotating Seal */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <div className="rotating-seal w-96 h-96 opacity-20">
+          <img 
+            src="/seal.png" 
+            alt="Selo do Templo do Abismo" 
+            className="w-full h-full object-contain filter drop-shadow-lg"
+          />
+        </div>
       </div>
 
-      {/* Hero Section */}
-      <div className="max-w-6xl mx-auto text-center py-16">
-        <h1 className="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 mb-6 animate-title-float font-cinzel">
-          Vox Abyssi
-        </h1>
-        <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto animate-mystical-float">
-          Mergulhe nos ensinamentos ancestrais através de artigos, reflexões e insights sobre a tradição luciferiana e os mistérios do caminho da gnose
-        </p>
+      {/* Mystical floating particles */}
+      <div className="fixed inset-0 overflow-hidden z-0">
+        <div className="mystical-particles"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
       </div>
+
+      {/* Main content */}
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 pt-20">
+        {/* Hero Section */}
+        <div className="text-center mb-12 max-w-5xl">
+          <div className="mb-8">
+            <div className="text-amber-400 text-6xl mb-4">⛧</div>
+            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
+              GNOSIS ABYSSOS
+            </h1>
+            <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
+              <span>☿</span>
+              <span>⚹</span>
+              <span>𖤍</span>
+              <span>⚹</span>
+              <span>☿</span>
+            </div>
+          </div>
+          
+          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
+              Portal de Conhecimento Ancestral
+            </h2>
+            
+            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
+              Mergulhe nos <strong className="text-amber-400">ensinamentos públicos</strong> do luciferianismo ancestral e da gnose ctônica. 
+              Cada artigo foi cuidadosamente crafted para iluminar os <strong className="text-red-400">caminhos da sabedoria oculta</strong> aos buscadores sinceros da verdade.
+            </p>
+            
+            <div className="text-center">
+              <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+              <p className="text-lg font-cinzel-decorative text-amber-300">
+                "Sapientia Occulta Omnibus"
+              </p>
+              <p className="text-sm text-gray-400 font-crimson italic mt-2">
+                A sabedoria oculta para todos
+              </p>
+            </div>
+          </div>
+        </div>
 
       {/* Blog Posts Grid */}
       <div className="max-w-6xl mx-auto">
