@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, Eye, ArrowLeft } from "lucide-react";
+import { Loader2, Eye, ArrowLeft, Download, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Link } from "wouter";
@@ -23,19 +23,16 @@ interface OracleResponse {
 export default function OracleMirror() {
   const [question, setQuestion] = useState("");
   const [result, setResult] = useState<OracleResponse | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
 
   const consultMutation = useMutation({
-    mutationFn: async (data: { type: string; question: string }) => {
-      const response = await apiRequest("/api/oracle/consult", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      return response;
+    mutationFn: async (data: { type: string; question: string }): Promise<OracleResponse> => {
+      return await apiRequest("/api/oracle/consult", data);
     },
     onSuccess: (data: OracleResponse) => {
       setResult(data);
+      generateOracleImage(data);
       toast({
         title: "Reflexão Revelada",
         description: "O Espelho Astral mostrou sua verdade",
@@ -49,6 +46,155 @@ export default function OracleMirror() {
       });
     },
   });
+
+  const generateOracleImage = (data: OracleResponse) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Set canvas size
+    canvas.width = 800;
+    canvas.height = 1000;
+
+    // Create mystical background gradient
+    const gradient = ctx.createRadialGradient(400, 500, 0, 400, 500, 500);
+    gradient.addColorStop(0, '#1a0b2e');
+    gradient.addColorStop(0.5, '#16213e');
+    gradient.addColorStop(1, '#0f0f23');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 800, 1000);
+
+    // Add mystical border
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 4;
+    ctx.setLineDash([10, 5]);
+    ctx.strokeRect(20, 20, 760, 960);
+
+    // Draw pentagram symbol
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    const centerX = 400;
+    const centerY = 150;
+    const radius = 40;
+    ctx.beginPath();
+    for (let i = 0; i < 5; i++) {
+      const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+      const x = centerX + radius * Math.cos(angle);
+      const y = centerY + radius * Math.sin(angle);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+
+    // Title
+    ctx.fillStyle = '#d4af37';
+    ctx.font = 'bold 36px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ESPELHO ASTRAL', 400, 250);
+
+    // Question
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '18px serif';
+    const questionLines = wrapText(ctx, data.question, 720);
+    questionLines.forEach((line, index) => {
+      ctx.fillText(line, 400, 320 + (index * 25));
+    });
+
+    // Reflection text
+    ctx.fillStyle = '#e0c097';
+    ctx.font = '20px serif';
+    const reflectionLines = wrapText(ctx, data.result.reflection, 720);
+    reflectionLines.forEach((line, index) => {
+      ctx.fillText(line, 400, 450 + (index * 30));
+    });
+
+    // Watermark
+    ctx.fillStyle = '#d4af37';
+    ctx.font = 'bold 24px serif';
+    ctx.fillText('TEMPLO DO ABISMO', 400, 920);
+
+    // Timestamp
+    ctx.fillStyle = '#888888';
+    ctx.font = '14px serif';
+    ctx.fillText(new Date(data.timestamp).toLocaleDateString('pt-BR'), 400, 950);
+  };
+
+  const wrapText = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number) => {
+    const words = text.split(' ');
+    const lines = [];
+    let currentLine = words[0];
+
+    for (let i = 1; i < words.length; i++) {
+      const word = words[i];
+      const width = ctx.measureText(currentLine + ' ' + word).width;
+      if (width < maxWidth) {
+        currentLine += ' ' + word;
+      } else {
+        lines.push(currentLine);
+        currentLine = word;
+      }
+    }
+    lines.push(currentLine);
+    return lines;
+  };
+
+  const downloadImage = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const link = document.createElement('a');
+    link.download = `templo-do-abismo-oraculo-${Date.now()}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+
+    toast({
+      title: "Imagem Baixada",
+      description: "Sua consulta foi salva com sucesso",
+    });
+  };
+
+  const shareImage = async () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    try {
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+
+        if (navigator.share && navigator.canShare) {
+          const file = new File([blob], 'templo-do-abismo-oraculo.png', { type: 'image/png' });
+          await navigator.share({
+            title: 'Consulta do Templo do Abismo',
+            text: 'Compartilhando minha consulta mística do Templo do Abismo',
+            files: [file]
+          });
+        } else {
+          // Fallback for browsers without native sharing
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'templo-do-abismo-oraculo.png';
+          link.click();
+          URL.revokeObjectURL(url);
+        }
+      }, 'image/png');
+
+      toast({
+        title: "Compartilhamento",
+        description: "Pronto para compartilhar sua consulta",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível compartilhar a imagem",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleConsult = () => {
     if (!question.trim()) {
