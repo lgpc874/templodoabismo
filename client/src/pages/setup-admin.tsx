@@ -76,21 +76,21 @@ export default function SetupAdmin() {
             <CardHeader className="text-center">
               <CheckCircle className="w-16 h-16 mx-auto text-green-400 mb-4" />
               <CardTitle className="text-2xl font-cinzel-decorative text-green-400">
-                Administrador Criado!
+                Magus do Templo Criado!
               </CardTitle>
               <CardDescription className="text-gray-300">
-                O usuário foi promovido a administrador com sucesso.
+                O usuário foi promovido a Magus do Templo com sucesso.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-center">
                 <p className="text-gray-300 mb-4">
-                  Agora você pode acessar o painel administrativo.
+                  Agora você pode acessar o sanctum do Magus do Templo.
                 </p>
                 <div className="space-y-2">
                   <a href="/admin">
                     <Button className="w-full bg-amber-600 hover:bg-amber-700 text-black">
-                      Acessar Painel Admin
+                      Acessar Sanctum Magus
                     </Button>
                   </a>
                   <a href="/">
@@ -135,7 +135,7 @@ export default function SetupAdmin() {
               Configuração Inicial
             </CardTitle>
             <CardDescription className="text-gray-300">
-              Configure o primeiro administrador do templo
+              Configure o primeiro Magus do Templo
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -154,7 +154,7 @@ export default function SetupAdmin() {
                   className="bg-black/50 border-amber-500/30 text-white"
                 />
                 <p className="text-xs text-gray-400">
-                  Digite o email de um usuário já registrado para promovê-lo a administrador.
+                  Digite o email de um usuário já registrado para promovê-lo a Magus do Templo.
                 </p>
               </div>
               
