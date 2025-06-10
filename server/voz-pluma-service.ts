@@ -1,40 +1,44 @@
-import OpenAI from "openai";
-import { supabase } from "./supabase-client";
+import { supabaseAdmin } from './supabase-admin';
+import OpenAI from 'openai';
+import type { VozPlumaManifestation, InsertVozPlumaManifestation } from '@shared/schema';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 export class VozPlumaService {
-  private readonly contentTypes = ['dica', 'poema', 'ritual', 'conjuracao'] as const;
   
-  private readonly mysticAuthors = [
-    'Mestre Astaroth',
-    'Sacerdotisa Lilith', 
-    'Mago Baphomet',
-    'Oracle Abyssos',
-    'Hierofante Lucifer',
-    'Sibila das Trevas',
-    'Archon Belial',
-    'Visionária Hecate'
-  ];
+  // Gerar conteúdo específico para cada horário
+  async generateManifestation(time: string): Promise<InsertVozPlumaManifestation> {
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    
+    let type: string;
+    let prompt: string;
+    
+    switch (time) {
+      case '07:00':
+        type = 'dica';
+        prompt = `Crie uma dica mística luciferiana para começar o dia. Deve ser uma orientação prática e inspiradora sobre autoconhecimento, poder pessoal ou desenvolvimento espiritual. Formato: Um título conciso e um texto de 2-3 frases. Não mencione "Lúcifer" diretamente, use linguagem sutil e poética.`;
+        break;
+      case '09:00':
+        type = 'verso';
+        prompt = `Escreva um verso poético da "Pluma Dourada" - uma poesia curta sobre sabedoria ancestral, despertar da consciência ou conexão com o divino interior. Deve ser elegante, místico e profundo. 4-6 linhas no máximo.`;
+        break;
+      case '11:00':
+        type = 'ritual';
+        prompt = `Descreva um ritual ou prática ancestral simples que pode ser realizada em casa. Focado em meditação, reflexão ou conexão espiritual. Inclua passos práticos mas mantenha a linguagem poética e mística. Máximo 3-4 frases.`;
+        break;
+      default:
+        throw new Error('Horário de manifestação inválido');
+    }
 
-  async generateDailyContent(type: 'dica' | 'poema' | 'ritual' | 'conjuracao'): Promise<{
-    title: string;
-    content: string;
-    author: string;
-    type: string;
-  }> {
     try {
-      const prompt = this.getPromptForType(type);
-      
-      // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
         messages: [
           {
             role: "system",
-            content: "Você é um mestre luciferiano que canaliza sabedoria ancestral através de revelações místicas. Responda sempre em português brasileiro com linguagem poética e profunda, mantendo o tom solene e reverente dos ensinamentos abissais."
+            content: "Você é um escriba místico do Templo do Abismo, criando conteúdo espiritual luciferiano ancestral. Use linguagem poética, elegante e profunda. Responda em JSON com 'title', 'content' e 'author'."
           },
           {
             role: "user",
@@ -43,239 +47,161 @@ export class VozPlumaService {
         ],
         response_format: { type: "json_object" },
         temperature: 0.8,
-        max_tokens: 800
       });
 
-      const result = JSON.parse(response.choices[0].message.content || '{}');
+      const result = JSON.parse(completion.choices[0].message.content || '{}');
       
       return {
-        title: result.title || this.getFallbackContent(type).title,
-        content: result.content || this.getFallbackContent(type).content,
-        author: this.getRandomAuthor(),
-        type: type
+        manifestation_time: time,
+        type: type,
+        title: result.title || `Manifestação ${time}`,
+        content: result.content || 'Conteúdo em preparação...',
+        author: result.author || 'Escriba do Templo',
+        posted_date: today,
+        is_current: true
       };
 
     } catch (error) {
-      console.error('Erro ao gerar conteúdo com IA:', error);
-      return this.getFallbackContent(type);
+      console.error('Erro ao gerar manifestação:', error);
+      
+      // Fallback com conteúdo místico genérico
+      const fallbackContent = this.getFallbackContent(type, time);
+      
+      return {
+        manifestation_time: time,
+        type: type,
+        title: fallbackContent.title,
+        content: fallbackContent.content,
+        author: fallbackContent.author,
+        posted_date: today,
+        is_current: true
+      };
     }
   }
 
-  private getPromptForType(type: string): string {
-    const prompts = {
-      'dica': `
-        Gere uma dica mística luciferiana para o dia. Responda em JSON com:
-        {
-          "title": "Título místico da dica (máximo 60 caracteres)",
-          "content": "Dica prática de sabedoria luciferiana para aplicar no dia (máximo 280 caracteres)"
-        }
-        
-        A dica deve ser sobre desenvolvimento espiritual, autoconhecimento, manifestação de vontade ou práticas mágicas básicas.
-      `,
-      
-      'poema': `
-        Crie um poema místico luciferiano. Responda em JSON com:
-        {
-          "title": "Título poético evocativo (máximo 60 caracteres)", 
-          "content": "Verso poético completo sobre temas luciferianos (máximo 400 caracteres)"
-        }
-        
-        O poema deve abordar temas como iluminação interior, liberdade espiritual, conhecimento oculto ou a jornada do iniciado.
-      `,
-      
-      'ritual': `
-        Descreva um ritual luciferiano básico. Responda em JSON com:
-        {
-          "title": "Nome do ritual (máximo 60 caracteres)",
-          "content": "Descrição concisa do ritual com propósito e passos básicos (máximo 350 caracteres)"
-        }
-        
-        O ritual deve ser seguro para iniciantes, focando em meditação, invocação de sabedoria ou fortalecimento da vontade.
-      `,
-      
-      'conjuracao': `
-        Crie uma conjuração luciferiana de poder. Responda em JSON com:
-        {
-          "title": "Nome da conjuração (máximo 60 caracteres)",
-          "content": "Texto da conjuração em linguagem solene e poderosa (máximo 300 caracteres)"
-        }
-        
-        A conjuração deve invocar força interior, sabedoria abissal ou proteção espiritual.
-      `
-    };
-
-    return prompts[type] || prompts['dica'];
-  }
-
-  private getFallbackContent(type: string): { title: string; content: string; author: string; type: string } {
+  // Conteúdo de emergência quando a IA falha
+  private getFallbackContent(type: string, time: string) {
     const fallbacks = {
-      'dica': {
-        title: 'Despertar da Consciência',
-        content: 'Nas sombras do desconhecido reside a chave para o autoconhecimento. Questione as verdades impostas e busque sua própria luz interior.',
+      dica: {
+        title: "Reflexão Matinal",
+        content: "Inicie este dia conectando-se com sua essência mais profunda. Permita que a sabedoria interior guie seus passos rumo ao despertar da consciência.",
+        author: "Guardião do Amanhecer"
       },
-      'poema': {
-        title: 'Canto das Esferas',
-        content: 'Entre luz e trevas dança a alma, buscando verdades no abismo eterno. Cada passo na jornada revela mistérios ancestrais.',
+      verso: {
+        title: "Verso da Pluma Dourada",
+        content: "No silêncio da manhã, a alma desperta,\nEntre sombras e luz, a verdade se revela,\nÉ no abismo do ser que a força se liberta,\nE a chama interior eternamente cintila.",
+        author: "Poeta das Profundezas"
       },
-      'ritual': {
-        title: 'Ritual do Espelho Negro',
-        content: 'Acenda uma vela vermelha diante de um espelho. Contemple seu reflexo e declare: "Eu sou o arquiteto de meu destino". Medite sobre suas verdadeiras aspirações.',
-      },
-      'conjuracao': {
-        title: 'Invocação da Força Interior',
-        content: 'Pela chama que queima em meu ser, pelo conhecimento que flui em minha mente, invoco a força primordial que habita as profundezas de minha alma.',
+      ritual: {
+        title: "Prática Ancestral",
+        content: "Acenda uma vela branca e contemple sua chama por alguns minutos. Respire profundamente e conecte-se com a energia que flui através de você, honrando a sabedoria dos antigos.",
+        author: "Mestre dos Rituais"
       }
     };
 
-    return {
-      ...fallbacks[type] || fallbacks['dica'],
-      author: this.getRandomAuthor(),
-      type: type
-    };
+    return fallbacks[type as keyof typeof fallbacks] || fallbacks.dica;
   }
 
-  private getRandomAuthor(): string {
-    return this.mysticAuthors[Math.floor(Math.random() * this.mysticAuthors.length)];
-  }
-
-  async getTodayContent(): Promise<any> {
+  // Buscar manifestações atuais
+  async getCurrentManifestations(): Promise<VozPlumaManifestation[]> {
     const today = new Date().toISOString().split('T')[0];
     
-    const { data, error } = await supabase
-      .from('voz_pluma_content')
+    const { data, error } = await supabaseAdmin
+      .from('voz_pluma_manifestations')
       .select('*')
-      .eq('date', today)
-      .eq('published', true)
-      .order('created_at', { ascending: false })
-      .limit(1);
+      .eq('posted_date', today)
+      .eq('is_current', true)
+      .order('manifestation_time');
 
     if (error) {
-      console.error('Erro ao buscar conteúdo do dia:', error);
-      return null;
-    }
-
-    return data?.[0] || null;
-  }
-
-  async getRecentContent(limit: number = 10): Promise<any[]> {
-    const { data, error } = await supabase
-      .from('voz_pluma_content')
-      .select('*')
-      .eq('published', true)
-      .order('created_at', { ascending: false })
-      .limit(limit);
-
-    if (error) {
-      console.error('Erro ao buscar conteúdo recente:', error);
+      console.error('Erro ao buscar manifestações:', error);
       return [];
     }
 
     return data || [];
   }
 
-  async generateAndSaveContent(): Promise<any> {
-    // Determina o tipo baseado no horário ou aleatorio
-    const hour = new Date().getHours();
-    let type: 'dica' | 'poema' | 'ritual' | 'conjuracao';
-    
-    if (hour >= 6 && hour < 9) {
-      type = 'dica';
-    } else if (hour >= 9 && hour < 12) {
-      type = 'poema'; 
-    } else if (hour >= 12 && hour < 15) {
-      type = 'ritual';
-    } else {
-      type = 'conjuracao';
-    }
-
-    const content = await this.generateDailyContent(type);
+  // Substituir manifestação antiga pela nova
+  async replaceManifestationForTime(time: string): Promise<VozPlumaManifestation | null> {
     const today = new Date().toISOString().split('T')[0];
-
-    const { data, error } = await supabase
-      .from('voz_pluma_content')
-      .insert({
-        type: content.type,
-        title: content.title,
-        content: content.content,
-        author: content.author,
-        date: today,
-        published: true
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Erro ao salvar conteúdo:', error);
-      throw error;
-    }
-
-    return data;
-  }
-
-  async getSettings(): Promise<any> {
-    const { data, error } = await supabase
-      .from('voz_pluma_settings')
-      .select('*')
-      .limit(1)
-      .single();
-
-    if (error && error.code !== 'PGRST116') {
-      console.error('Erro ao buscar configurações:', error);
-      return this.getDefaultSettings();
-    }
-
-    return data || this.getDefaultSettings();
-  }
-
-  async updateSettings(settings: any): Promise<any> {
-    const { data, error } = await supabase
-      .from('voz_pluma_settings')
-      .upsert({
-        id: 1,
-        ...settings,
-        updated_at: new Date().toISOString()
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Erro ao atualizar configurações:', error);
-      throw error;
-    }
-
-    return data;
-  }
-
-  private getDefaultSettings() {
-    return {
-      auto_publish_enabled: true,
-      daily_dica_time: "07:00",
-      daily_poema_time: "09:00", 
-      daily_ritual_time: "11:00",
-      last_auto_publish: null
-    };
-  }
-
-  async shouldAutoPublish(): Promise<boolean> {
-    const settings = await this.getSettings();
-    if (!settings.auto_publish_enabled) return false;
-
-    const now = new Date();
-    const today = now.toISOString().split('T')[0];
     
-    // Verifica se já publicou hoje
-    const existingContent = await this.getTodayContent();
-    if (existingContent) return false;
+    try {
+      // 1. Remover manifestação anterior deste horário (substituição, não arquivamento)
+      await supabaseAdmin
+        .from('voz_pluma_manifestations')
+        .delete()
+        .eq('manifestation_time', time);
 
-    // Verifica horários de publicação
-    const currentTime = now.toTimeString().slice(0, 5);
-    const publishTimes = [
-      settings.daily_dica_time,
-      settings.daily_poema_time,
-      settings.daily_ritual_time
-    ];
+      // 2. Gerar nova manifestação
+      const newManifestation = await this.generateManifestation(time);
 
-    return publishTimes.some(time => currentTime >= time);
+      // 3. Inserir a nova manifestação
+      const { data, error } = await supabaseAdmin
+        .from('voz_pluma_manifestations')
+        .insert(newManifestation)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Erro ao inserir manifestação:', error);
+        return null;
+      }
+
+      console.log(`Nova manifestação gerada para ${time}:`, data.title);
+      return data;
+
+    } catch (error) {
+      console.error('Erro ao substituir manifestação:', error);
+      return null;
+    }
+  }
+
+  // Gerar todas as três manifestações do dia
+  async generateDailyManifestations(): Promise<VozPlumaManifestation[]> {
+    const times = ['07:00', '09:00', '11:00'];
+    const results: VozPlumaManifestation[] = [];
+
+    for (const time of times) {
+      const manifestation = await this.replaceManifestationForTime(time);
+      if (manifestation) {
+        results.push(manifestation);
+      }
+    }
+
+    return results;
+  }
+
+  // Verificar se precisa gerar manifestações para o dia
+  async checkAndGenerateIfNeeded(): Promise<void> {
+    const today = new Date().toISOString().split('T')[0];
+    const currentManifestations = await this.getCurrentManifestations();
+    
+    // Se não há manifestações para hoje, gerar todas
+    if (currentManifestations.length === 0) {
+      console.log('Gerando manifestações para o dia:', today);
+      await this.generateDailyManifestations();
+      return;
+    }
+
+    // Verificar se algum horário está faltando
+    const times = ['07:00', '09:00', '11:00'];
+    const existingTimes = currentManifestations.map(m => m.manifestation_time);
+    
+    for (const time of times) {
+      if (!existingTimes.includes(time)) {
+        console.log(`Gerando manifestação faltante para ${time}`);
+        await this.replaceManifestationForTime(time);
+      }
+    }
+  }
+
+  // Forçar regeneração de uma manifestação específica
+  async regenerateManifestationForTime(time: string): Promise<VozPlumaManifestation | null> {
+    if (!['07:00', '09:00', '11:00'].includes(time)) {
+      throw new Error('Horário inválido. Use: 07:00, 09:00 ou 11:00');
+    }
+
+    return await this.replaceManifestationForTime(time);
   }
 }
 

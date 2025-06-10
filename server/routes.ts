@@ -239,6 +239,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ============ VOZ DA PLUMA ENDPOINTS ============
+  
+  // Get current day manifestations
+  app.get('/api/voz-pluma/manifestations', async (req: Request, res: Response) => {
+    try {
+      const manifestations = await vozPlumaService.getCurrentManifestations();
+      res.json(manifestations);
+    } catch (error) {
+      console.error('Error fetching manifestations:', error);
+      res.status(500).json({ error: 'Failed to fetch manifestations' });
+    }
+  });
+
+  // Force regenerate manifestation for specific time
+  app.post('/api/voz-pluma/regenerate/:time', async (req: Request, res: Response) => {
+    try {
+      const { time } = req.params;
+      
+      if (!['07:00', '09:00', '11:00'].includes(time)) {
+        return res.status(400).json({ error: 'Invalid time. Use: 07:00, 09:00, or 11:00' });
+      }
+
+      const manifestation = await vozPlumaService.regenerateManifestationForTime(time);
+      
+      if (!manifestation) {
+        return res.status(500).json({ error: 'Failed to generate manifestation' });
+      }
+
+      res.json(manifestation);
+    } catch (error) {
+      console.error('Error regenerating manifestation:', error);
+      res.status(500).json({ error: 'Failed to regenerate manifestation' });
+    }
+  });
+
+  // Check and generate manifestations if needed (for cron/scheduler)
+  app.post('/api/voz-pluma/check-and-generate', async (req: Request, res: Response) => {
+    try {
+      await vozPlumaService.checkAndGenerateIfNeeded();
+      const manifestations = await vozPlumaService.getCurrentManifestations();
+      res.json({ 
+        message: 'Check completed',
+        manifestations: manifestations 
+      });
+    } catch (error) {
+      console.error('Error checking/generating manifestations:', error);
+      res.status(500).json({ error: 'Failed to check/generate manifestations' });
+    }
+  });
+
   // Get published pages only
   app.get('/api/pages', async (req: Request, res: Response) => {
     try {

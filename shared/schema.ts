@@ -310,7 +310,7 @@ export const voz_pluma_manifestations = pgTable("voz_pluma_manifestations", {
   title: text("title").notNull(),
   content: text("content").notNull(),
   author: text("author").notNull(),
-  posted_date: date("posted_date").notNull(), // Data de postagem
+  posted_date: text("posted_date").notNull(), // Data de postagem (YYYY-MM-DD)
   posted_at: timestamp("posted_at").defaultNow(), // Timestamp completo
   is_current: boolean("is_current").default(true), // Apenas a manifestação atual
 });
@@ -673,10 +673,9 @@ export const insertScriptureSchema = createInsertSchema(scriptures).omit({
   updatedAt: true,
 });
 
-export const insertVozPlumaContentSchema = createInsertSchema(voz_pluma_content).omit({
+export const insertVozPlumaManifestationSchema = createInsertSchema(voz_pluma_manifestations).omit({
   id: true,
-  generated_at: true,
-  created_at: true,
+  posted_at: true,
 });
 
 export const insertVozPlumaSettingsSchema = createInsertSchema(voz_pluma_settings).omit({
@@ -715,8 +714,8 @@ export type OracleSession = typeof oracle_sessions.$inferSelect;
 export type InsertOracleSession = z.infer<typeof insertOracleSessionSchema>;
 export type DailyPoem = typeof daily_poems.$inferSelect;
 export type InsertDailyPoem = z.infer<typeof insertDailyPoemSchema>;
-export type VozPlumaContent = typeof voz_pluma_content.$inferSelect;
-export type InsertVozPlumaContent = z.infer<typeof insertVozPlumaContentSchema>;
+export type VozPlumaManifestation = typeof voz_pluma_manifestations.$inferSelect;
+export type InsertVozPlumaManifestation = z.infer<typeof insertVozPlumaManifestationSchema>;
 export type VozPlumaSettings = typeof voz_pluma_settings.$inferSelect;
 export type InsertVozPlumaSettings = z.infer<typeof insertVozPlumaSettingsSchema>;
 export type UserProgress = typeof user_progress.$inferSelect;
