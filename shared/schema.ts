@@ -302,27 +302,28 @@ export const daily_poems = pgTable("daily_poems", {
   created_at: timestamp("created_at").defaultNow(),
 });
 
-// Voz da Pluma - Sistema de publicação automática
-export const voz_pluma_content = pgTable("voz_pluma_content", {
+// Voz da Pluma - Três manifestações diárias que se renovam
+export const voz_pluma_manifestations = pgTable("voz_pluma_manifestations", {
   id: serial("id").primaryKey(),
-  type: text("type").notNull(), // 'dica', 'poema', 'ritual', 'conjuracao'
+  manifestation_time: text("manifestation_time").notNull(), // '07:00', '09:00', '11:00'
+  type: text("type").notNull(), // 'dica', 'verso', 'ritual'
   title: text("title").notNull(),
   content: text("content").notNull(),
   author: text("author").notNull(),
-  date: text("date").notNull(),
-  image_url: text("image_url"),
-  generated_at: timestamp("generated_at").defaultNow(),
-  published: boolean("published").default(true),
-  created_at: timestamp("created_at").defaultNow(),
+  posted_date: date("posted_date").notNull(), // Data de postagem
+  posted_at: timestamp("posted_at").defaultNow(), // Timestamp completo
+  is_current: boolean("is_current").default(true), // Apenas a manifestação atual
 });
 
 export const voz_pluma_settings = pgTable("voz_pluma_settings", {
   id: serial("id").primaryKey(),
   auto_publish_enabled: boolean("auto_publish_enabled").default(true),
-  daily_dica_time: text("daily_dica_time").default("07:00"),
-  daily_poema_time: text("daily_poema_time").default("09:00"),
-  daily_ritual_time: text("daily_ritual_time").default("11:00"),
-  last_auto_publish: timestamp("last_auto_publish"),
+  manifestation_07_enabled: boolean("manifestation_07_enabled").default(true),
+  manifestation_09_enabled: boolean("manifestation_09_enabled").default(true),
+  manifestation_11_enabled: boolean("manifestation_11_enabled").default(true),
+  last_manifestation_07: timestamp("last_manifestation_07"),
+  last_manifestation_09: timestamp("last_manifestation_09"),
+  last_manifestation_11: timestamp("last_manifestation_11"),
   updated_at: timestamp("updated_at").defaultNow(),
 });
 
