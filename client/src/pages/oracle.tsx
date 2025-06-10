@@ -61,21 +61,80 @@ export default function Oracle() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Fixed Central Rotating Seal */}
-      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
-        <div className="rotating-seal w-96 h-96 opacity-20">
-          <img 
-            src="/seal.png" 
-            alt="Selo do Templo do Abismo" 
-            className="w-full h-full object-contain filter drop-shadow-lg"
+      {/* Mystical Particles Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-red-500/40 rounded-full particle-effect"
+            style={{
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 15}s`,
+              animationDuration: `${12 + Math.random() * 8}s`
+            }}
           />
+        ))}
+      </div>
+
+      {/* Floating Smoke Effects */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        {[...Array(6)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-20 h-20 opacity-10 smoke-effect"
+            style={{
+              left: `${Math.random() * 100}%`,
+              bottom: '-80px',
+              animationDelay: `${Math.random() * 8}s`,
+              background: 'radial-gradient(circle, rgba(239,68,68,0.4) 0%, transparent 70%)'
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Enhanced Central Rotating Seal with Multiple Layers */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        {/* Outer rotating ring */}
+        <div className="absolute inset-0 w-[32rem] h-[32rem] opacity-8">
+          <div className="animate-spin-slow-reverse text-amber-500/30 text-[32rem] leading-none text-center">
+            ◯
+          </div>
+        </div>
+        
+        {/* Middle layer with mystical symbols */}
+        <div className="absolute inset-0 w-[28rem] h-[28rem] opacity-12">
+          <div className="animate-spin-slow text-red-400/40 text-[28rem] leading-none text-center animate-glow-pulse">
+            ☿
+          </div>
+        </div>
+        
+        {/* Main central seal */}
+        <div className="rotating-seal w-96 h-96 opacity-15">
+          <div className="animate-spin-slow text-red-500/60 text-[24rem] leading-none animate-flicker">
+            ⸸
+          </div>
+        </div>
+        
+        {/* Inner pulsing core */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 opacity-25">
+          <div className="animate-glow-pulse text-red-300/70 text-4xl leading-none text-center animate-float">
+            ●
+          </div>
         </div>
       </div>
 
-      {/* Mystical floating particles */}
-      <div className="fixed inset-0 overflow-hidden z-0">
-        <div className="mystical-particles"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+      {/* Mystical Energy Lines */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-red-500/15 to-transparent animate-flicker" />
+        <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-amber-500/15 to-transparent animate-flicker" style={{animationDelay: '1.5s'}} />
+        <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-500/15 to-transparent animate-flicker" style={{animationDelay: '2.5s'}} />
+        <div className="absolute bottom-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/15 to-transparent animate-flicker" style={{animationDelay: '3.5s'}} />
+      </div>
+
+      {/* Atmospheric Gradient Overlay */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/60 via-transparent to-black/80"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-radial from-transparent via-red-900/5 to-black/40"></div>
       </div>
 
       {/* Main content */}
@@ -120,36 +179,62 @@ export default function Oracle() {
 
         {/* Oracle Types Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full">
-          {oracleTypes.map((oracle) => {
+          {oracleTypes.map((oracle, index) => {
             const IconComponent = oracle.icon;
             return (
-              <div key={oracle.id} className="floating-card group transform hover:scale-105 transition-all duration-300">
-                <div className="p-6 text-center space-y-4">
-                  <IconComponent className="w-12 h-12 mx-auto mb-4 text-red-500" />
-                  <h3 className="text-xl font-bold text-amber-400 mb-3">{oracle.name}</h3>
-                  <p className="text-gray-300 text-sm leading-relaxed mb-4">
+              <div 
+                key={oracle.id} 
+                className="floating-card group transform hover:scale-105 transition-all duration-500 animate-float relative overflow-hidden"
+                style={{
+                  animationDelay: `${index * 0.5}s`,
+                  animationDuration: `${6 + index * 0.5}s`
+                }}
+              >
+                {/* Mystical shimmer overlay */}
+                <div className="absolute inset-0 mystical-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                {/* Glowing border effect */}
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-red-500/20 via-amber-500/20 to-red-500/20 opacity-0 group-hover:opacity-100 animate-glow-pulse transition-opacity duration-500" />
+                
+                <div className="relative p-6 text-center space-y-4">
+                  {/* Enhanced icon with floating animation */}
+                  <div className="relative">
+                    <div className="absolute inset-0 animate-glow-pulse">
+                      <IconComponent className="w-12 h-12 mx-auto text-red-500/30" />
+                    </div>
+                    <IconComponent className="w-12 h-12 mx-auto mb-4 text-red-500 animate-flicker relative z-10" />
+                  </div>
+                  
+                  {/* Title with mystical glow */}
+                  <h3 className="text-xl font-bold text-amber-400 mb-3 group-hover:text-amber-300 transition-colors duration-300 animate-flicker">
+                    {oracle.name}
+                  </h3>
+                  
+                  <p className="text-gray-300 text-sm leading-relaxed mb-4 group-hover:text-gray-200 transition-colors duration-300">
                     {oracle.description}
                   </p>
                   
-                  {/* Pricing info */}
-                  <div className="bg-red-900/20 p-3 rounded-lg border border-red-700/30 mb-4">
-                    <div className="flex items-center justify-center gap-2 text-red-300 text-sm">
-                      <CreditCard className="w-4 h-4" />
+                  {/* Enhanced pricing info with glow effect */}
+                  <div className="bg-red-900/20 p-3 rounded-lg border border-red-700/30 mb-4 group-hover:bg-red-900/30 group-hover:border-red-600/50 transition-all duration-300 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/10 to-transparent group-hover:animate-pulse" />
+                    <div className="flex items-center justify-center gap-2 text-red-300 text-sm relative z-10">
+                      <CreditCard className="w-4 h-4 animate-glow-pulse" />
                       <span>R$ {oracle.pricePerConsultation} por consulta</span>
                     </div>
                   </div>
 
-                  {/* Action buttons */}
+                  {/* Enhanced action button */}
                   <div className="space-y-2">
                     <Button 
                       onClick={() => {
                         setSelectedOracle(oracle);
                         setShowPayment(true);
                       }}
-                      className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white"
+                      className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white relative overflow-hidden group/btn transition-all duration-300 hover:shadow-lg hover:shadow-red-500/25"
                     >
-                      <CreditCard className="w-4 h-4 mr-2" />
-                      Realizar Consulta - R$ {oracle.pricePerConsultation}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700" />
+                      <CreditCard className="w-4 h-4 mr-2 animate-glow-pulse" />
+                      <span className="relative z-10">Realizar Consulta - R$ {oracle.pricePerConsultation}</span>
                     </Button>
                   </div>
                 </div>
