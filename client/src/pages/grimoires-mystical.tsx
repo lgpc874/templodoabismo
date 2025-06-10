@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Book, Download, Clock, Lock, Flame, Scroll, Shield, Crown } from "lucide-react";
 import MysticalGate from "@/components/MysticalGate";
-import SiteNavigation from "@/components/SiteNavigation";
+// import SiteNavigation from "@/components/SiteNavigation";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/contexts/AuthContext";
 

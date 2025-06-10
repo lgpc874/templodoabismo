@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, Eye, BookOpen, Feather } from "lucide-react";
-import SiteNavigation from "../components/SiteNavigation";
+// import SiteNavigation from "../components/SiteNavigation";
 import Footer from "../components/footer";
 import { useToast } from "../hooks/use-toast";
 import { useBlogPosts, useNewsletterSubscription } from "@/hooks/useSupabaseData";

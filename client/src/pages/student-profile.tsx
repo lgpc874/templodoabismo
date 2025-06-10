@@ -10,7 +10,7 @@ import {
   BookOpen, Clock, Star, Award, Play, Download, 
   CheckCircle, TrendingUp, Calendar, User
 } from "lucide-react";
-import SiteNavigation from "@/components/SiteNavigation";
+// import SiteNavigation from "@/components/SiteNavigation";
 import Footer from "@/components/footer";
 
 interface StudentCourse {

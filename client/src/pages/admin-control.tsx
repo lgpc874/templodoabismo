@@ -30,7 +30,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import SiteNavigation from "@/components/SiteNavigation";
+// import SiteNavigation from "@/components/SiteNavigation";
 
 export default function AdminControl() {
   const [activeTab, setActiveTab] = useState("dashboard");

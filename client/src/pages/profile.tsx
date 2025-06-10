@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress as ProgressBar } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import SiteNavigation from "@/components/SiteNavigation";
+// import SiteNavigation from "@/components/SiteNavigation";
 
 interface UserProfile {
   id: number;

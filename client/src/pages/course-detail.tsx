@@ -10,7 +10,7 @@ import {
   BookOpen, Clock, Star, Users, ArrowRight, Play, Lock, 
   CheckCircle, ShoppingCart, Award, Download 
 } from "lucide-react";
-import SiteNavigation from "@/components/SiteNavigation";
+// import SiteNavigation from "@/components/SiteNavigation";
 import { useToast } from "@/hooks/use-toast";
 
 interface CourseLevel {

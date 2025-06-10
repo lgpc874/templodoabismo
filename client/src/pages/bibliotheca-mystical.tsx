@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Lock, Crown, Scroll, Eye, Flame, Star } from "lucide-react";
 import MysticalGate from "@/components/MysticalGate";
-import SiteNavigation from "@/components/SiteNavigation";
+// import SiteNavigation from "@/components/SiteNavigation";
 import { useAuth } from "@/contexts/AuthContext";
 
 function BibliothecaContent() {
