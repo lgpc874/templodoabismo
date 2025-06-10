@@ -115,7 +115,7 @@ export default function Courses() {
         <div className="text-center mb-8 md:mb-12 max-w-4xl px-4">
           <div className="mb-6 md:mb-8">
             <div className="text-amber-400 text-4xl md:text-6xl mb-3 md:mb-4">🔥</div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-4 md:mb-6 floating-title leading-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-cinzel-decorative text-amber-400 mystical-glow mb-4 md:mb-6 floating-title leading-tight">
               ACADEMIA INFERNAL
             </h1>
             <div className="flex justify-center items-center space-x-4 md:space-x-8 text-amber-500 text-xl md:text-3xl mb-4 md:mb-6">
@@ -128,7 +128,7 @@ export default function Courses() {
           </div>
           
           <div className="floating-card p-4 md:p-8 space-y-4 md:space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-cinzel-decorative text-amber-300 mb-4 md:mb-6 floating-title-slow leading-tight">
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-cinzel-decorative text-amber-300 mb-4 md:mb-6 floating-title-slow leading-tight">
               Do Iniciante ao Mestre das Trevas
             </h2>
             

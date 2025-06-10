@@ -129,26 +129,7 @@ export default function Navigation() {
                 </Link>
               );
             })}
-            
-            {isAuthenticated ? (
-              <div className="pt-4 border-t border-red-900/30">
-                <div className="px-3 py-2 text-red-200 text-sm">
-                  <User className="w-4 h-4 inline mr-2" />
-                  {user?.username}
-                </div>
-                <Button
-                  variant="ghost"
-                  onClick={() => {
-                    logout();
-                    setIsOpen(false);
-                  }}
-                  className="w-full justify-start text-red-200 hover:text-red-400"
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sair
-                </Button>
-              </div>
-            ) : null}
+
           </div>
         </div>
       )}
