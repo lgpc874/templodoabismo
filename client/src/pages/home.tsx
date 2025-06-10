@@ -4,15 +4,11 @@ import { Scroll, Flame, Star, Eye, Moon, Crown, BookOpen } from "lucide-react";
 import Footer from "../components/footer";
 import { Link } from "wouter";
 
-interface DailyQuote {
-  content: string;
-  author: string;
-}
-
 export default function Home() {
-  const { data: dailyQuote, isLoading } = useQuery<DailyQuote>({
-    queryKey: ["/api/daily-quote"],
-    refetchInterval: 24 * 60 * 60 * 1000, // Refetch every 24 hours
+  // Fetch real content from Supabase only
+  const { data: recentPosts } = useQuery({
+    queryKey: ["/api/voz-pluma/recent"],
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   return (
@@ -93,20 +89,23 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Daily AI Quote */}
-        {!isLoading && dailyQuote && (
+        {/* Recent Real Content from Supabase */}
+        {recentPosts && recentPosts.length > 0 && (
           <div className="floating-card max-w-2xl mx-auto mb-12 p-8 bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-xl">
             <div className="text-center">
               <h3 className="text-2xl font-bold text-red-400 mb-4 flex items-center justify-center gap-2">
                 <Flame className="w-6 h-6" />
-                Susurri Abyssos
+                Voz da Pluma
               </h3>
-              <div className="text-lg text-gray-300 italic leading-relaxed mb-4">
-                "{dailyQuote.content}"
+              <div className="text-lg text-gray-300 leading-relaxed mb-4">
+                <h4 className="text-amber-400 mb-2">{recentPosts[0].title}</h4>
+                <div className="text-sm text-gray-400 italic">
+                  {recentPosts[0].excerpt || recentPosts[0].content?.substring(0, 200) + '...'}
+                </div>
               </div>
-              <div className="text-amber-400 font-semibold">
-                — {dailyQuote.author}
-              </div>
+              <Link to="/voz-da-pluma" className="text-amber-400 hover:text-amber-300 underline">
+                Ver todas as publicações
+              </Link>
             </div>
           </div>
         )}
