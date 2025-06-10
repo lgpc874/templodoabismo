@@ -383,6 +383,25 @@ export default function OracleMirror() {
                       <div className="text-center text-xs text-gray-500">
                         Reflexão contemplada em {new Date(result.timestamp).toLocaleString('pt-BR')}
                       </div>
+
+                      {/* Download and Share Buttons */}
+                      <div className="flex gap-4 justify-center mt-6">
+                        <Button
+                          onClick={downloadImage}
+                          className="bg-purple-600 hover:bg-purple-700 text-white"
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Baixar Imagem
+                        </Button>
+                        <Button
+                          onClick={shareImage}
+                          variant="outline"
+                          className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+                        >
+                          <Share2 className="w-4 h-4 mr-2" />
+                          Compartilhar
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 ) : (
@@ -413,6 +432,14 @@ export default function OracleMirror() {
           </div>
         </div>
       </div>
+
+      {/* Hidden Canvas for Image Generation */}
+      <canvas
+        ref={canvasRef}
+        width={800}
+        height={1000}
+        style={{ display: 'none' }}
+      />
     </div>
   );
 }
