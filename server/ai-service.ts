@@ -1,9 +1,18 @@
 import OpenAI from "openai";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const openai = process.env.OPENAI_API_KEY ? new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY 
-}) : null;
+let openai: OpenAI | null = null;
+
+try {
+  if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== '') {
+    openai = new OpenAI({ 
+      apiKey: process.env.OPENAI_API_KEY 
+    });
+  }
+} catch (error) {
+  console.log('OpenAI initialization failed:', error);
+  openai = null;
+}
 
 export interface OracleConsultation {
   type: string;
@@ -37,7 +46,10 @@ export class TemploAI {
   
   async generateTarotReading(question: string): Promise<TarotReading> {
     if (!openai) {
-      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
+      return {
+        cards: ["The Oracle Awaits", "Path of Preparation", "Key of Access"],
+        interpretation: "O Oracle permanece em silêncio, aguardando a configuração adequada das chaves místicas. Para revelar os segredos do Tarot Infernal, é necessário estabelecer a conexão com os oráculos ancestrais através da chave de acesso OpenAI."
+      };
     }
     
     try {
@@ -74,7 +86,9 @@ export class TemploAI {
 
   async generateMirrorReading(question: string): Promise<MirrorReading> {
     if (!openai) {
-      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
+      return {
+        reflection: "O Espelho do Abismo permanece velado, aguardando a chave de acesso aos mistérios ancestrais. Configure a conexão OpenAI para contemplar as verdades ocultas em seu reflexo interior."
+      };
     }
     
     try {
@@ -108,7 +122,10 @@ export class TemploAI {
 
   async generateRuneReading(question: string): Promise<RuneReading> {
     if (!openai) {
-      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
+      return {
+        runes: ["ᚺᚨᚷᚨᛚᚨᛉ", "ᚨᚾᛋᚢᛉ", "ᛟᚦᚨᛚᚨ"],
+        meaning: "As runas ancestrais aguardam a chave de acesso aos segredos primordiais. Configure a conexão OpenAI para desvelar a sabedoria dos antigos símbolos nórdicos."
+      };
     }
     
     try {
@@ -146,7 +163,9 @@ export class TemploAI {
 
   async generateFireReading(question: string): Promise<FireReading> {
     if (!openai) {
-      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
+      return {
+        flames: "As chamas do conhecimento aguardam o combustível adequado. Configure a chave OpenAI para acender o fogo sagrado da sabedoria ancestral e contemplar as visões nas labaredas etéreas."
+      };
     }
     
     try {
@@ -180,7 +199,9 @@ export class TemploAI {
 
   async generateAbyssalVoice(question: string): Promise<AbyssalVoice> {
     if (!openai) {
-      throw new Error('OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.');
+      return {
+        voice: "As vozes do abismo sussurram em silêncio, aguardando a chave que desbloqueará seus segredos ancestrais. Configure a conexão OpenAI para ouvir os ecos eternos das profundezas primordiais."
+      };
     }
     
     try {
