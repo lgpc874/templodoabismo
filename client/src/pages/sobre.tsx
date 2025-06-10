@@ -2,22 +2,22 @@ import { Flame, Eye, Star, Crown, Skull, BookOpen } from "lucide-react";
 
 export default function Sobre() {
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Fixed Central Rotating Seal */}
-      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
-        <div className="rotating-seal w-96 h-96 opacity-20">
-          <img 
-            src="/seal.png" 
-            alt="Selo do Templo do Abismo" 
-            className="w-full h-full object-contain filter drop-shadow-lg"
-          />
+    <div className="min-h-screen relative overflow-hidden bg-black/8 backdrop-blur-sm">
+      <div className="mystical-particles fixed inset-0 z-0" />
+      
+      <div className="fixed top-1/2 left-1/2 z-0 transform -translate-x-1/2 -translate-y-1/2" style={{marginTop: '2rem'}}>
+        <div className="absolute w-80 h-80 opacity-8 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="animate-spin-slow-reverse text-amber-500/15 text-[20rem] leading-none flex items-center justify-center h-full">◯</div>
         </div>
-      </div>
-
-      {/* Mystical floating particles */}
-      <div className="fixed inset-0 overflow-hidden z-0">
-        <div className="mystical-particles"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
+        <div className="absolute w-72 h-72 opacity-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="animate-spin-slow text-red-400/20 text-[18rem] leading-none flex items-center justify-center h-full">☿</div>
+        </div>
+        <div className="rotating-seal absolute w-64 h-64 opacity-15 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="animate-spin-slow text-red-500/30 text-[16rem] leading-none flex items-center justify-center h-full">⸸</div>
+        </div>
+        <div className="absolute w-16 h-16 opacity-25 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="text-red-300/40 text-4xl leading-none flex items-center justify-center h-full">●</div>
+        </div>
       </div>
 
       {/* Main content */}
@@ -38,15 +38,15 @@ export default function Sobre() {
             </div>
           </div>
           
-          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
-            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
+          <div className="floating-card p-8 space-y-6 bg-black/8 backdrop-blur-sm border border-white/10 rounded-xl">
+            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-400/70 mb-6 floating-title-slow">
               Portal Ancestral da Gnose Luciferiana
             </h2>
             
-            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
-              Nas <strong className="text-amber-400">profundezas do abismo</strong>, onde a luz comum não ousa penetrar, 
+            <p className="text-xl text-gray-300/70 leading-relaxed font-crimson mb-6">
+              Nas <strong className="text-amber-400/80">profundezas do abismo</strong>, onde a luz comum não ousa penetrar, 
               reside a sabedoria que precede todos os dogmas e transcende todas as limitações. 
-              Este Templo é o <strong className="text-red-400">sanctum primordial</strong> onde os mistérios luciferianos se revelam aos iniciados sinceros.
+              Este Templo é o <strong className="text-red-400/80">sanctum primordial</strong> onde os mistérios luciferianos se revelam aos iniciados sinceros.
             </p>
             
             <div className="text-center">
