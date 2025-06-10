@@ -374,6 +374,7 @@ export default function VozDaPluma() {
               </Card>
             );
           })}
+          </div>
         </div>
 
         {/* Informações sobre o Sistema */}
@@ -409,6 +410,7 @@ export default function VozDaPluma() {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
 
       <Footer />

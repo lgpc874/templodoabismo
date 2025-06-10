@@ -216,6 +216,46 @@ export class VozPlumaService {
 
     return await this.replaceManifestationForTime(time);
   }
+
+  // Missing methods required by scheduler
+  shouldAutoPublish(): boolean {
+    return true; // Always auto-publish
+  }
+
+  async generateAndSaveContent(): Promise<void> {
+    await this.checkAndGenerateIfNeeded();
+  }
+
+  async getTodayContent(): Promise<VozPlumaManifestation[]> {
+    return await this.getCurrentManifestations();
+  }
+
+  async getRecentContent(): Promise<VozPlumaManifestation[]> {
+    const { data, error } = await supabaseAdmin
+      .from('voz_pluma_manifestations')
+      .select('*')
+      .order('posted_date', { ascending: false })
+      .limit(10);
+
+    if (error) {
+      console.error('Erro ao buscar conteúdo recente:', error);
+      return [];
+    }
+
+    return data || [];
+  }
+
+  async getSettings(): Promise<any> {
+    return {
+      autoPublish: true,
+      publishTimes: ['07:00', '09:00', '11:00']
+    };
+  }
+
+  async updateSettings(settings: any): Promise<void> {
+    // Settings are static for this implementation
+    console.log('Settings update requested:', settings);
+  }
 }
 
 export const vozPlumaService = new VozPlumaService();

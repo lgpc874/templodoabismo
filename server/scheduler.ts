@@ -37,8 +37,8 @@ class AutoPublishScheduler {
       
       if (shouldPublish) {
         console.log('Auto-publishing new Voz da Pluma content...');
-        const content = await vozPlumaService.generateAndSaveContent();
-        console.log('Auto-published:', content.title, `(${content.type})`);
+        await vozPlumaService.generateAndSaveContent();
+        console.log('Auto-published new manifestations');
       }
     } catch (error) {
       console.error('Error in auto-publish scheduler:', error);
