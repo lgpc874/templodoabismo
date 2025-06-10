@@ -325,6 +325,46 @@ body.mood-void {
   box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
 }
 
+/* Responsive Popover Positioning */
+@media (max-width: 640px) {
+  [data-radix-popper-content-wrapper] {
+    max-width: calc(100vw - 32px) !important;
+    margin: 0 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  [data-radix-popper-content-wrapper] {
+    max-width: calc(100vw - 16px) !important;
+    margin: 0 8px !important;
+  }
+}
+
+/* Ensure popovers never overflow viewport */
+[data-radix-popper-content-wrapper] {
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+/* Custom scrollbar for popover content */
+[data-radix-popper-content-wrapper]::-webkit-scrollbar {
+  width: 4px;
+}
+
+[data-radix-popper-content-wrapper]::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+[data-radix-popper-content-wrapper]::-webkit-scrollbar-thumb {
+  background: rgba(245, 158, 11, 0.3);
+  border-radius: 2px;
+}
+
+[data-radix-popper-content-wrapper]::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 158, 11, 0.5);
+}
+
 /* Templo do Abismo Animations */
 @keyframes flame-shimmer {
   0%, 100% { 

@@ -83,6 +83,7 @@ const Header: React.FC = () => {
             </div>
           </Link>
         </div>
+      </div>
     </header>
   );
 };

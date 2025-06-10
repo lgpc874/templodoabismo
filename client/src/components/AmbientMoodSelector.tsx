@@ -122,7 +122,15 @@ export default function AmbientMoodSelector({ onMoodChange }: AmbientMoodSelecto
           </Button>
         </PopoverTrigger>
         
-        <PopoverContent className="w-72 md:w-80 bg-black/95 backdrop-blur-lg border-amber-500/30 text-white ml-2" side="right" align="start">
+        <PopoverContent 
+          className="w-64 sm:w-72 md:w-80 bg-black/95 backdrop-blur-lg border-amber-500/30 text-white" 
+          side="right" 
+          align="start"
+          sideOffset={8}
+          alignOffset={-4}
+          avoidCollisions={true}
+          collisionBoundary={document?.documentElement}
+        >
           <div className="space-y-3">
             <div className="text-center">
               <h3 className="text-sm md:text-lg font-cinzel-decorative text-amber-400 mb-1">

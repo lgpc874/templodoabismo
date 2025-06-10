@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
 import AmbientMoodSelector from "@/components/AmbientMoodSelector";
+import FloatingMenu from "@/components/FloatingMenu";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Login from "@/pages/login";
@@ -33,6 +34,7 @@ function Router() {
     <div className="min-h-screen bg-black text-white">
       <Header />
       <AmbientMoodSelector />
+      <FloatingMenu />
       <main>
         <Switch>
           <Route path="/" component={Home} />
