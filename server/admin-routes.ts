@@ -431,7 +431,8 @@ export function registerAdminRoutes(app: Express) {
       }
 
       // Restart schedulers with new settings
-      await vozPlumaScheduler.restart();
+      await vozPlumaScheduler.stop();
+      await vozPlumaScheduler.start();
 
       res.json({ success: true });
     } catch (error) {
