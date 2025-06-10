@@ -1,6 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useSupabaseAuth } from '@/hooks/useSupabaseAuth';
+import { getSupabase } from '@/lib/supabase';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface User {
@@ -77,13 +78,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const { data, error } = await signUp(email, password, { username });
       if (error) {
-        console.error('Register error:', error);
-        return false;
+        console.error('Register error:', error.message || error);
+        throw new Error(error.message || 'Erro no registro');
       }
-      return !!data.user;
-    } catch (error) {
-      console.error('Register error:', error);
+      
+      if (data.user) {
+        // Create user profile after successful registration
+        // Profile will be created automatically by Supabase triggers
+        console.log('User registered successfully:', data.user.id);
+        
+        return true;
+      }
       return false;
+    } catch (error: any) {
+      console.error('Register error:', error.message || error);
+      throw error;
     }
   };
 

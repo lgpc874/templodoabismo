@@ -76,8 +76,9 @@ export default function Login() {
       } else {
         setError("Erro ao criar conta");
       }
-    } catch (error) {
-      setError("Erro interno do servidor");
+    } catch (error: any) {
+      console.error("Registration error:", error);
+      setError(error.message || "Erro ao criar conta");
     } finally {
       setIsLoading(false);
     }
