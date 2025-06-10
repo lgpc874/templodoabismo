@@ -21,14 +21,14 @@ async function requireAuth(req: any, res: Response, next: any) {
     }
 
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
+    const { data: { user }, error } = await supabase.auth.getUser(token);
     
     if (error || !user) {
       return res.status(401).json({ error: 'Invalid token' });
     }
 
     // Get user profile
-    const { data: profile } = await supabaseAdmin
+    const { data: profile } = await supabase
       .from('users')
       .select('*')
       .eq('id', user.id)

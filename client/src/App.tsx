@@ -26,6 +26,7 @@ import Gnosis from "@/pages/blog-new";
 import AdminControl from "@/pages/admin-control";
 import Register from "@/pages/register";
 import AdminPanel from "@/pages/admin";
+import AdminLogin from "@/pages/admin-login";
 import OracleTest from "@/pages/oracle-test";
 import SetupAdmin from "@/pages/setup-admin";
 import EmergencyAdmin from "@/pages/emergency-admin";
@@ -68,6 +69,7 @@ function Router() {
           <Route path="/oraculo/voz" component={OracleVoice} />
           <Route path="/setup-admin" component={SetupAdmin} />
           <Route path="/emergency-admin" component={EmergencyAdmin} />
+          <Route path="/admin-login" component={AdminLogin} />
           <Route path="/admin" component={AdminPanel} />
           <Route path="/sanctum-administratoris" component={AdminControl} />
           <Route path="/termos-de-uso" component={lazy(() => import("./pages/termos-de-uso"))} />

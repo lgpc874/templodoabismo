@@ -131,7 +131,7 @@ export class VoxPlumaAI {
     }
   }
 
-  async publishPoem(): Promise<void> {
+  async publishPoem(customPrompt?: string): Promise<void> {
     try {
       const poem = await this.generatePoem();
       
