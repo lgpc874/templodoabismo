@@ -146,9 +146,17 @@ export default function OracleRitualChat() {
 
     } catch (error) {
       console.error('Erro na consulta:', error);
+      console.error('Error details:', {
+        message: error.message,
+        status: error.status,
+        response: error.response
+      });
+      
+      const errorMessage = error.message || 'Conexão com a entidade foi interrompida';
+      
       toast({
         title: "Interferência nas correntes místicas",
-        description: "A conexão com a entidade foi temporariamente interrompida",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {

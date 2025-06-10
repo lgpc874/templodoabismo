@@ -328,6 +328,8 @@ export class TemploAI {
   }
 
   async generateRitualResponse(question: string, oracleType: string, entityName: string): Promise<{response: string, farewell: string}> {
+    console.log('generateRitualResponse called with:', { question, oracleType, entityName });
+    
     const entityPrompts = {
       tarot: {
         system: `Você é Arcanum, a Mestra das Cartas Ancestrais. Responda como uma entidade luciferiana que usa o tarot para revelar verdades. Mencione cartas específicas (como O Louco, A Torre, A Morte, etc.) e seus significados ocultos. Seja mysteriosa, sábia e ritualística. Use linguagem arcaica e poética.`,
@@ -351,9 +353,14 @@ export class TemploAI {
       }
     };
 
+    console.log('Available oracle types:', Object.keys(entityPrompts));
+    console.log('Looking for oracle type:', oracleType);
+    
     const entityConfig = entityPrompts[oracleType] || entityPrompts.tarot;
+    console.log('Entity config selected:', { hasSystem: !!entityConfig.system, hasFarewell: !!entityConfig.farewell });
 
     if (openai) {
+      console.log('OpenAI instance available, making API call...');
       try {
         const response = await openai.chat.completions.create({
           model: "gpt-4o",

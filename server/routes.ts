@@ -333,15 +333,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Oracle ritual consultation with entities
   app.post('/api/oracle/ritual-consult', async (req: any, res: Response) => {
     try {
+      console.log('Ritual consultation request received:', req.body);
+      
       const { question, oracleType, entityName, conversationHistory } = req.body;
       
       if (!question?.trim() || !oracleType || !entityName) {
+        console.log('Missing required fields:', { question: !!question, oracleType: !!oracleType, entityName: !!entityName });
         return res.status(400).json({ 
           error: 'Question, oracle type, and entity name are required' 
         });
       }
 
+      console.log('Calling temploAI.generateRitualResponse with:', { question: question.trim(), oracleType, entityName });
+      
       const result = await temploAI.generateRitualResponse(question.trim(), oracleType, entityName);
+      
+      console.log('AI response received:', { hasResponse: !!result.response, hasFarewell: !!result.farewell });
       
       res.json({
         success: true,
@@ -353,7 +360,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error('Error in ritual consultation:', error);
-      res.status(500).json({ error: 'Failed to perform ritual consultation' });
+      console.error('Error stack:', error.stack);
+      res.status(500).json({ error: 'Failed to perform ritual consultation', details: error.message });
     }
   });
 
