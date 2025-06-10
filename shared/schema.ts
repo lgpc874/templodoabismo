@@ -550,24 +550,15 @@ export const insertCourseEnrollmentSchema = createInsertSchema(courseEnrollments
 
 export const insertGrimoireSchema = createInsertSchema(grimoires);
 
-export const insertGrimoireChapterSchema = createInsertSchema(grimoireChapters).pick({
-  grimoire_id: true,
-  chapter_number: true,
-  title: true,
-  content: true,
-  summary: true,
-  is_preview: true,
+export const insertGrimoireChapterSchema = createInsertSchema(grimoireChapters).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
 });
 
-export const insertGrimoireAccessSchema = createInsertSchema(grimoireAccess).pick({
-  user_id: true,
-  grimoire_id: true,
-  access_type: true,
-  chapter_id: true,
-  expires_at: true,
-  downloads_remaining: true,
-  price_paid_brl: true,
-  payment_id: true,
+export const insertGrimoireAccessSchema = createInsertSchema(grimoireAccess).omit({
+  id: true,
+  granted_at: true,
 });
 
 export const insertOracleSessionSchema = createInsertSchema(oracle_sessions).omit({
@@ -575,19 +566,15 @@ export const insertOracleSessionSchema = createInsertSchema(oracle_sessions).omi
   session_date: true,
 });
 
-export const insertDailyPoemSchema = createInsertSchema(daily_poems).pick({
-  title: true,
-  content: true,
-  date: true,
-  author: true,
-  is_ai_generated: true,
-  published: true,
+export const insertDailyPoemSchema = createInsertSchema(daily_poems).omit({
+  id: true,
+  created_at: true,
 });
 
-export const insertSiteConfigSchema = createInsertSchema(siteConfig).pick({
-  key: true,
-  value: true,
-  category: true,
+export const insertSiteConfigSchema = createInsertSchema(siteConfig).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
 });
 
 export const insertContentSectionSchema = createInsertSchema(contentSections).pick({
