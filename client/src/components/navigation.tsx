@@ -97,7 +97,7 @@ export default function Navigation() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className="flex md:hidden items-center">
             <Button
               variant="ghost"
               onClick={() => setIsOpen(!isOpen)}

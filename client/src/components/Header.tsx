@@ -140,7 +140,7 @@ const Header: React.FC = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="hidden md:flex items-center space-x-2">
                 <Link href="/login">
                   <Button 
                     variant="ghost" 
