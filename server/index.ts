@@ -41,26 +41,7 @@ app.use((req, res, next) => {
   // Register all API routes first, before Vite middleware
   const server = await registerRoutes(app);
   
-  // Core API endpoints using Supabase storage
-  app.get('/api/courses', async (req, res) => {
-    try {
-      const result = await storage.getCourses();
-      res.json(result);
-    } catch (error: any) {
-      console.error('Courses API error:', error);
-      res.status(500).json({ message: 'Failed to get courses', error: error.message });
-    }
-  });
-
-  app.get('/api/grimoires', async (req, res) => {
-    try {
-      const result = await storage.getGrimoires();
-      res.json(result);
-    } catch (error: any) {
-      console.error('Grimoires API error:', error);
-      res.status(500).json({ message: 'Failed to get grimoires', error: error.message });
-    }
-  });
+  // API routes are handled in registerRoutes function
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
