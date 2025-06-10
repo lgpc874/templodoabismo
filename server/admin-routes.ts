@@ -640,5 +640,5 @@ export function registerAdminRoutes(app: Express) {
   });
 
   // Initialize content scheduler on startup
-  contentScheduler.startSchedulers();
+  vozPlumaScheduler.start();
 }
