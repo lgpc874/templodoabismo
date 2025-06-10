@@ -35,6 +35,7 @@ import OracleMirror from "./pages/oracle-mirror";
 import OracleRunes from "./pages/oracle-runes";
 import OracleFire from "./pages/oracle-fire";
 import OracleVoice from "./pages/oracle-voice";
+import OracleChat from "./pages/oracle-chat";
 
 function Router() {
   return (
@@ -67,6 +68,7 @@ function Router() {
           <Route path="/oraculo/runas" component={OracleRunes} />
           <Route path="/oraculo/fogo" component={OracleFire} />
           <Route path="/oraculo/voz" component={OracleVoice} />
+          <Route path="/oraculo/chat" component={OracleChat} />
           <Route path="/setup-admin" component={SetupAdmin} />
           <Route path="/emergency-admin" component={EmergencyAdmin} />
           <Route path="/admin-login" component={AdminLogin} />

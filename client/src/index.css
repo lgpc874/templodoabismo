@@ -485,6 +485,45 @@ body.mood-void {
   to { opacity: 1; }
 }
 
+/* Enhanced Floating Symbols for Oracle Pages */
+.floating-symbols {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  font-size: 2.5rem;
+  color: #fbbf24;
+  margin-bottom: 2rem;
+  animation: mysticalFloat 4s ease-in-out infinite;
+}
+
+.floating-symbols span {
+  animation: symbolRotate 6s linear infinite;
+  filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.8));
+}
+
+.floating-symbols span:nth-child(1) { animation-delay: 0s; }
+.floating-symbols span:nth-child(2) { animation-delay: 1.5s; }
+.floating-symbols span:nth-child(3) { animation-delay: 3s; }
+.floating-symbols span:nth-child(4) { animation-delay: 4.5s; }
+
+.floating-card {
+  animation: cardFloat 6s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes symbolRotate {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(90deg) scale(1.1); }
+  50% { transform: rotate(180deg) scale(1); }
+  75% { transform: rotate(270deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0px) rotateX(0deg); }
+  50% { transform: translateY(-8px) rotateX(2deg); }
+}
+
 @keyframes slideIn {
   from { transform: translateX(-100%); }
   to { transform: translateX(0); }

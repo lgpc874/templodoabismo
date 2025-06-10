@@ -1,4 +1,7 @@
 workflows:
   - name: "Start application"
-    command: "npm run dev"
-    description: "Start the full-stack application"
+    run: "npm run dev"
+    env:
+      NODE_ENV: "development"
+    ports:
+      - 5173
