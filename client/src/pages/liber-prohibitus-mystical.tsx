@@ -109,49 +109,7 @@ export default function LiberProhibitus() {
           </div>
         )}
 
-        {/* Navigation Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12">
-          
-          {/* Grimoires Section */}
-          <Link href="/grimoires">
-            <div className="floating-card p-8 bg-black/20 backdrop-blur-lg border border-red-500/20 rounded-xl hover:border-red-400/40 transition-all duration-300 cursor-pointer group">
-              <div className="text-center">
-                <BookOpen className="w-12 h-12 mx-auto mb-4 text-red-400 group-hover:text-red-300 transition-colors" />
-                <h3 className="text-2xl font-cinzel-decorative text-red-300 mb-3">Grimorium Arcanum</h3>
-                <p className="text-gray-400 font-crimson">
-                  Manuscritos arcanos das trevas sagradas
-                </p>
-              </div>
-            </div>
-          </Link>
 
-          {/* Oracle Section */}
-          <Link href="/oraculo">
-            <div className="floating-card p-8 bg-black/20 backdrop-blur-lg border border-red-500/20 rounded-xl hover:border-red-400/40 transition-all duration-300 cursor-pointer group">
-              <div className="text-center">
-                <Eye className="w-12 h-12 mx-auto mb-4 text-red-400 group-hover:text-red-300 transition-colors" />
-                <h3 className="text-2xl font-cinzel-decorative text-red-300 mb-3">Oraculum Tenebris</h3>
-                <p className="text-gray-400 font-crimson">
-                  Consulte os oráculos das trevas
-                </p>
-              </div>
-            </div>
-          </Link>
-
-          {/* Bibliotheca Section */}
-          <Link href="/bibliotheca">
-            <div className="floating-card p-8 bg-black/20 backdrop-blur-lg border border-red-500/20 rounded-xl hover:border-red-400/40 transition-all duration-300 cursor-pointer group">
-              <div className="text-center">
-                <Crown className="w-12 h-12 mx-auto mb-4 text-red-400 group-hover:text-red-300 transition-colors" />
-                <h3 className="text-2xl font-cinzel-decorative text-red-300 mb-3">Bibliotheca Arcana</h3>
-                <p className="text-gray-400 font-crimson">
-                  Documentos selados das tradições
-                </p>
-              </div>
-            </div>
-          </Link>
-
-        </div>
       </div>
 
       <Footer />

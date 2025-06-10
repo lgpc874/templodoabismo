@@ -73,32 +73,7 @@ export default function NotFound() {
           </div>
         </div>
 
-        {/* Additional Navigation */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full mt-8">
-          <Link href="/oraculo">
-            <div className="floating-card p-6 text-center cursor-pointer transform hover:scale-105 transition-all duration-300">
-              <div className="text-amber-400 text-3xl mb-3">⛧</div>
-              <h3 className="text-lg font-cinzel-decorative text-amber-400 mb-2">Oraculum</h3>
-              <p className="text-sm text-gray-300">Consultar o Oráculo</p>
-            </div>
-          </Link>
-          
-          <Link href="/grimoires">
-            <div className="floating-card p-6 text-center cursor-pointer transform hover:scale-105 transition-all duration-300">
-              <div className="text-amber-400 text-3xl mb-3">𖤍</div>
-              <h3 className="text-lg font-cinzel-decorative text-amber-400 mb-2">Bibliotheca</h3>
-              <p className="text-sm text-gray-300">Grimórios Arcanos</p>
-            </div>
-          </Link>
-          
-          <Link href="/blog">
-            <div className="floating-card p-6 text-center cursor-pointer transform hover:scale-105 transition-all duration-300">
-              <div className="text-amber-400 text-3xl mb-3">☿</div>
-              <h3 className="text-lg font-cinzel-decorative text-amber-400 mb-2">Gnosis</h3>
-              <p className="text-sm text-gray-300">Ensinamentos</p>
-            </div>
-          </Link>
-        </div>
+
 
         {/* Mystical Quote */}
         <div className="floating-card max-w-2xl mx-auto mt-12 p-6 bg-black/20 backdrop-blur-lg border border-red-500/20 rounded-xl">
