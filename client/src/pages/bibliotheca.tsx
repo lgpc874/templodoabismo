@@ -503,11 +503,8 @@ export default function Bibliotheca() {
   };
 
   return (
-    <div className="min-h-screen p-4 relative">
-      {/* Mystical Background with floating animations */}
-      <div className="fixed inset-0 bg-gradient-to-b from-gray-900 via-purple-900/20 to-black z-0"></div>
-      
-      {/* Fixed Central Rotating Seal */}
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Fixed Central Rotating Seal - Exact same as home */}
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
         <div className="rotating-seal w-96 h-96 opacity-20">
           <img 
@@ -518,98 +515,61 @@ export default function Bibliotheca() {
         </div>
       </div>
 
-      {/* Mystical floating particles */}
+      {/* Mystical floating particles - Exact same as home */}
       <div className="fixed inset-0 overflow-hidden z-0">
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            className={`absolute w-2 h-2 bg-amber-400/30 rounded-full animate-float`}
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 20}s`,
-              animationDuration: `${15 + Math.random() * 10}s`
-            }}
-          />
-        ))}
+        <div className="mystical-particles"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
       </div>
 
-      <div className="relative z-10 flex flex-col items-center">
-        {/* Header */}
-        <div className="floating-card max-w-4xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl mb-8">
-          <div className="p-8 text-center">
-            <div className="flex items-center justify-center mb-6">
-              <div className="rotating-seal w-16 h-16 opacity-60 mr-4">
-                <img src="/seal.png" alt="Selo" className="w-full h-full object-contain" />
-              </div>
-              <h1 className="text-4xl md:text-5xl font-cinzel-decorative text-amber-400 tracking-wider">
-                BIBLIOTHECA ARCANUM
-              </h1>
-              <div className="rotating-seal-reverse w-16 h-16 opacity-60 ml-4">
-                <img src="/seal.png" alt="Selo" className="w-full h-full object-contain" />
-              </div>
+      {/* Main content - Same structure as home */}
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 pt-20">
+        {/* Header - Following exact home page structure */}
+        <div className="text-center mb-12 max-w-5xl">
+          <div className="mb-8">
+            <div className="text-amber-400 text-6xl mb-4">📚</div>
+            <h1 className="text-5xl md:text-7xl font-cinzel-decorative text-amber-400 mystical-glow mb-6 floating-title">
+              BIBLIOTHECA ARCANUM
+            </h1>
+            <div className="flex justify-center items-center space-x-8 text-amber-500 text-3xl mb-6">
+              <span>☿</span>
+              <span>⚹</span>
+              <span>𖤍</span>
+              <span>⚹</span>
+              <span>☿</span>
             </div>
+          </div>
+          
+          <div className="floating-card p-8 space-y-6 bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
+            <h2 className="text-3xl md:text-4xl font-cinzel-decorative text-amber-300 mb-6 floating-title-slow">
+              Sanctum Secretorum
+            </h2>
             
-            <p className="text-xl text-gray-300 mb-4 italic leading-relaxed">
-              "Aqui repousam os saberes que precedem a criação e sucedem a destruição"
+            <p className="text-xl text-gray-300 leading-relaxed font-crimson mb-6">
+              Aqui repousam os <strong className="text-amber-400">saberes que precedem a criação</strong> e sucedem a destruição. 
+              Cada pergaminho é um <strong className="text-red-400">portal para conhecimentos ancestrais</strong> que transcendem 
+              os limites da compreensão humana.
             </p>
             
-            <div className="flex items-center justify-center space-x-8 text-amber-400">
-              <div className="text-2xl">⛧</div>
-              <div className="text-lg">— SANCTUM SECRETORUM —</div>
-              <div className="text-2xl">⛧</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Danger Warning */}
-        <div className="floating-card max-w-5xl w-full bg-red-950/30 backdrop-blur-lg border border-red-500/30 rounded-xl mb-8">
-          <div className="p-6">
-            <div className="flex items-center justify-center mb-4">
-              <AlertTriangle className="w-8 h-8 text-red-400 mr-3" />
-              <h3 className="text-2xl font-cinzel-decorative text-red-300">AVISO DE PERIGO EXTREMO</h3>
-              <AlertTriangle className="w-8 h-8 text-red-400 ml-3" />
+            <div className="border-t border-b border-amber-700/30 py-6 my-8">
+              <p className="text-2xl font-cinzel-decorative text-red-400 mb-4">⚠️ ADVERTENTIA MAXIMA ⚠️</p>
+              <p className="text-lg text-gray-300 font-crimson leading-relaxed">
+                Os documentos desta biblioteca contêm <strong className="text-red-400">conhecimentos ultra-perigosos</strong>. 
+                Seu acesso pode resultar em consequências <strong className="text-red-400">irreversíveis e permanentes</strong> 
+                para o praticante. Procede apenas com <strong className="text-amber-400">absoluta certeza</strong> de tuas intenções.
+              </p>
             </div>
             
-            <div className="space-y-4 text-center">
-              <p className="text-gray-300 leading-relaxed">
-                Os documentos desta biblioteca contêm <strong className="text-red-400">conhecimentos que transcendem 
-                os limites da compreensão humana</strong>. Seu acesso pode resultar em consequências 
-                <strong className="text-red-400"> irreversíveis e permanentes</strong> para o praticante.
+            <div className="text-center">
+              <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
+              <p className="text-lg font-cinzel-decorative text-amber-300">
+                "Scientia Potentia Est"
               </p>
-              
-              <div className="grid md:grid-cols-3 gap-4 mt-6">
-                <div className="p-4 bg-red-950/30 border border-red-500/20 rounded">
-                  <Skull className="w-8 h-8 text-red-400 mx-auto mb-2" />
-                  <h4 className="text-red-300 font-semibold mb-2">Riscos Espirituais</h4>
-                  <p className="text-gray-400 text-sm">Dissolução da alma, possessão permanente</p>
-                </div>
-                
-                <div className="p-4 bg-orange-950/30 border border-orange-500/20 rounded">
-                  <Eye className="w-8 h-8 text-orange-400 mx-auto mb-2" />
-                  <h4 className="text-orange-300 font-semibold mb-2">Riscos Mentais</h4>
-                  <p className="text-gray-400 text-sm">Loucura cósmica, fragmentação total da psique</p>
-                </div>
-                
-                <div className="p-4 bg-purple-950/30 border border-purple-500/20 rounded">
-                  <Shield className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-                  <h4 className="text-purple-300 font-semibold mb-2">Responsabilidade</h4>
-                  <p className="text-gray-400 text-sm">Consequências transcendem vida e morte</p>
-                </div>
-              </div>
-              
-              <div className="mt-6 p-4 bg-black/40 border border-red-500/30 rounded">
-                <p className="text-red-300 font-semibold text-sm">
-                  ⚠️ ESTE CONTEÚDO É DESTINADO APENAS PARA FINS EDUCACIONAIS E HISTÓRICOS. 
-                  O TEMPLO DO ABISMO NÃO SE RESPONSABILIZA POR USO INDEVIDO OU CONSEQUÊNCIAS DECORRENTES.
-                  ACESSAR ESTES DOCUMENTOS CONSTITUI ACEITAÇÃO TOTAL DOS RISCOS ENVOLVIDOS.
-                </p>
-              </div>
+              <p className="text-sm text-gray-400 font-crimson italic mt-2">
+                Conhecimento é Poder
+              </p>
             </div>
           </div>
         </div>
-
-
 
         {/* Documents Grid */}
         <div className="floating-card max-w-6xl w-full bg-black/30 backdrop-blur-lg border border-amber-500/20 rounded-xl">
@@ -698,14 +658,14 @@ export default function Bibliotheca() {
           </div>
         </div>
 
-        {/* Mystical Quote */}
+        {/* Final Mystical Quote - Same style as home */}
         <div className="floating-card max-w-2xl mx-auto mt-12 p-8 bg-black/20 backdrop-blur-lg border border-amber-500/20 rounded-xl">
           <div className="text-center">
             <div className="text-amber-400 text-2xl mb-4">𖤍 ⸸ 𖤍</div>
-            <p className="text-lg text-gray-300 italic leading-relaxed mb-4">
+            <p className="text-lg text-gray-300 italic leading-relaxed mb-4 font-crimson">
               "Nem todos os conhecimentos devem ser buscados, mas uma vez encontrados, jamais podem ser esquecidos"
             </p>
-            <p className="text-amber-400 font-semibold">
+            <p className="text-amber-400 font-cinzel-decorative">
               — Axioma do Sanctum Secretorum
             </p>
           </div>
