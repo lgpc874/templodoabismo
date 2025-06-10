@@ -9,17 +9,15 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Login from "@/pages/login";
 import Sobre from "@/pages/sobre";
-import Oraculo from "@/pages/oraculo-supabase";
 import Oracle from "@/pages/oracle";
 import CourseDetail from "@/pages/course-detail";
 import Profile from "@/pages/profile";
 import StudentProfile from "@/pages/student-profile";
-import GrimoiresOld from "@/pages/grimoires-mystical";
 import Grimoires from "@/pages/grimoires-new";
 import Bibliotheca from "@/pages/bibliotheca";
 import VozDaPluma from "@/pages/voz-da-pluma";
 import LiberProhibitus from "@/pages/liber-prohibitus-mystical";
-import Blog from "@/pages/blog-new";
+import Gnosis from "@/pages/blog-new";
 
 
 import AdminControl from "@/pages/admin-control";
@@ -49,8 +47,7 @@ function Router() {
           <Route path="/grimorios" component={Grimoires} />
           <Route path="/bibliotheca" component={Bibliotheca} />
           <Route path="/voz-da-pluma" component={VozDaPluma} />
-          <Route path="/blog" component={Blog} />
-          <Route path="/gnosis" component={Blog} />
+          <Route path="/gnosis" component={Gnosis} />
           <Route path="/liber-prohibitus" component={LiberProhibitus} />
           <Route path="/oracle-test" component={OracleTest} />
           <Route path="/setup-admin" component={SetupAdmin} />
