@@ -39,8 +39,11 @@ export default function VozDaPluma() {
 
   const loadTodayContent = async () => {
     try {
-      const response = await apiRequest('GET', '/api/voz-pluma/today');
-      setTodayContent(response);
+      const response = await fetch('/api/voz-pluma/today');
+      if (response.ok) {
+        const data = await response.json();
+        setTodayContent(data);
+      }
     } catch (error) {
       console.error('Erro ao carregar conteúdo do dia:', error);
     } finally {

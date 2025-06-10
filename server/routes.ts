@@ -496,6 +496,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Voz da Pluma - Sistema de publicação automática
+  app.get('/api/voz-pluma/today', async (req: Request, res: Response) => {
+    try {
+      const content = await vozPlumaService.getTodayContent();
+      res.json(content);
+    } catch (error) {
+      console.error('Error fetching today content:', error);
+      res.status(500).json({ error: 'Failed to fetch today content' });
+    }
+  });
+
+  app.get('/api/voz-pluma/recent', async (req: Request, res: Response) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 10;
+      const content = await vozPlumaService.getRecentContent(limit);
+      res.json(content);
+    } catch (error) {
+      console.error('Error fetching recent content:', error);
+      res.status(500).json({ error: 'Failed to fetch recent content' });
+    }
+  });
+
+  app.post('/api/voz-pluma/generate', async (req: Request, res: Response) => {
+    try {
+      const content = await vozPlumaService.generateAndSaveContent();
+      res.json(content);
+    } catch (error) {
+      console.error('Error generating content:', error);
+      res.status(500).json({ error: 'Failed to generate content' });
+    }
+  });
+
+  app.get('/api/voz-pluma/settings', async (req: Request, res: Response) => {
+    try {
+      const settings = await vozPlumaService.getSettings();
+      res.json(settings);
+    } catch (error) {
+      console.error('Error fetching Voz da Pluma settings:', error);
+      res.status(500).json({ error: 'Failed to fetch settings' });
+    }
+  });
+
+  app.put('/api/voz-pluma/settings', async (req: Request, res: Response) => {
+    try {
+      const settings = await vozPlumaService.updateSettings(req.body);
+      res.json(settings);
+    } catch (error) {
+      console.error('Error updating Voz da Pluma settings:', error);
+      res.status(500).json({ error: 'Failed to update settings' });
+    }
+  });
+
   // Catch-all for unmatched API routes - must be after all API route definitions
   app.use('/api/*', (req: Request, res: Response) => {
     console.log(`Unmatched API route: ${req.method} ${req.path}`);
