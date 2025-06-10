@@ -254,6 +254,10 @@
   border-color: rgb(147 51 234 / 0.3) !important;
 }
 
+.mood-umbral .border-amber-800\/20 {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
 .mood-umbral .mystical-glow {
   text-shadow: 
     0 0 10px rgba(147, 51, 234, 0.3),
@@ -283,6 +287,10 @@
 .mood-chamas .border-amber-500\/15,
 .mood-chamas .border-white\/5 {
   border-color: rgb(220 38 38 / 0.3) !important;
+}
+
+.mood-chamas .border-amber-800\/20 {
+  border-color: rgba(0, 0, 0, 0.2) !important;
 }
 
 .mood-chamas .mystical-glow {
@@ -316,6 +324,10 @@
   border-color: rgb(148 163 184 / 0.3) !important;
 }
 
+.mood-lua-negra .border-amber-800\/20 {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
 .mood-lua-negra .mystical-glow {
   text-shadow: 
     0 0 10px rgba(148, 163, 184, 0.3),
@@ -345,6 +357,10 @@
 .mood-void-cosmico .border-amber-500\/15,
 .mood-void-cosmico .border-white\/5 {
   border-color: rgb(139 92 246 / 0.3) !important;
+}
+
+.mood-void-cosmico .border-amber-800\/20 {
+  border-color: rgba(0, 0, 0, 0.2) !important;
 }
 
 .mood-void-cosmico .mystical-glow {
