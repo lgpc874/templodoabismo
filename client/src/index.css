@@ -270,6 +270,38 @@
   }
 }
 
+/* Enhanced floating for mystical titles */
+@keyframes mysticalFloat {
+  0%, 100% { 
+    transform: translateY(0px);
+    text-shadow: 0 0 20px rgba(139, 69, 19, 0.5);
+  }
+  50% { 
+    transform: translateY(-8px);
+    text-shadow: 0 0 30px rgba(139, 69, 19, 0.8);
+  }
+}
+
+.animate-mystical-float {
+  animation: mysticalFloat 3s ease-in-out infinite;
+}
+
+/* Enhanced floating for main titles */
+@keyframes titleFloat {
+  0%, 100% { 
+    transform: translateY(0px) scale(1);
+    text-shadow: 0 0 25px rgba(139, 69, 19, 0.6);
+  }
+  50% { 
+    transform: translateY(-10px) scale(1.02);
+    text-shadow: 0 0 35px rgba(139, 69, 19, 0.9);
+  }
+}
+
+.animate-title-float {
+  animation: titleFloat 4s ease-in-out infinite;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

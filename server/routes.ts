@@ -388,7 +388,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // === ORACLE CONSULTATION WITH AI ===
-  app.post('/api/oracle/test', async (req: any, res: Response) => {
+  app.post('/api/oracle/consult', async (req: any, res: Response) => {
     try {
       const { type, question } = req.body;
       const userId = req.user?.id;
@@ -397,7 +397,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: 'Question is required' });
       }
 
+      if (!type || !['tarot', 'mirror', 'runes', 'fire', 'voice'].includes(type)) {
+        return res.status(400).json({ error: 'Valid oracle type is required (tarot, mirror, runes, fire, voice)' });
+      }
+
       let result;
+      
       switch (type) {
         case 'tarot':
           result = await temploAI.generateTarotReading(question);
@@ -415,38 +420,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
           result = await temploAI.generateAbyssalVoice(question);
           break;
         default:
-          return res.status(400).json({ error: 'Invalid consultation type' });
+          return res.status(400).json({ error: 'Invalid oracle type' });
       }
 
-      // Save consultation to database if user is available
+      // Store consultation in database if user is authenticated
       if (userId) {
         try {
-          const { data, error } = await supabase
+          await supabase
             .from('oracle_consultations')
             .insert({
               user_id: userId,
-              type,
-              question,
-              response: JSON.stringify(result),
+              oracle_type: type,
+              question: question,
+              result: result,
               created_at: new Date().toISOString()
-            })
-            .select()
-            .single();
-
-          if (error) {
-            console.error('Error saving consultation:', error);
-          }
+            });
         } catch (dbError) {
-          console.warn('Failed to save consultation to database:', dbError);
+          console.log('Failed to store consultation in database:', dbError);
+          // Continue without throwing error - consultation still works
         }
       }
 
-      res.json({ success: true, result });
+      res.json({
+        type,
+        question,
+        result,
+        timestamp: new Date().toISOString()
+      });
     } catch (error: any) {
       console.error('Oracle consultation error:', error);
-      res.status(500).json({ 
-        error: error.message || 'Failed to generate consultation'
-      });
+      res.status(500).json({ error: 'Oracle consultation failed: ' + error.message });
     }
   });
 
