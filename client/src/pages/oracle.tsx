@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Gem, Eye, Flame, Search, FileText, MessageCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Gem, Eye, Flame, Search, FileText, MessageCircle, Crown, CreditCard } from "lucide-react";
 import { Link } from "wouter";
+import PaymentGateway from "@/components/PaymentGateway";
 
 const oracleTypes = [
   {
@@ -10,7 +14,9 @@ const oracleTypes = [
     description: 'Consulte as cartas ancestrais que revelam os caminhos do destino',
     icon: Gem,
     color: 'from-purple-600 to-indigo-600',
-    route: '/oraculo/ritual/tarot'
+    route: '/oraculo/ritual/tarot',
+    freeConsultations: 3,
+    premiumPrice: 29.90
   },
   {
     id: 'mirror',
@@ -18,7 +24,9 @@ const oracleTypes = [
     description: 'Converse diretamente com Speculum, o Refletor das Profundezas',
     icon: Search,
     color: 'from-blue-600 to-cyan-600',
-    route: '/oraculo/ritual/espelho'
+    route: '/oraculo/ritual/espelho',
+    freeConsultations: 2,
+    premiumPrice: 39.90
   },
   {
     id: 'runes',
@@ -26,7 +34,9 @@ const oracleTypes = [
     description: 'Dialogue com Runicus, o Escriba das Runas Primordiais',
     icon: FileText,
     color: 'from-amber-600 to-orange-600',
-    route: '/oraculo/ritual/runas'
+    route: '/oraculo/ritual/runas',
+    freeConsultations: 2,
+    premiumPrice: 34.90
   },
   {
     id: 'fire',
@@ -34,7 +44,9 @@ const oracleTypes = [
     description: 'Converse com Ignis, o Senhor das Chamas que Purificam',
     icon: Flame,
     color: 'from-red-600 to-rose-600',
-    route: '/oraculo/ritual/fogo'
+    route: '/oraculo/ritual/fogo',
+    freeConsultations: 2,
+    premiumPrice: 37.90
   },
   {
     id: 'voice',
@@ -42,11 +54,16 @@ const oracleTypes = [
     description: 'Dialogue com Abyssos, a Voz Primordial das Profundezas',
     icon: Eye,
     color: 'from-gray-600 to-slate-700',
-    route: '/oraculo/ritual/voz'
+    route: '/oraculo/ritual/voz',
+    freeConsultations: 1,
+    premiumPrice: 49.90
   }
 ];
 
 export default function Oracle() {
+  const [selectedOracle, setSelectedOracle] = useState<any>(null);
+  const [showPayment, setShowPayment] = useState(false);
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Fixed Central Rotating Seal */}
@@ -111,17 +128,43 @@ export default function Oracle() {
           {oracleTypes.map((oracle) => {
             const IconComponent = oracle.icon;
             return (
-              <Link key={oracle.id} href={oracle.route}>
-                <div className="floating-card group cursor-pointer transform hover:scale-105 transition-all duration-300">
-                  <div className="p-6 text-center">
-                    <IconComponent className="w-12 h-12 mx-auto mb-4 text-red-500" />
-                    <h3 className="text-xl font-bold text-amber-400 mb-3">{oracle.name}</h3>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      {oracle.description}
-                    </p>
+              <div key={oracle.id} className="floating-card group transform hover:scale-105 transition-all duration-300">
+                <div className="p-6 text-center space-y-4">
+                  <IconComponent className="w-12 h-12 mx-auto mb-4 text-red-500" />
+                  <h3 className="text-xl font-bold text-amber-400 mb-3">{oracle.name}</h3>
+                  <p className="text-gray-300 text-sm leading-relaxed mb-4">
+                    {oracle.description}
+                  </p>
+                  
+                  {/* Free consultations info */}
+                  <div className="bg-amber-900/20 p-3 rounded-lg border border-amber-700/30 mb-4">
+                    <div className="flex items-center justify-center gap-2 text-amber-300 text-sm">
+                      <Crown className="w-4 h-4" />
+                      <span>{oracle.freeConsultations} consultas gratuitas</span>
+                    </div>
+                  </div>
+
+                  {/* Action buttons */}
+                  <div className="space-y-2">
+                    <Link href={oracle.route} className="block">
+                      <Button className="w-full bg-amber-900/50 hover:bg-amber-800/70 text-amber-200 border-amber-700">
+                        Consulta Gratuita
+                      </Button>
+                    </Link>
+                    
+                    <Button 
+                      onClick={() => {
+                        setSelectedOracle(oracle);
+                        setShowPayment(true);
+                      }}
+                      className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white"
+                    >
+                      <CreditCard className="w-4 h-4 mr-2" />
+                      Premium R$ {oracle.premiumPrice}
+                    </Button>
                   </div>
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>

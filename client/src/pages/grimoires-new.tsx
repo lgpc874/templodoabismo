@@ -20,6 +20,8 @@ interface Grimoire {
 
 export default function Grimoires() {
   const queryClient = useQueryClient();
+  const [selectedGrimoire, setSelectedGrimoire] = useState<Grimoire | null>(null);
+  const [showPayment, setShowPayment] = useState(false);
 
   const { data: grimoires = [], isLoading } = useQuery({
     queryKey: ["/api/grimoires"]
@@ -140,12 +142,14 @@ export default function Grimoires() {
                   </div>
                   
                   <button 
-                    onClick={() => purchaseMutation.mutate(grimoire.id)}
-                    disabled={purchaseMutation.isPending}
+                    onClick={() => {
+                      setSelectedGrimoire(grimoire);
+                      setShowPayment(true);
+                    }}
                     className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white px-4 py-2 rounded transition-all duration-300 flex items-center gap-2"
                   >
-                    <ShoppingCart className="w-4 h-4" />
-                    {purchaseMutation.isPending ? 'Comprando...' : 'Comprar'}
+                    <CreditCard className="w-4 h-4" />
+                    Adquirir
                   </button>
                 </div>
               </div>
@@ -173,6 +177,48 @@ export default function Grimoires() {
             </p>
           </div>
         </div>
+
+        {/* Payment Dialog */}
+        <Dialog open={showPayment} onOpenChange={setShowPayment}>
+          <DialogContent className="bg-black/95 border-amber-700/50 max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-cinzel-decorative text-amber-400">
+                Adquirir Grimório: {selectedGrimoire?.title}
+              </DialogTitle>
+            </DialogHeader>
+            
+            {selectedGrimoire && (
+              <div className="space-y-6">
+                <div className="bg-amber-900/20 p-4 rounded-lg border border-amber-700/30">
+                  <h4 className="text-lg font-semibold text-amber-300 mb-2">Detalhes do Grimório</h4>
+                  <p className="text-amber-200/70 text-sm mb-3">{selectedGrimoire.description}</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-amber-400 font-bold text-xl">
+                      R$ {selectedGrimoire.purchase_price_brl}
+                    </span>
+                    <Badge variant="outline" className="border-amber-600 text-amber-300">
+                      Nível {selectedGrimoire.level}
+                    </Badge>
+                  </div>
+                </div>
+
+                <PaymentGateway
+                  amount={selectedGrimoire.purchase_price_brl}
+                  currency="BRL"
+                  description={`Grimório: ${selectedGrimoire.title}`}
+                  onSuccess={(paymentData) => {
+                    console.log('Pagamento realizado:', paymentData);
+                    setShowPayment(false);
+                    // Aqui você pode redirecionar ou mostrar sucesso
+                  }}
+                  onError={(error) => {
+                    console.error('Erro no pagamento:', error);
+                  }}
+                />
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
