@@ -7,7 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Shield, CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function SetupAdmin() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('admin@templodoabismo.com');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const { toast } = useToast();
