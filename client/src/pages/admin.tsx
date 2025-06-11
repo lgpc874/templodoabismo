@@ -212,11 +212,23 @@ export default function AdminPanel() {
         client.from('site_pages').select('id', { count: 'exact' })
       ]);
 
+      // Load additional stats
+      const [consultationsResult, revenueResult] = await Promise.all([
+        client.from('oracle_consultations').select('id', { count: 'exact' }),
+        client.from('tkazh_transactions').select('amount')
+      ]);
+
+      const totalRevenue = revenueResult.data?.reduce((sum: number, t: any) => sum + (t.amount || 0), 0) || 0;
+      
       setStats({
         totalUsers: usersResult.count || 0,
         totalCourses: coursesResult.count || 0,
         totalGrimoires: grimoiresResult.count || 0,
         totalPages: pagesResult.count || 0,
+        totalConsultations: consultationsResult.count || 0,
+        totalRevenue,
+        activeUsers: Math.floor((usersResult.count || 0) * 0.3), // Estimate
+        pendingContent: 0
       });
 
       // Load users
