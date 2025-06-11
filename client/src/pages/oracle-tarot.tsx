@@ -6,6 +6,7 @@ import { Gem, ArrowLeft, Download } from "lucide-react";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import RotatingSeal from "@/components/RotatingSeal";
 
 export default function OracleTarot() {
   const [question, setQuestion] = useState("");

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, AlertCircle, Shield } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import RotatingSeal from "@/components/RotatingSeal";
 
 export default function AdminLogin() {
   const [, setLocation] = useLocation();
@@ -94,6 +95,9 @@ export default function AdminLogin() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
       </div>
+
+      {/* Selo Giratório Padrão */}
+      <RotatingSeal variant="simple" opacity={5} size="lg" />
 
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         {/* Admin Login Form */}
