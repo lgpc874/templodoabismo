@@ -6,7 +6,6 @@ import { Gem, ArrowLeft, Download } from "lucide-react";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import RotatingSeal from "@/components/RotatingSeal";
 
 export default function OracleTarot() {
   const [question, setQuestion] = useState("");
@@ -103,10 +102,20 @@ export default function OracleTarot() {
           </div>
         </div>
         
+        {/* Main central seal */}
+        <div className="rotating-seal absolute w-64 h-64 opacity-15 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="animate-spin-slow text-red-500/30 text-[16rem] leading-none flex items-center justify-center h-full">
+            ⸸
+          </div>
+        </div>
+        
+        {/* Inner pulsing core */}
+        <div className="absolute w-16 h-16 opacity-25 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="text-red-300/40 text-4xl leading-none flex items-center justify-center h-full">
+            ●
+          </div>
+        </div>
       </div>
-      
-      {/* Selo Giratório Padrão */}
-      <RotatingSeal variant="mystical" opacity={8} size="md" />
 
 
 

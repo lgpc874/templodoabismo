@@ -4,7 +4,6 @@ import { Scroll, Flame, Star, Eye, Moon, Crown, BookOpen } from "lucide-react";
 import Footer from "../components/footer";
 import { Link } from "wouter";
 import { CentralLogo } from '@/components/CentralLogo';
-import RotatingSeal from '@/components/RotatingSeal';
 
 export default function Home() {
   // Fetch real content from Supabase only
@@ -52,9 +51,6 @@ export default function Home() {
 
       {/* Logo Central Girando */}
       <CentralLogo />
-      
-      {/* Selo Giratório Padrão */}
-      <RotatingSeal variant="simple" opacity={8} size="md" />
 
 
 
