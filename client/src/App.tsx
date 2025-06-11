@@ -21,7 +21,8 @@ import Bibliotheca from "@/pages/bibliotheca";
 import VozDaPluma from "@/pages/voz-da-pluma";
 import LiberProhibitus from "@/pages/liber-prohibitus-mystical";
 import Gnosis from "@/pages/blog-new";
-
+import AdminLogin from "@/pages/admin-login";
+import AdminPanel from "@/pages/admin";
 
 import Register from "@/pages/register";
 import Cursos from "@/pages/cursos";
@@ -63,6 +64,10 @@ function Router() {
           <Route path="/liber-prohibitus" component={LiberProhibitus} />
           <Route path="/oracle-test" component={OracleTest} />
           <Route path="/oraculo/ritual/:type" component={OracleRitualChat} />
+
+          {/* Admin Routes */}
+          <Route path="/admin-login" component={AdminLogin} />
+          <Route path="/admin" component={AdminPanel} />
 
           <Route path="/termos-de-uso" component={lazy(() => import("./pages/termos-de-uso"))} />
           <Route path="/politica-de-privacidade" component={lazy(() => import("./pages/politica-de-privacidade"))} />
