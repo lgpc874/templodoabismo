@@ -7,11 +7,12 @@ export default function Footer() {
           {/* Logo and name section */}
           <div className="flex items-center justify-center mb-3">
             <div className="w-8 h-8 mr-2">
-              <img
-                src="/seal.png"
-                alt="Selo do Templo do Abismo"
-                className="w-full h-full object-contain filter drop-shadow-lg"
-              />
+              <svg viewBox="0 0 32 32" className="w-full h-full text-amber-400">
+                <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="1"/>
+                <path d="M16 6 L20 12 L28 12 L22.5 17 L24 24 L16 19.5 L8 24 L9.5 17 L4 12 L12 12 Z" 
+                      fill="none" stroke="currentColor" strokeWidth="1"/>
+                <circle cx="16" cy="16" r="3" fill="none" stroke="currentColor" strokeWidth="1"/>
+              </svg>
             </div>
             <div className="font-cinzel-decorative text-lg font-bold text-amber-400">
               Templo do Abismo
