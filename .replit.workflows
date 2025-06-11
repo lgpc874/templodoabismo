@@ -1,7 +1,6 @@
-workflows:
-  - name: "Start application"
-    run: "npm run dev"
-    env:
-      NODE_ENV: "development"
-    ports:
-      - 5000
+- name: "Start application"
+  run: "npm run dev"
+  env:
+    NODE_ENV: "development"
+  ports:
+    - 5000
