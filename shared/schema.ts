@@ -1,44 +1,86 @@
-import { z } from "zod";
-
-// User types for Supabase
+// Schema exclusivo para Supabase - Templo do Abismo
 export interface User {
   id: string;
   email: string;
-  username: string;
   password: string;
-  role: string;
-  member_type: string;
+  username?: string;
+  magical_name?: string;
+  role: 'user' | 'admin';
+  member_type: 'visitante' | 'iniciado' | 'vip' | 'admin';
   initiation_level: number;
-  is_active: boolean;
-  last_login?: string;
+  personal_seal_generated: boolean;
+  personal_seal_url?: string;
+  courses_completed: string[];
+  achievements: string[];
+  join_date: string;
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
+  last_login?: string;
+  is_active: boolean;
+  subscription_type?: string;
+  subscription_expires_at?: string;
 }
 
 export interface AdminSession {
-  id: number;
+  id: string;
   user_id: string;
   token: string;
   expires_at: string;
   created_at: string;
 }
 
-// Auth schemas
-export const loginSchema = z.object({
-  email: z.string().email("Email inválido"),
-  password: z.string().min(1, "Senha é obrigatória"),
-});
+export interface Course {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  difficulty_level: number;
+  instructor: string;
+  price_brl: number;
+  is_active: boolean;
+  featured_image?: string;
+  tags: string[];
+  created_at: string;
+}
 
-export const createUserSchema = z.object({
-  email: z.string().email("Email inválido"),
-  username: z.string().min(3, "Nome de usuário deve ter pelo menos 3 caracteres"),
-  password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
-  role: z.string().default("user"),
-  member_type: z.string().default("visitante"),
-  initiation_level: z.number().default(0),
-  is_active: z.boolean().default(true),
-});
+export interface Grimoire {
+  id: string;
+  title: string;
+  description: string;
+  author: string;
+  level: 'iniciante' | 'intermediario' | 'avancado';
+  price_brl: number;
+  pdf_url?: string;
+  cover_image?: string;
+  is_active: boolean;
+  tags: string[];
+  created_at: string;
+}
 
-// Types
-export type LoginRequest = z.infer<typeof loginSchema>;
-export type CreateUserRequest = z.infer<typeof createUserSchema>;
+export interface OracleConsultation {
+  id: string;
+  user_id?: string;
+  type: 'tarot' | 'mirror' | 'runes' | 'fire' | 'abyssal';
+  question: string;
+  response: any;
+  created_at: string;
+}
+
+export interface VozPlumaPost {
+  id: string;
+  title: string;
+  content: string;
+  author: string;
+  category: 'poem' | 'article' | 'ritual';
+  type: 'daily' | 'special';
+  posted_date: string;
+  created_at: string;
+}
+
+export type InsertUser = Omit<User, 'id' | 'created_at'>;
+export type UpdateUser = Partial<Omit<User, 'id' | 'created_at'>>;
+export type InsertAdminSession = Omit<AdminSession, 'id' | 'created_at'>;
+export type InsertCourse = Omit<Course, 'id' | 'created_at'>;
+export type InsertGrimoire = Omit<Grimoire, 'id' | 'created_at'>;
+export type InsertOracleConsultation = Omit<OracleConsultation, 'id' | 'created_at'>;
+export type InsertVozPlumaPost = Omit<VozPlumaPost, 'id' | 'created_at'>;

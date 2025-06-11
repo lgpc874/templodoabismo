@@ -1,59 +1,60 @@
 import { supabaseAdmin } from './supabase-client';
 import bcrypt from "bcrypt";
 import { randomBytes } from "crypto";
+import type { User, AdminSession, InsertUser, UpdateUser, InsertAdminSession } from '@shared/schema';
 
 export interface IStorage {
   // User operations
-  getUser(id: string): Promise<any>;
-  getUserByEmail(email: string): Promise<any>;
-  getUserByUsername(username: string): Promise<any>;
-  createUser(userData: any): Promise<any>;
-  updateUser(id: string, userData: any): Promise<any>;
+  getUser(id: string): Promise<User | null>;
+  getUserByEmail(email: string): Promise<User | null>;
+  getUserByUsername(username: string): Promise<User | null>;
+  createUser(userData: InsertUser): Promise<User>;
+  updateUser(id: string, userData: UpdateUser): Promise<User>;
   
   // Admin operations
-  authenticateAdmin(email: string, password: string): Promise<{ user: any; token: string } | null>;
-  validateAdminToken(token: string): Promise<any>;
+  authenticateAdmin(email: string, password: string): Promise<{ user: User; token: string } | null>;
+  validateAdminToken(token: string): Promise<User | null>;
   createAdminSession(userId: string): Promise<string>;
   revokeAdminSession(token: string): Promise<void>;
-  getAdminUsers(): Promise<any[]>;
-  createAdminUser(userData: any): Promise<any>;
+  getAdminUsers(): Promise<User[]>;
+  createAdminUser(userData: InsertUser): Promise<User>;
 }
 
 export class SupabaseStorage implements IStorage {
-  async getUser(id: string): Promise<any> {
+  async getUser(id: string): Promise<User | null> {
     const { data, error } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('id', id)
       .single();
     
-    if (error) return null;
-    return data;
+    if (error || !data) return null;
+    return data as User;
   }
 
-  async getUserByEmail(email: string): Promise<any> {
+  async getUserByEmail(email: string): Promise<User | null> {
     const { data, error } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('email', email)
       .single();
     
-    if (error) return null;
-    return data;
+    if (error || !data) return null;
+    return data as User;
   }
 
-  async getUserByUsername(username: string): Promise<any> {
+  async getUserByUsername(username: string): Promise<User | null> {
     const { data, error } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('username', username)
       .single();
     
-    if (error) return null;
-    return data;
+    if (error || !data) return null;
+    return data as User;
   }
 
-  async createUser(userData: any): Promise<any> {
+  async createUser(userData: InsertUser): Promise<User> {
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     
     const { data, error } = await supabaseAdmin
@@ -67,11 +68,11 @@ export class SupabaseStorage implements IStorage {
       .select()
       .single();
     
-    if (error) throw error;
-    return data;
+    if (error) throw new Error(`Failed to create user: ${error.message}`);
+    return data as User;
   }
 
-  async updateUser(id: string, userData: any): Promise<any> {
+  async updateUser(id: string, userData: UpdateUser): Promise<User> {
     const { data, error } = await supabaseAdmin
       .from('users')
       .update({
@@ -82,11 +83,11 @@ export class SupabaseStorage implements IStorage {
       .select()
       .single();
     
-    if (error) throw error;
-    return data;
+    if (error) throw new Error(`Failed to update user: ${error.message}`);
+    return data as User;
   }
 
-  async authenticateAdmin(email: string, password: string): Promise<{ user: any; token: string } | null> {
+  async authenticateAdmin(email: string, password: string): Promise<{ user: User; token: string } | null> {
     try {
       const user = await this.getUserByEmail(email);
       
@@ -111,7 +112,7 @@ export class SupabaseStorage implements IStorage {
     }
   }
 
-  async validateAdminToken(token: string): Promise<any> {
+  async validateAdminToken(token: string): Promise<User | null> {
     try {
       const { data: session, error } = await supabaseAdmin
         .from('admin_sessions')
@@ -148,7 +149,7 @@ export class SupabaseStorage implements IStorage {
         created_at: new Date().toISOString()
       });
 
-    if (error) throw error;
+    if (error) throw new Error(`Failed to create session: ${error.message}`);
     return token;
   }
 
@@ -159,47 +160,42 @@ export class SupabaseStorage implements IStorage {
       .eq('token', token);
   }
 
-  async getAdminUsers(): Promise<any[]> {
+  async getAdminUsers(): Promise<User[]> {
     const { data, error } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('role', 'admin');
     
     if (error) return [];
-    return data || [];
+    return (data || []) as User[];
   }
 
-  async createAdminUser(userData: any): Promise<any> {
-    try {
-      const hashedPassword = await bcrypt.hash(userData.password, 10);
-      
-      const { data, error } = await supabaseAdmin
-        .from('users')
-        .insert({
-          email: userData.email,
-          password: hashedPassword,
-          name: userData.name,
-          role: 'admin',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
-        .select()
-        .single();
-      
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(`Failed to create admin user: ${error.message}`);
-      }
-      
-      if (!data) {
-        throw new Error('No data returned from user creation');
-      }
-      
-      return data;
-    } catch (error) {
-      console.error('Admin creation error:', error);
-      throw error;
-    }
+  async createAdminUser(userData: InsertUser): Promise<User> {
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    
+    const { data, error } = await supabaseAdmin
+      .from('users')
+      .insert({
+        email: userData.email,
+        password: hashedPassword,
+        username: userData.username || userData.email.split('@')[0],
+        magical_name: userData.magical_name || 'Administrador Principal',
+        role: 'admin',
+        member_type: 'admin',
+        initiation_level: 100,
+        personal_seal_generated: false,
+        courses_completed: [],
+        achievements: [],
+        join_date: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        is_active: true
+      })
+      .select()
+      .single();
+    
+    if (error) throw new Error(`Failed to create admin user: ${error.message}`);
+    return data as User;
   }
 }
 

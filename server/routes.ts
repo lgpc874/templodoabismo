@@ -1,6 +1,5 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { supabaseAdmin } from './supabase-client';
 import { storage } from './storage';
 
 // Admin authentication middleware
@@ -58,14 +57,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const adminUser = await storage.createAdminUser({
         email,
         password,
-        name,
-        role: 'admin'
+        magical_name: name,
+        username: email.split('@')[0],
+        role: 'admin',
+        member_type: 'admin',
+        initiation_level: 100,
+        personal_seal_generated: false,
+        courses_completed: [],
+        achievements: [],
+        join_date: new Date().toISOString(),
+        is_active: true
       });
 
       res.json({
         success: true,
         message: 'Administrador criado com sucesso',
-        user: { id: adminUser.id, email: adminUser.email, name: adminUser.name }
+        user: { id: adminUser.id, email: adminUser.email, magical_name: adminUser.magical_name }
       });
     } catch (error: any) {
       console.error('Admin creation error:', error);
@@ -88,113 +95,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ error: 'Credenciais inválidas ou usuário não é administrador' });
       }
 
-      const { user, token } = result;
-      
-      // Remove password from response
-      const { password: _, ...userWithoutPassword } = user;
-
       res.json({
         success: true,
-        user: userWithoutPassword,
-        token,
-        message: 'Login realizado com sucesso'
+        token: result.token,
+        user: {
+          id: result.user.id,
+          email: result.user.email,
+          magical_name: result.user.magical_name,
+          role: result.user.role
+        }
       });
-    } catch (error) {
-      console.error('Admin login error:', error);
+    } catch (error: any) {
+      console.error('Login error:', error);
       res.status(500).json({ error: 'Erro interno do servidor' });
     }
   });
 
   // Admin logout
-  app.post('/api/admin/logout', async (req: Request, res: Response) => {
+  app.post('/api/admin/logout', requireAdmin, async (req: Request, res: Response) => {
     try {
       const authHeader = req.headers.authorization;
-      
       if (authHeader?.startsWith('Bearer ')) {
         const token = authHeader.split(' ')[1];
         await storage.revokeAdminSession(token);
       }
-
       res.json({ success: true, message: 'Logout realizado com sucesso' });
-    } catch (error) {
-      console.error('Admin logout error:', error);
-      res.status(500).json({ error: 'Erro interno do servidor' });
+    } catch (error: any) {
+      console.error('Logout error:', error);
+      res.status(500).json({ error: 'Erro ao fazer logout' });
     }
   });
 
-  // Validate admin session
-  app.get('/api/admin/me', async (req: Request, res: Response) => {
+  // Get admin user info
+  app.get('/api/admin/me', requireAdmin, async (req: any, res: Response) => {
     try {
-      const authHeader = req.headers.authorization;
-      
-      if (!authHeader?.startsWith('Bearer ')) {
-        return res.status(401).json({ error: 'Token de autorização necessário' });
-      }
-
-      const token = authHeader.split(' ')[1];
-      const user = await storage.validateAdminToken(token);
-
-      if (!user) {
-        return res.status(401).json({ error: 'Token inválido ou expirado' });
-      }
-
-      // Remove password from response
-      const { password: _, ...userWithoutPassword } = user;
-
+      const user = req.user;
       res.json({
-        success: true,
-        user: userWithoutPassword
+        id: user.id,
+        email: user.email,
+        magical_name: user.magical_name,
+        role: user.role,
+        member_type: user.member_type,
+        initiation_level: user.initiation_level
       });
-    } catch (error) {
-      console.error('Admin validation error:', error);
-      res.status(500).json({ error: 'Erro interno do servidor' });
+    } catch (error: any) {
+      console.error('Get admin info error:', error);
+      res.status(500).json({ error: 'Erro ao obter informações do administrador' });
     }
   });
 
-  // Create emergency admin user
-  app.post('/api/admin/create-emergency', async (req: Request, res: Response) => {
-    try {
-      const { email, password, username } = req.body;
-
-      if (!email || !password || !username) {
-        return res.status(400).json({ error: 'Email, senha e nome de usuário são obrigatórios' });
-      }
-
-      // Check if admin already exists
-      const existingUser = await storage.getUserByEmail(email);
-      if (existingUser) {
-        return res.status(400).json({ error: 'Usuário já existe' });
-      }
-
-      const adminUser = await storage.createUser({
-        email,
-        password,
-        username,
-        role: 'admin',
-        member_type: 'admin',
-        initiation_level: 7,
-        is_active: true
-      });
-
-      // Remove password from response
-      const { password: _, ...userWithoutPassword } = adminUser;
-
-      res.json({
-        success: true,
-        user: userWithoutPassword,
-        message: 'Usuário administrador criado com sucesso'
-      });
-    } catch (error) {
-      console.error('Create admin error:', error);
-      res.status(500).json({ error: 'Erro interno do servidor' });
-    }
+  // Basic health check
+  app.get('/api/health', (req: Request, res: Response) => {
+    res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      database: 'supabase'
+    });
   });
 
-  // Test endpoint to verify routing
-  app.get('/api/test', (req: Request, res: Response) => {
-    res.json({ status: 'API routes working', timestamp: new Date().toISOString() });
+  // Error handling middleware
+  app.use((err: any, req: Request, res: Response, next: any) => {
+    console.error('Unhandled error:', err);
+    res.status(500).json({ error: 'Erro interno do servidor' });
   });
 
   const httpServer = createServer(app);
   return httpServer;
-};
+}
