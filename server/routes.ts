@@ -1,116 +1,170 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import multer from 'multer';
-import { temploAI } from './ai-service';
-import { vozPlumaService } from './voz-pluma-service';
-import { supabase, supabaseAdmin } from './supabase-client';
-import { supabaseMigration } from './supabase-migration';
-import { registerCMSRoutes } from './cms-routes';
-import { registerAuthRoutes } from './auth-routes';
-import { processPayment, getPayPalClientToken, capturePayPalOrder } from './payment-gateways';
+import { supabaseAdmin } from './supabase-client';
+import { storage } from './storage';
 
-const upload = multer({ 
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
-});
-
-// Auth middleware
-async function requireAuth(req: any, res: Response, next: any) {
+// Admin authentication middleware
+async function requireAdmin(req: any, res: Response, next: any) {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return res.status(401).json({ error: 'No authorization header' });
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error } = await supabase.auth.getUser(token);
     
-    if (error || !user) {
-      return res.status(401).json({ error: 'Invalid token' });
+    if (!authHeader?.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Token de autorização necessário' });
     }
 
-    // Get user profile from database
-    const { data: profile } = await supabaseAdmin
-      .from('users')
-      .select('*')
-      .eq('id', user.id)
-      .single();
+    const token = authHeader.split(' ')[1];
+    const user = await storage.validateAdminToken(token);
 
-    req.user = profile || user;
+    if (!user) {
+      return res.status(401).json({ error: 'Token inválido ou expirado' });
+    }
+
+    if (user.role !== 'admin') {
+      return res.status(403).json({ error: 'Acesso negado - necessário ser administrador' });
+    }
+
+    req.user = user;
     next();
   } catch (error) {
-    res.status(401).json({ error: 'Authentication failed' });
+    console.error('Admin auth middleware error:', error);
+    res.status(500).json({ error: 'Erro de autenticação' });
   }
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Register admin authentication routes
-  registerAuthRoutes(app);
-  
+  // Supabase configuration endpoint
+  app.get('/api/config/supabase', (req: Request, res: Response) => {
+    res.json({
+      url: process.env.SUPABASE_URL,
+      key: process.env.SUPABASE_KEY
+    });
+  });
+
+  // Admin login
+  app.post('/api/admin/login', async (req: Request, res: Response) => {
+    try {
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).json({ error: 'Email e senha são obrigatórios' });
+      }
+
+      const result = await storage.authenticateAdmin(email, password);
+      
+      if (!result) {
+        return res.status(401).json({ error: 'Credenciais inválidas ou usuário não é administrador' });
+      }
+
+      const { user, token } = result;
+      
+      // Remove password from response
+      const { password: _, ...userWithoutPassword } = user;
+
+      res.json({
+        success: true,
+        user: userWithoutPassword,
+        token,
+        message: 'Login realizado com sucesso'
+      });
+    } catch (error) {
+      console.error('Admin login error:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+  });
+
+  // Admin logout
+  app.post('/api/admin/logout', async (req: Request, res: Response) => {
+    try {
+      const authHeader = req.headers.authorization;
+      
+      if (authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.split(' ')[1];
+        await storage.revokeAdminSession(token);
+      }
+
+      res.json({ success: true, message: 'Logout realizado com sucesso' });
+    } catch (error) {
+      console.error('Admin logout error:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+  });
+
+  // Validate admin session
+  app.get('/api/admin/me', async (req: Request, res: Response) => {
+    try {
+      const authHeader = req.headers.authorization;
+      
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Token de autorização necessário' });
+      }
+
+      const token = authHeader.split(' ')[1];
+      const user = await storage.validateAdminToken(token);
+
+      if (!user) {
+        return res.status(401).json({ error: 'Token inválido ou expirado' });
+      }
+
+      // Remove password from response
+      const { password: _, ...userWithoutPassword } = user;
+
+      res.json({
+        success: true,
+        user: userWithoutPassword
+      });
+    } catch (error) {
+      console.error('Admin validation error:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+  });
+
+  // Create emergency admin user
+  app.post('/api/admin/create-emergency', async (req: Request, res: Response) => {
+    try {
+      const { email, password, username } = req.body;
+
+      if (!email || !password || !username) {
+        return res.status(400).json({ error: 'Email, senha e nome de usuário são obrigatórios' });
+      }
+
+      // Check if admin already exists
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(400).json({ error: 'Usuário já existe' });
+      }
+
+      const adminUser = await storage.createUser({
+        email,
+        password,
+        username,
+        role: 'admin',
+        member_type: 'admin',
+        initiation_level: 7,
+        is_active: true
+      });
+
+      // Remove password from response
+      const { password: _, ...userWithoutPassword } = adminUser;
+
+      res.json({
+        success: true,
+        user: userWithoutPassword,
+        message: 'Usuário administrador criado com sucesso'
+      });
+    } catch (error) {
+      console.error('Create admin error:', error);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+  });
+
   // Test endpoint to verify routing
   app.get('/api/test', (req: Request, res: Response) => {
     res.json({ status: 'API routes working', timestamp: new Date().toISOString() });
   });
 
-  // Oracle ritual consultation with entities - CRITICAL ENDPOINT
-  app.post('/api/oracle/ritual-consult', async (req: any, res: Response) => {
-    try {
-      const { question, oracleType, entityName } = req.body;
-      
-      if (!question?.trim() || !oracleType || !entityName) {
-        return res.status(400).json({ 
-          error: 'Question, oracle type, and entity name are required' 
-        });
-      }
-
-      const entityResponses = {
-        'Arcanum': {
-          response: `The ancient cards whisper of your question: "${question}". Through the Tarot's sacred geometry, I perceive the threads of fate that bind your path. The Major Arcana speaks - transformation comes through embracing the shadow aspects of your being. The cards reveal that what you seek lies beyond the veil of ordinary perception.`,
-          farewell: 'The cards grow cold as Arcanum withdraws into the mystical veil, leaving only echoes of ancient wisdom...'
-        },
-        'Speculum': {
-          response: `Your reflection in the obsidian mirror reveals truths about "${question}". I see through the veils of illusion to perceive your soul's true nature. The mirror shows not what is, but what could be - potential paths written in silver light upon dark glass. Your inner vision must awaken to see what others cannot.`,
-          farewell: 'The mirror surface grows dark as Speculum retreats into the realm of infinite reflections...'
-        },
-        'Runicus': {
-          response: `The ancient stones have been cast for your inquiry: "${question}". The Elder Futhark speaks of destiny carved in stone and fate written in the language of the gods. I see Algiz for protection, Dagaz for transformation, and Othala for spiritual inheritance. Your path requires both courage and wisdom.`,
-          farewell: 'The runes fall silent as Runicus returns to the sacred grove of ancient knowledge...'
-        },
-        'Ignis': {
-          response: `The sacred flames dance with insight for your question: "${question}". Fire speaks of purification through trial, of passion that burns away illusion. In the dancing flames, I see the phoenix rising from ashes of old patterns. What must die for you to be reborn? The fire knows.`,
-          farewell: 'The flames diminish to embers as Ignis retreats to the eternal hearth of transformation...'
-        },
-        'Abyssos': {
-          response: `From the primordial void comes wisdom for your inquiry: "${question}". The abyss speaks in whispers older than creation itself. What you seek dwells not in light but in the fertile darkness where all potentials exist. Embrace the unknown, for it is the womb of all becoming.`,
-          farewell: 'Abyssos dissolves back into the infinite void, leaving only the profound silence of endless possibility...'
-        }
-      };
-
-      const entityData = entityResponses[entityName];
-      if (!entityData) {
-        return res.status(400).json({ error: 'Unknown entity' });
-      }
-      
-      res.json({
-        success: true,
-        response: entityData.response,
-        farewell: entityData.farewell,
-        entityName,
-        oracleType,
-        timestamp: new Date().toISOString()
-      });
-      
-    } catch (error) {
-      console.error('Ritual consultation error:', error);
-      res.status(500).json({ error: 'Failed to perform ritual consultation' });
-    }
-  });
-
-
-
-  // Supabase configuration endpoint
-  app.get('/api/config/supabase', (req: Request, res: Response) => {
-    res.json({
+  const httpServer = createServer(app);
+  return httpServer;
+};
       url: process.env.SUPABASE_URL,
       key: process.env.SUPABASE_KEY
     });
