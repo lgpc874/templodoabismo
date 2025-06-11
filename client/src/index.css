@@ -559,6 +559,8 @@ body {
     radial-gradient(circle at 50% 50%, rgba(139, 0, 0, 0.02) 0%, transparent 50%),
     linear-gradient(135deg, #000000 0%, #0a0000 100%);
   background-attachment: fixed;
+  min-height: 100vh;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* Símbolos místicos espalhados pelo fundo */
@@ -583,6 +585,79 @@ body::before {
 @keyframes mystic-symbols {
   0% { transform: translateY(0px); }
   100% { transform: translateY(-50px); }
+}
+
+/* Classes de fonte essenciais */
+.font-cinzel-decorative {
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 700;
+}
+
+.font-crimson {
+  font-family: 'EB Garamond', serif;
+}
+
+.font-fell {
+  font-family: 'IM Fell DW Pica', serif;
+}
+
+/* Efeitos de texto místico */
+.mystical-glow {
+  text-shadow: 
+    0 0 5px rgba(251, 191, 36, 0.3),
+    0 0 10px rgba(251, 191, 36, 0.2),
+    0 0 15px rgba(251, 191, 36, 0.1);
+}
+
+.floating-title {
+  animation: float 6s ease-in-out infinite;
+}
+
+.floating-title-slow {
+  animation: float 8s ease-in-out infinite;
+}
+
+/* Cards flutuantes */
+.floating-card {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.floating-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Gradiente radial */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* Partículas místicas */
+.mystical-particles {
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, rgba(251, 191, 36, 0.3), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(239, 68, 68, 0.2), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(251, 191, 36, 0.4), transparent),
+    radial-gradient(1px 1px at 130px 80px, rgba(239, 68, 68, 0.3), transparent);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: mystical-shimmer 20s linear infinite;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .floating-title {
+    font-size: 2.5rem !important;
+  }
+  
+  .floating-card {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
 }
 
 /* Cards Ultra Transparentes */
