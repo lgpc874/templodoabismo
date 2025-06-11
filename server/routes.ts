@@ -44,6 +44,9 @@ async function requireAuth(req: any, res: Response, next: any) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Register admin authentication routes
+  registerAuthRoutes(app);
+  
   // Test endpoint to verify routing
   app.get('/api/test', (req: Request, res: Response) => {
     res.json({ status: 'API routes working', timestamp: new Date().toISOString() });
