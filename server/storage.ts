@@ -170,23 +170,36 @@ export class SupabaseStorage implements IStorage {
   }
 
   async createAdminUser(userData: any): Promise<any> {
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
-    
-    const { data, error } = await supabaseAdmin
-      .from('users')
-      .insert({
-        email: userData.email,
-        password: hashedPassword,
-        name: userData.name,
-        role: 'admin',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      })
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data;
+    try {
+      const hashedPassword = await bcrypt.hash(userData.password, 10);
+      
+      const { data, error } = await supabaseAdmin
+        .from('users')
+        .insert({
+          email: userData.email,
+          password: hashedPassword,
+          name: userData.name,
+          role: 'admin',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Failed to create admin user: ${error.message}`);
+      }
+      
+      if (!data) {
+        throw new Error('No data returned from user creation');
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Admin creation error:', error);
+      throw error;
+    }
   }
 }
 
