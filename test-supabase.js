@@ -1,12 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
   console.error('Missing Supabase credentials');
   console.log('SUPABASE_URL:', supabaseUrl ? 'SET' : 'MISSING');
-  console.log('SUPABASE_ANON_KEY:', supabaseKey ? 'SET' : 'MISSING');
+  console.log('SUPABASE_SERVICE_ROLE_KEY:', supabaseKey ? 'SET' : 'MISSING');
   process.exit(1);
 }
 
@@ -17,7 +17,7 @@ async function testConnection() {
     console.log('🧪 Testing Supabase connection...');
     
     // Test basic connection
-    const { data, error } = await supabase.from('users').select('count').limit(1);
+    const { data, error } = await supabase.from('users').select('id').limit(1);
     
     if (error) {
       console.log('❌ Database error:', error.message);

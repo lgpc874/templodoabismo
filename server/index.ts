@@ -5,7 +5,7 @@ import fs from "fs";
 import { supabaseService } from "./supabase-service";
 
 const app = express();
-const PORT = parseInt(process.env.PORT || "5000");
+const PORT = parseInt(process.env.PORT || "3000");
 
 // Middleware
 app.use(cors());
