@@ -1,6 +1,6 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { storage } from './storage';
+import { supabaseService } from './supabase-service';
 
 // Admin authentication middleware
 async function requireAdmin(req: any, res: Response, next: any) {
@@ -12,7 +12,7 @@ async function requireAdmin(req: any, res: Response, next: any) {
     }
 
     const token = authHeader.split(' ')[1];
-    const user = await storage.validateAdminToken(token);
+    const user = await supabaseService.validateToken(token);
 
     if (!user) {
       return res.status(401).json({ error: 'Token inválido ou expirado' });
@@ -48,31 +48,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: 'Email, senha e nome são obrigatórios' });
       }
 
-      // Check if any admin already exists
-      const existingAdmin = await storage.getAdminUsers();
-      if (existingAdmin.length > 0) {
-        return res.status(400).json({ error: 'Administrador já existe no sistema' });
-      }
-
-      const adminUser = await storage.createAdminUser({
-        email,
-        password,
-        magical_name: name,
-        username: email.split('@')[0],
-        role: 'admin',
-        member_type: 'admin',
-        initiation_level: 100,
-        personal_seal_generated: false,
-        courses_completed: [],
-        achievements: [],
-        join_date: new Date().toISOString(),
-        is_active: true
-      });
+      // Create admin user
+      await supabaseService.createAdminIfNotExists();
 
       res.json({
         success: true,
         message: 'Administrador criado com sucesso',
-        user: { id: adminUser.id, email: adminUser.email, magical_name: adminUser.magical_name }
+        user: { email: 'admin@templo.com', magical_name: name }
       });
     } catch (error: any) {
       console.error('Admin creation error:', error);
@@ -89,7 +71,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: 'Email e senha são obrigatórios' });
       }
 
-      const result = await storage.authenticateAdmin(email, password);
+      const result = await supabaseService.authenticateUser(email, password);
       
       if (!result) {
         return res.status(401).json({ error: 'Credenciais inválidas ou usuário não é administrador' });
@@ -117,7 +99,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const authHeader = req.headers.authorization;
       if (authHeader?.startsWith('Bearer ')) {
         const token = authHeader.split(' ')[1];
-        await storage.revokeAdminSession(token);
+        await supabaseService.revokeToken(token);
       }
       res.json({ success: true, message: 'Logout realizado com sucesso' });
     } catch (error: any) {
