@@ -1,11 +1,11 @@
 import express from "express";
 import cors from "cors";
-import path from "path";
-import fs from "fs";
+import { createServer } from "http";
 import { supabaseService } from "./supabase-service";
+import { setupVite } from "./vite";
 
 const app = express();
-const PORT = parseInt(process.env.PORT || "3000");
+const PORT = parseInt(process.env.PORT || "5000");
 
 // Middleware
 app.use(cors());
@@ -82,53 +82,24 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Serve static files from client directory in development
-const clientPath = path.join(process.cwd(), 'client');
-const indexPath = path.join(clientPath, 'index.html');
+// Create HTTP server and setup Vite for frontend
+const server = createServer(app);
 
-// Serve the main HTML file for all routes
-app.get('*', (req, res) => {
-  if (fs.existsSync(indexPath)) {
-    res.sendFile(indexPath);
-  } else {
-    res.send(`
-      <!DOCTYPE html>
-      <html lang="pt-BR">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Templo do Abismo</title>
-        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-        <style>
-          body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #000; color: #fff; }
-          .container { max-width: 800px; margin: 0 auto; text-align: center; }
-          .logo { font-size: 2.5rem; font-weight: bold; margin-bottom: 2rem; }
-          .nav { margin: 2rem 0; }
-          .nav a { color: #fff; text-decoration: none; margin: 0 1rem; padding: 0.5rem 1rem; border: 1px solid #333; }
-          .nav a:hover { background: #333; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="logo">🏛️ TEMPLO DO ABISMO</div>
-          <div class="nav">
-            <a href="/">Home</a>
-            <a href="/admin-login">Admin Login</a>
-          </div>
-          <p>Sistema 100% Supabase ativo</p>
-          <p>Database: Conectado</p>
-          <p>Admin: <a href="/admin-login" style="color: #ff6b6b;">Fazer Login</a></p>
-        </div>
-      </body>
-      </html>
-    `);
+async function startServer() {
+  try {
+    // Setup Vite dev middleware to serve the frontend
+    await setupVite(app, server);
+    
+    server.listen(PORT, () => {
+      console.log(`Servidor rodando na porta ${PORT}`);
+      console.log(`Database: Supabase`);
+      console.log(`Frontend: http://localhost:${PORT}`);
+      console.log(`Admin login: http://localhost:${PORT}/admin-login`);
+    });
+  } catch (error) {
+    console.error('Erro ao iniciar servidor:', error);
+    process.exit(1);
   }
-});
+}
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-  console.log(`Database: Supabase`);
-  console.log(`Frontend: http://localhost:${PORT}`);
-  console.log(`Admin login: http://localhost:${PORT}/admin-login`);
-});
+startServer();
