@@ -1,6 +1,6 @@
 workflows:
   - name: "Start application"
-    run: "npm run dev"
+    run: "NODE_ENV=development npx tsx server/simple-server.ts"
     env:
       NODE_ENV: "development"
     ports:

@@ -88,11 +88,45 @@ async function startServer() {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'custom',
-      root: process.cwd() + '/client'
+      root: process.cwd() + '/client',
+      configFile: process.cwd() + '/vite.config.ts'
     });
 
     // Use vite's connect instance as middleware
     app.use(vite.middlewares);
+
+    // Handle SPA routes - serve index.html for all non-API routes
+    app.use('*', async (req, res, next) => {
+      const url = req.originalUrl;
+      
+      // Skip API routes
+      if (url.startsWith('/api/')) {
+        return next();
+      }
+
+      try {
+        // Read the index.html file
+        let template = await vite.transformIndexHtml(url, `
+          <!DOCTYPE html>
+          <html lang="pt-BR">
+            <head>
+              <meta charset="UTF-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <title>Templo do Abismo</title>
+            </head>
+            <body>
+              <div id="root"></div>
+              <script type="module" src="/src/main.tsx"></script>
+            </body>
+          </html>
+        `);
+        
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
+      } catch (e) {
+        vite.ssrFixStacktrace(e);
+        next(e);
+      }
+    });
 
     const server = createServer(app);
     
