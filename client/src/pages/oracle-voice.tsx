@@ -6,6 +6,7 @@ import { Eye, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import RotatingSeal from "@/components/RotatingSeal";
 
 export default function OracleVoice() {
   const [question, setQuestion] = useState("");
@@ -86,21 +87,8 @@ export default function OracleVoice() {
         ))}
       </div>
 
-      {/* Selo Central Fixo */}
-      <div className="fixed top-1/2 left-1/2 z-0 transform -translate-x-1/2 -translate-y-1/2" style={{marginTop: '2rem'}}>
-        <div className="absolute w-80 h-80 opacity-8 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="animate-spin-slow-reverse text-amber-500/15 text-[20rem] leading-none flex items-center justify-center h-full">◯</div>
-        </div>
-        <div className="absolute w-72 h-72 opacity-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="animate-spin-slow text-red-400/20 text-[18rem] leading-none flex items-center justify-center h-full">☿</div>
-        </div>
-        <div className="rotating-seal absolute w-64 h-64 opacity-15 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="animate-spin-slow text-red-500/30 text-[16rem] leading-none flex items-center justify-center h-full">⸸</div>
-        </div>
-        <div className="absolute w-16 h-16 opacity-25 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="text-red-300/40 text-4xl leading-none flex items-center justify-center h-full">●</div>
-        </div>
-      </div>
+      {/* Selo Giratório Padrão */}
+      <RotatingSeal variant="mystical" opacity={8} size="md" />
 
 
 
