@@ -4,4 +4,4 @@ workflows:
     env:
       NODE_ENV: "development"
     ports:
-      - 5173
+      - 5000
