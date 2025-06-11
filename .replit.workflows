@@ -1,2 +1,4 @@
+[workflow]
 name = "Start application"
+[workflow.command]
 run = "npm run dev"
