@@ -5,6 +5,7 @@ import { Sparkles, Eye, Zap, Flame, MessageSquare, CreditCard, Star, Crown, Sear
 import { Link } from "wouter";
 import Footer from "../components/footer";
 import { CentralLogo } from '@/components/CentralLogo';
+import RotatingSeal from '@/components/RotatingSeal';
 
 const oracleTypes = [
   {
@@ -99,6 +100,9 @@ export default function Oracle() {
 
       {/* Logo Central Girando */}
       <CentralLogo />
+      
+      {/* Selo Giratório Padrão */}
+      <RotatingSeal variant="mystical" opacity={8} size="md" />
 
       {/* Atmospheric Gradient Overlay */}
       <div className="fixed inset-0 z-0 pointer-events-none">

@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { BookOpen, ShoppingCart, CreditCard } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import PaymentGateway from "@/components/PaymentGateway";
+import RotatingSeal from '@/components/RotatingSeal';
 
 interface Grimoire {
   id: number;
