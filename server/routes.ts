@@ -40,6 +40,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Create first admin user (one-time setup)
+  app.post('/api/admin/create-first', async (req: Request, res: Response) => {
+    try {
+      const { email, password, name } = req.body;
+
+      if (!email || !password || !name) {
+        return res.status(400).json({ error: 'Email, senha e nome são obrigatórios' });
+      }
+
+      // Check if any admin already exists
+      const existingAdmin = await storage.getAdminUsers();
+      if (existingAdmin.length > 0) {
+        return res.status(400).json({ error: 'Administrador já existe no sistema' });
+      }
+
+      const adminUser = await storage.createAdminUser({
+        email,
+        password,
+        name,
+        role: 'admin'
+      });
+
+      res.json({
+        success: true,
+        message: 'Administrador criado com sucesso',
+        user: { id: adminUser.id, email: adminUser.email, name: adminUser.name }
+      });
+    } catch (error: any) {
+      console.error('Admin creation error:', error);
+      res.status(500).json({ error: 'Erro ao criar administrador' });
+    }
+  });
+
   // Admin login
   app.post('/api/admin/login', async (req: Request, res: Response) => {
     try {

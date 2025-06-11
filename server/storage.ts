@@ -15,6 +15,8 @@ export interface IStorage {
   validateAdminToken(token: string): Promise<any>;
   createAdminSession(userId: string): Promise<string>;
   revokeAdminSession(token: string): Promise<void>;
+  getAdminUsers(): Promise<any[]>;
+  createAdminUser(userData: any): Promise<any>;
 }
 
 export class SupabaseStorage implements IStorage {
@@ -155,6 +157,36 @@ export class SupabaseStorage implements IStorage {
       .from('admin_sessions')
       .delete()
       .eq('token', token);
+  }
+
+  async getAdminUsers(): Promise<any[]> {
+    const { data, error } = await supabaseAdmin
+      .from('users')
+      .select('*')
+      .eq('role', 'admin');
+    
+    if (error) return [];
+    return data || [];
+  }
+
+  async createAdminUser(userData: any): Promise<any> {
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    
+    const { data, error } = await supabaseAdmin
+      .from('users')
+      .insert({
+        email: userData.email,
+        password: hashedPassword,
+        name: userData.name,
+        role: 'admin',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
   }
 }
 
