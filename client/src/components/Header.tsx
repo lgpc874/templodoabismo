@@ -1,91 +1,55 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'wouter';
-import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
-import { 
-  LogOut, 
-  LogIn,
-  User, 
-  UserPlus,
-  Settings, 
-  Home,
-  Book,
-  Scroll,
-  Eye,
-  Feather,
-  Library,
-  Shield,
-  Menu,
-  X
-} from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Link } from "wouter";
 
-const Header: React.FC = () => {
-  const { user, logout, isAuthenticated } = useAuth();
-  const [location] = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const handleLogout = async () => {
-    await logout();
-  };
-
-  const navItems = [
-    { href: '/', label: 'Sanctuarium', icon: Home },
-    { href: '/grimoires', label: 'Grimorium', icon: Scroll },
-    { href: '/oraculo', label: 'Oraculum', icon: Eye },
-    { href: '/gnosis', label: 'Gnosis', icon: Book },
-    { href: '/liber-prohibitus', label: 'Liber Prohibitus', icon: Shield },
-    { href: '/voz-da-pluma', label: 'Vox Pluma', icon: Feather },
-    { href: '/bibliotheca', label: 'Bibliotheca', icon: Library },
-  ];
-
-  const isActivePath = (path: string) => {
-    if (path === '/' && location === '/') return true;
-    if (path !== '/' && location.startsWith(path)) return true;
-    return false;
-  };
-
+export default function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-amber-800/20 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/80">
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-center">
-          {/* Centered Logo */}
-          <Link href="/">
-            <div className="flex items-center space-x-3 cursor-pointer">
-              <div className="w-10 h-10 relative flex items-center justify-center">
-                {/* Rotating seal logo */}
-                <div className="absolute inset-0 animate-spin-slow">
-                  <img 
-                    src="/seal.png" 
-                    alt="Selo do Templo do Abismo" 
-                    className="w-full h-full object-contain opacity-90"
-                  />
-                </div>
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-amber-400 to-red-500 bg-clip-text text-transparent font-['Cinzel_Decorative'] floating-title-slow">
-                Templo do Abismo
-              </span>
-              <div className="w-10 h-10 relative flex items-center justify-center">
-                <div className="absolute inset-0 animate-spin-slow-reverse">
-                  <img 
-                    src="/seal.png" 
-                    alt="Selo do Templo do Abismo" 
-                    className="w-full h-full object-contain opacity-90"
-                  />
-                </div>
-              </div>
-            </div>
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-amber-500/20">
+      <div className="flex items-center justify-between px-6 py-4">
+        {/* Logo esquerdo */}
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8">
+            <svg viewBox="0 0 32 32" className="w-full h-full text-amber-400">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="1"/>
+              <path d="M16 6 L20 12 L28 12 L22.5 17 L24 24 L16 19.5 L8 24 L9.5 17 L4 12 L12 12 Z" 
+                    fill="none" stroke="currentColor" strokeWidth="1"/>
+              <circle cx="16" cy="16" r="3" fill="none" stroke="currentColor" strokeWidth="1"/>
+            </svg>
+          </div>
+          <div className="text-amber-400 font-cinzel-decorative text-lg font-bold">
+            TEMPLO<br/>
+            DO<br/>
+            ABISMO
+          </div>
+        </div>
+
+        {/* Navegação central */}
+        <nav className="hidden md:flex items-center space-x-8">
+          <Link href="/" className="text-white hover:text-amber-400 transition-colors">
+            Início
           </Link>
+          <Link href="/grimoires" className="text-white hover:text-amber-400 transition-colors">
+            Grimórios
+          </Link>
+          <Link href="/cursos" className="text-white hover:text-amber-400 transition-colors">
+            Cursos
+          </Link>
+          <Link href="/oraculo" className="text-white hover:text-amber-400 transition-colors">
+            Oráculo
+          </Link>
+          <Link href="/voz-pluma" className="text-white hover:text-amber-400 transition-colors">
+            Voz da Pluma
+          </Link>
+        </nav>
+
+        {/* Botões direita */}
+        <div className="flex items-center space-x-4">
+          <button className="px-4 py-2 text-white border border-amber-500/50 hover:bg-amber-500/10 transition-colors rounded">
+            Entrar
+          </button>
+          <button className="px-4 py-2 bg-gradient-to-r from-amber-500 to-red-500 text-black font-bold rounded hover:from-amber-400 hover:to-red-400 transition-colors">
+            Registrar
+          </button>
         </div>
       </div>
     </header>
   );
-};
-
-export default Header;
+}
